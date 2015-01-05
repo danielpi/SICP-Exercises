@@ -1,6 +1,6 @@
 #lang racket
 
-; SICP Excersise 1.1
+; SICP Excersize 1.1
 10
 (+ 5 3 4)
 (- 9 1)
