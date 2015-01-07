@@ -43,3 +43,11 @@ default:
 }
 
 
+// Exercise 1.2
+// let inOneGo = (5 + 4 + (2 - (3 - (6 + (4.0 / 5))))) / (3.0 * (6 - 2) * (2 - 7)) // Fails due to the calculation taking too long!!! That is pretty ordinary performance on Swift's part.
+let numerator = (5 + 4 + (2 - (3 - (6 + (4.0 / 5)))))
+let denominator: Double = (3 * (6 - 2) * (2 - 7))
+let answer = numerator / denominator
+
+
+// Exercise 1.3
