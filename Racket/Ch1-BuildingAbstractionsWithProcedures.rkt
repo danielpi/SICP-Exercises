@@ -26,3 +26,17 @@
 (/ (+ 5 (+ 4 (- 2 (- 3 (+ 6 (/ 4 5))))))
    (* 3 (- 6 2) (- 2 7)))
 
+; Exercise 1.3 Define a procedure that takes three numbers as arguments and 
+;              returns the sum of the squares of the two larger numbers.
+(define (square x) (* x x))
+(define (sumOfSquares x y) (+ (square x) (square y)))
+(define (!= a b) (if (= a b) #f #t))
+
+
+
+(define (sumOfSquaresOfTwoLargest a b c) (cond ((= (min a b c) a) (sumOfSquares b c))
+                                               ((= (min a b c) b) (sumOfSquares a c))
+                                               ((= (min a b c) c) (sumOfSquares a b))))
+(sumOfSquares 6 4)
+(sumOfSquaresOfTwoLargest 6 2 4)
+;(sumOfSquaresOfTwoLargest 4 4 4)

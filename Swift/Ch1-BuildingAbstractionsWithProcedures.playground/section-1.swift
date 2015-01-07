@@ -50,4 +50,26 @@ let denominator: Double = (3 * (6 - 2) * (2 - 7))
 let answer = numerator / denominator
 
 
-// Exercise 1.3
+// Exercise 1.3 - Define a procedure that takes three numbers as arguments and returns the sum of the squares of the two larger numbers.
+func square(x: Int) -> Int {
+    return x * x
+}
+func sumOfSquares(x: Int, y: Int) -> Int {
+    return square(x) + square(y)
+}
+
+func sumOfSquaresOfTwoLargest(a: Int, b: Int, c: Int) -> Int {
+    switch true {
+    case min(a, b, c) == a:
+        return sumOfSquares(b, c)
+    case min(a, b, c) == b:
+        return sumOfSquares(a, c)
+    case min(a, b, c) == c:
+        return sumOfSquares(a, b)
+    default:
+        println("Something went badly wrong with the sumOfSquaresOfTwoLargest() function")
+        return 0
+    }
+}
+sumOfSquaresOfTwoLargest(6, 2, 4)
+
