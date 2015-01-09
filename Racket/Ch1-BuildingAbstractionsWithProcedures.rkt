@@ -22,9 +22,11 @@
          (else -1))
    (+ a 1))                      ; 16
 
+
 ; Exercise 1.2
 (/ (+ 5 (+ 4 (- 2 (- 3 (+ 6 (/ 4 5))))))
    (* 3 (- 6 2) (- 2 7)))
+
 
 ; Exercise 1.3 Define a procedure that takes three numbers as arguments and 
 ;              returns the sum of the squares of the two larger numbers.
@@ -40,3 +42,77 @@
 (sumOfSquares 6 4)
 (sumOfSquaresOfTwoLargest 6 2 4)
 ;(sumOfSquaresOfTwoLargest 4 4 4)
+
+
+; Exercise 1.4 Observe that our model of evaluation allows for combinations 
+;              whose operators are compound expressions. Use this observation 
+;              to describe the behaiour of the following procedure.
+(define (a-plus-abs-b a b)
+  ((if (> b 0) + -) a b))
+(a-plus-abs-b 4 5)
+(a-plus-abs-b 4 -5)
+; In the procedure above the operator used for combining the values of a and 
+; b is choosen at runtime based on the evaluation of the computation of 
+; whether b is positive or negative.
+
+
+; Exercise 1.5 Ben Bitdiddle has invented a test to determine whether the interpreter
+;              he is faced with is using applicative-order evaluation or normal-order 
+;              evaluation. He defines the following two procedures:
+(define (p) (p))
+(define (test x y)
+  (if (= x 0)
+      0
+      y))
+; Then he evaluates the expression
+;(test 0 (p))
+
+;              What behaviour will Ben observe with an interpreter that uses 
+;              applicative-order evaluation?
+; (test 0 (p))
+; (test 0 (p))
+; (test 0 (p))
+; (test 0 (p))
+; 
+; Infinite loop. The (p) is repeditively expanded to itself.
+
+;              What behaviour will he observe with an interpreter that uses 
+;              normal-order evaluation?
+; (test 0 (p))
+; (if (= x 0) 0 y))
+; (if (= 0 0) 0 (p)))
+; (if #t 0 (p)))
+; 0
+; Result is 0. The procedure is evaluated step by step to get the result.
+
+
+; 1.1.7 Example: Square Roots by Newton's Method
+; Functions are declarative knowledge and procedures are imperative knowledge.
+; Meaning that functions describe functions of things and procedures describe
+; how to do things.
+
+; How does one compute square roots?
+; Guess a value, y, for the value of the square root of a number x. Find the
+; quotient of x divided by the guess. Average the quotient and the guess.
+; Continue till you have an accurate enough answer.
+
+(define (sqrt-iter guess x)
+  (if (good-enough? guess x)
+      guess
+      (sqrt-iter (improve guess x)
+                 x)))
+(define (improve guess x)
+  (average guess (/ x guess)))
+(define (average x y)
+  (/ (+ x y) 2))
+(define (good-enough? guess x)
+  (< (abs (- (square guess) x)) 0.001))
+(define (sqrt x)
+  (sqrt-iter 1.0 x))
+
+(sqrt 9)
+(sqrt (+ 100 37))
+(sqrt (+ (sqrt 2) (sqrt 3)))
+(square (sqrt 1000))
+
+
