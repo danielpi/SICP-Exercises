@@ -116,3 +116,27 @@
 (square (sqrt 1000))
 
 
+; Exercise 1.6 Alyssa P. Hacker doesn't see why if needs to be provided as
+; a special form. "Why can't I just define it as an ordinary procedure in 
+; terms pf cond?" she asks. Alyssa's friend Eva Lu Actor claims this can 
+; indeed be done and she defines a new version of if:
+(define (new-if predicate then-clause else-clause) 
+  (cond (predicate then-clause)
+      (else else-clause)))
+
+(new-if (= 2 3) 0 5)
+(new-if (= 1 1) 0 5)
+; Delighted, Alyssa uses new-if to rewrite the square-root program:
+(define (new-sqrt-iter guess x)
+  (new-if (good-enough? guess x)
+          guess
+          (new-sqrt-iter (improve guess x)
+                        x)))
+(define (new-sqrt x) (new-sqrt-iter 1 x))
+;(new-sqrt 9)
+; If we run the line above the interpreter loops forever. The if statement
+; is a special form that evaluates the predicate and then evaluates one,
+; but not both of the consequant or alternative. new-if on the other hand
+; is a procedure so the predicate, consequant and alternative are all evaluated
+; before going to the next step. At this point new-sqrt-iter is evaluated again
+; which leads to the infinite loop.

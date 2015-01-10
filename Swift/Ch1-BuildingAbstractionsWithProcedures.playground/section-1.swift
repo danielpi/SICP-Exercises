@@ -140,3 +140,28 @@ sqrt(100 + 37)
 sqrt(sqrt(2) + sqrt(3))
 square(sqrt(1000))
 
+
+// Exercise 1.6 - Alyssa P. Hacker doesn't see why if needs to be provided as a special form. " Why can't I just define it as an ordinary procedure in terms of cond?" she asks. Alyssa's friend Eva Lu Ator claims this can indeed be done, and she defines a new version of if:
+
+func newIf(predicate: Bool, thenClause: Double, elseClause: Double) -> Double {
+    switch true {
+    case predicate:
+        return thenClause
+    default:
+        return elseClause
+    }
+}
+
+newIf((2 == 3), 0, 5)
+newIf((1 == 1), 0, 5)
+
+func newSqrtIter(guess: Double, x: Double) -> Double {
+    return newIf(goodEnough(guess, x), guess, newSqrtIter(improve(guess, x), x))
+}
+//newSqrtIter(1.0, 9)
+// The above causes an nfinit loop in the Swift interpreter.
+
+
+
+
+
