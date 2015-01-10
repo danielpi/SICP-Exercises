@@ -162,6 +162,34 @@ func newSqrtIter(guess: Double, x: Double) -> Double {
 // The above causes an nfinit loop in the Swift interpreter.
 
 
+// Exercise 1.7 - The goodEnough() test used in computing square roots will not be very effective for finding the square roots of very small numbers. Also in real computers, arithmetic operations are almost always performed with limited precision. This makes our test inadequate for very large numbers. Explain these statements, with examples showing how the test fails for small and large numbers.
+
+// Small numbers
+sqrt(0.001)
+// goodEnough() uses a fixed comparision of 0.001 for the square of the guess to the value x no matter what size x is. If x is small (similar in size to 0.001) then the goodEnough result will be true when the result is not very accurate.
+
+// Large numbers
+sqrt(1000000000000)
+//sqrt(10000000000000) // This line crashes XCode
+
+
+func sqrtIter2(prevGuess: Double, guess: Double, x: Double) -> Double {
+    if (goodEnough2(prevGuess, guess)) {
+        return guess
+    } else {
+        return sqrtIter2(guess, improve(guess, x), x)
+    }
+}
+
+func goodEnough2(prevGuess: Double, guess: Double) -> Bool {
+    return (abs(prevGuess - guess) / guess) < 0.001
+}
+func sqrt2(x: Double) -> Double {
+    return sqrtIter2(0.0, 1.0, x)
+}
+sqrt2(9)
+sqrt2(0.001)
+sqrt2(10000000000000)
 
 
 

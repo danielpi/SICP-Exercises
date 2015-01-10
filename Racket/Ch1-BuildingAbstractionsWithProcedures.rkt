@@ -140,3 +140,51 @@
 ; is a procedure so the predicate, consequant and alternative are all evaluated
 ; before going to the next step. At this point new-sqrt-iter is evaluated again
 ; which leads to the infinite loop.
+
+
+; Exercise 1.7 The good-enough? test used in computing square roots will not 
+; be very effective for finding the square roots of very small numbers. Also, 
+; in real computers, arithmetic operations are almost always performed with 
+; limited precision. This makes our test inadequate for very large numbers. 
+; Explain these statements, with examples showing how the test fails for small 
+; and large numbers.
+
+; (define (good-enough? guess x)
+;  (< (abs (- (square guess) x)) 0.001))
+
+; Small numbers
+; Our good enough function uses a fixed difference value of 0.001 to determine
+; if the guess is good enough no matter what the value of x we are using is. If
+; x is small then the square of the guess being within 0.001 of x is not a very 
+; good indication that the guess shoudl be accepted.
+; As an example the sqrt of 0.001 is 0.0316. However guesses in the range 0 to
+; 0.0447 will be accepted as good enough
+(good-enough? 0.00001 0.001)
+(good-enough? 0.0447 0.001)
+(sqrt 0.001)
+
+; Large numbers
+
+(sqrt 1000000000000) ; Evaluates quickly
+;(sqrt 10000000000000) ; Evaluates slowly
+
+; An alternative strategy for implementing  good-enough? is to watch how guess 
+; changes from one iteration to the next and to stop when the change is a very 
+; small fraction of the guess. Design a square-root procedure that uses this kind 
+; of end test. Does this work better for small and large numbers?
+
+
+(define (sqrt-iter2 prev-guess guess x)
+  (if (good-enough2? prev-guess guess)
+      guess
+      (sqrt-iter2 guess (improve guess x) x)))
+(define (good-enough2? prev-guess guess)
+  (< (/ (abs (- guess prev-guess)) guess) 0.001))
+(define (sqrt2 x)
+  (sqrt-iter2 0.0 1.0 x))
+
+(sqrt2 9)
+(sqrt2 0.001)
+(sqrt2 10000000000000)
+; Yes it does work better for small and large numbers.
+
