@@ -1,5 +1,7 @@
 // Chapter 1 - Building Abstrations with Procedures
 
+import Darwin
+
 // Exercise 1.1
 10
 5 + 3 + 4
@@ -131,13 +133,13 @@ func average(x: Double, y: Double) -> Double {
 func goodEnough(guess: Double, x: Double) -> Bool {
     return abs((guess * guess) - x) < 0.001
 }
-func sqrt(x: Double) -> Double {
+func DRPsqrt(x: Double) -> Double {
     return sqrtIter(1.0, x)
 }
 
-sqrt(9)
-sqrt(100 + 37)
-sqrt(sqrt(2) + sqrt(3))
+DRPsqrt(9)
+DRPsqrt(100 + 37)
+DRPsqrt(DRPsqrt(2) + DRPsqrt(3))
 square(sqrt(1000))
 
 
@@ -165,11 +167,11 @@ func newSqrtIter(guess: Double, x: Double) -> Double {
 // Exercise 1.7 - The goodEnough() test used in computing square roots will not be very effective for finding the square roots of very small numbers. Also in real computers, arithmetic operations are almost always performed with limited precision. This makes our test inadequate for very large numbers. Explain these statements, with examples showing how the test fails for small and large numbers.
 
 // Small numbers
-sqrt(0.001)
+DRPsqrt(0.001)
 // goodEnough() uses a fixed comparision of 0.001 for the square of the guess to the value x no matter what size x is. If x is small (similar in size to 0.001) then the goodEnough result will be true when the result is not very accurate.
 
 // Large numbers
-sqrt(1000000000000)
+DRPsqrt(1000000000000)
 //sqrt(10000000000000) // This line crashes XCode
 
 
@@ -192,4 +194,102 @@ sqrt2(0.001)
 sqrt2(10000000000000)
 
 
+// Exercise 1.8 - Newton's method for cube roots is based on the fact that if y is an approximation to the cube root of x, then a better approximation is given by the value
+// x/y^2 + 2y
+// ----------
+//      3
+// Use this formula to implement a cube-root procedure analogous to the square-root procedure.
 
+func cbrtIter(guess: Double, x: Double) -> Double {
+    if (goodEnoughCubeRoot(guess, x)) {
+        return guess
+    } else {
+        return cbrtIter(improveCubeRoot(guess, x), x)
+    }
+}
+func cube(x: Double) -> Double {
+    return x * x * x
+}
+func improveCubeRoot(guess: Double, x: Double) -> Double {
+
+    return ((x / (guess * guess)) + (2 * guess)) / 3.0
+}
+func goodEnoughCubeRoot(guess: Double, x: Double) -> Bool {
+    return abs((guess * guess * guess) - x) < 0.0001
+}
+func DRPcbrt(x: Double) -> Double {
+    return cbrtIter(1.0, x)
+}
+
+DRPcbrt(8)
+DRPcbrt(0.001)
+DRPcbrt(100000)
+
+
+// 1.1.8 Procedures as Black-Box Abstractions
+func DRPdouble(x: Double) -> Double {
+    return x + x
+}
+func square3(x: Double) -> Double {
+    return exp(DRPdouble(log(x)))
+}
+
+square3(4)
+
+
+// Internal definitions and block structure
+
+func DRPsqrt2(x: Double) -> Double {
+    func goodEnough(guess: Double, x: Double) -> Bool {
+        return abs((guess * guess) - x) < 0.001
+    }
+    func average(x: Double, y: Double) -> Double {
+        return ((x + y) / 2)
+    }
+    func improve(guess: Double, x: Double) -> Double {
+        return average(guess, (x / guess))
+    }
+    
+    var sqrtIter: (Double, Double) -> (Double) = { _ in return 0.0 }
+    sqrtIter = { guess, x in
+        if (goodEnough(guess, x)) {
+            return guess
+        } else {
+            return sqrtIter(improve(guess, x), x)
+        }
+    }
+    
+    return sqrtIter(1.0, x)
+}
+
+DRPsqrt2(100)
+
+/*
+func DRPsqrt3(x: Double) -> Double {
+    func goodEnough(guess: Double) -> Bool {
+        return abs((guess * guess) - x) < 0.001
+    }
+    func average(a: Double, b: Double) -> Double {
+        return ((a + b) / 2)
+    }
+    func improve(guess: Double) -> Double {
+        return average(guess, (x / guess))
+    }
+    
+    var sqrtIter: (Double) -> (Double) = { _ in return 0.0 }
+    sqrtIter = { guess in
+        if (goodEnough(guess)) {
+            return guess
+        } else {
+            let improved = improve(guess)
+            return sqrtIter(improved)
+        }
+    }
+    
+    return sqrtIter(1.0)
+}
+
+DRPsqrt2(100)
+
+I'm not sure if the above is possible with swift.
+*/

@@ -188,3 +188,72 @@
 (sqrt2 10000000000000)
 ; Yes it does work better for small and large numbers.
 
+
+; Exercise 1.8 Newton's method for cube roots is based on the fact that if y 
+; is an approximation to the cube root of x, then a better approximation is
+; given by the value
+; x/y ^2 + 2y 
+; -----------
+;      3
+; Use this formula to implement a cube-root procedure analogous to the 
+; square-root procedure.
+
+(define (cube x)
+  (* x (* x x)))
+(define (cbrt-iter guess x)
+  (if (cbrt-good-enough? guess x)
+      guess
+      (cbrt-iter (improve-cbrt guess x)
+                 x)))
+(define (improve-cbrt guess x)
+  (/ (+ (/ x (square guess)) (* 2 guess)) 3))
+(define (cbrt-good-enough? guess x)
+  (< (abs (- (cube guess) x)) 0.00001))
+(define (cbrt x)
+  (cbrt-iter 1.0 x))
+
+(cbrt 8)
+(cbrt 0.001)
+(cbrt 1000)
+
+
+; 1.1.8 Procedures as Black-Box Abstractions
+(define (square2 x) ( * x x))
+(define (square3 x) (exp (double (log x))))
+(define (double x) (+ x x))
+
+(square2 4)
+(square3 4)
+
+
+; Internal definitions and block structure
+; We can hide procedure definitions within other procedures so that only the 
+; procedure that is required by the user will be accessible.
+(define (sqrt3 x)
+  (define (good-enough? guess x)
+    (< (abs (- (square guess) x)) 0.001))
+  (define (improve guess x)
+    (average guess (/ x guess)))
+  (define (sqrt-iter guess x)
+    (if (good-enough? guess x)
+        guess
+        (sqrt-iter (improve guess x) x)))
+  (sqrt-iter 1.0 x))
+
+(sqrt3 16)
+
+; Nesting as shown above is called block structure. We can take it a step 
+; further. Instead of passing x to each procedure we can turn x into a free
+; variable for the internal definitions. This is called lexical scoping
+(define (sqrt4 x)
+  (define (good-enough? guess)
+    (< (abs (- (square guess) x)) 0.001))
+  (define (improve guess)
+    (average guess (/ x guess)))
+  (define (sqrt-iter guess)
+    (if (good-enough? guess)
+        guess
+        (sqrt-iter (improve guess))))
+  (sqrt-iter 1.0))
+
+(sqrt4 64)
