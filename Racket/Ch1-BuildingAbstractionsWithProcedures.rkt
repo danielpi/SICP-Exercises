@@ -257,3 +257,184 @@
   (sqrt-iter 1.0))
 
 (sqrt4 64)
+
+
+; 1.2 Procedures and the Processes they Generate
+; 1.2.1 Linear Recursion and Iteration
+; Factorial n! 
+; Factorial can be thought of by noticing that n! == n * (n - 1)! . This is a recursive process
+
+; (factorial 3)
+; (* 3 (factorial 2))
+; (* 3 (* 2 (factorial 1)))
+; (* 3 (* 2 1)))
+; (* 3 2)
+; 6
+
+(define (recursive-factorial n) 
+  (if (= n 1)
+      1
+      (* n (recursive-factorial (- n 1)))))
+(recursive-factorial 6)
+
+; Note the ramped appearence of the calculation. This is due to the fact that the
+; interpreter must keep track of a large amount of state as it progresses ???
+
+; Lets take a different approach. We could maintain a running product along with a
+; counter that counts from 1 to n
+;
+; product = counter * product
+; counter = counter + a
+;
+; (factorial 3)
+; (fact-iter 1 1 3)
+; (fact-iter 1 2 3)
+; (fact-iter 2 3 3)
+; 6
+
+(define (fact-iter product counter max-count)
+  (if (> counter max-count)
+      product
+      (fact-iter (* product counter) (+ counter 1) max-count)))
+(define (factorial-iterative n)
+  (fact-iter 1 1 n))
+(factorial-iterative 6)
+
+(define (factorial-iterative2 n)
+  (define (fact-iter product counter)
+  (if (> counter n)
+      product
+      (fact-iter (* product counter) (+ counter 1))))
+  (fact-iter 1 1))
+(factorial-iterative2 6)
+
+; Both approaches compute the same mathematical function and 
+; requre the same number of steps which is proportional to n.
+
+; The first approach has an expansion and then contraction. The expansion
+; is due to a build up of deferred operations. The contraction is when
+; the operations are performed. This is called a linear recursive process
+
+; The second approach doesn't shrink or grow. At each step all we need
+; to keep track of for any n are the current values of product, counter and max-count.
+; This is a linear iterative process.
+
+; Most popular languages are designed in such a way that the interpretation of any
+; recursive procedure consumes an amount of memory that grows with the number
+; of procedure calls. As such special looping constructs are required. Tail
+; recursion can solve this problem though.
+
+
+; Exercise 1.9 Each of the following two procedures defines a method for adding 
+; two positive integrers in terms of the procedures inc, which increments its 
+; argument by 1, and dec, which decrements its argument by 1.
+(define (inc n)
+  (+ n 1))
+(define (dec n)
+  (- n 1))
+(define (+v1 a b)
+  (if (= a 0)
+      b
+      (inc (+v1 (dec a) b))))
+(define (+v2 a b)
+  (if (= a 0)
+      b
+      (+v2 (dec a) (inc b))))
+
+(+v1 4 5)
+; (inc (+v1 3 5))
+; (inc (inc (+v1 2 5)))
+; (inc (inc (inc (!v1 1 5)))
+; (inc (inc (inc (inc (+v1 0 5)))))
+; (inc (inc (inc (inc 5))))
+; (inc (inc (inc 6)))
+; (inc (inc 7))
+; (inc 8)
+; 9
+
+
+(+v2 4 5)
+; (+v2 3 6)
+; (+v2 2 7)
+; (+v2 1 8)
+; (+v2 0 9)
+; 9
+
+; +v1 is a recursive process. +v2 is an interative process
+
+
+; Exercise 1.10 The following procedure computes a mathematical 
+; function called Ackermann's function
+(define (A x y)
+  (cond ((= y 0) 0)
+        ((= x 0) (* 2 y))
+        ((= y 1) 2)
+        (else (A (- x 1)
+                 (A x (- y 1))))))
+; What are the values of the following expressions?
+(A 1 10)
+; (A 0 (A 1 9))
+; (A 0 (A 0 (A 1 8)))
+; (A 0 (A 0 (A 0 (A 1 7))))
+; (A 0 (A 0 (A 0 (A 0 (A 1 6))))
+; ...
+; 2 ^ 10
+; 1024
+
+(A 2 4)
+; (A 1 (A 2 3))
+; (A 1 (A 1 (A 2 2)))
+; (A 1 (A 1 (A 1 (A 2 1))))
+; (A 1 (A 1 (A 1 2)))
+; (A 1 (A 1 (A 0 (A 1 1))))
+; (A 1 (A 1 (A 0 2))))
+; (A 1 (A 1 4))
+; (A 1 (A 0 (A 1 3)))
+; (A 1 (A 0 (A 
+; (2^4)^4
+
+(A 3 3)
+; 
+; 134217728
+
+(A 1 1)
+(A 1 2)
+(A 1 3)
+(A 1 4)
+(A 2 1)
+(A 2 2)
+(A 2 3)
+(A 2 4)
+(A 3 1)
+(A 3 2)
+(A 3 3)
+; (A 3 4)
+
+
+; Give concise mathematical definitions for the following
+(define (f n) (A 0 n))
+(f 0)
+(f 1)
+(f 2)
+(f 3)
+(f 4)
+; f(n) = 2n
+
+(define (g n) (A 1 n))
+(g 0)
+(g 1)
+(g 2)
+(g 3)
+(g 4)
+; g(n) = 2^n
+
+(define (h n) (A 2 n))
+(h 0)
+(h 1)
+(h 2)
+(h 3)
+(h 4)
+; h(n) = 2^(2^n)
+
+
+; 1.2.2 Tree Recursion

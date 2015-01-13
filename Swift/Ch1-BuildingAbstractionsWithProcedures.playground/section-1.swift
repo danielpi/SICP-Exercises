@@ -293,3 +293,286 @@ DRPsqrt2(100)
 
 I'm not sure if the above is possible with swift.
 */
+
+
+// Exer 1.2 Procedures and the Processes they Generate
+// 1.2.1 Linear Recursion and Iteration
+// Factorial n!
+// Factorial can be thought of by noticing that n! == n * (n - 1)! . This is a recursive process
+
+/*
+ (factorial 3)
+ (* 3 (factorial 2))
+ (* 3 (* 2 (factorial 1)))
+ (* 3 (* 2 1)))
+ (* 3 2)
+ 6
+*/
+
+func factorialRecursive(n: Int) -> Int {
+    if (n == 1) {
+        return 1
+    } else {
+        return n * factorialRecursive(n - 1)
+    }
+}
+factorialRecursive(6)
+
+// Note the ramped appearence of the calculation. This is due to the fact that the interpreter must keep track of a large amount of state as it progresses ???
+
+// Lets take a different approach. We could maintain a running product along with a counter that counts from 1 to n
+
+// product = counter * product
+// counter = counter + a
+
+/*
+ (factorial 3)
+ (fact-iter 1 1 3)
+ (fact-iter 1 2 3)
+ (fact-iter 2 3 3)
+ 6
+*/
+
+func factIter(product: Int, counter: Int, maxCount: Int) -> Int {
+    if (counter > maxCount) {
+        return product
+    } else {
+        return factIter(product * counter, counter + 1, maxCount)
+    }
+}
+func factorialIterative(n: Int) -> Int {
+    return factIter(1, 1, n)
+}
+factorialIterative(6)
+
+func factorialIterative2(n:Int) -> Int {
+    
+    var factIter2: (Int, Int, Int) -> Int = { _ in return 0 }
+    factIter2 = { product, counter, maxCount in
+        if (counter > maxCount) {
+            return product
+        } else {
+            return factIter2(product * counter, counter + 1, maxCount)
+        }
+    }
+    return factIter2(1, 1, n)
+}
+factorialIterative2(6)
+
+// Both approaches compute the same mathematical function and require the same number of steps, which is proportional to n. The first approach has an expansion and then contraction. The sxpansion is due to a build up of deferred operations. The contraction is when the operations are performed. This is called a linear recursive process.
+// The second approach doesn't shrink or grow. At each step all we need to keep track of for any n are the current values of product, counter and max-count. This is a linear iterative process.
+// Most popular languages are designed in such a way that the interpretation  of any recursive process consumes an amount of memory that grows with the number of procedure calls. As such special looping constructs are required. Tail recursion can solve this defect though.
+
+
+// Exercise 1.9 - Each of the following two procedures defines a method for adding two positive integers in terms of the procedures inc, which increments its argument by 1, and dec, which decrements its argument by 1.
+func inc(value: Int) -> Int {
+    return value + 1
+}
+func dec(value: Int) -> Int {
+    return value - 1
+}
+
+func addition1(a: Int, b: Int) -> Int {
+    if (a == 0) {
+        return b
+    } else {
+        return inc(addition1(dec(a), b))
+    }
+}
+
+addition1(4, 5)
+/*
+inc(addition1(3, 5))
+inc(inc(addition1(2, 5)))
+inc(inc(inc(addition1(1, 5))))
+inc(inc(inc(inc(addition1(0, 5)))))
+inc(inc(inc(inc(5))))
+inc(inc(inc(6)))
+inc(inc(7))
+inc(8)
+9
+*/
+
+
+func addition2(a: Int, b: Int) -> Int {
+    if (a == 0) {
+        return b
+    } else  {
+        return addition2(dec(a), inc(b))
+    }
+}
+
+addition2(4, 5)
+/*
+addition2(3, 6)
+addition2(2, 7)
+addition2(1, 8)
+addition2(0, 9)
+9
+*/
+// addition1 is a recursive process. addition2 is an iterative process
+
+
+// Exercise 1.10 - The following procedure computes a mathematical function called Ackermann's function.
+func A(x:Int, y:Int) -> Int {
+    println("x:\(x) y:\(y)")
+    switch true {
+    case y == 0:
+        return 0
+    case x == 0:
+        return 2 * y
+    case y == 1:
+        return 2
+    default:
+        return A(x - 1, A(x, y - 1))
+    }
+}
+// What are the values of the following expressions?
+A(1, 10)
+/*
+x:1 y:10
+x:1 y:9
+x:1 y:8
+x:1 y:7
+x:1 y:6
+x:1 y:5
+x:1 y:4
+x:1 y:3
+x:1 y:2
+x:1 y:1
+x:0 y:2
+x:0 y:4
+x:0 y:8
+x:0 y:16
+x:0 y:32
+x:0 y:64
+x:0 y:128
+x:0 y:256
+x:0 y:512
+Final output is 1024
+*/
+A(2, 4)
+/*
+x:2 y:4
+x:2 y:3
+x:2 y:2
+x:2 y:1
+x:1 y:2
+x:1 y:1
+x:0 y:2
+x:1 y:4
+x:1 y:3
+x:1 y:2
+x:1 y:1
+x:0 y:2
+x:0 y:4
+x:0 y:8
+x:1 y:16
+x:1 y:15
+x:1 y:14
+x:1 y:13
+x:1 y:12
+x:1 y:11
+x:1 y:10
+x:1 y:9
+x:1 y:8
+x:1 y:7
+x:1 y:6
+x:1 y:5
+x:1 y:4
+x:1 y:3
+x:1 y:2
+x:1 y:1
+x:0 y:2
+x:0 y:4
+x:0 y:8
+x:0 y:16
+x:0 y:32
+x:0 y:64
+x:0 y:128
+x:0 y:256
+x:0 y:512
+x:0 y:1024
+x:0 y:2048
+x:0 y:4096
+x:0 y:8192
+x:0 y:16384
+x:0 y:32768
+Final output is 65536
+*/
+A(3, 3)
+/*
+x:3 y:3
+x:3 y:2
+x:3 y:1
+x:2 y:2
+x:2 y:1
+x:1 y:2
+x:1 y:1
+x:0 y:2
+x:2 y:4
+x:2 y:3
+x:2 y:2
+x:2 y:1
+x:1 y:2
+x:1 y:1
+x:0 y:2
+x:1 y:4
+x:1 y:3
+x:1 y:2
+x:1 y:1
+x:0 y:2
+x:0 y:4
+x:0 y:8
+x:1 y:16
+x:1 y:15
+x:1 y:14
+x:1 y:13
+x:1 y:12
+x:1 y:11
+x:1 y:10
+x:1 y:9
+x:1 y:8
+x:1 y:7
+x:1 y:6
+x:1 y:5
+x:1 y:4
+x:1 y:3
+x:1 y:2
+x:1 y:1
+x:0 y:2
+x:0 y:4
+x:0 y:8
+x:0 y:16
+x:0 y:32
+x:0 y:64
+x:0 y:128
+x:0 y:256
+x:0 y:512
+x:0 y:1024
+x:0 y:2048
+x:0 y:4096
+x:0 y:8192
+x:0 y:16384
+x:0 y:32768
+Final output is 65536
+*/
+
+func f(n:Int) -> Int {
+    return A(0, n)
+}
+// f(n) = 2n
+
+func g(n:Int) -> Int {
+    return A(1, n)
+}
+// g(n) = 2^n
+
+func h(n: Int) -> Int {
+    return A(3, n)
+}
+// h(n) = 2^(2^n)
+
+
+// 1.2.2 Tree Recursion
+
