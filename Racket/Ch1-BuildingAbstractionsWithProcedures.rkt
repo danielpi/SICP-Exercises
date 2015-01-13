@@ -438,3 +438,43 @@
 
 
 ; 1.2.2 Tree Recursion
+; Fibonacci numbers
+; 0 1 1 2 3 5 8 13 21
+; 
+;          / 0                       if n = 0
+; Fib(n) = | 1                       if n = 1
+;          \ Fib(n - 1) + Fib(n - 2) otherwise
+
+(define (fib n)
+  (cond ((= n 0) 0)
+         ((= n 1) 1)
+         (else (+ (fib (- n 1))
+                  (fib (- n 2))))))
+(fib 5)
+; This procedure involves a lot of redundant computation. It can be shown
+; that the procedure will calculate fib 1 and fib 0 fib(n + 1) times. This 
+; is an exponential growth with respect to n. Memory grows linearly with the input.
+
+; We can also process Fibonaccy numbers in an iterative process.
+; a = a + b
+; b = a
+
+
+
+(define (fib1 n)
+  (define (fib-iter a b count)
+    (if (= count 0)
+        b
+        (fib-iter (+ a b) a (- count 1))))
+  (fib-iter 1 0 n)) 
+(fib1 5)
+
+; The fib1 function operates in linear time. This difference between exponential and linear
+; time makes a huge difference. For a value of n=64 fib1 takes a fraction of a second, fib
+; on the other hand takes ages (I haven't waited long enough for it to finish yet.
+(fib1 64)
+;(fib 64)
+
+; Tree-recursive processes aren't useless even though they may be less efficient. For instance 
+; the version of fib listed above is a very direct translation from the mathematical formulation
+; of the Fibonacci sequence into lisp and is therefore very easy to understand.

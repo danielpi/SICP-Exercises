@@ -575,4 +575,45 @@ func h(n: Int) -> Int {
 
 
 // 1.2.2 Tree Recursion
+// Fibonacci numbers 0, 1, 1, 2, 3, 5, 8, 13, 21
+
+/*         / 0                       if n = 0
+  Fib(n) = | 1                       if n = 1
+           \ Fib(n - 1) + Fib(n - 2) otherwise
+*/
+
+func fib(n: Int) -> Int {
+    switch true {
+    case n == 0:
+        return 0
+    case n == 1:
+        return 1
+    default:
+        return fib(n - 1) + fib(n - 2)
+    }
+}
+fib(6)
+
+// The fib procedure above involves a lot of redundant computation. It can be shown that the procedure will calculate fib 1 and fib 0 fib(n + 1) times. This is an exponential growth with respect to n. Memory grows linearly with the input.
+
+// We can also process Fibonacci numbers in an iterative process.
+// a = a + b
+// b = a
+
+func fib1(n: Int) -> Int {
+    var fibIter: (Int, Int, Int) -> Int = { _ in return 0 }
+    fibIter = { a, b, count in
+        if (count == 0) {
+            return b
+        } else {
+            return fibIter(a + b, a, count - 1)
+        }
+    }
+    return fibIter(1, 0, n)
+}
+
+//fib1(64)  // Above fib1(91) Swift has a runtime error as the result is larger than 63 bits in size.
+            // Swift playgrounds aren't fast at this operation either. Dr Racket is significantly faster.
+
+
 
