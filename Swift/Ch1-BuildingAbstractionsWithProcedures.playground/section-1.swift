@@ -616,4 +616,43 @@ func fib1(n: Int) -> Int {
             // Swift playgrounds aren't fast at this operation either. Dr Racket is significantly faster.
 
 
+// Example: Counting change
+// How many different ways can we make change of $1.00, given half-dollars, quarters, dimes, nickels and pennies? More generally, can we write a procedure to computer the number of ways to change any given amount of money?
+
+// Recursive
+// The number of ways to change amount a using n kinds of coins equals
+// - the number of ways to change amount a using all but the first kind of coin, plus
+// - the number of ways to change amount a - d using all n kinds of coins, where d is the denomination of the first kind of coin.
+
+func countChange(amount: Int) -> Int {
+    return cc(amount, 5)
+}
+func cc(amount: Int, kindsOfCoins: Int) -> Int {
+    switch true {
+    case amount == 0:
+        return 1
+    case (amount < 0) || (kindsOfCoins == 0):
+        return 0
+    default:
+        return cc(amount, kindsOfCoins - 1) + cc(amount - firstDenomination(kindsOfCoins), kindsOfCoins)
+    }
+}
+func firstDenomination(kindsOfCoins: Int) -> Int {
+    switch kindsOfCoins {
+    case 1:
+        return 1
+    case 2:
+        return 5
+    case 3:
+        return 10
+    case 4:
+        return 25
+    case 5:
+        return 50
+    default:
+        return 0
+    }
+}
+countChange(100)
+
 
