@@ -504,8 +504,32 @@
         ((= kinds-of-coins 3) 10)
         ((= kinds-of-coins 4) 25)
         ((= kinds-of-coins 5) 50)))
-(count-change 100)
+(count-change 25)
 
+; Exercise 1.11 A function is defined by the rule that f(n) = n if n < 3 and 
+; f(n) = f(n - 1) + 2.f(n - 2) + 3.f(n - 3) if n >= 3. Write a procedure that computes
+; f by means of a recursive process
 
+; f(n) = | n                                     n <  3
+;        | f(n - 1) + 2.f(n - 2) + 3.f(n - 3) if n >= 3
 
+(define (ex1.11 n)
+  (if (< n 3)
+      n
+      (+ (+ (* 1 (ex1.11 (- n 1))) 
+            (* 2 (ex1.11 (- n 2)))
+            (* 3 (ex1.11 (- n 3)))))))
+(ex1.11 20)
+
+; Write a procedure that computes f by means of an iterative process
+
+(define (ex1.11-iter three two one count total)
+  (if (> count total)
+      one
+      (ex1.11-iter two one (+ (+ (* 1 one) (* 2 two) (* 3 three))) (+ count 1) total)))
+(define (ex1.11-iteration n)
+  (if (< n 3)
+      n
+      (ex1.11-iter 0 1 2 3 n)))
+(ex1.11-iteration 100)
 
