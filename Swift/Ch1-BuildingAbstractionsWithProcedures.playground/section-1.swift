@@ -657,3 +657,41 @@ countChange(25)
 
 // The recursive approach used above is very inefficient. Can you come up with an iterative approach that has better performance?
 
+
+// Exercise 1.11 - A function is defined by the rule that f(n) = n if n < 3 and f(n) = f(n -1) + 2f(n-2) + 3f(n - 3) if n >=3. Write a procedure that computes f by means of a recursive process.
+/*
+ f(n) = | n                                if n  < 3
+        | f(n - 1) + 2f(n - 2) + 3f(n -3)  if n >= 3
+*/
+
+func function11(n: Int) -> Int {
+    if (n < 3) {
+        return n
+    } else {
+        return function11(n - 1) + 2*function11(n - 2) + 3*function11(n - 3)
+    }
+}
+function11(8)
+
+// Write a procedure that computes f by means of an iterative process
+
+func function11Iter(three: Int, two: Int, one: Int, count: Int, total: Int) -> Int {
+    if (count > total) {
+        return one
+    } else {
+        return function11Iter(two, one, one + 2*two + 3*three, count + 1, total)
+    }
+}
+
+func function11v2(n: Int) -> Int {
+    if (n < 3) {
+        return n
+    } else {
+        return function11Iter( 0, 1, 2, 3, n)
+    }
+}
+
+function11v2(10)
+
+
+
