@@ -564,6 +564,7 @@
 (pascal-recursive 4 2)
 (pascal-recursive 4 3)
 (pascal-recursive 4 4)
+(pascal-recursive 10 5)
 
 
 

@@ -693,5 +693,38 @@ func function11v2(n: Int) -> Int {
 
 function11v2(10)
 
+// Exercise 1.12 - Pascal's Triangle
+// The following pattern of numbers is called Pascal's triangle
+/*
+
+    1
+   1 1
+  1 2 1
+ 1 3 3 1
+1 4 6 4 1
 
 
+*/
+// The numbers at the edge of the triangle are all 1, and each number inside the triangle is the sum of the two numbers above it. Write a procedure that computes elements of Pascal's triangle by means of a recursive process.
+
+// In other words, compute an entry on the Pascal triangle given the row and column. Rows start from 1, counting from above; columns start from 1 too, counting from left to right.
+
+func pascalRecursive(row: Int, col: Int) -> Int {
+    switch true {
+    case col < 1 || row < 1 || col > row:
+        return 0
+    case col == row:
+        return 1
+    case col == 1:
+        return 1
+    default:
+        return pascalRecursive(row - 1, col - 1) + pascalRecursive(row - 1, col)
+    }
+}
+pascalRecursive(1, 1)
+pascalRecursive(2, 1)
+pascalRecursive(2, 2)
+pascalRecursive(3, 1)
+pascalRecursive(3, 2)
+pascalRecursive(3, 3)
+pascalRecursive(10, 5)
