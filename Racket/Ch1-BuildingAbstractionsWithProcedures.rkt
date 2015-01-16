@@ -46,7 +46,7 @@
 
 ; Exercise 1.4 Observe that our model of evaluation allows for combinations 
 ;              whose operators are compound expressions. Use this observation 
-;              to describe the behaiour of the following procedure.
+;              to describe the behaviour of the following procedure.
 (define (a-plus-abs-b a b)
   ((if (> b 0) + -) a b))
 (a-plus-abs-b 4 5)
@@ -532,4 +532,38 @@
       n
       (ex1.11-iter 0 1 2 3 n)))
 (ex1.11-iteration 100)
+
+
+; Exercise 1.12 Pascal's triangle
+; The following pattern of numbers is called Pascal's triangle.
+;     1
+;    1 1
+;   1 2 1
+;  1 3 3 1
+; 1 4 6 4 1
+; The numbers at the edge of the triangle are all 1, and each number inside the triangle 
+; is the sum of the two numbers above it. Write a procedure that computes elements of Pascal's 
+; triangle by means of a recursive process.
+
+; In other words, Computes an entry in the Pascal triangle given the row and column. Rows 
+; start from 1, counting from above; columns start from 1 too, counting from left to right.
+
+(define (pascal-recursive row col)
+  (cond ((> col row) 0)
+        ((= col row) 1)
+        ((< row 2) 1)
+        ((< col 2) 1)
+        (else (+ (pascal-recursive (- row 1) (- col 1))
+                 (pascal-recursive (- row 1) col)))))
+(pascal-recursive 1 1)
+(pascal-recursive 1 2)
+(pascal-recursive 3 1)
+(pascal-recursive 3 2) 
+(pascal-recursive 3 3)
+(pascal-recursive 4 1)
+(pascal-recursive 4 2)
+(pascal-recursive 4 3)
+(pascal-recursive 4 4)
+
+
 
