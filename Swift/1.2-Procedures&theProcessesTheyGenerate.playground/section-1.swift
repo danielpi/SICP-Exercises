@@ -1,312 +1,20 @@
-// Chapter 1 - Building Abstrations with Procedures
+// Playground - noun: a place where people can play
 
 import Darwin
 
-// Exercise 1.1
-10
-5 + 3 + 4
-9 - 1
-6 / 2
-(2 * 4) + (4 - 6)
-let a = 3
-let b = a + 1
-(a * b) + a + b
-a == b
-if ((b > a) && (b < (a * b))) {
-    b
-} else {
-    a
-}
-switch 4 {
-case a:
-    6
-case b:
-    6 + 7 + a
-default:
-    25
-}
-// Alternative to above
-switch true {
-case a == 4:
-    6
-case b == 4:
-    6 + 7 + a
-default:
-    25
-}
-((b > a) ? b : a) + 2
-switch true {
-case a > b:
-    a * (a + 1)
-case a < b:
-    b * (a + 1)
-default:
-    -1 * (a + 1)
-}
 
-
-// Exercise 1.2
-// let inOneGo = (5 + 4 + (2 - (3 - (6 + (4.0 / 5))))) / (3.0 * (6 - 2) * (2 - 7)) // Fails due to the calculation taking too long!!! That is pretty ordinary performance on Swift's part.
-let numerator = (5 + 4 + (2 - (3 - (6 + (4.0 / 5)))))
-let denominator: Double = (3 * (6 - 2) * (2 - 7))
-let answer = numerator / denominator
-
-
-// Exercise 1.3 - Define a procedure that takes three numbers as arguments and returns the sum of the squares of the two larger numbers.
-func square(x: Int) -> Int {
-    return x * x
-}
-func sumOfSquares(x: Int, y: Int) -> Int {
-    return square(x) + square(y)
-}
-
-func sumOfSquaresOfTwoLargest(a: Int, b: Int, c: Int) -> Int {
-    switch true {
-    case min(a, b, c) == a:
-        return sumOfSquares(b, c)
-    case min(a, b, c) == b:
-        return sumOfSquares(a, c)
-    case min(a, b, c) == c:
-        return sumOfSquares(a, b)
-    default:
-        println("Something went badly wrong with the sumOfSquaresOfTwoLargest() function")
-        return 0
-    }
-}
-sumOfSquaresOfTwoLargest(6, 2, 4)
-
-
-// Exercise 1.4 - Observe that our model of evaluation allows for combinations whose operators are compound expressions. Use this observation to describe the behaviou of the following procedure
-// (define (a-plus-abs-b a b) ((if (> b 0) + -) a b))
-func aPlusABSb(a: Int, b: Int) -> Int {
-    if (b > 0) {
-        return a + b
-    } else {
-        return a - b
-    }
-}
-aPlusABSb(4, 5)
-aPlusABSb(4, -5)
-// Swift doesn't really have the same ability as lisp in this regard. In the function above two entire blocks of code which use different operators can be selected between but the operator of a particular procedure is not being set at runtime.
-
-
-// Exercise 1.5 - Ben Bitdiddle has invented a test to determine whether the interpreter he is faced with is using applicative-order evaluation or normal-order evaluation. He defines the following two procedures:
-/*
-func p() -> () {
-    return p()
-}
-
-func test(x:Int, y: () -> ()) -> Int {
-    if (x == 0) {
-        return 0
-    } else {
-        return y
-    }
-}
-I don't think this one makes much sense in Swift. I can't see how we can have a function that returns a closure or number for a start and also the test doesn't really dig into how swift works (as best I can understand.
-*/
-
-func square(x: Double) -> Double {
-    return x * x
-}
-
-// 1.1.7 Example: Square Roots by Newton's Method
-// Functions are declarative knowledge and procedures are imperative knowledge. Meaning that functions describe functions of things and procedures describe how to do things.
-
-// How does one compute square roots?
-// Guess a value, y, for the value of the square root of a number x. Find the quotient of x divided by the guess. Average the quotient and the guess. Continue till you have an accurate enough answer.
-
-func sqrtIter(guess: Double, x: Double) -> Double {
-    if (goodEnough(guess, x)) {
-        return guess
-    } else {
-        return sqrtIter(improve(guess, x), x)
-    }
-}
-
-func improve(guess: Double, x: Double) -> Double {
-    return average(guess, (x / guess))
-}
-func average(x: Double, y: Double) -> Double {
-    return ((x + y) / 2)
-}
-func goodEnough(guess: Double, x: Double) -> Bool {
-    return abs((guess * guess) - x) < 0.001
-}
-func DRPsqrt(x: Double) -> Double {
-    return sqrtIter(1.0, x)
-}
-
-DRPsqrt(9)
-DRPsqrt(100 + 37)
-DRPsqrt(DRPsqrt(2) + DRPsqrt(3))
-square(sqrt(1000))
-
-
-// Exercise 1.6 - Alyssa P. Hacker doesn't see why if needs to be provided as a special form. " Why can't I just define it as an ordinary procedure in terms of cond?" she asks. Alyssa's friend Eva Lu Ator claims this can indeed be done, and she defines a new version of if:
-
-func newIf(predicate: Bool, thenClause: Double, elseClause: Double) -> Double {
-    switch true {
-    case predicate:
-        return thenClause
-    default:
-        return elseClause
-    }
-}
-
-newIf((2 == 3), 0, 5)
-newIf((1 == 1), 0, 5)
-
-func newSqrtIter(guess: Double, x: Double) -> Double {
-    return newIf(goodEnough(guess, x), guess, newSqrtIter(improve(guess, x), x))
-}
-//newSqrtIter(1.0, 9)
-// The above causes an nfinit loop in the Swift interpreter.
-
-
-// Exercise 1.7 - The goodEnough() test used in computing square roots will not be very effective for finding the square roots of very small numbers. Also in real computers, arithmetic operations are almost always performed with limited precision. This makes our test inadequate for very large numbers. Explain these statements, with examples showing how the test fails for small and large numbers.
-
-// Small numbers
-DRPsqrt(0.001)
-// goodEnough() uses a fixed comparision of 0.001 for the square of the guess to the value x no matter what size x is. If x is small (similar in size to 0.001) then the goodEnough result will be true when the result is not very accurate.
-
-// Large numbers
-DRPsqrt(1000000000000)
-//sqrt(10000000000000) // This line crashes XCode
-
-
-func sqrtIter2(prevGuess: Double, guess: Double, x: Double) -> Double {
-    if (goodEnough2(prevGuess, guess)) {
-        return guess
-    } else {
-        return sqrtIter2(guess, improve(guess, x), x)
-    }
-}
-
-func goodEnough2(prevGuess: Double, guess: Double) -> Bool {
-    return (abs(prevGuess - guess) / guess) < 0.001
-}
-func sqrt2(x: Double) -> Double {
-    return sqrtIter2(0.0, 1.0, x)
-}
-sqrt2(9)
-sqrt2(0.001)
-sqrt2(10000000000000)
-
-
-// Exercise 1.8 - Newton's method for cube roots is based on the fact that if y is an approximation to the cube root of x, then a better approximation is given by the value
-// x/y^2 + 2y
-// ----------
-//      3
-// Use this formula to implement a cube-root procedure analogous to the square-root procedure.
-
-func cbrtIter(guess: Double, x: Double) -> Double {
-    if (goodEnoughCubeRoot(guess, x)) {
-        return guess
-    } else {
-        return cbrtIter(improveCubeRoot(guess, x), x)
-    }
-}
-func cube(x: Double) -> Double {
-    return x * x * x
-}
-func improveCubeRoot(guess: Double, x: Double) -> Double {
-
-    return ((x / (guess * guess)) + (2 * guess)) / 3.0
-}
-func goodEnoughCubeRoot(guess: Double, x: Double) -> Bool {
-    return abs((guess * guess * guess) - x) < 0.0001
-}
-func DRPcbrt(x: Double) -> Double {
-    return cbrtIter(1.0, x)
-}
-
-DRPcbrt(8)
-DRPcbrt(0.001)
-DRPcbrt(100000)
-
-
-// 1.1.8 Procedures as Black-Box Abstractions
-func DRPdouble(x: Double) -> Double {
-    return x + x
-}
-func square3(x: Double) -> Double {
-    return exp(DRPdouble(log(x)))
-}
-
-square3(4)
-
-
-// Internal definitions and block structure
-
-func DRPsqrt2(x: Double) -> Double {
-    func goodEnough(guess: Double, x: Double) -> Bool {
-        return abs((guess * guess) - x) < 0.001
-    }
-    func average(x: Double, y: Double) -> Double {
-        return ((x + y) / 2)
-    }
-    func improve(guess: Double, x: Double) -> Double {
-        return average(guess, (x / guess))
-    }
-    
-    var sqrtIter: (Double, Double) -> (Double) = { _ in return 0.0 }
-    sqrtIter = { guess, x in
-        if (goodEnough(guess, x)) {
-            return guess
-        } else {
-            return sqrtIter(improve(guess, x), x)
-        }
-    }
-    
-    return sqrtIter(1.0, x)
-}
-
-DRPsqrt2(100)
-
-/*
-func DRPsqrt3(x: Double) -> Double {
-    func goodEnough(guess: Double) -> Bool {
-        return abs((guess * guess) - x) < 0.001
-    }
-    func average(a: Double, b: Double) -> Double {
-        return ((a + b) / 2)
-    }
-    func improve(guess: Double) -> Double {
-        return average(guess, (x / guess))
-    }
-    
-    var sqrtIter: (Double) -> (Double) = { _ in return 0.0 }
-    sqrtIter = { guess in
-        if (goodEnough(guess)) {
-            return guess
-        } else {
-            let improved = improve(guess)
-            return sqrtIter(improved)
-        }
-    }
-    
-    return sqrtIter(1.0)
-}
-
-DRPsqrt2(100)
-
-I'm not sure if the above is possible with swift.
-*/
-
-
-// Exer 1.2 Procedures and the Processes they Generate
+// 1.2 Procedures and the Processes they Generate
 // 1.2.1 Linear Recursion and Iteration
 // Factorial n!
 // Factorial can be thought of by noticing that n! == n * (n - 1)! . This is a recursive process
 
 /*
- (factorial 3)
- (* 3 (factorial 2))
- (* 3 (* 2 (factorial 1)))
- (* 3 (* 2 1)))
- (* 3 2)
- 6
+(factorial 3)
+(* 3 (factorial 2))
+(* 3 (* 2 (factorial 1)))
+(* 3 (* 2 1)))
+(* 3 2)
+6
 */
 
 func factorialRecursive(n: Int) -> Int {
@@ -326,11 +34,11 @@ factorialRecursive(6)
 // counter = counter + a
 
 /*
- (factorial 3)
- (fact-iter 1 1 3)
- (fact-iter 1 2 3)
- (fact-iter 2 3 3)
- 6
+(factorial 3)
+(fact-iter 1 1 3)
+(fact-iter 1 2 3)
+(fact-iter 2 3 3)
+6
 */
 
 func factIter(product: Int, counter: Int, maxCount: Int) -> Int {
@@ -578,8 +286,8 @@ func h(n: Int) -> Int {
 // Fibonacci numbers 0, 1, 1, 2, 3, 5, 8, 13, 21
 
 /*         / 0                       if n = 0
-  Fib(n) = | 1                       if n = 1
-           \ Fib(n - 1) + Fib(n - 2) otherwise
+Fib(n) = | 1                       if n = 1
+\ Fib(n - 1) + Fib(n - 2) otherwise
 */
 
 func fib(n: Int) -> Int {
@@ -613,7 +321,7 @@ func fib1(n: Int) -> Int {
 }
 
 //fib1(64)  // Above fib1(91) Swift has a runtime error as the result is larger than 63 bits in size.
-            // Swift playgrounds aren't fast at this operation either. Dr Racket is significantly faster.
+// Swift playgrounds aren't fast at this operation either. Dr Racket is significantly faster.
 
 
 // Example: Counting change
@@ -660,8 +368,8 @@ countChange(25)
 
 // Exercise 1.11 - A function is defined by the rule that f(n) = n if n < 3 and f(n) = f(n -1) + 2f(n-2) + 3f(n - 3) if n >=3. Write a procedure that computes f by means of a recursive process.
 /*
- f(n) = | n                                if n  < 3
-        | f(n - 1) + 2f(n - 2) + 3f(n -3)  if n >= 3
+f(n) = | n                                if n  < 3
+| f(n - 1) + 2f(n - 2) + 3f(n -3)  if n >= 3
 */
 
 func function11(n: Int) -> Int {
@@ -697,10 +405,10 @@ function11v2(10)
 // The following pattern of numbers is called Pascal's triangle
 /*
 
-    1
-   1 1
-  1 2 1
- 1 3 3 1
+1
+1 1
+1 2 1
+1 3 3 1
 1 4 6 4 1
 
 
@@ -734,33 +442,33 @@ pascalRecursive(10, 5)
 
 /*
 func countChange(amount: Int) -> Int {
-    return cc(amount, 5)
+return cc(amount, 5)
 }
 func cc(amount: Int, kindsOfCoins: Int) -> Int {
-    switch true {
-    case amount == 0:
-        return 1
-    case (amount < 0) || (kindsOfCoins == 0):
-        return 0
-    default:
-        return cc(amount, kindsOfCoins - 1) + cc(amount - firstDenomination(kindsOfCoins), kindsOfCoins)
-    }
+switch true {
+case amount == 0:
+return 1
+case (amount < 0) || (kindsOfCoins == 0):
+return 0
+default:
+return cc(amount, kindsOfCoins - 1) + cc(amount - firstDenomination(kindsOfCoins), kindsOfCoins)
+}
 }
 func firstDenomination(kindsOfCoins: Int) -> Int {
-    switch kindsOfCoins {
-    case 1:
-        return 1
-    case 2:
-        return 5
-    case 3:
-        return 10
-    case 4:
-        return 25
-    case 5:
-        return 50
-    default:
-        return 0
-    }
+switch kindsOfCoins {
+case 1:
+return 1
+case 2:
+return 5
+case 3:
+return 10
+case 4:
+return 25
+case 5:
+return 50
+default:
+return 0
+}
 }
 countChange(25)
 */
@@ -801,6 +509,80 @@ sine(12.15)
 //        (ceiling(/ (log (/ a 0.1)) (log 3)))
 // Which gives us an order of growth for size and space as
 //        O(log(n))
+
+
+// 1.2.4 Exponentiation
+// Consider the problem of computing the exponential of a given number. We would like a procedure that takes as arguments a base b and a positive integer exponent n and computes b^n. One way to do this is via the recursive definition
+/*
+   b^n = b.b^(n-1)
+   b^0 = 1
+*/
+
+// Which translates into the procedure
+func expt1(b: Int, n:Int) -> Int {
+    if (n == 0) {
+        return 1
+    } else {
+        return b * expt1(b, n - 1)
+    }
+}
+expt1(2, 10)
+
+// This is a linear recursive process, which requires O(n) steps and space. Just as with factorial we can formulate an equivilent linear iteration
+
+func exptIter(b:Int, count:Int, product: Int) -> Int {
+    if (count == 0) {
+        return product
+    } else {
+        
+        return exptIter(b, count - 1, b * product)
+    }
+}
+func expt2(b: Int, n:Int) -> Int {
+    return exptIter(b, n, 1)
+}
+expt2(2, 10)
+
+// The version above requires O(n) steps and O(1) space.
+
+// We can compute exponentials in fewer steps by using successive squaring. For instance rather than computing b^8 as
+//
+// b * b * b * b * b * b * b * b
+//
+// We can compute it using three multiplications
+/*
+   b^2 = b * b
+   b^4 = b^2 * b^2
+   b^8 = b^4 * b^4
+*/
+// This method works fine for exponents that are powers of 2. We can also take advantage of successive squaring in computing exponentials in genearl if we use the rule
+/*
+    b^n = (b^2/2)^2     if n is even
+    b^n = b*b^(n-1)     if n is odd
+*/
+
+func fastExpt(b: Int, n: Int) -> Int {
+    switch true {
+    case n == 0:
+        return 1
+    case isEven(n):
+        return square(fastExpt(b, n / 2))
+    default:
+        return b * fastExpt(b, n - 1)
+    }
+}
+func isEven(n: Int) -> Bool {
+    return (n % 2) == 0
+}
+func square(x: Int) -> Int {
+    return x * x
+}
+fastExpt(2, 10)
+
+// fastExpt() grows logarithmically with n in both space and time. To see this observe that computing b^2n requires only one more multiplication than computing b^n. The size of the exponent we can computer therefor doubles with every new multiplication. Hence O(log(n)
+
+
+
 
 
 

@@ -7,15 +7,25 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		E636147F1A5B581A00E495B9 /* Ch1-BuildingAbstractionsWithProcedures.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ch1-BuildingAbstractionsWithProcedures.playground"; sourceTree = "<group>"; };
+		E636147F1A5B581A00E495B9 /* 1.1-TheElementsOfProgramming.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "1.1-TheElementsOfProgramming.playground"; sourceTree = "<group>"; };
+		E66A58E31A6DF2ED00557760 /* 1.2-Procedures&theProcessesTheyGenerate.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "1.2-Procedures&theProcessesTheyGenerate.playground"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
 		E63614781A5B57F800E495B9 = {
 			isa = PBXGroup;
 			children = (
-				E636147F1A5B581A00E495B9 /* Ch1-BuildingAbstractionsWithProcedures.playground */,
+				E6F73DFA1A6DF39300EEE0FE /* Chapter 1 Building Abstractions from Procedures */,
 			);
+			sourceTree = "<group>";
+		};
+		E6F73DFA1A6DF39300EEE0FE /* Chapter 1 Building Abstractions from Procedures */ = {
+			isa = PBXGroup;
+			children = (
+				E636147F1A5B581A00E495B9 /* 1.1-TheElementsOfProgramming.playground */,
+				E66A58E31A6DF2ED00557760 /* 1.2-Procedures&theProcessesTheyGenerate.playground */,
+			);
+			name = "Chapter 1 Building Abstractions from Procedures";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
