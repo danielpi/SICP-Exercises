@@ -497,9 +497,24 @@
 (fast-expt2 2 10)
 
 
+; Exercise 1.17
+; Using addition, double and halve design a multiplication procedure analoguous to fast-expt
+; tha uses a logarithmic number of steps.
 
+(define (double x) (+ x x))
+(define (halve x) (/ x 2))
+(define (fast-multi-iter a b c)
+  (cond ((= b 1) (+ a c))
+        ((even? b) (fast-multi-iter (double a) (halve b) c))
+        (else (fast-multi-iter a (- b 1) (+ c a)))))
+(define (fast-multi a b)
+  (fast-multi-iter a b 0))
 
+(fast-multi 3 4)
+(fast-multi 15 101)
 
+; 2 * 4 = 8
+; 2 * 3 = 6
 
 
 

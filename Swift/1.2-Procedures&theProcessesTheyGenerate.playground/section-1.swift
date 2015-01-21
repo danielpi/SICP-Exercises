@@ -600,16 +600,7 @@ fastExpt(2, 10)
 // At the beginning of the process a is taken to be 1, and the answer is given by the value of a at the end of the process.
 
 // In general, the technique of defining an invariant quantity that remains unchanged from state to state is a powerful way to thing about the design of iterative algorithms.
-/*
-(define (fast-expt-iter a b n)
-(cond ((= n 0) a)
-((even? n) (fast-expt-iter a (square b) (/ n 2)))
-(else (fast-expt-iter (* a b) b (- n 1)))))
-(define (fast-expt2 b n)
-(fast-expt-iter 1 b n))
 
-(fast-expt2 2 10)
-*/
 func fastExptIter(a: Int, b: Int, n: Int) -> Int {
     println("\(a), \(b), \(n), \(a * fastExpt(b, n))")
     switch true {
@@ -627,4 +618,29 @@ func fastExpt2(b: Int, n: Int) -> Int {
 fastExpt2(2, 20)
 
 
+// Exercise 1.17
+// Using addition, double and halve design a multiplication procedure analoguous to fast-expt that uses a logarithmic number of steps.
+
+func double(x: Int) -> Int {
+    return x + x
+}
+func halve(x: Int) -> Int {
+    return x / 2
+}
+
+func fastMultiplyIter(a: Int, b: Int, c: Int) -> Int {
+    switch true {
+    case b == 1:
+        return a + c
+    case isEven(b):
+        return fastMultiplyIter(double(a), halve(b), c)
+    default:
+        return fastMultiplyIter(a, b - 1, c + a)
+    }
+}
+func fastMultiply(a: Int, b: Int) -> Int {
+    return fastMultiplyIter(a, b, 0)
+}
+//fastMultiply(2, 4)
+fastMultiply(3, 1000000)
 
