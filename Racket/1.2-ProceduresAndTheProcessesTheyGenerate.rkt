@@ -39,7 +39,7 @@
       (fact-iter (* product counter) (+ counter 1) max-count)))
 (define (factorial-iterative n)
   (fact-iter 1 1 n))
-(factorial-iterative 6)
+(factorial-iterative 5)
 
 (define (factorial-iterative2 n)
   (define (fact-iter product counter)
@@ -526,6 +526,3 @@
 
 (fast-multi 3 4)
 (fast-multi 15 101)
-
-
-

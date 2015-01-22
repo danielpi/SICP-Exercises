@@ -86,7 +86,7 @@ AND [IF]
 \ Meaning that functions describe functions of things and procedures describe
 \ how to do things.
 
-\ How does one computer square roots?
+\ How does one compute square roots?
 \ Guess a value, y, for the value of the square root of a number x. Find the
 \ quotient of x divided by the guess. Average the quotient and the guess.
 \ Continue till you have an accurate enough answer.
@@ -97,8 +97,8 @@ AND [IF]
 : IMPROVE ( guess x --- improved_guess )
 	SWAP DUP ROT / AVERAGE
 	;
-	: GOOD-ENOUGH ( guess x --- bool )
-	SWAP SQUARE - ABS 0.001
+\ : GOOD-ENOUGH ( guess x --- bool )
+\ 	SWAP SQUARE - ABS 0.001 <
 
 
 
