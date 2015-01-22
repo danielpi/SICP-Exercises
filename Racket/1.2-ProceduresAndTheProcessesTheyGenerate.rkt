@@ -503,6 +503,20 @@
 
 (define (double x) (+ x x))
 (define (halve x) (/ x 2))
+
+(define (fast-multi-recursive a b)
+  (cond ((= b 0) 0)
+        ((even? b) (double (fast-multi-recursive a (halve b))))
+        (else (+ a (fast-multi-recursive a (- b 1))))))
+(fast-multi-recursive 3 4)
+(fast-multi-recursive 3 101)
+
+
+; Exercise 1.18
+; Devise a procedure that generates an iterative process for 
+; multiplying two integers in terms of adding, doubling and halving
+; that uses a logarithmic number of steps
+
 (define (fast-multi-iter a b c)
   (cond ((= b 1) (+ a c))
         ((even? b) (fast-multi-iter (double a) (halve b) c))
@@ -512,9 +526,6 @@
 
 (fast-multi 3 4)
 (fast-multi 15 101)
-
-; 2 * 4 = 8
-; 2 * 3 = 6
 
 
 

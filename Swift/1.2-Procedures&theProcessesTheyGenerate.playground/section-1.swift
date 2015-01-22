@@ -628,6 +628,22 @@ func halve(x: Int) -> Int {
     return x / 2
 }
 
+func fastMutliplyRecursive(a: Int, b: Int) -> Int {
+    switch true {
+    case b == 0:
+        return 0
+    case isEven(b):
+        return double(fastMutliplyRecursive(a, halve(b)))
+    default:
+        return a + fastMutliplyRecursive(a, b - 1)
+    }
+}
+fastMutliplyRecursive(2, 4)
+
+
+// Exercise 1.18
+// Devise a procedure that generates an iterative process for multiplying two integers in terms of adding, doubling and halving that uses a logarithmic number of steps
+
 func fastMultiplyIter(a: Int, b: Int, c: Int) -> Int {
     switch true {
     case b == 1:
@@ -643,4 +659,10 @@ func fastMultiply(a: Int, b: Int) -> Int {
 }
 //fastMultiply(2, 4)
 fastMultiply(3, 1000000)
+
+
+
+
+
+
 
