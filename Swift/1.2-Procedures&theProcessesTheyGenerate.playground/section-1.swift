@@ -715,3 +715,37 @@ func fibIter3(a: Int, b: Int, p: Int, q: Int, count: Int) -> Int {
 }
 fib3(30)
 
+
+
+// 1.2.5 Greatest Common Divisors
+// The greatest commong divisor of two integers is the largest integer that divides both a and b with no remainder. GCD of 16 and 28 is 4.
+
+// Euclid's Algorithm
+// If r is the remainder when a is divided by b, then the common divisors of a and b are the same as the common divisors of b and r.
+/*
+   GCD(a, b) == GCD(b, r)
+
+   Example
+   GCD(206,40) = GCD(40, 6)
+               = GCD(6, 4)
+               = GCD(4, 2)
+               = GCD(2, 0)
+               = 2
+*/
+func gcd(a: Int, b: Int) -> Int {
+    if b == 0 {
+        return a
+    } else {
+        return gcd(b, a % b)
+    }
+}
+
+gcd(206, 40)
+//gcd(28, 16)
+//gcd(7, 300)
+
+// This generates an iterative process whose number of steps grows at a logarithmic rate.
+
+// Lame's Theorem
+// If Euclid's Algorithm requires k steps to compute the GCD of some pair, then the smaller number in the pair must be greater than or equal to the kth Fibonacci number.
+
