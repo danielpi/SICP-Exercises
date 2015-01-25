@@ -603,4 +603,51 @@
 ; equal to the kth Fibonacci number.
 
 ; Exercise 1.20
-; 
+; The process that a procedure generates is dependent on the rules used by the 
+; interpreter that runs the procedure. How would GCD be processed using normal-
+; order evaluation?
+
+(gcd 206 40)
+(if (= 40 0) 206 (gcd 40 (remainder 206 40)))
+(gcd 40 (remainder 206 40))
+(if (= (remainder 206 40) 0) 40 (gcd (remainder 206 40)(remainder 40 (remainder 206 40))))
+;(if (= 6 0) ...)  1 remainder
+(gcd (remainder 206 40) (remainder 40 (remainder 206 40)))
+(if (= (remainder 40 (remainder 206 40)) 0) 
+    (remainder 206 40) 
+    (gcd (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40))))) 
+;(if (= 4 0) ...) 1 + 2 remainder
+(gcd (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40))))
+(if (= (remainder (remainder 206 40) (remainder 40 (remainder 206 40))) 0)
+    (remainder 40 (remainder 206 40))
+    (gcd (remainder (remainder 206 40) (remainder 40 (remainder 206 40))) (remainder (remainder 40 (remainder 206 40))  (remainder (remainder 206 40) (remainder 40 (remainder 206 40))))))
+;(if (= 2 0) ...) 3 + 4 remainder
+(gcd 
+ (remainder (remainder 206 40) (remainder 40 (remainder 206 40))) 
+ (remainder (remainder 40 (remainder 206 40))  (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))))
+(if (= (remainder (remainder 40 (remainder 206 40))  (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))) 0)
+    (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))
+    (gcd (remainder (remainder 40 (remainder 206 40))  (remainder (remainder 206 40) (remainder 40 (remainder 206 40))))
+         (remainder (remainder (remainder 206 40) (remainder 40 (remainder 206 40))) (remainder (remainder 40 (remainder 206 40))  (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))))))
+;(if (= 0 0) ...) 7 + 7 remainder
+(remainder (remainder 206 40) (remainder 40 (remainder 206 40)))
+; 14 + 4 remainder
+; Until the last step, when 4 remainders are calculated as part of evaluating a, the remainders in the if 
+; statements are all that are evaluated.
+
+; How many remainder operations are performed in applicative order process?
+(gcd 206 40)
+(gcd 40 (remainder 206 40))
+(gcd 40 6)
+(gcd 6 (remainder 40 6))
+(gcd 6 4)
+(gcd 4 (remainder 6 4))
+(gcd 4 2)
+(gcd 2 (remainder 4 2))
+(gcd 2 0)
+2
+; there are 4 remainder operations.
+
+
+
+
