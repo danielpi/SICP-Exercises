@@ -649,5 +649,80 @@
 ; there are 4 remainder operations.
 
 
+; 1.2.6 Example: Testing for Primality
+; Two methods of checking the primality of an integer, one with order of growth
+; O(n^0.5) and a probabilistic algorithm with order of growth O(log(n)).
 
+; Searching for divisors
+; The following program finds the smallest integral divisor of a given number n
+; by testing n for divisibility by successive integers starting with 2.
 
+(define (smallest-divisor n)
+  (find-divisor n 2))
+(define (find-divisor n test-divisor)
+  (cond ((> (square test-divisor) n) n)
+        ((divides? test-divisor n) test-divisor)
+        (else (find-divisor n (+ test-divisor 1)))))
+(define (divides? a b)
+  (= (remainder b a) 0))
+(smallest-divisor 4)
+(smallest-divisor 7)
+(smallest-divisor 3127)
+(smallest-divisor 23113)
+
+; We can test if a number is prime if it's smallest divisor is itself
+
+(define (prime? n)
+  (= n (smallest-divisor n)))
+(prime? 7)
+(prime? 23113)
+
+; The end test for find-divisor is based on the fact that if n is not 
+; prime it must have a divisor less than or equal to n^0.5. This means the 
+; algorithm need only test divisors between 1 and n^0.5. Consequently, the 
+; number of steps required to identify n as prime will have order of growth
+; O(n^0.5).
+
+; The Fermat test (Fermat's Little Theorem)
+; If n is a prime number and a is any positive integer less than n, then a
+; raised to the nth power is congruent to a modulo n.
+
+; (Two numbers are said to be congruent modulo n if they both have the 
+; same remainder when divided by n. The remainder of a number a when divided 
+; by n is also referred to as the remainder of a modulo n, or simply as
+; a modulo n)
+
+; If n is not prime most of the numbers a < n will not satisfy the above
+; relation. This leads to the following algorithm
+; - Given a number n
+; - pick a random number a < n
+; - compute the remainder of a^n modulo n
+; - If the result is not equal to a then n is certainly not prime
+; - If it is then n might be prime
+; - Pick another a and test again
+
+(define (expmod base exp m)
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         (remainder (square (expmod base (/ exp 2) m))
+                    m))
+        (else
+         (remainder (* base (expmod base (- exp 1) m))
+                    m))))
+(define (fermat-test n)
+  (define (try-it a)
+    (= (expmod a n n) a))
+  (try-it (+ 1 (random (- n 1)))))
+
+(define (fast-prime? n times)
+  (cond ((= times 0) true)
+        ((fermat-test n) (fast-prime? n (- times 1)))
+        (else false)))
+(fast-prime? 7 3)
+(fast-prime? 1235 10)
+(fast-prime? 313 4)
+
+; Exercise 1.21
+(smallest-divisor 199)
+(smallest-divisor 1999)
+(smallest-divisor 19999)
