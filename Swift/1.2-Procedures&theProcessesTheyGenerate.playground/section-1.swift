@@ -749,3 +749,41 @@ gcd(206, 40)
 // Lame's Theorem
 // If Euclid's Algorithm requires k steps to compute the GCD of some pair, then the smaller number in the pair must be greater than or equal to the kth Fibonacci number.
 
+// Exercise 1.20
+// The process that a procedure generates is dependent on the rules used by the interpreter. Using the substitution method (for normal order), illustrate the process generated in evaluating gcd(206, 40).
+gcd(206, 40)
+if 40 == 0 { 206 } else { gcd(40, 206 % 40) }
+// if 40 == 0 { ... }
+gcd(40, 206 % 40)
+if 206 % 40 == 0 { 40 } else { gcd(206 % 40, 40 % (206 % 40)) }
+// if 6 == 0 { ... }            // 1 remainder performed
+gcd(206 % 40, 40 % (206 % 40))
+if 40 % (206 % 40) == 0 { 206 % 40 } else { gcd(40 % (206 % 40), (206 % 40) % (40 % (206 % 40))) }
+// if 4 == 0 { ... }            // 2 remainder performed (3 so far)
+gcd(40 % (206 % 40), (206 % 40) % (40 % (206 % 40)))
+if (206 % 40) % (40 % (206 % 40)) == 0 { 40 % (206 % 40) } else { gcd((206 % 40) % (40 % (206 % 40)), (40 % (206 % 40)) % (206 % 40) % (40 % (206 % 40))) }
+// if 2 == 0 { ... }            // 4 remainder performed (7 so far)
+gcd((206 % 40) % (40 % (206 % 40)), (40 % (206 % 40)) % (206 % 40) % (40 % (206 % 40)))
+//if (40 % (206 % 40)) % (206 % 40) % (40 % (206 % 40)) == 0 { (206 % 40) % (40 % (206 % 40)) } else { gcd((40 % (206 % 40)) % (206 % 40) % (40 % (206 % 40)), (206 % 40) % (40 % (206 % 40)) % (40 % (206 % 40)) % (206 % 40) % (40 % (206 % 40)))
+// if 0 == 0 { ... }            // 7 remainders performed (14 so far)
+(206 % 40) % (40 % (206 % 40))  // 4 remainders performed (18 in total)
+2
+
+// Illustrate the applicative process
+gcd(206, 40)
+gcd(40, 206 % 40)
+gcd(40, 6)
+gcd(6, 40 % 6)
+gcd(6, 4)
+gcd(4, 6 % 4)
+gcd(4, 2)
+gcd(2, 4 % 2)
+2
+// 4 remainder procedures called.
+
+
+
+
+
+
+
