@@ -783,6 +783,35 @@ gcd(2, 4 % 2)
 
 
 
+// 1.2.6 Example: Testing for Primality
+// Searching for divisors
+// First up the straight forward method, testing n for divisibility by successive integers startng with 2.
+
+func dividesWithNoRemainder(a: Int, b: Int) -> Bool {
+    return  a % b == 0
+}
+dividesWithNoRemainder(10, 2)
+
+func findDivisor(n: Int, testDivisor: Int) -> Int {
+    switch true {
+    case square(testDivisor) > n:
+        return n
+    case dividesWithNoRemainder(n, testDivisor):
+        return testDivisor
+    default:
+        return findDivisor(n, testDivisor + 1)
+    }
+}
+
+func smallestDivisor(n: Int) -> Int {
+    return findDivisor(n, 2)
+}
+
+func isPrime(n:Int) -> Bool {
+    return n == smallestDivisor(n)
+}
+
+isPrime(31123)
 
 
 
