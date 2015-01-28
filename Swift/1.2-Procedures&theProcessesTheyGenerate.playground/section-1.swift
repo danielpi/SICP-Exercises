@@ -814,5 +814,54 @@ func isPrime(n:Int) -> Bool {
 isPrime(31123)
 
 
+// Fermat's Little Theorem
+// If n is a prime number and a is any positive integer less than n, then a raised to the nth power is congruent to a modulo n. (Not sure if you could make this any less comprehensible)
+/* This can be restated as
+   - Given a number n
+   - pick a random number a < n
+   - compute the remainder of a^n modulo n
+   - If the result is not equal to a then n is certainly not prime
+   - If it is then pick another value for a and try again.
+   - The more values you try the more confident you are that n is prime
+*/
+
+func expMod(base: Int, exp: Int, m: Int) -> Int {
+    switch true {
+    case exp == 0:
+        return 1
+    case isEven(exp):
+        return square(expMod(base, exp / 2, m)) % m
+    default:
+        return (base * expMod(base, exp - 1, m)) % m
+    }
+}
+func fermatTest(n: Int) -> Bool {
+    func tryIt(a: Int) -> Bool {
+        return expMod(a, n, n) == a
+    }
+    let randomA:Int = Int(arc4random_uniform(UInt32(n - 1)) + 1)
+    return tryIt(randomA)
+}
+fermatTest(8)
+
+func isPrimeFast(n: Int, times: Int) -> Bool {
+    switch true {
+    case times == 0:
+        return true
+    case fermatTest(n):
+        return isPrimeFast(n, times - 1)
+    default:
+        return false
+    }
+}
+
+isPrimeFast(31131, 10)
+
+
+// Exercise 1.21
+smallestDivisor(199)
+smallestDivisor(1999)
+smallestDivisor(19999)
+
 
 
