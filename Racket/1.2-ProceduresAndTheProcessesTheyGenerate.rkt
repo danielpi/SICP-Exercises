@@ -726,3 +726,75 @@
 (smallest-divisor 199)
 (smallest-divisor 1999)
 (smallest-divisor 19999)
+
+; Exercise 1.22
+(define (timed-prime-test n)
+  (newline)
+  (display n)
+  (start-prime-test n (current-inexact-milliseconds)))
+(define (start-prime-test n start-time)
+  (if (prime? n)
+      (report-prime (- (current-inexact-milliseconds) start-time))
+      (display " ")))
+(define (report-prime elapsed-time)
+  (display " *** ")
+  (display elapsed-time))
+; Using the procedure above write a procedure search-fo-primes that checks 
+; the primality of consecutive odd integers in a specified range. 
+(timed-prime-test 31123)
+
+(define (search-for-primes a b)
+  (cond ((> a b) (display " done "))
+        ((even? a) (search-for-primes (+ a 1) b))
+        (else (timed-prime-test a) (search-for-primes (+ a 2) b))))
+
+
+; Use your procedure to find the three smallest primes larger than
+; - 1000
+; - 10000
+; - 100000
+; - 1000000
+
+(search-for-primes 1000 1030)
+; 1009 *** 0.004150390625
+; 1013 *** 0.00390625
+; 1019 *** 0.00390625
+(/ (+ 0.004150390625 0.00390625 0.00390625) 3)
+; Average time 0.00398
+
+(search-for-primes 10000 10050)
+; 10007 *** 0.01220703125
+; 10009 *** 0.011962890625
+; 10037 *** 0.012939453125
+(/ (+ 0.01220703125 0.011962890625 0.012939453125) 3)
+; Average time 0.012369
+
+(search-for-primes 100000 100050)
+; 100003 *** 0.037841796875
+; 100019 *** 0.0439453125
+; 100043 *** 0.033935546875
+(/ (+ 0.037841796875 0.0439453125 0.033935546875) 3)
+; Average time 0.03857
+
+(search-for-primes 1000000 1000050)
+; 1000003 *** 0.1181640625
+; 1000033 *** 0.10498046875
+; 1000037 *** 0.10400390625
+(/ (+ 0.1181640625 0.10498046875 0.10400390625) 3)
+; Average time 0.109049
+
+; Note the time needed to test each prime. Since the testing algorithm has an order of 
+; growth of O(n^0.5) you should expect primes around 10,000 to take about 10^0.5 times
+; as long to test for as for primes around 1000.
+
+;         | Actual Times |    1000 |   10000 |  100000 | 1000000 |
+;    1000 |    0.00398   | 0.00398 | 0.00390 | 0.00385 | 0.00344 |
+;   10000 |    0.01236   | 0.01258 | 0.01236 | 0.01219 | 0.01090 |
+;  100000 |    0.03857   | 0.0398  | 0.03908 | 0.03857 | 0.03448 |
+; 1000000 |    0.10905   | 0.12585 | 0.1236  | 0.12196 | 0.10905 |
+
+; Does your timing data bear this out?                                                  Yes
+; How well do the data for 100,000 and 1,000,000 support the n^0.5 prediction?    Very well
+; Is the result compatible with the notion that programs on your machine run in 
+; time proportional to the number of steps required for the computation?                Yes
+
