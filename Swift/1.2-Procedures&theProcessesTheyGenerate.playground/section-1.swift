@@ -1,6 +1,7 @@
 // Playground - noun: a place where people can play
 
-import Darwin
+//import Darwin
+import Foundation // For NSDate
 
 
 // 1.2 Procedures and the Processes they Generate
@@ -863,5 +864,22 @@ smallestDivisor(199)
 smallestDivisor(1999)
 smallestDivisor(19999)
 
+
+// Exercise 1.22
+func timedPrimeTest(n: Int) {
+    print("\n")
+    print("\(n)")
+    startPrimeTest(n, NSDate())
+}
+func startPrimeTest(n: Int, startTime: NSDate) {
+    if isPrime(n) {
+        reportPrime(-1 * startTime.timeIntervalSinceNow)
+    }
+}
+func reportPrime(elapsedTime: Double) {
+    print(" *** ")
+    print("\(elapsedTime)")
+}
+timedPrimeTest(7013)
 
 
