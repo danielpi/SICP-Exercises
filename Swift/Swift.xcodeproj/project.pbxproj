@@ -9,6 +9,7 @@
 /* Begin PBXFileReference section */
 		AA313A1E1A7FA3AC00A12005 /* Ex1.23-SearchForPrimes.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.23-SearchForPrimes.playground"; sourceTree = "<group>"; };
 		AA313A1F1A7FA66100A12005 /* Ex1.22-SearchForPrimes.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.22-SearchForPrimes.playground"; sourceTree = "<group>"; };
+		AA5103C21A81000100D145C1 /* Ex1.24-SearchForPrimes-Fermat.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.24-SearchForPrimes-Fermat.playground"; sourceTree = "<group>"; };
 		E636147F1A5B581A00E495B9 /* 1.1-TheElementsOfProgramming.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "1.1-TheElementsOfProgramming.playground"; sourceTree = "<group>"; };
 		E66A58E31A6DF2ED00557760 /* 1.2-Procedures&theProcessesTheyGenerate.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "1.2-Procedures&theProcessesTheyGenerate.playground"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -28,6 +29,7 @@
 				E66A58E31A6DF2ED00557760 /* 1.2-Procedures&theProcessesTheyGenerate.playground */,
 				AA313A1F1A7FA66100A12005 /* Ex1.22-SearchForPrimes.playground */,
 				AA313A1E1A7FA3AC00A12005 /* Ex1.23-SearchForPrimes.playground */,
+				AA5103C21A81000100D145C1 /* Ex1.24-SearchForPrimes-Fermat.playground */,
 			);
 			name = "Chapter 1 Building Abstractions from Procedures";
 			sourceTree = "<group>";

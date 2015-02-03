@@ -822,3 +822,58 @@
 
 ; search-for-primes2 isn't twice as fast. It is about 1.6 times as fast. The reason is the if statement in next.
 ; We have halved the number of divisor tests but we have added an extra if statement.
+
+
+; Exercise 1.24
+; Modify the timed-prime-test procedure of exercise 1.22 to use fast-prime? and test each of the 12 primes you found 
+; in that exercise. 
+
+(define (timed-prime-test3 n)
+  (start-prime-test3 n (current-inexact-milliseconds)))
+(define (start-prime-test3 n start-time)
+  (if (fast-prime? n 10)
+      (report-prime n (- (current-inexact-milliseconds) start-time))
+      (display " ")))
+(define (search-for-primes3 a b)
+  (cond ((> a b) (newline))
+        ((even? a) (search-for-primes3 (+ a 1) b))
+        (else (timed-prime-test3 a) (search-for-primes3 (+ a 2) b))))
+
+(newline) (display "Exercise 1.24")
+(search-for-primes3 1000 1019)
+
+(search-for-primes3 10000 10037)
+(search-for-primes3 100000 100043)
+(search-for-primes3 1000000 1000037)
+
+(/ (/ (+ 0.113037109375 0.116943359375 0.1220703125) 3)
+   (/ (+ 0.070068359375 0.072998046875 0.0771484375) 3))
+
+
+; The Fermat test has O(log(n)) growth how would you expect the time to test primes near 1,000,000 to compare with 
+; the time needed to test primes near 1,000?
+; log(1000) = 3, log(1000000) = 6. So I would expect a prime near 1000000 to take about twice as long to calculate
+; as a prime near 1000.
+
+; Does your data bear this out?
+; It is more like 6 times as long for 1000000 than for 1000.
+;Exercise 1.24    
+;1009 *** 0.009033203125 
+;1013 *** 0.009033203125  
+;1019 *** 0.010009765625
+;   
+;10007 *** 0.011962890625
+;10009 *** 0.01708984375             
+;10037 *** 0.013916015625
+; 
+;100003 *** 0.0439453125       
+;100019 *** 0.048828125           
+;100043 *** 0.0419921875
+; 
+;1000003 *** 0.066162109375              
+;1000033 *** 0.06689453125 
+;1000037 *** 0.067138671875
+
+; Can you explain any discrepency?
+; From reading answers it seems like it should have taken only twice as long. 
+

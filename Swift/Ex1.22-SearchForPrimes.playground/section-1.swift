@@ -10,7 +10,7 @@ func square(x: Int) -> Int {
 func dividesWithNoRemainder(a: Int, b: Int) -> Bool {
     return  a % b == 0
 }
-dividesWithNoRemainder(10, 2)
+// dividesWithNoRemainder(10, 2)
 
 func findDivisor(n: Int, testDivisor: Int) -> Int {
     switch true {
@@ -45,7 +45,7 @@ func reportPrime(n: Int, elapsedTime: Double) {
     print(" *** ")
     print("\(elapsedTime)")
 }
-timedPrimeTest(7013)
+// timedPrimeTest(7013)
 
 // Using this procedure write a searchForPrimes that checks the primality of consecutive odd integers in a specified range. Use your procedure to find the three smallest primes larger than 1000, larger than 10000, larger than 100000, larger than 1000000.
 
@@ -74,21 +74,21 @@ searchForPrimes(1000, 1030)
 (0.23639303445816 + 0.227622985839844 + 0.216214001178741) / 3
 // Average time 0.00398
 
-//searchForPrimes(10000, 10050)
+searchForPrimes(10000, 10050)
 // 10007 *** 0.727922022342682
 // 10009 *** 0.748418986797333
 // 10037 *** 0.735283017158508
 (0.727922022342682 + 0.748418986797333 + 0.735283017158508) / 3
 // Average time 0.012369
 
-//searchForPrimes(100000, 100050)
+searchForPrimes(100000, 100050)
 // 100003 *** 2.24567699432373
 // 100019 *** 2.0843819975853
 // 100043 *** 2.03399205207825
 (2.24567699432373 + 2.0843819975853 + 2.03399205207825) / 3
 // Average time 0.03857
 
-//searchForPrimes(1000000, 1000050)
+searchForPrimes(1000000, 1000050)
 // 1000003 *** 6.36476397514343
 // 1000033 *** 6.54135400056839
 // 1000037 *** 6.34981900453568
