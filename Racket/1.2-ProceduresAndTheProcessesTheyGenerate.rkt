@@ -877,3 +877,40 @@
 ; Can you explain any discrepency?
 ; From reading answers it seems like it should have taken only twice as long. 
 
+
+; Exercise 1.25
+; Could expmod be which has been calculated as below
+
+;(define (expmod base exp m)
+;  (cond ((= exp 0) 1)
+;        ((even? exp)
+;         (remainder (square (expmod base (/ exp 2) m))
+;                    m))
+;        (else
+;         (remainder (* base (expmod base (- exp 1) m))
+;                    m))))
+
+; (define (fast-expt b n)
+;   (cond ((= n 0) 1)
+;         ((even? n) (square (fast-expt b (/ n 2))))
+;         (else (* b (fast-expt b (- n 1))))))
+; (fast-expt 5 16)
+
+
+; be calculated more simply by the following procedure
+
+(define (expmod2 base exp m)
+   (remainder (fast-expt base exp) m))
+
+(expmod 5 3 5)
+(expmod2 5 3 5)
+
+; Would this work?
+; Yes but, The second version calculates extremely large intermediate values. As 
+; such we get the correct answer but it  takes a lot longer to perform the arbitary
+; precision arithmetic.
+
+; Would this procedure serve as well for our fast prime tester?
+; Yes, but see above
+
+
