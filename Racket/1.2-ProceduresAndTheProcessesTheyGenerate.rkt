@@ -914,3 +914,19 @@
 ; Yes, but see above
 
 
+
+; Exercise 1.26
+; the expmod function has O(log(n)) growth. What would happen if the square was replaced
+; with an explicit multiply?
+
+(define (expmod3 base exp m)
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         (remainder (* (expmod base (/ exp 2) m)
+                      (expmod base (/ exp 2) m))
+                   m))
+        (else
+         (remainder (* base (expmod base (- exp 1) m))
+                    m))))
+
+(expmod3 2 1000 7)
