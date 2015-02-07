@@ -948,9 +948,10 @@
 (define (carmichael-test n)
   (newline)
   (display n)
-  (if (carmichael-iter n (- n 1))
-      (display " is a Carmichael or Prime number")
-      (display " is not a Carmichael number")))
+  (cond ((prime? n) (display " is a prime number"))
+        ((carmichael-iter n (- n 1)) (display " is a Carmichael number"))
+        (else (display " has divisors"))))
+
 
 (carmichael-test 7)
 (carmichael-test 561)
