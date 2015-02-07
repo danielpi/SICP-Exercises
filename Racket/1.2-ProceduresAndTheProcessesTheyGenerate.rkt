@@ -930,3 +930,33 @@
                     m))))
 
 (expmod3 2 1000 7)
+
+
+; Exercise 1.27
+; Demonstrate that the Carmichael numbers really do fool the fermat test. Write a 
+; procedure that takes an integer n and tests whether a^n is congruent to a modulo
+; n for every a<n and try your procedure on the given Carmichael numbers.
+
+; (= (expmod a n n) a))
+(define (carmichael-iter n a)
+  (define (try-it b)
+    (= (expmod b n n) b))
+  (cond ((= a 0) true)
+        ((try-it a) (carmichael-iter n (- a 1)))
+        (else false)))
+
+(define (carmichael-test n)
+  (newline)
+  (display n)
+  (if (carmichael-iter n (- n 1))
+      (display " is a Carmichael or Prime number")
+      (display " is not a Carmichael number")))
+
+(carmichael-test 7)
+(carmichael-test 561)
+(carmichael-test 1105)
+(carmichael-test 1729)
+(carmichael-test 2465)
+(carmichael-test 2821)
+(carmichael-test 6601)
+(carmichael-test 6603)
