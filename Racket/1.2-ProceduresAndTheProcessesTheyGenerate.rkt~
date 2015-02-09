@@ -729,14 +729,14 @@
 
 ; Exercise 1.22
 (define (timed-prime-test n)
-  (newline)
-  (display n)
   (start-prime-test n (current-inexact-milliseconds)))
 (define (start-prime-test n start-time)
   (if (prime? n)
-      (report-prime (- (current-inexact-milliseconds) start-time))
+      (report-prime n (- (current-inexact-milliseconds) start-time))
       (display " ")))
-(define (report-prime elapsed-time)
+(define (report-prime n elapsed-time)
+  (newline)
+  (display n)
   (display " *** ")
   (display elapsed-time))
 ; Using the procedure above write a procedure search-fo-primes that checks 
@@ -744,7 +744,7 @@
 (timed-prime-test 31123)
 
 (define (search-for-primes a b)
-  (cond ((> a b) (display " done "))
+  (cond ((> a b) (newline))
         ((even? a) (search-for-primes (+ a 1) b))
         (else (timed-prime-test a) (search-for-primes (+ a 2) b))))
 
@@ -755,38 +755,20 @@
 ; - 100000
 ; - 1000000
 
-(search-for-primes 1000 1030)
-; 1009 *** 0.004150390625
-; 1013 *** 0.00390625
-; 1019 *** 0.00390625
-(/ (+ 0.004150390625 0.00390625 0.00390625) 3)
-; Average time 0.00398
+(newline) (display "Exercise 1.22")
+(search-for-primes 1000 1019)
 
-(search-for-primes 10000 10050)
-; 10007 *** 0.01220703125
-; 10009 *** 0.011962890625
-; 10037 *** 0.012939453125
-(/ (+ 0.01220703125 0.011962890625 0.012939453125) 3)
-; Average time 0.012369
+(search-for-primes 10000 10037)
 
-(search-for-primes 100000 100050)
-; 100003 *** 0.037841796875
-; 100019 *** 0.0439453125
-; 100043 *** 0.033935546875
-(/ (+ 0.037841796875 0.0439453125 0.033935546875) 3)
-; Average time 0.03857
+(search-for-primes 100000 100043)
 
-(search-for-primes 1000000 1000050)
-; 1000003 *** 0.1181640625
-; 1000033 *** 0.10498046875
-; 1000037 *** 0.10400390625
-(/ (+ 0.1181640625 0.10498046875 0.10400390625) 3)
-; Average time 0.109049
+(search-for-primes 1000000 1000037)
 
 ; Note the time needed to test each prime. Since the testing algorithm has an order of 
 ; growth of O(n^0.5) you should expect primes around 10,000 to take about 10^0.5 times
 ; as long to test for as for primes around 1000.
 
+; Times for MacBook Air
 ;         | Actual Times |    1000 |   10000 |  100000 | 1000000 |
 ;    1000 |    0.00398   | 0.00398 | 0.00390 | 0.00385 | 0.00344 |
 ;   10000 |    0.01236   | 0.01258 | 0.01236 | 0.01219 | 0.01090 |
@@ -798,3 +780,184 @@
 ; Is the result compatible with the notion that programs on your machine run in 
 ; time proportional to the number of steps required for the computation?                Yes
 
+
+; Exercise 1.23
+; The smallest-divisor procedure shown at the start of this section does lots of needless
+; testing. After it checks to see if the number is divisible by any by 2 there is no point
+; in checking to see if it is divisible by any larger even numbers. Define a procedure 
+; next that returns 3 if its input is equal to 2 and otherwise returns its input + 2.
+
+(define (next n)
+  (if (= n 2)
+      3
+      (+ n 2)))
+(define (smallest-divisor2 n)
+  (find-divisor2 n 2))
+(define (find-divisor2 n test-divisor)
+  (cond ((> (square test-divisor) n) n)
+        ((divides? test-divisor n) test-divisor)
+        (else (find-divisor2 n (next test-divisor)))))
+(define (prime2? n)
+  (= n (smallest-divisor2 n)))
+(define (timed-prime-test2 n)
+  (start-prime-test2 n (current-inexact-milliseconds)))
+(define (start-prime-test2 n start-time)
+  (if (prime2? n)
+      (report-prime n (- (current-inexact-milliseconds) start-time))
+      (display " ")))
+(define (search-for-primes2 a b)
+  (cond ((> a b) (newline))
+        ((even? a) (search-for-primes2 (+ a 1) b))
+        (else (timed-prime-test2 a) (search-for-primes2 (+ a 2) b))))
+
+(newline) (display "Exercise 1.23")
+(search-for-primes2 1000 1019)
+
+(search-for-primes2 10000 10037)
+(search-for-primes2 100000 100043)
+(search-for-primes2 1000000 1000037)
+
+(/ (/ (+ 0.113037109375 0.116943359375 0.1220703125) 3)
+   (/ (+ 0.070068359375 0.072998046875 0.0771484375) 3))
+
+; search-for-primes2 isn't twice as fast. It is about 1.6 times as fast. The reason is the if statement in next.
+; We have halved the number of divisor tests but we have added an extra if statement.
+
+
+; Exercise 1.24
+; Modify the timed-prime-test procedure of exercise 1.22 to use fast-prime? and test each of the 12 primes you found 
+; in that exercise. 
+
+(define (timed-prime-test3 n)
+  (start-prime-test3 n (current-inexact-milliseconds)))
+(define (start-prime-test3 n start-time)
+  (if (fast-prime? n 10)
+      (report-prime n (- (current-inexact-milliseconds) start-time))
+      (display " ")))
+(define (search-for-primes3 a b)
+  (cond ((> a b) (newline))
+        ((even? a) (search-for-primes3 (+ a 1) b))
+        (else (timed-prime-test3 a) (search-for-primes3 (+ a 2) b))))
+
+(newline) (display "Exercise 1.24")
+(search-for-primes3 1000 1019)
+
+(search-for-primes3 10000 10037)
+(search-for-primes3 100000 100043)
+(search-for-primes3 1000000 1000037)
+
+(/ (/ (+ 0.113037109375 0.116943359375 0.1220703125) 3)
+   (/ (+ 0.070068359375 0.072998046875 0.0771484375) 3))
+
+
+; The Fermat test has O(log(n)) growth how would you expect the time to test primes near 1,000,000 to compare with 
+; the time needed to test primes near 1,000?
+; log(1000) = 3, log(1000000) = 6. So I would expect a prime near 1000000 to take about twice as long to calculate
+; as a prime near 1000.
+
+; Does your data bear this out?
+; It is more like 6 times as long for 1000000 than for 1000.
+;Exercise 1.24    
+;1009 *** 0.009033203125 
+;1013 *** 0.009033203125  
+;1019 *** 0.010009765625
+;   
+;10007 *** 0.011962890625
+;10009 *** 0.01708984375             
+;10037 *** 0.013916015625
+; 
+;100003 *** 0.0439453125       
+;100019 *** 0.048828125           
+;100043 *** 0.0419921875
+; 
+;1000003 *** 0.066162109375              
+;1000033 *** 0.06689453125 
+;1000037 *** 0.067138671875
+
+; Can you explain any discrepency?
+; From reading answers it seems like it should have taken only twice as long. 
+
+
+; Exercise 1.25
+; Could expmod be which has been calculated as below
+
+;(define (expmod base exp m)
+;  (cond ((= exp 0) 1)
+;        ((even? exp)
+;         (remainder (square (expmod base (/ exp 2) m))
+;                    m))
+;        (else
+;         (remainder (* base (expmod base (- exp 1) m))
+;                    m))))
+
+; (define (fast-expt b n)
+;   (cond ((= n 0) 1)
+;         ((even? n) (square (fast-expt b (/ n 2))))
+;         (else (* b (fast-expt b (- n 1))))))
+; (fast-expt 5 16)
+
+
+; be calculated more simply by the following procedure
+
+(define (expmod2 base exp m)
+   (remainder (fast-expt base exp) m))
+
+(expmod 5 3 5)
+(expmod2 5 3 5)
+
+; Would this work?
+; Yes but, The second version calculates extremely large intermediate values. As 
+; such we get the correct answer but it  takes a lot longer to perform the arbitary
+; precision arithmetic.
+
+; Would this procedure serve as well for our fast prime tester?
+; Yes, but see above
+
+
+
+; Exercise 1.26
+; the expmod function has O(log(n)) growth. What would happen if the square was replaced
+; with an explicit multiply?
+
+(define (expmod3 base exp m)
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         (remainder (* (expmod base (/ exp 2) m)
+                      (expmod base (/ exp 2) m))
+                   m))
+        (else
+         (remainder (* base (expmod base (- exp 1) m))
+                    m))))
+
+(expmod3 2 1000 7)
+
+
+; Exercise 1.27
+; Demonstrate that the Carmichael numbers really do fool the fermat test. Write a 
+; procedure that takes an integer n and tests whether a^n is congruent to a modulo
+; n for every a<n and try your procedure on the given Carmichael numbers.
+
+; (= (expmod a n n) a))
+(define (carmichael-iter n a)
+  (define (try-it b)
+    (= (expmod b n n) b))
+  (cond ((= a 0) true)
+        ((try-it a) (carmichael-iter n (- a 1)))
+        (else false)))
+
+(define (carmichael-test n)
+  (newline)
+  (display n)
+  (cond ((prime? n) (display " is a prime number"))
+        ((carmichael-iter n (- n 1)) (display " is a Carmichael number"))
+        (else (display " has divisors"))))
+
+
+(carmichael-test 7)
+(carmichael-test 561)
+(carmichael-test 1105)
+(carmichael-test 1729)
+(carmichael-test 2465)
+(carmichael-test 2821)
+(carmichael-test 6601)
+(carmichael-test 6603)

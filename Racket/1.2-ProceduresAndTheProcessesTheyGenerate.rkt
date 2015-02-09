@@ -961,3 +961,33 @@
 (carmichael-test 2821)
 (carmichael-test 6601)
 (carmichael-test 6603)
+
+
+; Exercise 1.28
+; One variant of the Fermat test that cannot be fooled is the Miller-Rabin test. This starts from an
+; alternate form of Fermat's Little Theorem which states that
+
+; if n is a prime number and a is any positive integer less than n
+; then a raised to the (n - 1)st power is congruent to 1 modulo n
+
+; To test the primality of a number n by the Miller-Rabin test, we 
+; - pick random number a<n
+; - raise a^(n - 1) % n
+; However whenever we perform the squaring step in expmod we check to see if we have discovered a 
+; "nontrivial square root of 1 modulo n". That is a number not egual to 1 or n - 1 whose square is
+; equal to 1 modulo n. If such a number exists then n is not prime. Also if n is an odd number that
+; is not prime then at least half the numbers a<n computing a^n-1 this way will reveal a notrivial
+; square root of 1 modulo n.
+
+
+
+
+
+
+
+
+
+
+
+
+
