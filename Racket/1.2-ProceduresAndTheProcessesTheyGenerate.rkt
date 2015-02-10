@@ -979,12 +979,41 @@
 ; is not prime then at least half the numbers a<n computing a^n-1 this way will reveal a notrivial
 ; square root of 1 modulo n.
 
+(define (non-trivial-sqrt? n m)
+  (cond ((= n 1) false)
+        ((= n (- m 1)) false)
+        (else (= (remainder (square n) m) 1))))
 
+(define (expmod4 base exp m)
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         (if (non-trivial-sqrt? (expmod4 base (/ exp 2) m) m) 
+             0 
+             (remainder (square (expmod4 base (/ exp 2) m)) m)))
+        (else
+         (remainder (* base (expmod4 base (- exp 1) m)) m))))
 
+(define (Miller-Rabin-test n)
+  (define (try-it a)
+    (= (expmod4 a n n) a))
+  (try-it (+ 1 (random (- n 1)))))
 
+(define (fast-prime2? n times)
+  (cond ((= times 0) true)
+        ((Miller-Rabin-test n) (fast-prime2? n (- times 1)))
+        (else false)))
 
+(newline)
+(fast-prime2? 7 100)
+(fast-prime2? 1013 100)
 
-
+(fast-prime2? 561 100)
+(fast-prime2? 1105 100)
+(fast-prime2? 1729 100)
+(fast-prime2? 2465 100)
+(fast-prime2? 2821 100)
+(fast-prime2? 6601 100)
+(fast-prime2? 6603 100)
 
 
 
