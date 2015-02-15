@@ -1,10 +1,26 @@
 import Cocoa
 
+protocol MultipliableType {
+    func *(lhs: Self, rhs: Self) -> Self
+}
+extension Double : MultipliableType {}
+extension Float  : MultipliableType {}
+extension Int    : MultipliableType {}
+
+protocol AddableType: IntegerLiteralConvertible {
+    func +(lhs: Self, rhs: Self) -> Self
+}
+extension Double : AddableType {}
+extension Float  : AddableType {}
+extension Int    : AddableType {}
+
+
+
 // 1.3 Formulating Abstractions with Higher-Order Procedures
 
 // Procedures are abstractions that describe compound operations on numbers independent of the particular numbers. For instance.
 
-func cube(x: Int) -> Int {
+func cube<T:MultipliableType>(x: T) -> T {
     return x * x * x
 }
 
@@ -55,7 +71,7 @@ func <name>(a: Int, b: Int) -> ??? {
 
 // The pattern described above is very similar to the mathematical concept of summation. This allows mathematicians to deal with the concept of summation rather than simply a particular instance of summation.
 
-func sum(term: (Int) -> Double, a: Int, next: (Int) -> Int, b: Int) -> Double {
+func sum<T:Comparable,U:AddableType>(term:(T) -> U, a:T, next:(T) -> T, b:T) -> U {
     if a > b {
         return 0
     } else {
@@ -76,10 +92,10 @@ func sumCubes2(a: Int, b: Int) -> Double {
 }
 sumCubes2(1, 10)
 
-func identity(x:Int) -> Double {
-    return Double(x)
+func identity<T>(x:T) -> T {
+    return x
 }
-func sumIntegers2(a: Int, b: Int) -> Double {
+func sumIntegers2(a: Int, b: Int) -> Int {
     return sum(identity, a, inc, b)
 }
 sumIntegers2(1, 10)
@@ -94,3 +110,18 @@ func piSum2(a:Int, b:Int) -> Double {
     return sum(piTerm, a, piNext, b)
 }
 8 * piSum2(1, 1000)
+
+
+// Once we have sum() we can use it as a building block if formulating further concepts. For instance the definite integral of a function f between limits a and b can be approximated numerically. We can express this directly as a procedure using the following
+
+func integral(f:(Double) -> Double, a:Double, b:Double, dx:Double) -> Double {
+    func addDx(x:Double) -> Double {
+        return x + dx
+    }
+    return sum(f, a + (2 * dx), addDx, b) * dx
+}
+integral(cube, 0, 1, 0.01)
+integral(cube, 0, 1, 0.001)
+integral(identity, 0, 1, 0.01)
+integral(identity, 0, 1, 0.001)
+
