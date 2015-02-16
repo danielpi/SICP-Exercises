@@ -14,6 +14,7 @@
 		E60A86D31A839C2200ACBA3C /* Ex1.26-expMod-Modified.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.26-expMod-Modified.playground"; sourceTree = "<group>"; };
 		E61AD7481A871D2B0028163E /* Ex1.27-Carmichael-Numbers.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.27-Carmichael-Numbers.playground"; sourceTree = "<group>"; };
 		E6234E061A8F53A800E88292 /* 1.3-FormulatingAbstractionsWithHigher-Order-Procedures.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "1.3-FormulatingAbstractionsWithHigher-Order-Procedures.playground"; sourceTree = "<group>"; };
+		E623CA841A918C7400ED9D5B /* Ex1.29-SimpsonsIntegration.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.29-SimpsonsIntegration.playground"; sourceTree = "<group>"; };
 		E636147F1A5B581A00E495B9 /* 1.1-TheElementsOfProgramming.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "1.1-TheElementsOfProgramming.playground"; sourceTree = "<group>"; };
 		E66A58E31A6DF2ED00557760 /* 1.2-Procedures&theProcessesTheyGenerate.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "1.2-Procedures&theProcessesTheyGenerate.playground"; sourceTree = "<group>"; };
 		E6BCAB741A8AF9690046EF18 /* Ex1.28-Miller-Rabin-Test.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.28-Miller-Rabin-Test.playground"; sourceTree = "<group>"; };
@@ -40,6 +41,7 @@
 				E61AD7481A871D2B0028163E /* Ex1.27-Carmichael-Numbers.playground */,
 				E6BCAB741A8AF9690046EF18 /* Ex1.28-Miller-Rabin-Test.playground */,
 				E6234E061A8F53A800E88292 /* 1.3-FormulatingAbstractionsWithHigher-Order-Procedures.playground */,
+				E623CA841A918C7400ED9D5B /* Ex1.29-SimpsonsIntegration.playground */,
 			);
 			name = "Chapter 1 Building Abstractions from Procedures";
 			sourceTree = "<group>";
