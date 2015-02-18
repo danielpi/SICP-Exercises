@@ -17,6 +17,7 @@
 		E623CA841A918C7400ED9D5B /* Ex1.29-SimpsonsIntegration.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.29-SimpsonsIntegration.playground"; sourceTree = "<group>"; };
 		E636147F1A5B581A00E495B9 /* 1.1-TheElementsOfProgramming.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "1.1-TheElementsOfProgramming.playground"; sourceTree = "<group>"; };
 		E63F83CF1A9312DE00E9AD85 /* Ex1.30-SumIterative.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.30-SumIterative.playground"; sourceTree = "<group>"; };
+		E646C6C81A9421300055017B /* Ex1.31-Product.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.31-Product.playground"; sourceTree = "<group>"; };
 		E66A58E31A6DF2ED00557760 /* 1.2-Procedures&theProcessesTheyGenerate.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "1.2-Procedures&theProcessesTheyGenerate.playground"; sourceTree = "<group>"; };
 		E6BCAB741A8AF9690046EF18 /* Ex1.28-Miller-Rabin-Test.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.28-Miller-Rabin-Test.playground"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -44,6 +45,7 @@
 				E6234E061A8F53A800E88292 /* 1.3-FormulatingAbstractionsWithHigher-Order-Procedures.playground */,
 				E623CA841A918C7400ED9D5B /* Ex1.29-SimpsonsIntegration.playground */,
 				E63F83CF1A9312DE00E9AD85 /* Ex1.30-SumIterative.playground */,
+				E646C6C81A9421300055017B /* Ex1.31-Product.playground */,
 			);
 			name = "Chapter 1 Building Abstractions from Procedures";
 			sourceTree = "<group>";
