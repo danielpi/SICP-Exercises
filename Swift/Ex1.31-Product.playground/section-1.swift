@@ -62,14 +62,15 @@ pi   2 * 4 * 4 * 6 * 6 * 8 ...
 func DRPpi(steps: Int) -> Double {
     func term(k: Int) -> Double {
         if isEven(k) {
-            return (k + 2) / (k + 1)
+            return (Double(k) + 2) / (Double(k) + 1)
         } else {
-            
+            return (Double(k) + 1) / (Double(k) + 2)
         }
     }
+    return 4 * product(term, 1, inc, steps)
 }
 
-
+DRPpi(100)
 
 
 
