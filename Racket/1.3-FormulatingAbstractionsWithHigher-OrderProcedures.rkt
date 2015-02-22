@@ -105,4 +105,42 @@
 
 
 
+; 1.3.2 Constructing Procedures Using Lambda
+; In using sum it is awkward to have to define trivial procedures such as pi-term
+; and pi-next just so that we can use them as arguments to our higher-order
+; procedure. It would be mre convenient to have a way to directly specify "the
+; procedure that returns its input incremented by 4" and "the procedure that
+; returns the reciprocal of its input times its input plus 2". We can do this by
+; the special for lambda, which creates procedures.
+
+(lambda (x) (+ x 4))
+
+; and
+
+(lambda (x) (/ 1.0 (* x (+ x 2))))
+
+; Then our pi-sum procedure can be expressed without defining any auxiliary 
+; procedures as
+
+(define (pi-sum3 a b)
+  (sum (lambda (x) (/ 1.0 (* x (+ x 2))))
+       a
+       (lambda (x) (+ x 4))
+       b))
+
+; Again using lambda we can write the integral procedure without having to define 
+; the auxiliary procedure add-dx
+
+(define (integral2 f a b dx)
+  (* (sum f
+          (+ a (/ dx 2.0))
+          (lambda (x) (+ x dx))
+          b)
+     dx))
+
+; In general lambda is used to create procedures in the same way as define, except 
+; that no name is specified for the procedure
+
+; (lambda (<formal-parameters>) <body>)
+
 
