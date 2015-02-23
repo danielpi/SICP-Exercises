@@ -143,4 +143,95 @@
 
 ; (lambda (<formal-parameters>) <body>)
 
+; Using let to create local variables
+; Often we would like to bind values as local variables above and beyond the 
+; arguments that are passed into our function. We can do this by using an auxilary
+; procedure like so
+(define (square n) (* n n))
+
+(define (f x y)
+  (define (f-helper a b)
+    (+ (* x (square a))
+       (* y b)
+       (* a b)))
+  (f-helper (+ 1 (* x y))
+            (- 1 y)))
+(f 1 5)
+
+; Or we could use a lambda expression
+
+(define (f2 x y)
+  ((lambda (a b)
+    (+ (* x (square a))
+       (* y b)
+       (* a b)))
+   (+ 1 (* x y))
+   (- 1 y)))
+(f2 1 5)
+  
+; This construct is so useful there is a special form called let to make its
+; use more convenient. Using let, the f procedure could be written as
+
+(define (f3 x y)
+  (let ((a (+ 1 (* x y)))
+        (b (- 1 y)))
+    (+ (* x (square a))
+       (* y b)
+       (* a b))))
+(f3 1 5)
+
+; The general form of a let expression is
+; (let ((<var1> <exp1>)
+;       (<var2> <exp2>))
+;      <body>)
+
+; The let expression is interpreted as an alternative syntax for
+; ((lambda (<var1> <var2>)
+;       <body>)
+;  <exp1>
+;  <exp2>)
+; A let expression is simply syntactic sugar for the underlying lambda application
+
+; Let allows one to bind variables as locally as possible to where they are to be 
+; used. For example, if the value of x is 5
+
+(define (let-demo x)
+  (+ (let ((x 3))
+       (+ x (* x 10)))  ; Here x = 3
+     x))                ; Here x = 5
+(let-demo 5)
+
+; The variables values are computed outside the let. This matters when expressions
+; that provide the values for the local variables depend upon variables having
+; the same names as the local variables themselves.
+
+(define (let-demo2 x)
+  (let ((x 3)
+        (y (+ x 2)))  ; x = 2 here as the value is computed outside the let
+    (* x y)))         ; x = 3 here, taking the value from the let
+(let-demo2 2)
+
+
+
+; Exercise 1.34
+; Suppose we define the procedure
+
+(define (f4 g)
+  (g 2))
+
+; Then we have 
+(f4 square)                     ; 4
+(f4 (lambda (z) (* z (+ z 1)))) ; 6
+
+; What would happen if we ask the interpreter to evaluate (f4 f4)?
+; I think it will go into an infinite loop trying to evaluate
+; (f f)
+; (f 2)
+; (2 2) Which is an error
+
+
+
+; 1.3.3 Procedures as General Methods
+
+; 1.3.4 Procedures as Returned Values
 
