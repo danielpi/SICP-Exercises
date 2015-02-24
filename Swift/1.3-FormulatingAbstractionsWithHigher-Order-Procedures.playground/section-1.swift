@@ -121,7 +121,63 @@ func integral(f:(Double) -> Double, a:Double, b:Double, dx:Double) -> Double {
     return sum(f, a + (2 * dx), addDx, b) * dx
 }
 integral(cube, 0, 1, 0.01)
-integral(cube, 0, 1, 0.001)
-integral(identity, 0, 1, 0.01)
-integral(identity, 0, 1, 0.001)
+//integral(cube, 0, 1, 0.001)
+//integral(identity, 0, 1, 0.01)
+//integral(identity, 0, 1, 0.001)
+
+
+
+// 1.3.2 Constructing Procedures Using Lambda (Closures)
+// In piSum it is a bit awkward having to define piTerm and piNext just so that they can be used as arguments to our higher-order procedure. We can do this with closures
+
+func piSum3(a:Int, b:Int) -> Double {
+    return sum({ (x: Int) -> Double in
+        return 1.0 / (Double(x) * (Double(x) + 2.0)) },
+        a,
+        { (x: Int) -> Int in
+            return x + 4 },
+        b)
+}
+8 * piSum3(1, 1000)
+
+// Again using closures we can write integral without having to define auxilary procedure addDx
+
+func integral2(f:(Double) -> Double, a:Double, b:Double, dx:Double) -> Double {
+    return sum(f, a + (2 * dx), { (x:Double) -> Double in return x + dx }, b) * dx
+}
+integral2(cube, 0, 1, 0.01)
+
+// Closures take the general form
+// { (<args>) -> <return> in <body> }
+
+// The resulting procedure is just as much a procedure as one that is created using func. The only difference is that it has not been associated with any name. In fact
+
+func plus4(x: Int) -> Int {
+    return x + 4
+}
+plus4(4)
+
+// is equivilent to
+var plus5 = { (x: Int) -> Int in return x + 5 }
+plus5(5)
+
+
+// Using let to create local variables
+// I'm not sure if there is an equivilent in Swift for this sort of thing. I'll implement the examples as best I can
+
+func squareInt(x:Int) -> Int { return x * x }
+func f(x:Int, y:Int) -> Int {
+    func fHelper(a:Int, b:Int) {
+        let first: Int = x * squareInt(a)
+        let second: Int = y * b
+        let third: Int = a * b
+        return first + second + third
+    }
+    return fHelper((x * y) + 1, 1 - y)
+}
+f(3,4)
+
+
+
+
 
