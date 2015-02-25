@@ -81,4 +81,4 @@ func integral(f:(Double) -> Double, a:Double, b:Double, n:Int) -> Double {
 integral(cube, 0, 1, 100)
 //integral(cube, 0, 1, 1000)
 integral(identity, 0, 1, 100)
-//integral(identity, 0, 1, 1000)
+//integral(identity, 0, 3.2345, 1000)

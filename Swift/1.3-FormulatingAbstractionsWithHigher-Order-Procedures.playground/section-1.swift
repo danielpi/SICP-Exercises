@@ -165,19 +165,59 @@ plus5(5)
 // Using let to create local variables
 // I'm not sure if there is an equivilent in Swift for this sort of thing. I'll implement the examples as best I can
 
-func squareInt(x:Int) -> Int { return x * x }
+func square(x:Int) -> Int {
+    return x * x
+}
+square(4)
+
 func f(x:Int, y:Int) -> Int {
-    func fHelper(a:Int, b:Int) {
-        let first: Int = x * squareInt(a)
-        let second: Int = y * b
-        let third: Int = a * b
-        return first + second + third
+    func fHelper(a:Int, b:Int) -> Int {
+        return (x * square(a)) + (y * b) + (a * b)
     }
     return fHelper((x * y) + 1, 1 - y)
 }
 f(3,4)
 
+// Or we could use a closure to accomplish this
 
+func f2(x: Int, y: Int) -> Int {
+    return { (a:Int, b:Int) -> Int in
+        return (x * square(a)) + (y * b) + (a * b)
+    }((x * y) + 1, 1 - y)
+}
+f2(3,4)
 
+// But that is ugly as sin.
+
+// In Lisp there is a let construct that makes this all simpler. Is this the same as specifying local variables in Swift?
+
+func f3(x: Int, y: Int) -> Int {
+    let a = (x * y) + 1
+    let b = 1 - y
+    return (x * square(a)) + (y * b) + (a * b)
+}
+f3(3,4)
+
+// The above isn't the same as a let construct from lisp. At this point I'm not sure why it is significant though.
+
+// Let allows one to bind variables as locally as possible to where they are to be used. For example if the value of x is 5, the value of the expression
+
+func letDemo(x: Int) -> Int {
+    return { (x:Int) -> Int in return (x * 10) + x }(3) + x
+}
+letDemo(5)
+
+// is 38. Here the x in the body of the let is 3, so the value of the let expression is 33. On the other hand, the x that is the second argument to the outermost addition is still 5.
+
+// The variables values are computed outside the let. This matters when the expressions that provide the values for the local variables depend upon variables having the same names as the local variables themselves. For example, if the value of x is 2, the expression
+
+func letDemo2(x: Int) -> Int {
+    return { (x: Int, y: (x: Int) -> Int) -> Int in return x * y(x: x) }(x, { (x: Int) -> Int in return x + 2 } )
+}
+letDemo2(2)
+
+// The answer above should have been 12.
+
+//    { (x: Int, y: () -> Int) -> Int in return x * y() }(3, { () -> Int in return x + 2 })
 
 
