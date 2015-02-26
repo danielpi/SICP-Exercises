@@ -232,6 +232,55 @@
 
 
 ; 1.3.3 Procedures as General Methods
+; Finding roots of equations by the half interval method
+; is a technique for finding roots of an equation, f(x) = 0, where f is a continuous function.
+; The idea is that, given points a and b where f(a) < 0 < f(b), then f must have at least one
+; zero between a and b. To locate a zero, let x be the average of a and b and compute f(x). If
+; f(x) > 0, then f must have a zero between a and x. If f(x) < 0, then f must have a zero between
+; x and b. Continuing in this way, we can identify a smaller and smaller intervals on which f
+; must have a zero. When we reach a point where the interval is small enough, the process stops.
+; The number of steps required grows as O(log(L/T)) where L is the length of the original interval
+; and T is the error tolerance.
+
+(define (search f neg-point pos-point)
+  (let ((midpoint (average neg-point pos-point)))
+    (if (close-enough? neg-point pos-point)
+        midpoint
+        (let ((test-value (f midpoint)))
+          (cond ((positive? test-value)
+                 (search f neg-point midpoint))
+                ((negative? test-value)
+                 (search f midpoint pos-point))
+                (else midpoint))))))
+(define (average a b) (/ (+ a b) 2))
+(define (abs x) (if (> x 0) x (* -1 x)))
+(define (close-enough? a b) (< (abs (- b a)) 0.001))
+
+(define (func1 x) (- (* x x) 9))
+(search func1 1 10)
+(search func1 -1 -10)
+
+; Search is awkward because we will get the wrong value if we accidentally give it two 
+; values that have the same sign.
+
+(define (half-interval-method f a b)
+  (let ((a-value (f a))
+        (b-value (f b)))
+    (cond ((and (negative? a-value) (positive? b-value))
+           (search f a b))
+          (( and (negative? b-value) (positive? a-value))
+           (search f b a))
+          (else (error "Values are not of opposite sign" a b)))))
+(half-interval-method func1 0 5)
+(half-interval-method func1 5 0)
+; (half-interval-method func1 10 5)
+(half-interval-method sin 2.0 4.0)
+(half-interval-method (lambda (x) (- (* x x x) (* 2 x) 3))
+                      1.0
+                      2.0)
+
+
+
 
 ; 1.3.4 Procedures as Returned Values
 
