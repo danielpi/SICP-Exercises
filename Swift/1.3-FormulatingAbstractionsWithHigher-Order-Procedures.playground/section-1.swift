@@ -212,12 +212,31 @@ letDemo(5)
 // The variables values are computed outside the let. This matters when the expressions that provide the values for the local variables depend upon variables having the same names as the local variables themselves. For example, if the value of x is 2, the expression
 
 func letDemo2(x: Int) -> Int {
-    return { (x: Int, y: (x: Int) -> Int) -> Int in return x * y(x: x) }(x, { (x: Int) -> Int in return x + 2 } )
+    return { (z: Int, y: (Int) -> Int) -> Int in return z * y(x) }(3, { (x: Int) -> Int in return x + 2 } )
 }
 letDemo2(2)
 
-// The answer above should have been 12.
+// I could mimick the lisp let implementation here is Swift. Ignoring the fact that the above code is horrendous to look at, I also had to change the name of x to z so that swift would evaluate the intended scope for the first closure. I don't see why the Lisp version would even want to work the way it does/
 
-//    { (x: Int, y: () -> Int) -> Int in return x * y() }(3, { () -> Int in return x + 2 })
+// Sometimes we can use internal definitions to get the same effect as with let. For example
+
+func f4(x: Int, y: Int) -> Int {
+    func a() -> Int { return 1 + (x * y) }
+    func b() -> Int { return 1 - y }
+    return (x * square(a())) + (y * b()) + (a() * b())
+}
+f4(3,4)
+
+// However let is preferred in situations like this and to use internal define only for internal procedures.
+
+// How would a Swift version look
+
+func f5(x: Int, y: Int) -> Int {
+    let a = 1 + (x * y)
+    let b = 1 - y
+    return (x * square(a)) + (y * b) + (a * b)
+}
+f5(3,4)
+
 
 
