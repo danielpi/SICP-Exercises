@@ -240,3 +240,62 @@ f5(3,4)
 
 
 
+// 1.3.3 Procedures as General Methods
+// Finding roots of equations by the half-interval method
+
+// The half-interval method is a simple but powerful technique for finding roots of an equation.
+
+func average(a: Double, b: Double) -> Double {
+    return (a + b) / 2
+}
+func isCloseEnough(a: Double, b: Double, tolerance: Double) -> Bool {
+    return abs(a - b) < tolerance
+}
+func isPositive(x: Double) -> Bool {
+    return x > 0
+}
+func isNegative(x: Double) -> Bool {
+    return x < 0
+}
+
+func search(f:(Double) -> Double, negative: Double, positive: Double) -> Double {
+    let midpoint = average(negative, positive)
+    if isCloseEnough(negative, positive, 0.001) {
+        return midpoint
+    } else {
+        let testValue = f(midpoint)
+        switch true {
+        case isPositive(testValue):
+            return search(f, negative, midpoint)
+        case isNegative(testValue):
+            return search(f, midpoint, positive)
+        default:
+            return midpoint
+        }
+    }
+}
+
+// Search is awkward to use directly because we can accidentally give it points at which f's values do not have the required sign. Instead we will use search via the following procedure.
+
+
+func halfIntervalMethod(f:(Double) -> Double, a: Double, b: Double) -> Double? {
+    let aValue = f(a)
+    let bValue = f(b)
+    switch true {
+    case isNegative(aValue) && isPositive(bValue):
+        return search(f, a, b)
+    case isNegative(bValue) && isPositive(aValue):
+        return search(f, b, a)
+    default:
+        return nil
+    }
+}
+
+halfIntervalMethod(sin, 2.0, 4.0)
+
+let root = halfIntervalMethod({ (x:Double) -> Double in (x * x * x) - (2 * x) - 3 }, 1.0, 2.0)
+root
+
+// Finding fixed points of functions
+
+
