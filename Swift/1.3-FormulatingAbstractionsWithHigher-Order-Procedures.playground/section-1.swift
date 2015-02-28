@@ -297,5 +297,36 @@ let root = halfIntervalMethod({ (x:Double) -> Double in (x * x * x) - (2 * x) - 
 root
 
 // Finding fixed points of functions
+// Begin with an initial guess and applying f repeatedly until the value doesn't change very much.
+
+
+func fixedPoint(f: (Double) -> Double, guess: Double) -> Double {
+    let next = f(guess)
+    if isCloseEnough(guess, next, 0.00001) {
+        return next
+    } else {
+        return fixedPoint(f, next)
+    }
+}
+fixedPoint(cos, 1.0)
+let aFixedPoint = fixedPoint({ (y:Double) -> Double in return sin(y) + cos(y) }, 1.0)
+aFixedPoint
+
+// The fixed point process is similar to square-root computation.
+
+func sqrtInfiniteLoop(x: Double) -> Double {
+    return fixedPoint({ (y:Double) -> Double in x / y }, 1.0)
+}
+//sqrtInfiniteLoop(16.0)
+
+// The fixed point search above does not converge. The next guesses oscillate around the correct value. 
+
+func sqrt(x: Double) -> Double {
+    return fixedPoint({ (y: Double) -> Double in average(y, x/y) }, 1.0)
+}
+sqrt(2.0)
+
+
+
 
 
