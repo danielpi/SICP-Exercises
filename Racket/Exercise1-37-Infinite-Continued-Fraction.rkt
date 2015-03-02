@@ -32,9 +32,12 @@
 ; procedure by approximating 1 / Golden ratio
 
 (define (cont-frac Ni Di k)
-  (if (= k 1)
-      (/ (Ni k) (Di k))
-      (/ (Ni k) (+ (Di k) (cont-frac Ni Di (- k 1))))))
+  (define (recur i)
+    (if (> i k)
+        0
+        (/ (Ni i) (+ (Di i) (recur (+ i 1))))))
+  (recur 1))
+  
 (define (golden-ratio)
   (/ 1 (cont-frac (lambda (i) 1.0)
                   (lambda (i) 1.0)
