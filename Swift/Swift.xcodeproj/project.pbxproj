@@ -15,6 +15,7 @@
 		E61AD7481A871D2B0028163E /* Ex1.27-Carmichael-Numbers.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.27-Carmichael-Numbers.playground"; sourceTree = "<group>"; };
 		E6234E061A8F53A800E88292 /* 1.3-FormulatingAbstractionsWithHigher-Order-Procedures.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "1.3-FormulatingAbstractionsWithHigher-Order-Procedures.playground"; sourceTree = "<group>"; };
 		E623CA841A918C7400ED9D5B /* Ex1.29-SimpsonsIntegration.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.29-SimpsonsIntegration.playground"; sourceTree = "<group>"; };
+		E62C48021AA40ABC001CE44A /* Ex1.36-X-Power-X.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.36-X-Power-X.playground"; sourceTree = "<group>"; };
 		E636147F1A5B581A00E495B9 /* 1.1-TheElementsOfProgramming.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "1.1-TheElementsOfProgramming.playground"; sourceTree = "<group>"; };
 		E63F83CF1A9312DE00E9AD85 /* Ex1.30-SumIterative.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.30-SumIterative.playground"; sourceTree = "<group>"; };
 		E646C6C81A9421300055017B /* Ex1.31-Product.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.31-Product.playground"; sourceTree = "<group>"; };
@@ -54,6 +55,7 @@
 				E6FCEBC61A98A6E500E1AB59 /* Ex1.33-Filtered-Accumulate.playground */,
 				E6D7D5E21A9EEE6800777201 /* Ex1.34-FunctionsCallingFunctions.playground */,
 				E6AB1D151AA32D6C001527C3 /* Ex1.35-Golden-Ratio.playground */,
+				E62C48021AA40ABC001CE44A /* Ex1.36-X-Power-X.playground */,
 			);
 			name = "Chapter 1 Building Abstractions from Procedures";
 			sourceTree = "<group>";
@@ -64,7 +66,7 @@
 		E63614791A5B57F800E495B9 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0630;
 			};
 			buildConfigurationList = E636147C1A5B57F800E495B9 /* Build configuration list for PBXProject "Swift" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -85,6 +87,7 @@
 		E636147D1A5B57F800E495B9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
 			};
 			name = Debug;
 		};
