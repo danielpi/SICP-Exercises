@@ -350,4 +350,185 @@
 
 
 ; 1.3.4 Procedures as Returned Values
+; We can acheive more expressive power by creating procedures whose returned values are themselves 
+; procedures. As an example the average damping used above is a method that has general application.
+; Namely, given a function f, we consider the function whose value at x is equal to the average of
+; x and f(x).
+
+(define (average-damp f)
+  (lambda (x) (average x (f x))))
+
+; Average-damp is a procedure that takes as its argument a procedure f and returns as its value a
+; procedure (produced by the lambda) that, when applied to a number x, produces the average of x and 
+; f(x). For example, applying the average-damp to the square procedure produces a procedure
+; whose value at some number x is the average of x and x^2. Applying this resulting procedure to 10
+; returns the average of 10 and 100, 55
+
+((average-damp square) 10)
+
+; Using average-damp we can reformulate the square-root procedure as follows
+
+(define (sqrt2 x)
+  (fixed-point (average-damp (lambda (y) (/ x y))) 1.0))
+
+(sqrt2 16)
+
+; Notice how this formulation makes explicit the three ideas on the method: fixed-point search, average
+; damping, and the function y -> x/y. It is constructive to compare this formulation with the original
+; version from section 1.1.7
+
+(define (sqrt-iter guess x)
+  (if (good-enough? guess x)
+      guess
+      (sqrt-iter (improve guess x)
+                 x)))
+(define (improve guess x)
+  (average guess (/ x guess)))
+;(define (average x y)
+;  (/ (+ x y) 2))
+(define (good-enough? guess x)
+  (< (abs (- (square guess) x)) 0.001))
+(define (sqrt-1.1.7 x)
+  (sqrt-iter 1.0 x))
+
+; These procedures express the same process but the fixed-point version is much clearer. There are
+; many ways to formulate a procedure. Look for the ways that allow reuse. As an example of reuse notice
+; that the cube root of x is a fixed point of the function y -> x/y^2, so we can immediately generalise our
+; square root procedure to one that extracts cube roots
+
+(define (cube-root x)
+  (fixed-point (average-damp (lambda (y) (/ x (square y)))) 1.0))
+
+(cube-root 27)
+
+; Newton's Method
+; The square root procedure is a special case of Newton's method. If x -> g(x) is a differentiable function,
+; then a solution of equation g(x) = 0 is a fixed point of the function x -> f(x) where
+;
+;              g(x)
+; f(x) = x - -------
+;             Dg(x)
+;
+; and Dg(x) is the derivitaive of g evaluated at x. Newton's method is the use of the fixed-point method
+; we saw above to approximate a solution of the equation by finding a fixed point of the fuction f. For
+; many functions g and for sufficiently good initial guesses for x, Newton's method converges very 
+; rapidly to a solution of g(x) = 0
+
+; In order to implement Newton's method as a procedure we must first express the idea of derivative.
+; Note that "derivative" like average damping, is something that transforms a function into another
+; function. For instance. the derivative of the function x -> x^3 is the function x -> 3x^2. In general
+; if g is a function and dx is a small number, then the dervative Dg of g is the function whose value
+; at any number x is given (in the limit of small dx) by
+;
+;         g(x + dx) - g(x)
+; Dg(x) = ----------------
+;                dx
+;
+; Thus we can express the idea of derivative by
+
+(define dx 0.00001)
+(define (deriv g)
+  (lambda (x)
+    (/ (- (g (+ x dx)) (g x)) 
+       dx)))
+
+; Like average-damp deriv is a procedure that takes a procedure as argument and returns a procedure as
+; value. For example to approximate the derivative of x -> x3 at 5 (answer is 75) we can evaluate
+
+((deriv cube) 5)
+
+; With the aid of deriv, we can express Newton's method as a fixed-point process.
+
+(define (newton-transform g)
+  (lambda (x)
+    (- x (/ (g x) ((deriv g) x)))))
+(define (newtons-method g guess)
+  (fixed-point (newton-transform g) guess))
+
+; The newton-transform procedure expresses the formula at the beginning of this section, and 
+; newtons-method is readily defined in terms of this. It takes as arguments a procedure that
+; computes the function fo which we want to find a zero, together with an initial guess. For instance,
+; to find the square root of x, we can use Newton's method to find a zero of the function y -> y^2 - x
+; starting with an intial guess of 1. This provides yet another form of the square-root procedure
+
+(define (sqrt3 x)
+  (newtons-method (lambda (y) (- (square y) x))
+                  1.0))
+(sqrt3 64)
+
+
+; Abstractions and first-class procedures
+; We've seen two ways to express the square root computation as an instance of a more general method,
+; once as a fixed-point search and once using Newton's method. Since Newton's method was itself
+; expressed as a fixed-point process,we actuall saw two ways to compute square roots as fixed points.
+; Each method begins with a function and finds a fixed point of some transformation of the function.
+; We can express this general idea itself as a procedure
+
+(define (fixed-point-of-transform g transform guess)
+  (fixed-point (transform g) guess))
+
+; This very general procedure takes as its arguments a procedure g that computes some function, a
+; procedure that transforms g and an initial guess. The returned result is a fixed point of the
+; transformed function.
+
+; Using this abstraction, we can recast the first square-root computation from this section as
+; an instance of this general method.
+
+(define (sqrt4 x)
+  (fixed-point-of-transform (lambda (y) (/ x y))
+                            average-damp
+                            1.0))
+(sqrt4 16)
+
+; Similarly we can express the second square-root computation as
+
+(define (sqrt5 x)
+  (fixed-point-of-transform (lambda (y) (- (square y) x))
+                            newton-transform
+                            1.0))
+(sqrt5 16)
+
+; We began section 1.3 with the observation that compound procedures are a crucial abstraction
+; mechanism, because they permit us to express general methods of computing as explicit elements on
+; our programming language. Now we've seen how higher-prder procedures permit us to manipulate these 
+; general methods to create further abstracions.
+
+; As programmers, we should be alert to opportunities to identify the underlying abstractions in our
+; programs and to build upon them and generalize them to create more powerful abstractions. this is not
+; to say that one should always write programs in the most abstract way possible; expert programmers 
+; know how to choose the level of abstraction appropriate to their task. But it is important to be able to 
+; think in terms of these abstractions, so that we can be ready to apply them in new contexts. The 
+; significance of higher-order procesures is that they enable us to represent these abstractions explicitly
+; as elements in our programming language, so that they can be handled just like other computational elements.
+
+; In general, programming languages impose restrictions on the ways in which computational elements 
+; can be manipulated. Elements with the fewest restrictions are said to have first-class status. Some of
+; the "rights and privileges" of first-class elements are
+; - They may be named by variables
+; - They may be passed as arguments to procedures
+; - They may be returned as the results of procedures
+; - They may be included in data structures
+
+; Lisp, unlike other common programming languages, awards procedures full first-class status. This
+; poses challenges for efficient implementation, but the resulting gain in expressive power is enormous.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
