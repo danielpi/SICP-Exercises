@@ -361,7 +361,54 @@ cubeRoot(27)
 
 
 // Newton's Method
+// When we first introduced the square root procedure in section 1.1.7 we mentioned that this was a special case of Newton's method. If x -> g(x) is a differentiable function, then a solution of the equation g(x) = 0 is a fixed point of the function x -> f(x) where
+/*
+              g(x)
+  f(x) = x - -----
+             Dg(x)
+*/
+// Dg(x) is the derivative of g evaluated at x. Newton's method is the use of the fixed-point method we saw above to approximate a solution of the equation by finding a fixed point of the function f. For many functions g and for sufficiently good initial guesses for x, Newton's method converges very rapidly to a solution of g(x) = 0
 
+// In order to implement Newton's method as a procedure, we must first express the idea of derivative. Not that "derivative" like average damping, is something that transforms a function into another function. For instance the derivative of the function x -> x^3 is the function x -> 3x^2. In general if g is a function and dx is a small number then the derivative Dg of g is the function whose value at any number x is given by
+/*
+          g(x + dx) - g(x)
+  Dg(x) = ----------------
+                 dx
+*/
+
+// Thus we can express the idea of derivative as the procedure
+
+func deriv(g: (Double) -> Double) -> (Double) -> Double {
+    return { (x: Double) -> Double in
+                let dx = 0.00001
+                return (g(x + dx) - g(x)) / dx
+            }
+}
+
+// Like averageDamp, deriv is a procedure that takes a procedure as argument and returns a procedure as value. For example to approximate the derivative of x -> x^3 at 5 (whose exact value is 75) we can evaluate
+
+func cube(x: Double) -> Double { return x * x * x }
+deriv(cube)(5)
+
+let cubeDeriv = deriv(cube)
+
+// Create an array of doubles. Have a start value and an end value and a linear growing value for each value in between
+
+func linspace(start: Double, end: Double, steps: Int) -> [Double] {
+    var array = [Double](count: steps, repeatedValue: 0.0)
+    let stepSize = (end - start) / Double(steps - 1)
+    for (index, element) in enumerate(array) {
+        array[index] = start + (stepSize * Double(index))
+    }
+    return array
+}
+
+let x = linspace(-10, 10, 51)
+
+for value in x {
+    cube(value)
+    cubeDeriv(value)
+}
 
 
 
