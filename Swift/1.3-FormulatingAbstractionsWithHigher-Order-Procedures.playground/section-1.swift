@@ -328,5 +328,47 @@ sqrt(2.0)
 
 
 
+// 1.3.4 Procedures as Returned Values
+// The above examples demonstrate how the ability to pass procedures as arguments significantly enhances the expressive power of our programming language. We can achieve even more expressive power by creating procedures whose returned values are themselves procedures.
+
+// We can illustrate this idea by looking again at the fixed-point example described at the end of section 1.3.3. We formulated a new version of the square-root procedure as a fixed-point search, starting with the observation thatsqrt(x) is a fixed-point of the function y -> x/y. Then we used average dampingto make the approximations converge. Average damping is a useful general technique in itself. Namely, given a function f, we consider the function whose value at x is equal to the average of x and f(x).
+
+func averageDamp(f: (Double) -> Double) -> (Double) -> Double {
+    return { (x: Double) -> Double in return average(x, f(x)) }
+}
+
+func squareDouble(x: Double) -> Double {
+    return x * x
+}
+
+averageDamp(squareDouble)(10)
+
+// Using averageDamp we can reformulate the square-root procedure as follows
+
+func sqrt2(x: Double) -> Double {
+    return fixedPoint(averageDamp({ (y: Double) -> Double in return x / y }), 1.0)
+}
+
+sqrt2(64)
+
+// Notice how this formulation makes explicit the three ideas in the method: fixed-point search, average damping and the function y -> x/y. It is instructive to compare this formulation of the square-root method with the original version given in section 1.1.7. Bear in mind that these procedures express the same process, and notice how much clearer the idea becomes when we express the process in terms of these abstractions. In general there are many ways to formulate a process as a procedure. Experienced programmers kmow how to choose procedureal formulations that are particularly perspicuous, and where useful elements of the process are exposed as separate entities that can be reused in other applications. As a simple example of reuse, notice that the cube root of x is a fixed point of the function y -> x/y^2, so we can immediately generalise our square-root procedure to one that extracts cube roots.
+
+func cubeRoot(x: Double) -> Double {
+    return fixedPoint(averageDamp({ (y: Double) -> Double in return x / (y * y) }), 1.0)
+}
+
+cubeRoot(27)
+
+
+// Newton's Method
+
+
+
+
+
+
+
+
+
 
 
