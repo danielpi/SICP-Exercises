@@ -410,12 +410,69 @@ for value in x {
     cubeDeriv(value)
 }
 
+// With the aid of deriv we can express Newton's method as a fixed point process:
+
+func newtonTransform(g: (Double) -> Double) -> (Double) -> Double {
+    return { (x: Double) -> Double in return x - (g(x) / deriv(g)(x)) }
+}
+func newtonsMethod(g: (Double) -> Double, guess: Double) -> Double {
+    return fixedPoint(newtonTransform(g), guess)
+}
+
+// To find the square root of x we can use Newton's method to find a zero of the function y -> y^2 - x starting with an initial guess of 1.
+
+/*
+sqrt(x) = ?
+?^2 = x
+?^2 - x = 0 when ? == sqrt(x)
+*/
+
+// This provides yet another form of the square root procedure
+
+func sqrt3(x: Double) -> Double {
+    return newtonsMethod({ (y: Double) -> Double in return (y * y) - x }, 1.0)
+}
+sqrt3(64)
 
 
+// Abstractions and first-class procedures
+// We've seen two ways to express the square-root computation as an instance of a more general method, 
+//    1. As a fixed-pont search and
+//    2. Using Newton's method
+// Since Newton's method was itself expressed as a fixed-point process, we actually saw two ways to compute square roots as fixed points. Each method begins with a function and finds a fixed point of some transformation of the function. We can express this general idea itself as a procedure
 
+func fixedPointOfTransform(g: (Double) -> Double,
+                   transform: ((Double) -> Double) -> (Double) -> Double,
+                       guess: Double) -> Double {
+    return fixedPoint(transform(g), guess)
+}
 
+// This very general procedure takes as its arguments a procedure g that computes some function, a procedure that transforms g and an initial guess. The returned result is a fixed point of the transformed function.
 
+// Using this abstraction we can recast the first square root computation as an instance of this general method.
 
+func sqrt4(x: Double) -> Double {
+    return fixedPointOfTransform({ (y:Double) -> Double in return x / y }, averageDamp, 1.0)
+}
+sqrt4(2)
 
+// Similary we can express the second square-root computation from this section as
+
+func sqrt5(x: Double) -> Double {
+    return fixedPointOfTransform({ (y:Double) -> Double in return (y * y) - x }, newtonTransform, 1.0)
+}
+sqrt5(2)
+
+// We began section 1.3 with the observation that compound procedures are a crucial abstraction mechanism, because they permit us to express general methods of computing as explicit elements in our programming language. Now we've seen how higher-order procedures permit us to manipulate these general methods to create further abstractions.
+
+// As programmers we should be alert to opportunities to identify the underlying abstractions in our programs and to build upon them and generalise them to create more powerful abstractions. This is not to say that one should always write programs in the most abstract way possible, choose the right level of abstraction that is appropriate to the task. The significance of higher-order procedures is that they enable us to represent these abstractions expicitly as elements in our programming language, so that they can be handled just like other computational elements.
+
+// In general, programming languages impose restricitons on the ways in which computational elements can be manipulated. Elements with the fewest restricitions are said to have first-class status. Some of the "rights and privileges" of first-class elements are 
+//  - They may be named by variables
+//  - They may be passed as arguments to procedures
+//  - They may be returned as the results of procedures
+//  - They may be included in data structures
+
+// Swift, unlike other common programming languages, awards procedures full first-class status. This poses challenges for efficient implementation, but the resulting gain in expressive power is enormous.
 
 

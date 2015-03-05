@@ -17,6 +17,8 @@
 		E623CA841A918C7400ED9D5B /* Ex1.29-SimpsonsIntegration.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.29-SimpsonsIntegration.playground"; sourceTree = "<group>"; };
 		E62C48021AA40ABC001CE44A /* Ex1.36-X-Power-X.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.36-X-Power-X.playground"; sourceTree = "<group>"; };
 		E636147F1A5B581A00E495B9 /* 1.1-TheElementsOfProgramming.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "1.1-TheElementsOfProgramming.playground"; sourceTree = "<group>"; };
+		E63C8E731AA812020092B551 /* Ex1.40-Solve-Cubic.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.40-Solve-Cubic.playground"; sourceTree = "<group>"; };
+		E63C8E741AA8142D0092B551 /* Ex1.41-double.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.41-double.playground"; sourceTree = "<group>"; };
 		E63F83CF1A9312DE00E9AD85 /* Ex1.30-SumIterative.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.30-SumIterative.playground"; sourceTree = "<group>"; };
 		E646C6C81A9421300055017B /* Ex1.31-Product.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.31-Product.playground"; sourceTree = "<group>"; };
 		E646C6C91A95F67F0055017B /* Ex1.32-Accumulate.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.32-Accumulate.playground"; sourceTree = "<group>"; };
@@ -62,6 +64,8 @@
 				E6BA3BF31AA5703B00297A9D /* Ex1.37-Infinite-continued-fraction.playground */,
 				E6BA3BF41AA5797A00297A9D /* Ex1.38-Euler-e.playground */,
 				E6BA3BF51AA58D7500297A9D /* Ex1.39-Tan-Continuous-Function.playground */,
+				E63C8E731AA812020092B551 /* Ex1.40-Solve-Cubic.playground */,
+				E63C8E741AA8142D0092B551 /* Ex1.41-double.playground */,
 			);
 			name = "Chapter 1 Building Abstractions from Procedures";
 			sourceTree = "<group>";
