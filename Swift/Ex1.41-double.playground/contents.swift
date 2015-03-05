@@ -15,6 +15,9 @@ inc(5)
 double(inc)(5)
 
 // What value is returned by double(double(double))(inc)(5)
+
 double(double)
+
+// Can't seem to work out how to do this one.
 
 
