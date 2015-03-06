@@ -281,7 +281,7 @@
 
 ; Finding fixed points of functions
 ; A number is called a fixed point of a function f if x satifies the equation f(x) = x. For
-; some functions we can locate a fixed point by begining with a ninitial guess and applying
+; some functions we can locate a fixed point by begining with an initial guess and applying
 ; f repeatedly until the value doesn't change very much.
 
 (define (fixed-point2 f guess)
@@ -511,9 +511,6 @@
 
 ; Lisp, unlike other common programming languages, awards procedures full first-class status. This
 ; poses challenges for efficient implementation, but the resulting gain in expressive power is enormous.
-
-
-
 
 
 

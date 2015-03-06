@@ -13,10 +13,18 @@
 ; ((repeated square 2) 5)
 
 (define (square x) (* x x))
+(define (inc x) (+ x 1))
+
+(define (compose f g)
+  (lambda (x) (f (g x))))
 
 (define (repeated f n)
-  (if (= 1 n)
-      (lambda (x) (f x))
-      (repeated (lambda (x) (f (f x))) (- n 1))))
+  (define (iter g step)
+    (if (= step 1)
+        g
+        (iter (compose f g) (- step 1))))
+  (iter f n))
+ 
 
 ((repeated square 2) 5)
+((repeated inc 4) 5)

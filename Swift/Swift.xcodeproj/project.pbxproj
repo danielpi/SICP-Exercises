@@ -23,6 +23,9 @@
 		E646C6C81A9421300055017B /* Ex1.31-Product.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.31-Product.playground"; sourceTree = "<group>"; };
 		E646C6C91A95F67F0055017B /* Ex1.32-Accumulate.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.32-Accumulate.playground"; sourceTree = "<group>"; };
 		E66A58E31A6DF2ED00557760 /* 1.2-Procedures&theProcessesTheyGenerate.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "1.2-Procedures&theProcessesTheyGenerate.playground"; sourceTree = "<group>"; };
+		E68AE0D11AA919D100BD09DD /* Ex1.43-repeated.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.43-repeated.playground"; sourceTree = "<group>"; };
+		E68AE0D21AA9439200BD09DD /* Ex1.44-Smoothing.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.44-Smoothing.playground"; sourceTree = "<group>"; };
+		E68AE0D31AA95B2F00BD09DD /* Ex1.45-Finding-Roots.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.45-Finding-Roots.playground"; sourceTree = "<group>"; };
 		E6AB1D151AA32D6C001527C3 /* Ex1.35-Golden-Ratio.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.35-Golden-Ratio.playground"; sourceTree = "<group>"; };
 		E6BA3BF31AA5703B00297A9D /* Ex1.37-Infinite-continued-fraction.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.37-Infinite-continued-fraction.playground"; sourceTree = "<group>"; };
 		E6BA3BF41AA5797A00297A9D /* Ex1.38-Euler-e.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.38-Euler-e.playground"; sourceTree = "<group>"; };
@@ -68,6 +71,9 @@
 				E63C8E731AA812020092B551 /* Ex1.40-Solve-Cubic.playground */,
 				E63C8E741AA8142D0092B551 /* Ex1.41-double.playground */,
 				E6D3B8AC1AA86E1600CB5BEC /* Ex1.42-compose.playground */,
+				E68AE0D11AA919D100BD09DD /* Ex1.43-repeated.playground */,
+				E68AE0D21AA9439200BD09DD /* Ex1.44-Smoothing.playground */,
+				E68AE0D31AA95B2F00BD09DD /* Ex1.45-Finding-Roots.playground */,
 			);
 			name = "Chapter 1 Building Abstractions from Procedures";
 			sourceTree = "<group>";
