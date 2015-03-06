@@ -12,62 +12,32 @@ func smooth(f: (Double) -> Double) -> (Double) -> Double {
 
 // It is sometimes valuable to repeatedly smooth a function (that is, smooth the smoothed function) to obtain the n-fold smoothed function. Show how to generate the n-fold smoothed function of any given function using smooth and repeated from exersize 1.43
 
-func compose(f: (Double) -> Double, g: (Double) -> Double) -> (Double) -> Double {
-    return { (x: Double) -> Double in return f(g(x)) }
+func compose<T>(f: (T) -> T, g: (T) -> T) -> (T) -> T {
+    return { (x: T) -> T in return f(g(x)) }
 }
 
-func repeated(f: (Double) -> Double , n: Int) -> (Double) -> Double {
-    var iter:((Double) -> Double, Int) -> (Double) -> Double = { _ in return { _ in return 0.0 }}
-    iter = { (g: (Double) -> Double, step: Int) -> (Double) -> Double in
-        if (step == 1) {
-            return g
-        } else {
-            return iter(compose(f, g), step - 1)
-        }
+func repeatIter<T>(f: (T) -> T, g: (T) -> T, step: Int) -> (T) -> T {
+    if (step == 1) {
+        return g
+    } else {
+        return repeatIter(f, compose(f, g), step - 1)
     }
-    return iter(f, n)
 }
 
-
-
-
-/*
-func compose(f: ((Double) -> Double) -> (Double) -> Double, g: (Double) -> Double) -> ((Double) -> Double) -> (Double) {
-    return { ((x: Double) -> Double) -> (Double) -> Double in return f(g(x)) }
+func repeated<T>(f: (T) -> T , n: Int) -> (T) -> T {
+    return repeatIter(f, f, n)
 }
 
-func repeated(f: ((Double) -> Double) -> (Double) -> Double , n: Int) -> (Double) -> Double {
-    var iter:((Double) -> Double, Int) -> (Double) -> Double = { _ in return { _ in return 0.0 }}
-    iter = { (g: (Double) -> Double, step: Int) -> (Double) -> Double in
-        if (step == 1) {
-            return g
-        } else {
-            return iter(compose(f, g), step - 1)
-        }
-    }
-    return iter(f, n)
-}
-*/
+repeated(smooth, 3)(sin)(0.5)
+
+
 func nFoldSmooth(f: (Double) -> Double, n: Int) -> (Double) -> Double {
-    var iter: ((Double) -> Double, Int) -> (Double) -> Double = { _, _ in
-        { _ in 0.0 } }
-    iter = { (g: (Double) -> Double, step:Int) in
-        if (step == 0) {
-            return g
-        } else {
-            return iter(smooth(g), step - 1)
-        }
-    }
-    return iter(f, n)
+    return repeated(smooth, n)(f)
 }
 
 sin(0.5)
 smooth(sin)(0.5)
 nFoldSmooth(sin, 1)(0.5)
-nFoldSmooth(sin, 5)(0.5)
-
-
-// Need to revisit repeated and compose to see if I can make them work for nFold smooth
-
+nFoldSmooth(sin, 2)(0.5)
 
 

@@ -20,19 +20,18 @@ func compose<T>(f: (T) -> T, g: (T) -> T) -> (T) -> T {
     return { (x: T) -> T in return f(g(x)) }
 }
 
-
-func repeated(f: (Double) -> Double , n: Int) -> (Double) -> Double {
-    var iter:((Double) -> Double, Int) -> (Double) -> Double = { _ in return { _ in return 0.0 }}
-    iter = { (g: (Double) -> Double, step: Int) -> (Double) -> Double in
-        if (step == 1) {
-            return g
-        } else {
-            return iter(compose(f, g), step - 1)
-        }
+func repeatIter<T>(f: (T) -> T, g: (T) -> T, step: Int) -> (T) -> T {
+    if (step == 1) {
+        return g
+    } else {
+        return repeatIter(f, compose(f, g), step - 1)
     }
-    return iter(f, n)
 }
-repeated(square, 3)(5)
+
+func repeated<T>(f: (T) -> T , n: Int) -> (T) -> T {
+    return repeatIter(f, f, n)
+}
+repeated(square, 2)(5)
 repeated(inc, 9)(1)
 
 

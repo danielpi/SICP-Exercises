@@ -27,11 +27,37 @@ func averageDamp(f: (Double) -> Double) -> (Double) -> Double {
     return { (x: Double) -> Double in return average(x, f(x)) }
 }
 
+func compose<T>(f: (T) -> T, g: (T) -> T) -> (T) -> T {
+    return { (x: T) -> T in return f(g(x)) }
+}
+
+func repeatIter<T>(f: (T) -> T, g: (T) -> T, step: Int) -> (T) -> T {
+    if (step == 1) {
+        return g
+    } else {
+        return repeatIter(f, compose(f, g), step - 1)
+    }
+}
+
+func repeated<T>(f: (T) -> T , n: Int) -> (T) -> T {
+    return repeatIter(f, f, n)
+}
+
 
 func nthRoot(x: Double, n: Int) -> Double {
-    return fixedPoint(averageDamp({ (y: Double) -> Double in return x / pow(y, Double(n - 1)) }), 1.0)
+    let dampings = floor(log(Double(n)) / log(2))
+    let damper = repeated(averageDamp, Int(dampings))
+    return fixedPoint(damper({ (y: Double) -> Double in return x / pow(y, Double(n - 1)) }), 1.0)
 }
-nthRoot(2.0, 3)
 
-pow(3.0, 3 - 1)
+                // Dampings
+//nthRoot(2.0, 1) // 1
+nthRoot(2.0, 2) // 1
+nthRoot(2.0, 3) // 1
+nthRoot(2.0, 4) // 2
+nthRoot(2.0, 5) // 2
+nthRoot(2.0, 6) // 2
+nthRoot(2.0, 7) // 2
+nthRoot(2.0, 8) // 3
+nthRoot(2.0, 9) // 3
 
