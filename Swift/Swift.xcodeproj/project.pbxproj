@@ -17,6 +17,7 @@
 		E6234E061A8F53A800E88292 /* 1.3-FormulatingAbstractionsWithHigher-Order-Procedures.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "1.3-FormulatingAbstractionsWithHigher-Order-Procedures.playground"; sourceTree = "<group>"; };
 		E623CA841A918C7400ED9D5B /* Ex1.29-SimpsonsIntegration.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.29-SimpsonsIntegration.playground"; sourceTree = "<group>"; };
 		E62C48021AA40ABC001CE44A /* Ex1.36-X-Power-X.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.36-X-Power-X.playground"; sourceTree = "<group>"; };
+		E6303E6F1AAB2ACB002733FE /* 2.1-IntroductionToDataAbstraction.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "2.1-IntroductionToDataAbstraction.playground"; sourceTree = "<group>"; };
 		E636147F1A5B581A00E495B9 /* 1.1-TheElementsOfProgramming.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "1.1-TheElementsOfProgramming.playground"; sourceTree = "<group>"; };
 		E63C8E731AA812020092B551 /* Ex1.40-Solve-Cubic.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.40-Solve-Cubic.playground"; sourceTree = "<group>"; };
 		E63C8E741AA8142D0092B551 /* Ex1.41-double.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.41-double.playground"; sourceTree = "<group>"; };
@@ -38,10 +39,19 @@
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		E6303E701AAB2AD7002733FE /* Chapter 2 Building Abstractions with Data */ = {
+			isa = PBXGroup;
+			children = (
+				E6303E6F1AAB2ACB002733FE /* 2.1-IntroductionToDataAbstraction.playground */,
+			);
+			name = "Chapter 2 Building Abstractions with Data";
+			sourceTree = "<group>";
+		};
 		E63614781A5B57F800E495B9 = {
 			isa = PBXGroup;
 			children = (
 				E6F73DFA1A6DF39300EEE0FE /* Chapter 1 Building Abstractions from Procedures */,
+				E6303E701AAB2AD7002733FE /* Chapter 2 Building Abstractions with Data */,
 			);
 			sourceTree = "<group>";
 		};
