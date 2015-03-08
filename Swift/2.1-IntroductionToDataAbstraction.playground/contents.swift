@@ -44,6 +44,7 @@ func cdr<T>(innerCons: ConsPosition -> T) -> T {
     return innerCons(.Right);
 }
 
+// Above from https://gist.github.com/bcobb/70dac95ae10a39632e0b
 
 let x = cons(1, 2)
 car(x)
