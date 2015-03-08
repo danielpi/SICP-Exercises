@@ -55,3 +55,77 @@ car(car(z))
 car(cdr(z))
 
 // Pairs can be used as general purpose building blocks to create all sorts of complex data structures. The single compount-data primitive pair, implemented by the procedures cons, car, and cdr, is the only glue we need. Data objects constructed from pairs are called list-structured data.
+
+/*
+(define (cons x y)
+(lambda (m) (m x y)))
+(define (car z)
+(z (lambda (p q) p)))
+(define (cdr z)
+(z (lambda (p q) q)))
+*/
+
+// Representing rational numbers
+// Pairs offer a natural way to complete the rational-number system. Simply represent a rational number as a pair of two integers: a numerator and a denominator. Then makeRat, numer and denom are readily implemented as follows
+
+typealias Rational = (ConsPosition -> Int)
+
+func makeRat1(n: Int, d:Int) -> Rational {
+    return cons(n,d)
+}
+func numer(x: Rational) -> Int {
+    return car(x)
+}
+func denom(x: Rational) -> Int {
+    return cdr(x)
+}
+
+func printRat(x: Rational) {
+    println("\(numer(x))/\(denom(x))")
+}
+
+func addRat1(x: Rational, y: Rational) -> Rational {
+    return makeRat1((numer(x) * denom(y)) + (numer(y) * denom(x)), denom(x) * denom(y))
+}
+func subRat1(x: Rational, y: Rational) -> Rational {
+    return makeRat1((numer(x) * denom(y)) - (numer(y) * denom(x)), denom(x) * denom(y))
+}
+func mulRat1(x: Rational, y: Rational) -> Rational {
+    return makeRat1(numer(x) * numer(y), denom(x) * denom(y))
+}
+func divRat1(x: Rational, y: Rational) -> Rational {
+    return makeRat1(numer(x) * denom(y), denom(x) * numer(y))
+}
+func isEqualRat(x: Rational, y: Rational) -> Bool {
+    return (numer(x) * denom(y)) == (numer(y) * denom(x))
+}
+
+let oneHalf = makeRat1(1, 2)
+printRat(oneHalf)
+let oneThird = makeRat1(1, 3)
+printRat(addRat1(oneHalf, oneThird))
+printRat(mulRat1(oneHalf, oneThird))
+printRat(addRat1(oneThird, oneThird))
+
+// The final example shows that our rational-number implementation does not reduce numbers to lowest terms. We can remedy this by changing makeRat. 
+
+func gcd(a: Int, b: Int) -> Int {
+    if b == 0 {
+        return abs(a)
+    } else {
+        return gcd(b, a % b)
+    }
+}
+
+func makeRat2(n: Int, d:Int) -> Rational {
+    let g = gcd(n, d)
+    return cons(n/g, d/g)
+}
+
+func addRat2(x: Rational, y: Rational) -> Rational {
+    return makeRat2((numer(x) * denom(y)) + (numer(y) * denom(x)), denom(x) * denom(y))
+}
+
+printRat(addRat2(oneThird, oneThird))
+
+
