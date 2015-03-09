@@ -130,3 +130,31 @@ func addRat2(x: Rational, y: Rational) -> Rational {
 printRat(addRat2(oneThird, oneThird))
 
 
+// 2.1.2 Abstraction Barriers
+// In general, the underlying idea of data abstraction is to identify for each type of data object a basic set of operations in terms of which all manipulations of data objects of that type will be expressed, and then to use only those operations in manipulating the data.
+
+// We can envision the structure of the rational-number system as shown in figure 2.1. The horizontal lines represent abstraction barriers that isolate different levels of the system. At each level the barrier separates the programs (abov) that use the data abstraction from the programs (below that implement the data abstraction.
+
+// This simple idea has many advantages such as the fact that programs are easier to maintain and modify.
+
+// For example an alternative way to address the problem of reducing rational numbers to lowest terms  is to perform the reduction whenever we access the parts of a rational number, rather than when we construct it. This leads to different constructor and selector procedures:
+
+func makeRat(n: Int, d: Int) -> Rational {
+    return cons(n, d)
+}
+func numer2(x: Rational) -> Int {
+    let g = gcd(car(x), cdr(x))
+    return car(x) / g
+}
+func denom2(x: Rational) -> Int {
+    let g = gcd(car(x), cdr(x))
+    return cdr(x) / g
+}
+
+// If our typical use of rational numberswas to access the numerators and denominators of the same rational numbers many times, it would be preferable to compute the gcd when the rational numbers are constructed. If not, we may be better off waiting until access time to compute the gcd. In any case, when we change from one representation to the other, the procedures addRat, subRat and so on do not have to be modified.
+
+
+
+
+
+
