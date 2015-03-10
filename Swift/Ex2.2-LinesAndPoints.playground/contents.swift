@@ -74,4 +74,5 @@ func midpointSegment(x: Segment) -> Point {
 let origin = makePoint(0, 0)
 let end = makePoint(6, 9)
 let aLine = makeSegment(origin, end)
+let mid = midpointSegment(aLine)
 printPoint(midpointSegment(aLine))
