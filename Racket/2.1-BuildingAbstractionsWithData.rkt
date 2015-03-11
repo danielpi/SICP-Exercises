@@ -221,4 +221,64 @@ z
 ; to make progress on the rest of the system.
 
 
+; 2.1.3 What is meant by Data
+; We began the rational-number implementation by implementing the rational number operations add-rat,
+; sub-rat and so on interms of three unspecified procedures: make-rat, numer and denom. At that point we
+; could think of the operations as being defined in terms of data objects -- numerators, denominators and
+; rational numbers -- whose behaviour was specified by the latter three procedures.
 
+; But exactly what is meant by data? It is not enough to say "Whatever is implemented by the given
+; selectors and constructors. We need to guarantee that, if we construct a rational number x from a pair
+; of integers n and d, then extracting the numer and denom of x and dividing them should yield the same
+; result as dividing n by d.
+
+; In fact this is the only condition make-rat, numer and denom must fulfill in order to form a suitable
+; basis for a rational-number representation. In general, we can think of data as defined by some collection
+; of selectors and constructors, together with specified conditions that these procedures must fulfill in
+; order to be valid representations.
+
+; This point of view can serve to define not only "high-level" data objects but low level objects such
+; as pair as well. We never actually said what a pair was, only that the language supplied procedures
+; cons, car and cdr for operating on pairs. But the only thing we need to know about these three operations
+; is that if we glue two objects together using cons we can retreive the objects using car and cdr. Any 
+; triple of procedures that satisfies the above condition can be used as the basis for implementing pairs.
+
+; This point is illustrated strikingly by the fact that we could implement cons, car and cdr without using
+; any data structures at all but only using procedures. Here are the definitions
+
+(define (cons2 x y)
+  (define (dispatch m)
+    (cond ((= m 0) x)
+          ((= m 1) y)
+          (else (error "Argument not 0 or 1 -- CONS" m))))
+  dispatch)
+
+(define (car2 z) (z 0))
+(define (cdr2 z) (z 1))
+
+(define (make-rat3 n d) 
+  (let ((g (gcd n d)))
+    (cons2 (/ n g) (/ d g))))
+(define (numer3 x) (car2 x))
+(define (denom3 x) (cdr2 x))
+
+(define (print-rat3 x)
+  (newline)
+  (display (numer3 x))
+  (display "/")
+  (display (denom3 x)))
+
+(print-rat3 (make-rat3 5 2))
+
+; This use of procedures corresponds to nothing like our intuitive notion of what data should be.
+; Nevertheless, all we need to do to show that this is a valid way to repreent pairs is to verify
+; that these procedures satisfy the conditions given above.
+
+; The procedural implementation of pairs is a valid implementation, and if we access pairs using
+; only cons, car and cdr we cannot distinguish this implementation from one that uses "real" data
+; structures.
+
+; The point of exhibiting the procedureal representation of pairs is not that our language works
+; this way (in general it does not) but that it could work this way. The procedural representation
+; is perfectly adequate for representing pairs since it fulfills the only conditions that pairs need
+; to fulfill. 
