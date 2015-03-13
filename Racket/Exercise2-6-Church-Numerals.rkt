@@ -40,5 +40,10 @@
 ; Give a direct definition of the addition procedure + (not in terms of repeated application of
 ; add-1).
 
-(define (church+ a b)
-  
+(define (add a b)
+  (lambda (f)
+    (lambda (x)
+      ((a f) ((b f) x)))))
+
+(add one one)
+two
