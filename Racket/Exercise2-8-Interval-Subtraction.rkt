@@ -9,9 +9,9 @@
 (define (make-interval lower upper)
   (cons lower upper))
 (define (lower-bound interval)
-  (car interval))
+  (min (car interval) (cdr interval)))
 (define (upper-bound interval)
-  (cdr interval))
+  (max (car interval) (cdr interval)))
 
 (define (sub-interval x y)
   (make-interval (- (lower-bound x) (lower-bound y))
