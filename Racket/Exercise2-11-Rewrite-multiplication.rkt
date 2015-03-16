@@ -6,9 +6,10 @@
 
 ; Rewrite this procedure to take advantage of this fact.
 
-
+(define (negative? x) (< x 0))
+(define (positive? x) (> x 0))
 (define (make-interval lower upper)
-  (cons lower upper))
+  (cons (min lower upper) (max lower upper)))
 (define (lower-bound interval)
   (min (car interval) (cdr interval)))
 (define (upper-bound interval)
@@ -27,8 +28,30 @@
         (p4 (* (upper-bound x) (upper-bound y))))
     (make-interval (min p1 p2 p3 p4)
                    (max p1 p2 p3 p4))))
-;(define (mul-interval x y)
-;  (cond 
+(define (mul-interval x y)
+  (let ((lx (lower-bound x))
+        (ly (lower-bound y))
+        (ux (upper-bound x))
+        (uy (upper-bound y)))
+    (cond ((and (negative? lx) (negative? ly) (negative? ux) (negative? uy)) (make-interval (* lx ly)
+                                                                                             (* ux uy)))
+           ((and (positive? lx) (positive? ly) (positive? ux) (positive? uy)) (make-interval (* lx ly) 
+                                                                                             (* ux uy)))
+           ((and (negative? lx) (negative? ly) (positive? ux) (positive? uy)) (make-interval (min (* lx uy) (* ux ly))
+                                                                                             (* ux uy)))
+           ((and (negative? lx) (positive? ly) (positive? ux) (positive? uy)) (make-interval (* lx uy) 
+                                                                                             (* ux uy)))
+           ((and (positive? lx) (negative? ly) (positive? ux) (positive? uy)) (make-interval (* ux ly) 
+                                                                                             (* ux uy)))
+           ((and (negative? lx) (negative? ly) (positive? ux) (negative? uy)) (make-interval (* ux ly) 
+                                                                                             (* lx ly)))
+           ((and (negative? lx) (negative? ly) (negative? ux) (positive? uy)) (make-interval (* lx uy) 
+                                                                                             (* lx ly)))
+           (else (error "Didn't handle this case")))))
+            
+           
+           
+           
 (define (spans-zero interval)
   (if (> (upper-bound interval) 0)
       (< (lower-bound interval) 0)
@@ -46,6 +69,55 @@
 (define r4 (make-interval 0 1))
 (define r5 (make-interval -4 0))
 
-(mul-interval-old r1 r1)
-(mul-interval-old r2 r2)
-(mul-interval-old r3 r3)
+
+; Case 1
+; All 4 bounds are positive
+; (make-interval (* (lower-bound x) (lower-bound y))
+;                (* (upper-bound x) (upper-bnound y)))
+(display "Case 1") (newline)
+(mul-interval-old (make-interval 1 3) (make-interval 1 3))
+(mul-interval (make-interval 1 3) (make-interval 1 3))
+
+; Case 2
+; All 4 bounds are negative
+; (make-interval (* (lower-bound x) (lower-bound y))
+;                (* (upper-bound x) (upper-bnound y)))
+(display "Case 2") (newline)
+(mul-interval-old (make-interval -1 -3) (make-interval -1 -3))
+(mul-interval (make-interval -1 -3) (make-interval -1 -3))
+
+; Case 3
+; Both intervals span 0
+; (let ((p2 (* (lower-bound x) (upper-bound y)))
+;       (p3 (* (upper-bound x) (lower-bound y)))
+;       (p4 (* (upper-bound x) (upper-bound y))))
+;   (make-interval (min p2 p3)
+;                  p4)))
+(display "Case 3") (newline)
+(mul-interval-old (make-interval -1 3) (make-interval -2 3))
+(mul-interval (make-interval -1 3) (make-interval -2 3))
+
+; Case 4
+; One interval spans 0 the other is positive
+(display "Case 4") (newline)
+(mul-interval-old (make-interval -1 3) (make-interval 2 3))
+(mul-interval (make-interval -1 3) (make-interval 2 3))
+
+; Case 5
+; One interval spans 0 the other is positive
+(display "Case 5") (newline)
+(mul-interval-old (make-interval 1 3) (make-interval -2 3))
+(mul-interval (make-interval 1 3) (make-interval -2 3))
+
+; Case 6
+; One interval spans 0 the other is negative
+(display "Case 6") (newline)
+(mul-interval-old (make-interval -1 3) (make-interval -2 -3))
+(mul-interval (make-interval -1 3) (make-interval -2 -3))
+
+; Case 7
+; One interval spans 0 the other is negative
+(display "Case 7") (newline)
+(mul-interval-old (make-interval -1 -3) (make-interval -2 3))
+(mul-interval (make-interval -1 -3) (make-interval -2 3))
+
