@@ -328,3 +328,50 @@ z
                 (make-interval (/ 1.0 (upper-bound y))
                                (/ 1.0 (lower-bound y)))))
 
+; Sometimes it would be better to work with intervals that are specified as centers and widths
+; rather than upper and lower bounds.
+
+(define (make-center-width c w)
+  (make-interval (- c w) (+ c w)))
+(define (center i)
+  (/ (+ (lower-bound i) (upper-bound i)) 2))
+(define (width i)
+  (/ (- (upper-bound i) (lower-bound i)) 2))
+
+; Alternatively we would like to be able to work with intervals that are presented as a center
+; and a percentage tolerance. See question 2.12
+
+(define (make-center-percent c t)
+  (make-interval (- c (* c t)) (+ c (* c t))))
+(define (percent i)
+  (/ (width i) (center i)))
+
+; The formula for parallel resistors can be written in two algebraically equivilent ways
+;
+;  R1 R2
+; -------
+; R1 + R2
+;
+;                and
+;
+;      1
+; -----------
+; 1/R1 + 1/R2
+
+; Which can be written as
+
+(define (par1 r1 r2)
+  (div-interval (mul-interval r1 r2)
+                (add-interval r1 r2)))
+(define (par2 r1 r2)
+  (let ((one (make-interval 1 1)))
+    (div-interval one
+                  (add-interval (div-interval one r1)
+                                (div-interval one r2)))))
+
+; These two bits of code give different results for the same input
+
+
+
+
+

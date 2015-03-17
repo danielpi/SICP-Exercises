@@ -47,6 +47,10 @@
                                                                                              (* lx ly)))
            ((and (negative? lx) (negative? ly) (negative? ux) (positive? uy)) (make-interval (* lx uy) 
                                                                                              (* lx ly)))
+           ((and (negative? lx) (positive? ly) (negative? ux) (positive? uy)) (make-interval (* ux ly) 
+                                                                                             (* lx uy)))
+           ((and (positive? lx) (negative? ly) (positive? ux) (negative? uy)) (make-interval (* lx uy) 
+                                                                                             (* ux ly)))
            (else (error "Didn't handle this case")))))
             
            
@@ -71,7 +75,7 @@
 
 
 ; Case 1
-; All 4 bounds are positive
+; Both intervals are positive
 ; (make-interval (* (lower-bound x) (lower-bound y))
 ;                (* (upper-bound x) (upper-bnound y)))
 (display "Case 1") (newline)
@@ -79,7 +83,7 @@
 (mul-interval (make-interval 1 3) (make-interval 1 3))
 
 ; Case 2
-; All 4 bounds are negative
+; Both intervals are negative
 ; (make-interval (* (lower-bound x) (lower-bound y))
 ;                (* (upper-bound x) (upper-bnound y)))
 (display "Case 2") (newline)
@@ -104,7 +108,7 @@
 (mul-interval (make-interval -1 3) (make-interval 2 3))
 
 ; Case 5
-; One interval spans 0 the other is positive
+; One interval is positive and the other spans 0
 (display "Case 5") (newline)
 (mul-interval-old (make-interval 1 3) (make-interval -2 3))
 (mul-interval (make-interval 1 3) (make-interval -2 3))
@@ -116,8 +120,19 @@
 (mul-interval (make-interval -1 3) (make-interval -2 -3))
 
 ; Case 7
-; One interval spans 0 the other is negative
+; One interval is negative and the other spans 0
 (display "Case 7") (newline)
 (mul-interval-old (make-interval -1 -3) (make-interval -2 3))
 (mul-interval (make-interval -1 -3) (make-interval -2 3))
 
+; Case 8
+; One interval is negative and the other is positive
+(display "Case 8") (newline)
+(mul-interval-old (make-interval -1 -3) (make-interval 2 3))
+(mul-interval (make-interval -1 -3) (make-interval 2 3))
+
+; Case 9
+; One interval is positive and the other is negative
+(display "Case 9") (newline)
+(mul-interval-old (make-interval 1 3) (make-interval -2 -3))
+(mul-interval (make-interval 1 3) (make-interval -2 -3))
