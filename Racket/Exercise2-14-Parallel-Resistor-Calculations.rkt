@@ -55,6 +55,11 @@
 (par2 r1 r2)
 
 ; Investigate the behaviour of the system on a variety of arithmetic expressions.
+(define one (make-interval 1 1))
+(div-interval r1 r1)
+(div-interval r1 one)
+(mul-interval one r1)
+(add-interval one r1)
 
 ; Make some intervals A and B and use them in computing the expressions A/A and A/B. You
 ; will get the most insight by using intervals whose width is a small precentage of the 
