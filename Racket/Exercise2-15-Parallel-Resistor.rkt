@@ -1,11 +1,12 @@
 #lang racket
 
-; Exercise 2.14
-; Demonstrate that Lem is right. Investigate the behavior of the system on a variety 
-; of arithmetic expressions. Make some intervals A and B, and use them in computing 
-; the expressions A/A and A/B. You will get the most insight by using intervals whose 
-; width is a small percentage of the center value. Examine the results of the computation 
-; in center-percent form (see exercise 2.12).
+; Exercise 2.15
+; Another user has also noticed the different intervals computed by different but algebraically
+; equivalent expressions. She says that a formula to compute with intervals like ours will produce
+; tighter error bounds if it can be written in such a form that no variable that represents an 
+; uncertain number is repeated. Thus par2 is a "better" program for parallel resistances.
+; Is this right?
+
 
 (define (make-interval lower upper)
   (cons lower upper))
@@ -29,7 +30,6 @@
                 (make-interval (/ 1.0 (upper-bound y))
                                (/ 1.0 (lower-bound y)))))
 
-
 (define (make-center-width c w)
   (make-interval (- c w) (+ c w)))
 (define (center i)
@@ -43,7 +43,6 @@
 (define (percent i)
   (/ (width i) (center i)))
 
-; Demonstrate that par1 and par2 give different rsults for the same input.
 
 (define (par1 r1 r2)
   (div-interval (mul-interval r1 r2)
@@ -58,34 +57,4 @@
 (par1 r1 r2)
 (par2 r1 r2)
 
-; Investigate the behaviour of the system on a variety of arithmetic expressions.
-(define one (make-interval 1 1))
-(div-interval r1 r1)
-(div-interval r1 one)
-(mul-interval one r1)
-(add-interval one r1)
-
-(mul-interval r1 r2)
-(add-interval r1 r2)
-(div-interval one r1)
-(div-interval one r2)
-
-(par1 r1 r1)
-(par2 r1 r1)
-r1
-
-; Make some intervals A and B and use them in computing the expressions A/A and A/B. You
-; will get the most insight by using intervals whose width is a small precentage of the 
-; center value.
-(define A (make-center-percent 1000 0.01))
-(define B (make-center-percent 1000 0.01))
-
-(div-interval A A)
-(div-interval A B)
-
-; A/A must be 1.0 but our interval system is unable to get that result as it doesn't
-; contain the concept of an identity.
-
-; Examine the results of the computation in center-percent form
-
-
+; Certainly par2 gives tighter error bounds so this statement is right.
