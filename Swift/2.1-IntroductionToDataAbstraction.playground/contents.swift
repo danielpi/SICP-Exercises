@@ -154,6 +154,40 @@ func denom2(x: Rational) -> Int {
 // If our typical use of rational numberswas to access the numerators and denominators of the same rational numbers many times, it would be preferable to compute the gcd when the rational numbers are constructed. If not, we may be better off waiting until access time to compute the gcd. In any case, when we change from one representation to the other, the procedures addRat, subRat and so on do not have to be modified.
 
 
+// 2.1.3 What is meant by Data?
+// We began the rathional-number implementation in section 2.1.1 by implementing the rational-number operations addRat, subRat and so on in terms of three unspecified procedures: makeRat, numer and denom. At that point, we could think of the operations as being defined in terms of data objects -- numerators, denominators and rational numbers -- whose behavior was specified by the latter three procedures.
+
+// But what is meant by data? It is not enough to say "whatever is implemented by the given selectors and constructors." Clearly, not every arbitrary set of three procedures can serve as an appropriate basis for the rational-number implementation. We need to guarantee that, if we construct a rational number x from a pair of integers n and d, then extracting the numer and the denom of x and dividing them should yield the same result as dividing n by d.
+
+// In fact this is the only condition makeRat, numer, and denom must fulfill in order to form a suitable basis for a rational-number representation. In general, we can think of data as defined by some collection of selectors and constructors, together with specified conditions hat these procedures must fulfill in order to be a valid represntation.
+
+// This point of view can serve to define not only "high-level" data objects, such as rational numbers, but lower-level objects as well. Consider the notion of a pair, which we used in order to define our rational numbers. We never actually saidwhat a pair was, only that the language supplied procedures conc, car, and cdr for operating on pairs. But the only thing we need to know about these three operations is that if we glue two objects together using cons we can retrieve the objects using car and cdr. Indeed, we mentioned that these three procedures are included as primitives in our language. However, any triple of procedures that satisfied the above condition can be used as the basis for implementing pairs. This point is illustrated strikingly by the fact that we could implement cons, car, and cdr without using any data structures at all but only using procedures. Here are the definitions
+
+/*
+enum ConsPosition {
+    case Left, Right
+}
+
+func cons<T>(a: T, b: T) -> (ConsPosition -> T) {
+    func innerCons(i: ConsPosition) -> T {
+        if i == .Left {
+            return a;
+        } else {
+            return b;
+        }
+    }
+    
+    return innerCons;
+}
+
+func car<T>(innerCons: ConsPosition -> T) -> T {
+    return innerCons(.Left);
+}
+
+func cdr<T>(innerCons: ConsPosition -> T) -> T {
+    return innerCons(.Right);
+}
+*/
 
 
 
