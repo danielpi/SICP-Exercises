@@ -189,6 +189,36 @@ func cdr<T>(innerCons: ConsPosition -> T) -> T {
 }
 */
 
+// This use of procedures corresponds to nothing like our intuitive notion of what data should be. Nevertheless, all we need to do to show that this is a valid way to represent pairs is to verify that these procedures satisfy the condition given above.
+
+// The subtle point to notice is that the value returned by cons(x, y) is a procedure -- namely the internally defined procedure dispatch, which takes one argument and returns either x or y depending on whether the argument is 0 or 1. Therefore this procedural implementation of pairs is a valid implmentation and if we access pairs using only cons, car, and cdr we cannot distinguish this implementation from one that uses "real" data structures.
+
+typealias DRPFunction = (Int, Int) -> Int
+
+func cons2(x: Int, y: Int) -> (DRPFunction -> Int) {
+    return { (m:DRPFunction) -> Int in
+        return m(x, y)
+    }
+}
+
+let a = cons2(2, 3)
+func add(x: Int, y: Int) -> Int {
+    return x + y
+}
+
+a(add)
+
+func car3(p:Int, q:Int) -> Int {
+    return p
+}
+a(car3)
+
+//((Int, Int) -> Int)
+func car2(z:(DRPFunction -> Int)) -> Int {
+    return z({ (p:Int, q:Int) -> Int in return p })
+}
+
+car2(a)
 
 
 

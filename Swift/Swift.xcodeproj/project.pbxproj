@@ -30,6 +30,7 @@
 		E68AE0D11AA919D100BD09DD /* Ex1.43-repeated.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.43-repeated.playground"; sourceTree = "<group>"; };
 		E68AE0D21AA9439200BD09DD /* Ex1.44-Smoothing.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.44-Smoothing.playground"; sourceTree = "<group>"; };
 		E68AE0D31AA95B2F00BD09DD /* Ex1.45-Finding-Roots.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.45-Finding-Roots.playground"; sourceTree = "<group>"; };
+		E6A520131ABEEA3700BB0D9F /* Ex2.4-Procedural-Pairs.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.4-Procedural-Pairs.playground"; sourceTree = "<group>"; };
 		E6AB1D151AA32D6C001527C3 /* Ex1.35-Golden-Ratio.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.35-Golden-Ratio.playground"; sourceTree = "<group>"; };
 		E6BA3BF31AA5703B00297A9D /* Ex1.37-Infinite-continued-fraction.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.37-Infinite-continued-fraction.playground"; sourceTree = "<group>"; };
 		E6BA3BF41AA5797A00297A9D /* Ex1.38-Euler-e.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.38-Euler-e.playground"; sourceTree = "<group>"; };
@@ -49,6 +50,7 @@
 				E68028C11AABFB560046720A /* Ex2.1-MakeRational.playground */,
 				E6D5BA341AADB384007C9B20 /* Ex2.2-LinesAndPoints.playground */,
 				E616A2161AAF108E00BCE97E /* Ex2.3-Rectangles.playground */,
+				E6A520131ABEEA3700BB0D9F /* Ex2.4-Procedural-Pairs.playground */,
 			);
 			name = "Chapter 2 Building Abstractions with Data";
 			sourceTree = "<group>";
