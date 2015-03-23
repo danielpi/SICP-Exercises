@@ -136,3 +136,5 @@ func area2(rect: Rect2) -> Double {
 let rect2 = makeRect2(makePoint(0, 0), makeSize(4, 6))
 perimeter2(rect2)
 area2(rect2)
+
+
