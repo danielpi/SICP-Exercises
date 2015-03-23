@@ -24,4 +24,5 @@ func cdr2(z:Pair) -> Int {
 }
 cdr2(a)
 
+println("\(a)")
 
