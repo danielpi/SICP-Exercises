@@ -13,6 +13,7 @@
 		AA8DA81F1A82473500643C12 /* Ex1.25-expMod-Modified.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.25-expMod-Modified.playground"; sourceTree = "<group>"; };
 		E60401F61AA9673C00211ABE /* Ex1.46-Iterative-Improve.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.46-Iterative-Improve.playground"; sourceTree = "<group>"; };
 		E60A86D31A839C2200ACBA3C /* Ex1.26-expMod-Modified.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.26-expMod-Modified.playground"; sourceTree = "<group>"; };
+		E60FC5191AC0EAE2007A7197 /* Ex26ChurchNumerals.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Ex26ChurchNumerals.playground; sourceTree = "<group>"; };
 		E616A2161AAF108E00BCE97E /* Ex2.3-Rectangles.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.3-Rectangles.playground"; sourceTree = "<group>"; };
 		E61AD7481A871D2B0028163E /* Ex1.27-Carmichael-Numbers.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.27-Carmichael-Numbers.playground"; sourceTree = "<group>"; };
 		E6234E061A8F53A800E88292 /* 1.3-FormulatingAbstractionsWithHigher-Order-Procedures.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "1.3-FormulatingAbstractionsWithHigher-Order-Procedures.playground"; sourceTree = "<group>"; };
@@ -53,6 +54,7 @@
 				E616A2161AAF108E00BCE97E /* Ex2.3-Rectangles.playground */,
 				E68E2C6A1AC031A300CED4BA /* Ex24Pairs.playground */,
 				E66236C21ABFADA700F5E780 /* Ex25SingleIntBasedPairs.playground */,
+				E60FC5191AC0EAE2007A7197 /* Ex26ChurchNumerals.playground */,
 			);
 			name = "Chapter 2 Building Abstractions with Data";
 			sourceTree = "<group>";
