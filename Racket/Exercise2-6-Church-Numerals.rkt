@@ -19,11 +19,12 @@
 (add-1 zero)
 
 ; Substitution of above
-; (add-1 zero)
+;   (add-1 zero)
 ; - Grab the body of add-1
-; (lambda (f) (lambda (x) (f ((n f) x))))
+;   (lambda (f) (lambda (x) (f ((n f) x))))
 ; - Replace the formal parameters n with the body of zero
-; (lambda (f) (lambda (x) (f (((lambda (f) (lambda (x) x)) f) x))))
+;   (lambda (f) (lambda (x) (f ((zero f) x))))
+;   (lambda (f) (lambda (x) (f (((lambda (f) (lambda (x) x)) f) x))))
 
 ; I do not get this at all
 
@@ -33,8 +34,8 @@
 ; 2 = f(f(x)
 ; etc
 
-(define zero2 (lambda (f) (lambda (x) x)))
-(define one (lambda (f) (f (lambda (x) x))))
+(define zero2     (lambda (f) (lambda (x) x)))
+(define one    (lambda (f) (f (lambda (x) x))))
 (define two (lambda (f) (f (f (lambda (x) x)))))
 
 ; Give a direct definition of the addition procedure + (not in terms of repeated application of
