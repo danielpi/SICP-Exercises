@@ -43,6 +43,7 @@ func unchurch<A>(f : ((Int -> Int) -> Int -> A)) -> A {
 }
 
 unchurch(zero)
+unchurch(addOne(zero))
 
 
 
