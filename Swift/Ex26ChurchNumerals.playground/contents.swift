@@ -6,15 +6,15 @@ import Cocoa
 
 // I took the following from https://gist.github.com/CodaFi/b9ca5bcee6d7ea9ff158
 
-func zero<A, B>(a : A) -> B -> B {
-    return { (b : B) -> B in
+func zero<A, B>(a: A) -> B -> B {
+    return { (b: B) -> B in
         return b
     }
 }
 
-func addOne<A, B, C>(n : ((A -> B) -> C -> A)) -> (A -> B) -> C -> B {
-    return { (f : (A -> B)) -> C -> B in
-        return { (x : C) -> B in
+func addOne<A, B, C>(n: ((A -> B) -> C -> A)) -> (A -> B) -> C -> B {
+    return { (f: (A -> B)) -> C -> B in
+        return { (x: C) -> B in
             return f(n(f)(x))
         }
     }
@@ -74,20 +74,33 @@ return f( return { (b : B) -> B in return b }(f)(x))
 
 */
 
-/*
-func one<A, B>(a : A) -> B -> B {
-    return { (f : (A -> B)) -> C -> B in
-        return { (x : C) -> B in
-            return f(f( f(f)(x)))
+func one<A>(f : (A -> A)) -> (A) -> A {
+    return { (x : A) -> A in
+        return f(x)
+    }
+}
+unchurch(one)
+
+func two<A>(f : (A -> A)) -> (A) -> A {
+    return { (x : A) -> A in
+        return f(f(x))
+    }
+}
+unchurch(two)
+
+// Give a direct definition of the addition procedure + (not in terms of repeated application of add-1
+
+//typealias ChurchNumeral<A> = (A -> A) -> (A) -> A
+func add<A, B, C>(a: (A -> B) -> C -> B, b: (A -> B) -> C -> B) -> (A -> B) -> C -> B {
+    return { (f: (A -> B)) -> C -> B in
+        return { (x: C) -> B in
+            return a(f)
         }
     }
 }
 
-unchurch(one)
-*/
+unchurch(add(one, two))
 
-
-// Give a direct definition of the addition procedure + (not in terms of repeated application of add-1
 
 
 
