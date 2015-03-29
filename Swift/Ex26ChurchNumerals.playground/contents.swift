@@ -91,15 +91,29 @@ unchurch(two)
 // Give a direct definition of the addition procedure + (not in terms of repeated application of add-1
 
 //typealias ChurchNumeral<A> = (A -> A) -> (A) -> A
-func add<A, B, C>(a: (A -> B) -> C -> B, b: (A -> B) -> C -> B) -> (A -> B) -> C -> B {
-    return { (f: (A -> B)) -> C -> B in
+/*func add<A, B, C>(a: (C -> B) -> C -> B, b: (C -> B) -> C -> B) -> (C -> B) -> C -> B {
+    return { (f: (C -> B)) -> C -> B in
         return { (x: C) -> B in
-            return a(f)
+            let bFunc = b(f)
+            let aFunc = a(f)
+            return aFunc(bFunc)
+        }
+    }
+}*/
+
+func plus<A, B, C>(m: A , n: A ) -> (B -> C -> C) {
+    return { (f : B) -> C -> C in
+        return { (x : C) -> C in
+            //let a = n(f)
+            //let b = m(f)
+            //let c = a(x)
+            //let d = b(c)
+            return f(x) //m(f)(n(f)(x))
         }
     }
 }
 
-unchurch(add(one, two))
+unchurch(plus(one, two))
 
 
 
