@@ -193,3 +193,60 @@ func cdr<T>(innerCons: ConsPosition -> T) -> T {
 
 // The subtle point to notice is that the value returned by cons(x, y) is a procedure -- namely the internally defined procedure dispatch, which takes one argument and returns either x or y depending on whether the argument is 0 or 1. Therefore this procedural implementation of pairs is a valid implmentation and if we access pairs using only cons, car, and cdr we cannot distinguish this implementation from one that uses "real" data structures.
 
+
+
+// 2.1.4 Extended Exercise: Interval Arithmetic
+// Alyssa P. Hacker is designing a system to help people solve engineering problems. One feature she wants to provide in her system is the ability to manipulate inexact quantities (such as measured parameters of physical devices). with known precision, so that when computations are done with such approcimate quantities the results will be numbers of known precision.
+
+// Electrical engineers will be using Alyssa's system to compute electrical quantities. It is sometimes necessary for thm to compute the value of a parallel equivalent resistance Rp of two resistors R1 and R2 using the formula
+
+//           1
+// Rp = -----------
+//      1/R1 + 1/R2
+
+// Resistance values are usually known only up to some tolerance guaranteed by the manufacturer of the resistor. For example, if you buy a resistor labeled "6.8 ohms with 10% tolerance" you can only be sure that the resistor has a resistance between 
+// 6.8 - 0.68 = 6.12 and
+// 6.8 + 0.68 = 7.48 ohms.
+// Thus, if you have a 6.8-ohm 10% resistor in parallel with a 4.7-ohm 5% resistor, the resistance of the combination can range from about 2.58 ohms (if the two resistors are at the lower bounds) to about 2.97 ohms (if the two resistors are at the upper bounds).
+
+// Alyssa's idea is to implement "interval arithmetic" as a set of arithmetic operations for combining "intervals" (objects that represent the range of possible values of an inexact quantity). The result of adding, subtracting, multiplying, or dividing two intervals is itself an interval, representing a range of the result.
+
+// Alyssa postulates the existence of an abstract object called an "interval" that has two endpoints: a lower bound and an upper bound. She also presumes that, given the endpoints of an interval, she can construct the interval using the data constructor make-interval().Alyssa first writes a procedure for adding two intervals. She reasons that the minimum value the sum could be is the sum of the two lower bounds and the maximum value it could be is the sum of the two upper bounds:
+
+struct Interval {
+    var lower: Double
+    var upper: Double
+    init(_ l: Double, _ u: Double) {
+        self.lower = min(l,u)
+        self.upper = max(l,u)
+    }
+}
+
+let a = Interval(6.7, 6.9)
+let b = Interval(2.1, 2.3)
+
+func +(lhs: Interval, rhs: Interval) -> Interval {
+    return Interval(lhs.lower + rhs.lower, lhs.upper + rhs.upper)
+}
+let c = a + b
+
+// Alyssa also works out the product of two intervals by finding the minimum and the maximum of the products of the bounds using them as the bounds o fthe resulting interval.
+
+func *(lhs: Interval, rhs: Interval) -> Interval {
+    let p1 = lhs.lower * rhs.lower
+    let p2 = lhs.lower * rhs.upper
+    let p3 = lhs.upper * rhs.lower
+    let p4 = lhs.upper * rhs.upper
+    return Interval(min(p1, p2, p3, p4), max(p1, p2, p3, p4))
+}
+let d = a * b
+
+// To divide two intervals, Alyssa multiplies the first by the reciprocal of the second. Note that the bounds of the reciprocal interval are the reciprocal of the upper bound and the reciprocal of the lower bound, in that order.
+
+func /(lhs: Interval, rhs: Interval) -> Interval {
+    return lhs * Interval(1 / rhs.upper, 1 / rhs.lower)
+}
+let e = d / b
+a
+
+

@@ -101,19 +101,17 @@ unchurch(two)
     }
 }*/
 
-func plus<A, B, C>(m: A , n: A ) -> (B -> C -> C) {
-    return { (f : B) -> C -> C in
-        return { (x : C) -> C in
-            //let a = n(f)
-            //let b = m(f)
-            //let c = a(x)
-            //let d = b(c)
-            return f(x) //m(f)(n(f)(x))
+// I have no idea how this works. Straight copy.
+func plus<A, B, C>(m : (B -> A -> C)) -> (B -> C -> A) -> B -> C -> C {
+    return { (n : (B -> C -> A)) -> B -> C -> C in
+        return { (f : B) -> C -> C in
+            return { (x : C) -> C in
+                return m(f)(n(f)(x))
+            }
         }
     }
 }
-
-unchurch(plus(one, two))
+unchurch(plus(one)(two))
 
 
 
