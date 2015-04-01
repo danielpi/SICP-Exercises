@@ -2,6 +2,9 @@
 
 import Cocoa
 
+// Exercise 2.7
+// Alyssa's program is incomplete because she has not specified the implementation of the interval abstraction. Define an interval constructor as well as the upper-bound and lower-bound access functions.
+
 struct Interval {
     var lower: Double
     var upper: Double
