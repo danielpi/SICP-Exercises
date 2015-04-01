@@ -38,6 +38,7 @@
 		E693FA471AC65C9300459BF7 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; };
 		E69824641ACBD40400D18A6C /* Ex2.9-Interval-Width.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.9-Interval-Width.playground"; sourceTree = "<group>"; };
 		E6AB1D151AA32D6C001527C3 /* Ex1.35-Golden-Ratio.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.35-Golden-Ratio.playground"; sourceTree = "<group>"; };
+		E6B5D34E1ACBE0E1008B7598 /* Ex2.10-Division-Spanning-Zero.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.10-Division-Spanning-Zero.playground"; sourceTree = "<group>"; };
 		E6BA3BF31AA5703B00297A9D /* Ex1.37-Infinite-continued-fraction.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.37-Infinite-continued-fraction.playground"; sourceTree = "<group>"; };
 		E6BA3BF41AA5797A00297A9D /* Ex1.38-Euler-e.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.38-Euler-e.playground"; sourceTree = "<group>"; };
 		E6BA3BF51AA58D7500297A9D /* Ex1.39-Tan-Continuous-Function.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.39-Tan-Continuous-Function.playground"; sourceTree = "<group>"; };
@@ -62,6 +63,7 @@
 				E67937D81ACBCF88002447DE /* Ex2.7-Make-Interval.playground */,
 				E67937D91ACBD015002447DE /* Ex2.8-Interval-Subtraction.playground */,
 				E69824641ACBD40400D18A6C /* Ex2.9-Interval-Width.playground */,
+				E6B5D34E1ACBE0E1008B7598 /* Ex2.10-Division-Spanning-Zero.playground */,
 			);
 			name = "Chapter 2 Building Abstractions with Data";
 			sourceTree = "<group>";
