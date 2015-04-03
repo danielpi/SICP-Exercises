@@ -45,6 +45,7 @@
 		E6BCAB741A8AF9690046EF18 /* Ex1.28-Miller-Rabin-Test.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.28-Miller-Rabin-Test.playground"; sourceTree = "<group>"; };
 		E6D3B8AC1AA86E1600CB5BEC /* Ex1.42-compose.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.42-compose.playground"; sourceTree = "<group>"; };
 		E6D5BA341AADB384007C9B20 /* Ex2.2-LinesAndPoints.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.2-LinesAndPoints.playground"; sourceTree = "<group>"; };
+		E6D7913B1ACE57AE00279DE9 /* Ex2.11-Optimised-Interval-Division.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.11-Optimised-Interval-Division.playground"; sourceTree = "<group>"; };
 		E6D7D5E21A9EEE6800777201 /* Ex1.34-FunctionsCallingFunctions.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.34-FunctionsCallingFunctions.playground"; sourceTree = "<group>"; };
 		E6FCEBC61A98A6E500E1AB59 /* Ex1.33-Filtered-Accumulate.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.33-Filtered-Accumulate.playground"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -64,6 +65,7 @@
 				E67937D91ACBD015002447DE /* Ex2.8-Interval-Subtraction.playground */,
 				E69824641ACBD40400D18A6C /* Ex2.9-Interval-Width.playground */,
 				E6B5D34E1ACBE0E1008B7598 /* Ex2.10-Division-Spanning-Zero.playground */,
+				E6D7913B1ACE57AE00279DE9 /* Ex2.11-Optimised-Interval-Division.playground */,
 			);
 			name = "Chapter 2 Building Abstractions with Data";
 			sourceTree = "<group>";
