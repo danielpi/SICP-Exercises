@@ -27,6 +27,7 @@
 		E646C6C81A9421300055017B /* Ex1.31-Product.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.31-Product.playground"; sourceTree = "<group>"; };
 		E646C6C91A95F67F0055017B /* Ex1.32-Accumulate.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.32-Accumulate.playground"; sourceTree = "<group>"; };
 		E66236C21ABFADA700F5E780 /* Ex25SingleIntBasedPairs.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Ex25SingleIntBasedPairs.playground; sourceTree = "<group>"; };
+		E6633D511AD0A57900FCC4CE /* Ex2.12-Center-Percent-Interval.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.12-Center-Percent-Interval.playground"; sourceTree = "<group>"; };
 		E66A58E31A6DF2ED00557760 /* 1.2-Procedures&theProcessesTheyGenerate.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "1.2-Procedures&theProcessesTheyGenerate.playground"; sourceTree = "<group>"; };
 		E67937D81ACBCF88002447DE /* Ex2.7-Make-Interval.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.7-Make-Interval.playground"; sourceTree = "<group>"; };
 		E67937D91ACBD015002447DE /* Ex2.8-Interval-Subtraction.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.8-Interval-Subtraction.playground"; sourceTree = "<group>"; };
@@ -47,6 +48,7 @@
 		E6D5BA341AADB384007C9B20 /* Ex2.2-LinesAndPoints.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.2-LinesAndPoints.playground"; sourceTree = "<group>"; };
 		E6D7913B1ACE57AE00279DE9 /* Ex2.11-Optimised-Interval-Division.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.11-Optimised-Interval-Division.playground"; sourceTree = "<group>"; };
 		E6D7D5E21A9EEE6800777201 /* Ex1.34-FunctionsCallingFunctions.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.34-FunctionsCallingFunctions.playground"; sourceTree = "<group>"; };
+		E6D8B2561AD0AC6F000ED7EA /* Ex2.13-Interval-small-tolerances.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.13-Interval-small-tolerances.playground"; sourceTree = "<group>"; };
 		E6FCEBC61A98A6E500E1AB59 /* Ex1.33-Filtered-Accumulate.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.33-Filtered-Accumulate.playground"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -66,6 +68,8 @@
 				E69824641ACBD40400D18A6C /* Ex2.9-Interval-Width.playground */,
 				E6B5D34E1ACBE0E1008B7598 /* Ex2.10-Division-Spanning-Zero.playground */,
 				E6D7913B1ACE57AE00279DE9 /* Ex2.11-Optimised-Interval-Division.playground */,
+				E6633D511AD0A57900FCC4CE /* Ex2.12-Center-Percent-Interval.playground */,
+				E6D8B2561AD0AC6F000ED7EA /* Ex2.13-Interval-small-tolerances.playground */,
 			);
 			name = "Chapter 2 Building Abstractions with Data";
 			sourceTree = "<group>";

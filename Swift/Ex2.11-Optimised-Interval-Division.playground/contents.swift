@@ -12,8 +12,7 @@ struct Interval {
         get {
             return (upper - lower) / 2
         }
-    }
-    
+    }    
     init(_ l: Double, _ u: Double) {
         self.lower = min(l,u)
         self.upper = max(l,u)
@@ -99,9 +98,6 @@ mulInterval(negative, spans)
 mulInterval(positive, negative)
 mulInterval(spans, negative)
 mulInterval(negative, negative)
-
-
-
 
 
 

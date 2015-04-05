@@ -250,5 +250,53 @@ let e = d / b
 a
 
 
+// After debugging her program, Alyssa shows it to a potential user, who comlains that her program solves the wrong problem. He wants a program that can deal with numbers represented as a center value and an additive tolerance; for example, he wants to work with intervals such as 3.5 +- 0.15 rather than [3.35, 3.65]. Alyssa returns to her desk and fixes this problem by supplying an alternate constructor and alternate selectors:
+
+extension Interval {
+    var center: Double {
+        get {
+            return (lower + upper) / 2
+        }
+    }
+    var width: Double {
+        get {
+            return (upper - lower) / 2
+        }
+    }
+    init(center: Double, width: Double) {
+        self.lower = center - width
+        self.upper = center + width
+    }
+}
+
+// Unfortunately, most of Alyssa's users are engineers. Real engineering situations usually involve measurements with only a small uncertainty, measured as the ratio of the width of the interval to the midpoint of the interval. Engineers usually specify percentage tolerances on the parameters of devices, as in the resistor specifications given earlier.
+
+
+// After considerable work, Alyssa P. Hacker delivers her finished system. Several years later, after she has forgotten all about it, she gets a frenzied call from an irate user, Lem E. Tweakit. It seems that Lem has noticed that the formula for parallel resistors can be written in two algebraically equivalent ways
+
+//  R1R2
+// -------
+// R1 + R2
+
+//      1
+// -----------
+// 1/R1 + 1/R2
+
+// He has written the following two programs, each of which computes the parallel-resistors formula differently
+
+func parOne(a: Interval, b: Interval) -> Interval {
+    return (a * b) / (a + b)
+}
+
+func parTwo(a: Interval, b: Interval) -> Interval {
+    let one = Interval(1, 1)
+    return one / ((one / a) + (one / b))
+}
+
+let r1 = Interval(center: 3.3, percent: 0.01)
+let r2 = Interval(center: 4.7, percent: 0.01)
+
+
+
 
 
