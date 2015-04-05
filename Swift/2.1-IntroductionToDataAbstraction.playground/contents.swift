@@ -271,6 +271,16 @@ extension Interval {
 
 // Unfortunately, most of Alyssa's users are engineers. Real engineering situations usually involve measurements with only a small uncertainty, measured as the ratio of the width of the interval to the midpoint of the interval. Engineers usually specify percentage tolerances on the parameters of devices, as in the resistor specifications given earlier.
 
+extension Interval {
+    var percent: Double {
+        get {
+            return self.width / self.center
+        }
+    }
+    init(center: Double, percent: Double) {
+        self.init(center: center, width: center * percent)
+    }
+}
 
 // After considerable work, Alyssa P. Hacker delivers her finished system. Several years later, after she has forgotten all about it, she gets a frenzied call from an irate user, Lem E. Tweakit. It seems that Lem has noticed that the formula for parallel resistors can be written in two algebraically equivalent ways
 
@@ -294,7 +304,16 @@ func parTwo(a: Interval, b: Interval) -> Interval {
 }
 
 let r1 = Interval(center: 3.3, percent: 0.01)
-let r2 = Interval(center: 4.7, percent: 0.01)
+let r2 = Interval(center: 4.7, percent: 0.05)
+
+let pOne = parOne(r1, r2)
+pOne.center
+pOne.percent
+let pTwo = parTwo(r1, r2)
+pTwo.center
+pTwo.percent
+
+
 
 
 
