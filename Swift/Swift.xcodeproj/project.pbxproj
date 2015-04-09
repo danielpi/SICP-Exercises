@@ -39,6 +39,9 @@
 		E68AE0D31AA95B2F00BD09DD /* Ex1.45-Finding-Roots.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.45-Finding-Roots.playground"; sourceTree = "<group>"; };
 		E68E2C6A1AC031A300CED4BA /* Ex24Pairs.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Ex24Pairs.playground; sourceTree = "<group>"; };
 		E693FA471AC65C9300459BF7 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; };
+		E696F06F1AD685D700039485 /* Ex2.17-Last-Pair.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.17-Last-Pair.playground"; sourceTree = "<group>"; };
+		E696F0701AD6872C00039485 /* Ex2.18-Reverse.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.18-Reverse.playground"; sourceTree = "<group>"; };
+		E696F0711AD694A600039485 /* Ex2.19-Change-Counting-Revisited.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.19-Change-Counting-Revisited.playground"; sourceTree = "<group>"; };
 		E69824641ACBD40400D18A6C /* Ex2.9-Interval-Width.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.9-Interval-Width.playground"; sourceTree = "<group>"; };
 		E6AB1D151AA32D6C001527C3 /* Ex1.35-Golden-Ratio.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.35-Golden-Ratio.playground"; sourceTree = "<group>"; };
 		E6B5D34E1ACBE0E1008B7598 /* Ex2.10-Division-Spanning-Zero.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.10-Division-Spanning-Zero.playground"; sourceTree = "<group>"; };
@@ -78,6 +81,9 @@
 				E6B7AE841AD0DAC7006EE934 /* Ex2.15-Parallel-Calculator.playground */,
 				E6E1CE771AD0E33A007CDF5E /* Ex2.16-Improved-Interval.playground */,
 				E62C9C111AD15F7200B45633 /* 2.2-HierarchicalDataAndTheClosureProperty.playground */,
+				E696F06F1AD685D700039485 /* Ex2.17-Last-Pair.playground */,
+				E696F0701AD6872C00039485 /* Ex2.18-Reverse.playground */,
+				E696F0711AD694A600039485 /* Ex2.19-Change-Counting-Revisited.playground */,
 			);
 			name = "Chapter 2 Building Abstractions with Data";
 			sourceTree = "<group>";
