@@ -28,6 +28,7 @@
 		E63F83CF1A9312DE00E9AD85 /* Ex1.30-SumIterative.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.30-SumIterative.playground"; sourceTree = "<group>"; };
 		E646C6C81A9421300055017B /* Ex1.31-Product.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.31-Product.playground"; sourceTree = "<group>"; };
 		E646C6C91A95F67F0055017B /* Ex1.32-Accumulate.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.32-Accumulate.playground"; sourceTree = "<group>"; };
+		E661D6F71AD75C6A00C010A0 /* Ex2.20-Variadic-Parameters.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.20-Variadic-Parameters.playground"; sourceTree = "<group>"; };
 		E66236C21ABFADA700F5E780 /* Ex25SingleIntBasedPairs.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Ex25SingleIntBasedPairs.playground; sourceTree = "<group>"; };
 		E6633D511AD0A57900FCC4CE /* Ex2.12-Center-Percent-Interval.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.12-Center-Percent-Interval.playground"; sourceTree = "<group>"; };
 		E66A58E31A6DF2ED00557760 /* 1.2-Procedures&theProcessesTheyGenerate.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "1.2-Procedures&theProcessesTheyGenerate.playground"; sourceTree = "<group>"; };
@@ -84,6 +85,7 @@
 				E696F06F1AD685D700039485 /* Ex2.17-Last-Pair.playground */,
 				E696F0701AD6872C00039485 /* Ex2.18-Reverse.playground */,
 				E696F0711AD694A600039485 /* Ex2.19-Change-Counting-Revisited.playground */,
+				E661D6F71AD75C6A00C010A0 /* Ex2.20-Variadic-Parameters.playground */,
 			);
 			name = "Chapter 2 Building Abstractions with Data";
 			sourceTree = "<group>";
