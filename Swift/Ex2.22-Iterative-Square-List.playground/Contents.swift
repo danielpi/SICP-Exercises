@@ -55,6 +55,7 @@ func squareList2(items: [Int]) -> [Int] {
     return iter(items, [])
 }
 
+
 // This doesn't work either. Explain.
 
 // This doesn't work in our case because cons is defined as taking a value and an array of values, not an array of values and a value.
