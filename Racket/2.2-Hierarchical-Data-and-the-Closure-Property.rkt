@@ -167,3 +167,56 @@ one-through-four
 ; sequences to sequences. Section 2.2.3 expands on this use of sequences as a framework for
 ; organizing programs.
 
+
+; 2.2.2 Hierachical Structures
+; The representation of sequences in terms of lists generalizes naturally to represent sequences
+; whose elements may themselves be sequences. For example, we can regard the object (1 2) 3 4)
+; constructed by
+
+(cons (list 1 2) (list 3 4))
+
+; as a list of three items, the first of which is itself a list, (1 2). Indeed, this is suggested 
+; by the form in which the result is printed by the interpreter. 
+
+; Another way to think of sequences whose elements are sequences is as trees. The elements of
+; the sequence are the branches of the tree, and elements that are themselves sequences are 
+; subtrees. 
+
+; Recursion is a natural tool for dealing with tree structures, since we can often reduce
+; operations on trees to operations on their branches, which reduce to operations on the branches
+; of the branches, and so on, until we reach the leaves of the tree. As an example, compare the
+; length procedure of section 2.2.1 with the count-leaves procedure, which returns the total
+; number of leaves of a tree
+
+; To implement count-leaves, recall the recursive plan for computing length:
+; - Length of a list x is 1 plus length of the cdr of x
+; - Length of the empty list is 0
+
+; Count-leaves is similar. The value for the empty list is the same:
+; - Count-leaves of the empty list is 0
+
+; But in the reduction step, where we strip off the car of the list, we must take into account
+; that the car may itself be a tree whose leaves we need to count. Thus, the appropriate 
+; reduction step is
+; - Count-leaves of a tree x is count-leaves of the car of c plus count-leaves of the cdr of x
+
+; Finally by taking cars we reach actual leaves, so we need another base case:
+; - Count-leaves of a leaf is 1
+
+; To aid in writing recursive procedures on trees, Scheme provides the primitive predicate
+; pair?, which tests whether its argument is a pair. Here is the complete procedure
+
+(define (count-leaves x)
+  (cond ((null? x) 0)
+        ((not (pair? x)) 1)
+        (else (+ (count-leaves (car x))
+                 (count-leaves (cdr x))))))
+
+(define x (cons (list 1 2) (list 3 4)))
+(length x) ; 3
+(count-leaves x) ; 4
+
+(list x x) ; (((1 2) 3 4) ((1 2) 3 4))
+(length (list x x)) ; 2
+
+(count-leaves (list x x)) ; 8
