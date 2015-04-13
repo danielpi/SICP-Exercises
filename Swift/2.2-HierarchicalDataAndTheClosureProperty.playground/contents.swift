@@ -145,6 +145,51 @@ scaleList2([1, 2, 3, 4, 5], 10)
 // Map is an important construct not only because it captures a common pattern, but because it establishes a higher level of abstraction in dealing with lists. In the original definition of scaleList, the recursive structure of the program draws attention to the element-by-element processing of the list. Defining scaleList in terms of map suppresses that level of detail and emphasizes that scaling transforms a list of elements to a list of results. The difference between the two definitions is not that the computer is performing a different process (it isn't) but that we think about the process differently. In effect, map helps establish an abstraction barrier that isolates the implementation of procedures that trahsform lists from the details of how the elements of the list are extracted and combined. Like the barriers shown in figure 2.1, this abstraction gives us the flexibility to change the low-level details of how sequences are implemented, while preserving the conceptual framework of operations that transform sequences to sequences.
 
 
+// 2.2.2 Hierarchical Structures
+// The representation of sequences in terms of lists generalizes naturally to represent sequences whose elements may themselves be sequences. For example, we can regard the object ((1 2) 3 4) constructed by
+
+cons([1, 2], [3, 4])
+
+// as a list of three items, the first of which is itself a list, (1 2). Indeed, this is suggested by the form in which the result is printed by the interpreter.
+
+// Another way to think of sequences whose elements are sequences is as trees. The elements of the sequence are the branches of the tree, and elements that are themselves sequences are subtrees.
+
+// Recursion is a natural tool for dealing with tree structures, since we can often reduce operations on trees to operations on their branches, which reduce in turn to operations on the branches of the branches, and so on, until we reach the leaves of the tree. As an example, compare the length procedure of section 2.2.1 with the count-leaves procedure, which returns the total number of leaves of a tree.
+
+// To implement count-leaves, recall the recursive plan for computing length:
+// - Length of a list x is 1 plus length of the cdr of x
+// - Length of the empty list is 0
+
+// Count-leaves is similar. The value for the empty list is the same:
+// - Count-leaves of the empty list is 0
+// But in the reduction step, where we strip off the car of the list, we must take into account that the car may itself be a tree whose leaves we need to count. Thus, the appropriate reduction step is
+// - Count-leaves of a tree x is count-leaves of the car of x plus count-leaves of the cdr of x
+
+// Finally, by taking cars we reach actual leaves, so we need another base case:
+// - Count-leaves of a leaf is 1.
+
+// To aid in writing recursive procedures on trees, Scheme provides the primitive predicate pair?, which tests whether its argument is a pair. Here is the complete procedure
+
+func countLeaves(x: Int) -> Int {
+    return 1
+}
+
+func countLeaves(x: [Int]) -> Int {
+    switch true {
+    case x.isEmpty:
+        return 0
+    default:
+        return countLeaves(car(x)) + countLeaves(cdr(x))
+    }
+}
+
+func countLeaves(x: Pair<[Int],[Int]>) -> Int {
+    return countLeaves(car(x)) + countLeaves(cdr(x))
+}
+
+let x = cons([1,2],[3,4])
+countLeaves(x)
+
 
 
 
