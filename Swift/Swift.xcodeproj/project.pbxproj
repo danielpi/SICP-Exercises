@@ -38,6 +38,7 @@
 		E67937D81ACBCF88002447DE /* Ex2.7-Make-Interval.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.7-Make-Interval.playground"; sourceTree = "<group>"; };
 		E67937D91ACBD015002447DE /* Ex2.8-Interval-Subtraction.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.8-Interval-Subtraction.playground"; sourceTree = "<group>"; };
 		E68028C11AABFB560046720A /* Ex2.1-MakeRational.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.1-MakeRational.playground"; sourceTree = "<group>"; };
+		E6866C441ADF64680097106E /* Ex2.24-Tree-Diagrams.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.24-Tree-Diagrams.playground"; sourceTree = "<group>"; };
 		E68AE0D11AA919D100BD09DD /* Ex1.43-repeated.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.43-repeated.playground"; sourceTree = "<group>"; };
 		E68AE0D21AA9439200BD09DD /* Ex1.44-Smoothing.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.44-Smoothing.playground"; sourceTree = "<group>"; };
 		E68AE0D31AA95B2F00BD09DD /* Ex1.45-Finding-Roots.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.45-Finding-Roots.playground"; sourceTree = "<group>"; };
@@ -92,6 +93,7 @@
 				E6153A081ADA8EEB0031FA24 /* Ex2.21-Square-List.playground */,
 				E6153A091ADAA0050031FA24 /* Ex2.22-Iterative-Square-List.playground */,
 				E61601471ADB50C70081BF21 /* Ex2.23-For-Each.playground */,
+				E6866C441ADF64680097106E /* Ex2.24-Tree-Diagrams.playground */,
 			);
 			name = "Chapter 2 Building Abstractions with Data";
 			sourceTree = "<group>";
