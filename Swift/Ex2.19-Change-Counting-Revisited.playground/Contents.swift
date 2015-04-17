@@ -1,17 +1,5 @@
 import Cocoa
 
-func cons<A>(value: A, list: [A]) -> [A] {
-    var newList = list
-    newList.insert(value, atIndex: 0)
-    return newList
-}
-func car<A>(list:[A]) -> A {
-    return list[0]
-}
-func cdr<A>(list:[A]) -> [A] {
-    return Array(list[1..<list.count])
-}
-
 protocol MathematicsProtocol: Equatable, Comparable, IntegerLiteralConvertible {
     init(_ value: Int)
     init(_ value: Float)
@@ -31,9 +19,9 @@ extension Double: MathematicsProtocol {}
 
 // We want to rewrite the procedure cc so that its second argument is a list of the values of the coins to use rather than an integer specifying which coins to use. We could then have lists that defined each kind of currency:
 
-let usCoins = [50, 25, 10, 5, 1]
-let ukCoins = [100, 50, 20, 10, 5, 2, 1, 0.5]
-let ausCoins = [200, 100, 50, 20, 10, 5]
+let usCoins:List = [50, 25, 10, 5, 1]
+let ukCoins:List = [100, 50, 20, 10, 5, 2, 1, 0.5]
+let ausCoins:List = [200, 100, 50, 20, 10, 5]
 
 // We could then call cc as follows
 // cc(100, usCoins)
@@ -42,17 +30,17 @@ let ausCoins = [200, 100, 50, 20, 10, 5]
 
 // Define the procedures firstDenomination, exceptFirstDenomination and isNoMore in terms of primitive operations on list structures. Does the order of the list coinValues affect the answer produced by cc? Why or why not?
 
-func firstDenomination<T>(coinValues: [T]) -> T {
-    return car(coinValues)
+func firstDenomination<T>(coinValues: List<T>) -> T {
+    return car(coinValues)!
 }
-func exceptFirstDenomination<T>(coinValues: [T]) -> [T] {
-    return cdr(coinValues)
+func exceptFirstDenomination<T>(coinValues: List<T>) -> List<T> {
+    return cdr(coinValues)!
 }
-func isNoMore<T>(coinValues: [T]) -> Bool {
-    return coinValues.isEmpty
+func isNoMore<T>(coinValues: List<T>) -> Bool {
+    return coinValues.isEmpty()
 }
 
-func cc<T: MathematicsProtocol>(amount: T, coinValues: [T]) -> T {
+func cc<T: MathematicsProtocol>(amount: T, coinValues: List<T>) -> T {
     switch true {
     case amount == 0:
         return 1
