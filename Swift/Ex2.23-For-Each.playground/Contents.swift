@@ -1,23 +1,5 @@
 import Cocoa
 
-func cons<A>(value: A, list: [A]) -> [A] {
-    var newList = list
-    newList.insert(value, atIndex: 0)
-    return newList
-}
-func car<A>(list:[A]) -> A {
-    return list[0]
-}
-func cdr<A>(list:[A]) -> [A] {
-    return Array(list[1..<list.count])
-}
-func map<T, U>(proc:(T) -> U, items: [T]) -> [U] {
-    if items.isEmpty {
-        return []
-    } else {
-        return cons(proc(car(items)), map(proc, cdr(items)))
-    }
-}
 func square(x: Int) -> Int { return x * x }
 
 // Exercise 2.23
@@ -29,10 +11,10 @@ for x in [57, 321, 88] {
 
 // The value returned by the call to for-each (not illustrated above) can be something arbitrary, such as true. Give an implmentation of for-each
 
-func forEach<T>(proc: (T) -> (), items: [T]) {
-    if !items.isEmpty {
-        proc(car(items))
-        forEach(proc, cdr(items))
+func forEach<T>(proc: (T) -> (), items: List<T>) {
+    if !items.isEmpty() {
+        proc(car(items)!)
+        forEach(proc, cdr(items)!)
     }
 }
 

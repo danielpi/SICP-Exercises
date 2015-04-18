@@ -1,36 +1,18 @@
 import Cocoa
 
-func cons<A>(value: A, list: [A]) -> [A] {
-    var newList = list
-    newList.insert(value, atIndex: 0)
-    return newList
-}
-func car<A>(list:[A]) -> A {
-    return list[0]
-}
-func cdr<A>(list:[A]) -> [A] {
-    return Array(list[1..<list.count])
-}
-func map<T, U>(proc:(T) -> U, items: [T]) -> [U] {
-    if items.isEmpty {
-        return []
-    } else {
-        return cons(proc(car(items)), map(proc, cdr(items)))
-    }
-}
 func square(x: Int) -> Int { return x * x }
 
 // Exercise 2.22
 // Louis Reasoner tries to rewrite the first square-list procedure of exercise 2.21 so that it evolves an iterative process:
 
 
-func squareList(items: [Int]) -> [Int] {
-    var iter: ([Int], [Int]) -> [Int] = { _, _ in return [] }
+func squareList(items: List<Int>) -> List<Int> {
+    var iter: (List<Int>, List<Int>) -> List<Int> = { _, _ in return [] }
     iter = { things, answer in
-        if things.isEmpty {
+        if things.isEmpty() {
             return answer
         } else {
-            return iter(cdr(things), cons(square(car(things)), answer))
+            return iter(cdr(things)!, cons(square(car(things)!), answer))
         }
     }
     return iter(items, [])
@@ -43,13 +25,13 @@ squareList([1, 2, 3, 4])
 
 // Louis then tries to fix his bug by interchanging the arguments to cons:
 
-func squareList2(items: [Int]) -> [Int] {
-    var iter: ([Int], [Int]) -> [Int] = { _, _ in return [] }
+func squareList2(items: List<Int>) -> List<Int> {
+    var iter: (List<Int>, List<Int>) -> List<Int> = { _, _ in return [] }
     iter = { things, answer in
-        if things.isEmpty {
+        if things.isEmpty() {
             return answer
         } else {
-            return iter(cdr(things), cons(answer, square(car(things))))
+            return iter(cdr(things)!, cons(answer, square(car(things)!)))
         }
     }
     return iter(items, [])
