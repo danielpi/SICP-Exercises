@@ -220,3 +220,37 @@ one-through-four
 (length (list x x)) ; 2
 
 (count-leaves (list x x)) ; 8
+
+
+; Mapping over trees
+; Just as map is a powerful abstraction for dealing with sequences, map together with recursion 
+; is a powerful abstraction for dealing with trees. For instance, the scale-tree procedure, analogous
+; to scale-list of section 2.2.1, takes as arguments a numeric factor and a tree whose leaves
+; are numbers. It returns a tree of the same shape, where each number is multiplied by the factor.
+; The recursive plan for scale-tree is similar to the one for count-leaves:
+
+(define (scale-tree tree factor)
+  (cond ((null? tree) '())
+        ((not (pair? tree)) (* tree factor))
+        (else (cons (scale-tree (car tree) factor)
+                    (scale-tree (cdr tree) factor)))))
+(scale-tree (list 1 (list 2 (list 3 4) 5) (list 6 7)) 10)
+
+; Another way to implement scale-tree is to regard the tree as a sequence of sub-trees and use
+; map. We map over the sequence, scaling each sub-tree in turn, and return the list of results. In
+; the base case, where the tree is a leaf, we simply multiply by the factor:
+
+(define (scale-tree2 tree factor)
+  (map (lambda (sub-tree)
+         (if (pair? sub-tree)
+             (scale-tree2 sub-tree factor)
+             (* sub-tree factor)))
+       tree))
+(scale-tree2 (list 1 (list 2 (list 3 4) 5) (list 6 7)) 10)
+
+; Many tree operations can be implemented by similar combinations of sequence operations and
+; recursion.
+
+
+
+
