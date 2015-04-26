@@ -7,11 +7,41 @@
 ; of a procedure that generates the set of subsets of a set and give a clear explanation of
 ; why it works:
 
+(define (reverse list)
+  (define (reverse-iter list reverse-list)
+    (if (null? list)
+        reverse-list
+        (reverse-iter (cdr list) (cons (car list) reverse-list))))
+  (reverse-iter list '()))
+
+(define (contains? A b)
+  (cond ((null? A) #f)
+        ((= (car A) b) #t)
+        (else (or (contains? (cdr A) b)))))
+;(contains? (list 1 2 3) 1) ; #t
+;(contains? (list 1 2 3) 3) ; #t
+;(contains? (list 1 2 3) 5) ; #f
+
+; Build up the output by grabbing each value from A that is not contained in B and appending
+; it to our output list.
+(define (relative-complement A B)
+  (define (iter AA BB output)
+    (if (null? AA)
+        output
+        (if (contains? BB (car AA))
+            (iter (cdr AA) BB output)
+            (iter (cdr AA) BB (append (list (car AA)) output)))))
+  (reverse (iter A B '())))
+  
+; (relative-complement (list 2 3) (list 3)) ; (2)
+; (relative-complement (list 1 2 3) (list 2)) ; (1 3)
+
+
 (define (subsets s)
   (if (null? s)
       (list '())
       (let ((rest (subsets (cdr s))))
-        (append rest (map (lambda (subset) s) rest)))))
+        (append rest (map (lambda (subset) (relative-complement s subset)) (reverse rest))))))
 
 (subsets (list 1 2 3))
 
@@ -28,10 +58,6 @@
 ; (subset (2 3))
 ; (s (2 3)) (rest (subset (3)) (append rest (map (??) rest))
 ; (s (2 3)) (append (() (3)) (map (??) (() (3))))
-;(lambda (the-rest) 
-;  (if (null? the-rest)
-;      s
-;      (exclude
 ; (() (3) (2) (2 3))
 
 (subsets (list 3))
@@ -42,17 +68,3 @@
 (subsets '())
 ; (s '()) (list '()) 
 ; (())
-(define (contains? A b)
-  (cond ((null? A) #f)
-        ((= (car A) b) #t)
-        (else (or (contains? (cdr A) b)))))
-(contains? (list 1 2 3) 1)
-(contains? (list 1 2 3) 3)
-(contains? (list 1 2 3) 5)
-
-(define (relative-complement A B)
-  (define (rc A b)
-    
-  )
-;(relative-complement (list 2 3) (list 3)) ; (2)
-;(relative-complement (list 1 2 3) (list 2)) ; (1 3)
