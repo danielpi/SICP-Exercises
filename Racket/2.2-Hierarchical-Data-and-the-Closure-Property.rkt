@@ -252,5 +252,44 @@ one-through-four
 ; recursion.
 
 
+; Sequences as Conventional Interfaces
+; In working with compound data, we've stressed how data abstraction permits us to design programs
+; without becoming enmeshed in the details of data representations, and how abstraction preserves
+; for us the flexibility to experiment with alternative representations. In this section, we
+; introduce another powerful design principle for working with data structures - the use of 
+; conventional interfaces.
+
+; In section 1.3 we saw how program abstractions, implemented as higher-order procedures, can 
+; capture common patterns in programs that deal with numerical data. Our ability to formulate 
+; analogous operations for working with compound data depends crucially on the style in which
+; we manipulate our data structures. Consider, for example, the following procedure, analogous
+; to the count-leaves procedure of sections 2.2.2, which takes a tree as argument and computes 
+; the sum of the squares of the leaves that are odd:
+
+(define (square x) (* x x))
+
+(define (sum-odd-squares tree)
+  (cond ((null? tree) 0)
+        ((not (pair? tree))
+         (if (odd? tree) (square tree) 0))
+        (else (+ (sum-odd-squares (car tree))
+                 (sum-odd-squares (cdr tree))))))
+
+(sum-odd-squares (list 1 2 3 (list 4 5) (list 6 7 8 9)))
+
+; On the surface, this procedure is very different from the following one, which constructs a 
+; list of all the even Fibonacci numbers Fib(k), where k is less than or equal to a given 
+; integer n:
+
+; (define (even-fibs n)
+;   (define (next k)
+;     (if (> k n)
+;         '()
+;         (let ((f (fib k)))
+;           (if (even? f)
+;               (cons f (next (+ k 1)))
+;               (next (+ k 1))))))
+;   (next 0))
+
 
 
