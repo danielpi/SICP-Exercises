@@ -281,16 +281,23 @@ one-through-four
 ; list of all the even Fibonacci numbers Fib(k), where k is less than or equal to a given 
 ; integer n:
 
-; (define (even-fibs n)
-;   (define (next k)
-;     (if (> k n)
-;         '()
-;         (let ((f (fib k)))
-;           (if (even? f)
-;               (cons f (next (+ k 1)))
-;               (next (+ k 1))))))
-;   (next 0))
+(define (fib n)
+  (cond ((= n 0) 0)
+         ((= n 1) 1)
+         (else (+ (fib (- n 1))
+                  (fib (- n 2))))))
 
+(define (even-fibs n)
+   (define (next k)
+     (if (> k n)
+         '()
+         (let ((f (fib k)))
+           (if (even? f)
+               (cons f (next (+ k 1)))
+               (next (+ k 1))))))
+   (next 0))
+
+(even-fibs 5)
 ; Despite the fact that these two procedures are structurally very different, a more abstract 
 ; description of the two computations reveals a great deal of similarity. The first program
 ;  - enumerates the leaves of a tree
@@ -326,4 +333,88 @@ one-through-four
 
 
 ; Sequence Operations
-; 
+; The key to organising programs so as to more clearly reflect the signal-flow structure is to 
+; concentrate on the "signals" that flow from one stage in the process to the next. If we represent 
+; these signals as lists, then we can use list operations to implement the processing at each of 
+; the stages. For instance, we can implement the mpping stages of the signal-flow diagrams using 
+; the map procedure from section 2.2.1:
+
+(map square (list 1 2 3 4 5))
+
+; Filtering a sequence to select only those elements that satisfy a given predicate is accomplished
+; by
+
+(define (filter predicate sequence)
+  (cond ((null? sequence) '())
+        ((predicate (car sequence))
+         (cons (car sequence)
+               (filter predicate (cdr sequence))))
+        (else (filter predicate (cdr sequence)))))
+
+(filter odd? (list 1 2 3 4 5))
+
+; Accumulations can be implemented by
+
+(define (accumulate op initial sequence)
+  (if (null? sequence)
+      initial
+      (op (car sequence)
+          (accumulate op initial (cdr sequence)))))
+
+(accumulate + 0 (list 1 2 3 4 5))
+(accumulate * 1 (list 1 2 3 4 5))
+(accumulate cons '() (list 1 2 3 4 5))
+  
+; All that remains to implement signal-flow diagrams is to enumerate the sequence of elements to
+; be processed. For even-fips, we need to generate the sequence of integers in a given range,
+; which we can do as follows:
+
+(define (enumerate-interval low high)
+  (if (> low high)
+      '()
+      (cons low (enumerate-interval (+ low 1) high))))
+(enumerate-interval 2 7)
+
+; To enumerate the leaves of a tree, we can use
+
+(define (enumerate-tree tree)
+  (cond ((null? tree) '())
+       ((not (pair? tree)) (list tree))
+       (else (append (enumerate-tree (car tree))
+                     (enumerate-tree (cdr tree))))))
+(enumerate-tree (list 1 (list 2 (list 3 4)) 5))
+
+; Now we can reformulate sum-odd-squares and even-fibs as in the signal-flow diagrams. For
+; sum-odd-squares, we enumerate the sequence of leaves of the tree, filter this to keep only
+; odd numbers in the sequence, square each element, and sum the results:
+
+(define (sum-odd-squares2 tree)
+  (accumulate + 0 (map square (filter odd? (enumerate-tree tree)))))
+
+(sum-odd-squares2 (list 1 2 3 (list 4 5) (list 6 7 8 9)))
+
+; For even-fibs, we enumerate the integers from 0 to n, generate the fibonacci number for each
+; of these integers, filter the resulting sequence to keep only the even elements, and accumulate
+; the results into a list:
+
+(define (even-fibs2 n)
+  (accumulate cons '() (filter even? (map fib (enumerate-interval 0 n)))))
+
+(even-fibs2 15)
+
+; The value of expressing programs as sequence operations is that this helps us make program 
+; designs that are modular, that is, designs that are constructed by combining relatively 
+; independent pieces. We can encourage modular design by providing a library of standard components
+; together with a conventional interface for connecting the components in flexible ways.
+
+; Modular construction is a powerful strategy for controlling complexity in engineering design.
+; In real signal-processing applications, for example, designers regularly build systems by cascading
+; elements selected from standardized families of filters and transducers. Similarly, sequence
+; operations provide a library of standard program elements that we can mix and match. For 
+; instance, we can reuse pieces from the sum-odd-squares and even-fibs procedures in a program
+; that constructs a list of the squares of the first n + 1 Fibonacci numbers:
+
+(define (list-fib-squares n)
+  (accumulate cons '() (map square (map fib (enumerate-interval 0 n)))))
+(list-fib-squares 10)
+
