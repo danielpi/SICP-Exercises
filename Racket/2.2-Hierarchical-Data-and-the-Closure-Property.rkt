@@ -418,3 +418,26 @@ one-through-four
   (accumulate cons '() (map square (map fib (enumerate-interval 0 n)))))
 (list-fib-squares 10)
 
+; We can rearrange the pieces and use them in computing the product of the squares of the odd integers
+; in a sequence
+
+(define (product-of-squares-of-odd-elements sequence)
+  (accumulate * 1 (map square (filter odd? sequence))))
+(product-of-squares-of-odd-elements (list 1 2 3 4 5))
+
+; We can also formulate conventional data-processing applications in terms of sequence operations. Suppose
+; we have a sequence of personnel records and we want to find the salary of the highest-paid programmer.
+; Assume that we have a selector salary that returns the salary of a record, and a predicate programmer? that 
+; tests if a record is for a programmer. Then we can write
+
+; (define (salary-of-highest-paid-programmer records)
+;   (accumulate max 0 (map salary (filter programmer? records))))
+
+; These examples give just a hint of the vast range of operations that can be expressed as sequence operations.
+
+; Sequences, implemented here as lists, serve as a conventional interface that permits us to combine processing
+; modules. Additionally, when we uniformly represent structures as sequences, we have localized the data-structure 
+; dependencies in our programs to a small number of sequence operations. By changing these, we can experiment with
+; alternative representations of sequences, while leaving the overall design of our programs intact. We will 
+; exploit this capability in section 3.5, when we generalise the sequence-processing paradigm to admit infinite
+; sequences.
