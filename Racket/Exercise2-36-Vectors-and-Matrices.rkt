@@ -38,11 +38,21 @@
 ; operations. (The procedure accumulate-n is defined in Exercise 2.36)
 
 (define (matrix-*-vector m v)
-  (map <> m))
+  (map (lambda (n) (dot-product n v)) m))
 
 (define (transpose mat)
-  (accumulate-n <> <> mat))
+  (accumulate-n cons '() mat))
 
 (define (matrix-*-matrix m n)
   (let ((cols (transpose n)))
-    (map <> m)))
+    (map (lambda (n) (matrix-*-vector cols n)) m)))
+
+(define m (list (list 1 2 3 4) (list 4 5 6 6) (list 6 7 8 9)))
+(define v (list 1 2 3 4))
+(define a (list (list 8 7) (list 6 5) (list 4 3) (list 2 1)))
+(define v2 (list (list 1 2 3 4)))
+
+(dot-product v v)
+(matrix-*-vector m v)
+(transpose m)
+(matrix-*-matrix v2 a)
