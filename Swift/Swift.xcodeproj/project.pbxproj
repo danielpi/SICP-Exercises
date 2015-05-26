@@ -31,6 +31,7 @@
 		E63F83CF1A9312DE00E9AD85 /* Ex1.30-SumIterative.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.30-SumIterative.playground"; sourceTree = "<group>"; };
 		E646C6C81A9421300055017B /* Ex1.31-Product.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.31-Product.playground"; sourceTree = "<group>"; };
 		E646C6C91A95F67F0055017B /* Ex1.32-Accumulate.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.32-Accumulate.playground"; sourceTree = "<group>"; };
+		E64F7C181B12E9C700B27C57 /* Ex2.28-Fringe.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.28-Fringe.playground"; sourceTree = "<group>"; };
 		E661D6F71AD75C6A00C010A0 /* Ex2.20-Variadic-Parameters.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.20-Variadic-Parameters.playground"; sourceTree = "<group>"; };
 		E66236C21ABFADA700F5E780 /* Ex25SingleIntBasedPairs.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Ex25SingleIntBasedPairs.playground; sourceTree = "<group>"; };
 		E6633D511AD0A57900FCC4CE /* Ex2.12-Center-Percent-Interval.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.12-Center-Percent-Interval.playground"; sourceTree = "<group>"; };
@@ -43,12 +44,15 @@
 		E68AE0D21AA9439200BD09DD /* Ex1.44-Smoothing.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.44-Smoothing.playground"; sourceTree = "<group>"; };
 		E68AE0D31AA95B2F00BD09DD /* Ex1.45-Finding-Roots.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.45-Finding-Roots.playground"; sourceTree = "<group>"; };
 		E68E2C6A1AC031A300CED4BA /* Ex24Pairs.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Ex24Pairs.playground; sourceTree = "<group>"; };
+		E691E6C91B1408E200DBAA12 /* Ex2.29-Binary-Mobile.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.29-Binary-Mobile.playground"; sourceTree = "<group>"; };
 		E693FA471AC65C9300459BF7 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; };
+		E695B1651B12E0E800C92955 /* Ex2.26-Append-Cons-List.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.26-Append-Cons-List.playground"; sourceTree = "<group>"; };
 		E696F06F1AD685D700039485 /* Ex2.17-Last-Pair.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.17-Last-Pair.playground"; sourceTree = "<group>"; };
 		E696F0701AD6872C00039485 /* Ex2.18-Reverse.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.18-Reverse.playground"; sourceTree = "<group>"; };
 		E696F0711AD694A600039485 /* Ex2.19-Change-Counting-Revisited.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.19-Change-Counting-Revisited.playground"; sourceTree = "<group>"; };
 		E69824641ACBD40400D18A6C /* Ex2.9-Interval-Width.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.9-Interval-Width.playground"; sourceTree = "<group>"; };
 		E6AB1D151AA32D6C001527C3 /* Ex1.35-Golden-Ratio.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.35-Golden-Ratio.playground"; sourceTree = "<group>"; };
+		E6B05B7C1B12E29700D71401 /* Ex2.27-Deep-Reverse.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.27-Deep-Reverse.playground"; sourceTree = "<group>"; };
 		E6B5D34E1ACBE0E1008B7598 /* Ex2.10-Division-Spanning-Zero.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.10-Division-Spanning-Zero.playground"; sourceTree = "<group>"; };
 		E6B7AE841AD0DAC7006EE934 /* Ex2.15-Parallel-Calculator.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.15-Parallel-Calculator.playground"; sourceTree = "<group>"; };
 		E6BA3BF31AA5703B00297A9D /* Ex1.37-Infinite-continued-fraction.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.37-Infinite-continued-fraction.playground"; sourceTree = "<group>"; };
@@ -96,6 +100,10 @@
 				E61601471ADB50C70081BF21 /* Ex2.23-For-Each.playground */,
 				E6866C441ADF64680097106E /* Ex2.24-Tree-Diagrams.playground */,
 				E6D4204C1AE3DEF30057712B /* Ex2.25-Moving-Through-Trees.playground */,
+				E695B1651B12E0E800C92955 /* Ex2.26-Append-Cons-List.playground */,
+				E6B05B7C1B12E29700D71401 /* Ex2.27-Deep-Reverse.playground */,
+				E64F7C181B12E9C700B27C57 /* Ex2.28-Fringe.playground */,
+				E691E6C91B1408E200DBAA12 /* Ex2.29-Binary-Mobile.playground */,
 			);
 			name = "Chapter 2 Building Abstractions with Data";
 			sourceTree = "<group>";
