@@ -25,7 +25,7 @@ enum Structure {
     case Structure(Box<Mobile>)
 }
 
-let aMobile = Mobile(left: Branch(length: 3, structure: .Weight(2)),
+let aMobile = Mobile(left: Branch(length: 4, structure: .Weight(2)),
                     right: Branch(length: 3, structure: .Structure(Box(Mobile(left: Branch(length: 1, structure: .Weight(1)), right: Branch(length: 1, structure: .Weight(1)))))))
 // a. Write the corresponding selectors left-branch and right -branch, which return the branches of a mobile, and branch-length and branch-structure, which return components of a branch
 
@@ -57,15 +57,30 @@ func isBalanced(mobile: Mobile) -> Bool {
     let leftBranch = mobile.left
     let rightBranch = mobile.right
     
-    let mob = (leftBranch, rightBranch)
+    var isBal = true
+    let leftTorque = branchWeight(leftBranch) * leftBranch.length
+    let rightTorque = branchWeight(rightBranch) * rightBranch.length
+    isBal = isBal && (leftTorque == rightTorque)
     
-    switch mob {
-    case let (.Weight(leftWeight), .Weight(rightWeight):
-        return (leftBranch.length * leftWeight) == (rightBranch.length * rightWeight)
-    case let (.Weight(leftWeight), .Structure(rightMobile)):
-        return (leftBranch.length * leftWeight) == (rightBranch.length * totalWeight(rightMobile.unbox)) && isBalanced(rightMobile.unbox)
+    switch leftBranch.structure {
+    case let .Structure(leftMobile):
+        isBal = isBal && isBalanced(leftMobile.unbox)
     default:
-        return false
+        println("Weight")
     }
+    
+    switch rightBranch.structure {
+    case let .Structure(rightMobile):
+        isBal = isBal && isBalanced(rightMobile.unbox)
+    default:
+        println("Weight")
+    }
+    
+    return isBal
 }
+
+isBalanced(aMobile)
+
+
+// This is a whole lot uglier than the Lisp version. 
 
