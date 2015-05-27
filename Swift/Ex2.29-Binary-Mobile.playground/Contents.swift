@@ -13,20 +13,64 @@ class Box<T>{
 struct Mobile {
     let left: Branch
     let right: Branch
+    
+    var weight: Int {
+        return self.left.weight + self.right.weight
+    }
+    
+    var isBalanced: Bool {
+        return (left.torque == right.torque) && left.structure.isBalanced && right.structure.isBalanced
+    }
 }
 
 struct Branch {
     let length: Int
     let structure: Structure
+    
+    init(_ length: Int, _ structure: Structure) {
+        self.length = length
+        self.structure = structure
+    }
+    init(length: Int, structure: Structure) {
+        self.length = length
+        self.structure = structure
+    }
+    
+    var weight: Int {
+        switch self.structure {
+        case let Structure.Weight(weight):
+            return weight
+        case let Structure.Structure(mobile):
+            return mobile.unbox.weight
+        }
+    }
+    
+    var torque: Int {
+        return self.length * self.weight
+    }
 }
 
 enum Structure {
     case Weight(Int)
     case Structure(Box<Mobile>)
+    
+    var isBalanced: Bool {
+        switch self {
+        case .Weight(_):
+            return true
+        case .Structure(let boxedMobile):
+            let mobile = boxedMobile.unbox
+            return mobile.isBalanced
+        }
+    }
 }
 
-let aMobile = Mobile(left: Branch(length: 4, structure: .Weight(2)),
-                    right: Branch(length: 3, structure: .Structure(Box(Mobile(left: Branch(length: 1, structure: .Weight(1)), right: Branch(length: 1, structure: .Weight(1)))))))
+let aMobile = Mobile(left: Branch(length: 3, structure: .Weight(2)),
+                    right: Branch(length: 3, structure: .Structure(Box(Mobile(left: Branch(length: 2, structure: .Weight(1)), right: Branch(length: 2, structure: .Weight(1)))))))
+
+let bMobile = Mobile(left: Branch(3, .Weight(2)),
+                    right: Branch(3, .Structure(Box(Mobile(left: Branch(2, .Weight(1)),
+                                                          right: Branch(2, .Weight(1)))))))
 // a. Write the corresponding selectors left-branch and right -branch, which return the branches of a mobile, and branch-length and branch-structure, which return components of a branch
 
 let aBranch = aMobile.left
@@ -36,51 +80,14 @@ aBranch.structure
 
 // b. Using your selectors, define a procedure total-weight that returns the total weight of a mobile
 
-func branchWeight(branch: Branch) -> Int {
-    switch branch.structure {
-    case let .Weight(weight):
-        return weight
-    case let .Structure(mobile):
-        return totalWeight(mobile.unbox)
-    }
-}
-
-func totalWeight(mobile: Mobile) -> Int {
-    return branchWeight(mobile.left) + branchWeight(mobile.right)
-}
-totalWeight(aMobile)
-
+aMobile.weight
 
 // c. A mobile is said to be balanced if the torque applied by its top-left branch is equal to that applied by its top-right branch (that is, if the length of the left rod multiplied by the weight hanging from that rod is equal to the corresponding product for the right side) and if each of the submodules hanging off its branches is balanced. Design a predicate that tests whether a binary mobile is balanced.
 
-func isBalanced(mobile: Mobile) -> Bool {
-    let leftBranch = mobile.left
-    let rightBranch = mobile.right
-    
-    var isBal = true
-    let leftTorque = branchWeight(leftBranch) * leftBranch.length
-    let rightTorque = branchWeight(rightBranch) * rightBranch.length
-    isBal = isBal && (leftTorque == rightTorque)
-    
-    switch leftBranch.structure {
-    case let .Structure(leftMobile):
-        isBal = isBal && isBalanced(leftMobile.unbox)
-    default:
-        println("Weight")
-    }
-    
-    switch rightBranch.structure {
-    case let .Structure(rightMobile):
-        isBal = isBal && isBalanced(rightMobile.unbox)
-    default:
-        println("Weight")
-    }
-    
-    return isBal
-}
-
-isBalanced(aMobile)
+aMobile.isBalanced
 
 
-// This is a whole lot uglier than the Lisp version. 
+// This is a lot different from the ML version. I have done away with the global functions and used Swift properties instead. Not sure if this is a good idea or not. This method does result in the shortest code which I think remains easy to read. The data type definitions are starting to bloat admittedly. I'm not particularly happy with the isBalanced property on the structure but it makes the recursion work after Swift forced me to set the weight and mobiles as different types. The fact that isBalanced could be a very expensive operation, yet it looks like a simple property reference is not ideal (Also you need to understand that it is checking every structure in the whole mobile which is not really implied in the naming).
+
+
 
