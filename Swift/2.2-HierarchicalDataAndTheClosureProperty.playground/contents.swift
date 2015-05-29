@@ -250,15 +250,25 @@ let a = Tree.Node([Box(.Leaf(Box(3))), Box(.Leaf(Box(4)))])
 let b = Tree.node(Tree.leaf(1), Tree.node(Tree.leaf(2), Tree.list(3,4), Tree.leaf(5), Tree.list(6,7)))
 println("\(b)")
 
+protocol Multipliable: Equatable {
+    func *(lhs: Self, rhs: Self) -> Self
+}
+extension Int: Multipliable {}
+extension Double: Multipliable {}
 
-func scaleTree<T>(tree: Tree<T>, factor: T) -> Tree<T>? {
+func scaleTree<T: Multipliable>(tree: Tree<T>, factor: T) -> Tree<T> {
     switch tree {
     case let .Leaf(value):
-        return value.unbox * factor
+        return Tree.leaf(value.unbox * factor)
     case let .Node(values):
-        
+        let newValues = map(values) { Box(scaleTree($0.unbox, factor)) }
+        return Tree.Node(newValues)
     }
 }
+
+let c = scaleTree(b, 10)
+
+// I need a printTree to make check if this works.
 
 
 
