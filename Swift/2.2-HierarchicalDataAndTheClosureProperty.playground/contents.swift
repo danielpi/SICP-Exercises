@@ -24,6 +24,27 @@ func cdr<A,B>(pair: Pair<A,B>) -> B {
 
 // One of the useful structures we can build with pairs is a sequence -- an ordered collection of data objects. There are many ways to represent sequences in terms of pairs. One particularly straightforward representation is illustrated below for the sequence 1 2 3 4.
 
+let abcd = cons(1, cons(2, cons(3, cons(4,()))))
+
+/*
+let ab = cons(1, cons(2, ()))
+let cd = cons(3, cons(4, ()))
+let acdb = cons(ab, cd)
+
+println("\(acdb)")
+
+extension Array {
+    var decompose : (head: T, tail: [T])? {
+        return (count > 0) ? (self[0], Array(self[1..<count])) : nil
+    }
+}
+
+func list<T,U>(values: [T]) -> U {
+    if let (head, tail) = values.decompose {
+        return cons(head, list(tail))
+    }
+}
+*/
 cons(1, cons(2, cons(3, cons(4, []))))
 
 // Lisp systems conventionally print lists by printing the sequence of elements, enclosed in parentheses. In Swift a list literal looks like this [1, 2, 3, 4] but that isn't implemented via cons. I've had trouble writing a list function in Swift (I couldn't seem to make the generics work) so I'm switching to using an array as the base of the my lists. Thus I need car and cdr re-written to accept arrays.
@@ -191,6 +212,69 @@ func countLeaves(x: Pair<[Int],[Int]>) -> Int {
 
 let x = cons([1,2],[3,4])
 countLeaves(x)
+
+
+// Mapping over trees
+// Just as map is a powerful abstraction for dealing with sequences, map together with recursion is a powerful abstraction for dealing with trees. For instance, the scale-tree procedure, analogous to scale-list of section 2.2.1 takes as arguments a numeric factor and a tree whose leaves are numbers. It returns a tree of the same shape, where each number is multiplied by the factor. The recursive plan for scale-tree is similar to the one for count-leaves:
+
+class Box<T>{
+    let unbox: T
+    init(_ value: T) {
+        self.unbox = value
+    }
+}
+
+enum Tree<T> {
+    case Leaf(Box<T>)
+    case Node([Box<Tree<T>>])
+    
+    static func leaf(value: T) -> Tree<T> {
+        return Tree.Leaf(Box(value))
+    }
+    static func node(leaves: Tree<T>...) -> Tree<T> {
+        let boxed = map(leaves) { Box($0) }
+        return Tree.Node(boxed)
+    }
+    static func list(values: T...) -> Tree<T> {
+        let boxedValues = map(values) { Box($0) }
+        let leaves = map(boxedValues) { Tree.Leaf($0) }
+        let boxed = map(leaves) { Box($0) }
+        return Tree.Node(boxed)
+    }
+}
+
+//let xx = Tree.Node(Box([Tree.Node(Box([Tree.Leaf(Box(1)),Tree.Leaf(Box(2))]),Tree.Leaf(Box(3)), Tree.Leaf(Box(4)))]))
+
+let a = Tree.Node([Box(.Leaf(Box(3))), Box(.Leaf(Box(4)))])
+
+let b = Tree.node(Tree.leaf(1), Tree.node(Tree.leaf(2), Tree.list(3,4), Tree.leaf(5), Tree.list(6,7)))
+println("\(b)")
+
+
+func scaleTree<T>(tree: Tree<T>, factor: T) -> Tree<T>? {
+    switch tree {
+    case let .Leaf(value):
+        return value.unbox * factor
+    case let .Node(values):
+        
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
