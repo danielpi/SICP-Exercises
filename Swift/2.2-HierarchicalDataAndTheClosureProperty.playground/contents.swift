@@ -228,6 +228,16 @@ enum Tree<T> {
     case Leaf(Box<T>)
     case Node([Box<Tree<T>>])
     
+    var stringRepresentation: String {
+        switch self {
+        case let .Leaf(value):
+            return " \(value.unbox)"
+        case let .Node(values):
+            let strings = map(values) { $0.unbox.stringRepresentation }
+            return "\(strings)"
+        }
+    }
+    
     static func leaf(value: T) -> Tree<T> {
         return Tree.Leaf(Box(value))
     }
@@ -241,14 +251,18 @@ enum Tree<T> {
         let boxed = map(leaves) { Box($0) }
         return Tree.Node(boxed)
     }
+    
+    
 }
 
 //let xx = Tree.Node(Box([Tree.Node(Box([Tree.Leaf(Box(1)),Tree.Leaf(Box(2))]),Tree.Leaf(Box(3)), Tree.Leaf(Box(4)))]))
 
 let a = Tree.Node([Box(.Leaf(Box(3))), Box(.Leaf(Box(4)))])
+a.stringRepresentation
+
 
 let b = Tree.node(Tree.leaf(1), Tree.node(Tree.leaf(2), Tree.list(3,4), Tree.leaf(5), Tree.list(6,7)))
-println("\(b)")
+println("\(b.stringRepresentation)")
 
 protocol Multipliable: Equatable {
     func *(lhs: Self, rhs: Self) -> Self
@@ -267,8 +281,9 @@ func scaleTree<T: Multipliable>(tree: Tree<T>, factor: T) -> Tree<T> {
 }
 
 let c = scaleTree(b, 10)
+c.stringRepresentation
 
-// I need a printTree to make check if this works.
+
 
 
 
