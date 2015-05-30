@@ -21,6 +21,7 @@
 		E61AD7481A871D2B0028163E /* Ex1.27-Carmichael-Numbers.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.27-Carmichael-Numbers.playground"; sourceTree = "<group>"; };
 		E6234E061A8F53A800E88292 /* 1.3-FormulatingAbstractionsWithHigher-Order-Procedures.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "1.3-FormulatingAbstractionsWithHigher-Order-Procedures.playground"; sourceTree = "<group>"; };
 		E623CA841A918C7400ED9D5B /* Ex1.29-SimpsonsIntegration.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.29-SimpsonsIntegration.playground"; sourceTree = "<group>"; };
+		E6260E5E1B19CF9200952F4C /* Ex2.32-Subset.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.32-Subset.playground"; sourceTree = "<group>"; };
 		E62C48021AA40ABC001CE44A /* Ex1.36-X-Power-X.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.36-X-Power-X.playground"; sourceTree = "<group>"; };
 		E62C9C111AD15F7200B45633 /* 2.2-HierarchicalDataAndTheClosureProperty.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "2.2-HierarchicalDataAndTheClosureProperty.playground"; sourceTree = "<group>"; };
 		E6303E6F1AAB2ACB002733FE /* 2.1-IntroductionToDataAbstraction.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "2.1-IntroductionToDataAbstraction.playground"; sourceTree = "<group>"; };
@@ -108,6 +109,7 @@
 				E691E6C91B1408E200DBAA12 /* Ex2.29-Binary-Mobile.playground */,
 				E67604C81B1990A1002E000E /* Ex2.30-Square-Tree.playground */,
 				E6680EDB1B1996E500A93CFC /* Ex2.31-Abstract-Square-Tree.playground */,
+				E6260E5E1B19CF9200952F4C /* Ex2.32-Subset.playground */,
 			);
 			name = "Chapter 2 Building Abstractions with Data";
 			sourceTree = "<group>";
