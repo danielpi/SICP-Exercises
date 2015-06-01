@@ -19,6 +19,7 @@
 		E61601471ADB50C70081BF21 /* Ex2.23-For-Each.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.23-For-Each.playground"; sourceTree = "<group>"; };
 		E616A2161AAF108E00BCE97E /* Ex2.3-Rectangles.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.3-Rectangles.playground"; sourceTree = "<group>"; };
 		E61AD7481A871D2B0028163E /* Ex1.27-Carmichael-Numbers.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.27-Carmichael-Numbers.playground"; sourceTree = "<group>"; };
+		E61DAC6E1B1C6457001F3774 /* Ex2.35-Count-Leaves-Accumulation.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.35-Count-Leaves-Accumulation.playground"; sourceTree = "<group>"; };
 		E6234E061A8F53A800E88292 /* 1.3-FormulatingAbstractionsWithHigher-Order-Procedures.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "1.3-FormulatingAbstractionsWithHigher-Order-Procedures.playground"; sourceTree = "<group>"; };
 		E623CA841A918C7400ED9D5B /* Ex1.29-SimpsonsIntegration.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.29-SimpsonsIntegration.playground"; sourceTree = "<group>"; };
 		E6260E5E1B19CF9200952F4C /* Ex2.32-Subset.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.32-Subset.playground"; sourceTree = "<group>"; };
@@ -114,6 +115,7 @@
 				E6260E5E1B19CF9200952F4C /* Ex2.32-Subset.playground */,
 				E6541A371B1C277E00CDDF56 /* Ex2.33-Sequence-Puzzles.playground */,
 				E6541A381B1C2D1B00CDDF56 /* Ex2.34-Horners-Rule-For-Polynomials.playground */,
+				E61DAC6E1B1C6457001F3774 /* Ex2.35-Count-Leaves-Accumulation.playground */,
 			);
 			name = "Chapter 2 Building Abstractions with Data";
 			sourceTree = "<group>";
