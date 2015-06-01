@@ -284,20 +284,197 @@ let c = scaleTree(b, 10)
 c.stringRepresentation
 
 
+// 2.2.3 Sequences as Conventional Interfaces
+
+// In working with compound data, we've stressed how data abstraction permits us to design programs without becoming enmeshed in the details of data representations, and how abstraction preserves for us the flexibility to experiment with alternative representations. In this section we introduce another powerful design principle for working with data structures - the use of conventional interfaces.
+// In Section 1.3 we say how program abstractions, implemented as higher-order procedures, can capture common patterns in programs that deal with numerical data. Our ability to formulate analogous operations for working with compound data depends crucially on the style in which we manipulate our data structures. Consider, for example, the following procedure, analogous to the count-leaves procedure of section 2.2.2, which takes a tree as argument and computes the sum of the squares of the leaves that are odd:
+
+func isEven(x: Int) -> Bool {
+    return x % 2 == 0
+}
+func isOdd(x: Int) -> Bool {
+    return x % 2 != 0
+}
+
+isOdd(1)
+isOdd(2)
+isOdd(3)
+
+func square(x: Int) -> Int { return x * x }
+
+func sumOddSquares(tree: Tree<Int>) -> Int {
+    switch tree {
+    case .Leaf(let value):
+        return isOdd(value.unbox) ? square(value.unbox) : 0
+    case .Node(let values):
+        return reduce(values, 0) { $0 + sumOddSquares($1.unbox) }
+    }
+}
+
+1 + (3*3) + (5*5) + (7*7)
+sumOddSquares(b)
+
+//On the surface, this procedure is very different from the following one, which constructs a list of all the even Fibonacci numbers Fib(k), where k is less than or equal to a given integer n:
+
+func fib(n: Int) -> Int {
+    switch true {
+    case n == 0:
+        return 0
+    case n == 1:
+        return 1
+    default:
+        return fib(n - 1) + fib(n - 2)
+    }
+}
+
+func evenFibs(fromFirstNFibs n: Int) -> [Int] {
+    var next: (Int) -> [Int] = { _ in return [] }
+    next = { (k: Int) in
+        if k > n {
+            return []
+        } else {
+            let f = fib(k)
+            if isEven(f) {
+                return cons(f, next(k + 1))
+            } else {
+                return next(k + 1)
+            }
+        }
+    }
+    return next(0)
+}
+
+evenFibs(fromFirstNFibs: 10)
+
+// Despite the fact that these two procedures are structurally very different, a more abstract description of the two computations reveals a great deal of similarity. The first program
+// - Enumerates the leaves of a tree
+// - filters them, selecting the odd ones
+// - squares each of the selected ones, and
+// - accumulates the results using +, starting with 0
+
+// The second program
+// - Enumerates the integers from 0 to n
+// - computes the Fibonacci number for each integer
+// - filters them, selecting the even ones, and
+// - accumulates the results using cons, starting with an empty list
+
+// A signal processing engineer would find it natural to conceptualize these processes in terms of signals flowing through a cascade of stages, each of which implements part of the program plan. In sum-odd-squares, we begin with an enumerator, which generates a signal consisting of the leaves of a given tree. This signal is passed through a filter, which eliminates all but the odd elements. The resulting signal is in turn passed through a map, which is a transducer that applies the square procedure to each element. The output of the map is then fed to an accumulator, which combines the elements using +, starting from an initial 0. The plan for even-fibs is analogous.
+// Unfortunately, the two procedure definitions above fail to exhibit this signal-flow structure. For instance, if we examine the sum-odd-squares procedure, we find that the enumeration is implemented partly by the null? and pair? tests and partly bu the tree-recursive structure of the procedure. Similarly, the accumulation is found partly in the tests and partly in the addition used in the recursion In general, there are no distinct parts of either procedure that correspond to the elements in the signal-flow description. Our two procedures decompose the computations in a different way, spreading the enumeration over the program mingling it with the map, the filter and the accumulation. If we could organize our programs to make the signal-flow structure manifest in the procedures we write, this would increase the conceptual clarity of the resulting code.
 
 
+// Sequence Operations
+// The key to organising programs so as to more clearly reflect the signal-flow structure is to concentrate on the "signals" that flow from one stage in the process to the next. If we represent these signals as lists, then we can use list operations to implement the processing at each of the stages. For instance, we can implement the mapping stages of the signal-flow diagrams using the map procedure from section 2.2.1
 
+map([1,2,3,4,5], square)
 
+//Filtering a sequence to select only those elements that satisfy a given predicate is accomplished by
 
+func filterDRP(predicate: (Int) -> Bool, sequence: [Int]) -> [Int] {
+    switch true {
+    case sequence.isEmpty:
+        return []
+    case predicate(car(sequence)):
+        return cons(car(sequence), filterDRP(predicate, cdr(sequence)))
+    default:
+        return filterDRP(predicate, cdr(sequence))
+    }
+}
 
+filterDRP(isOdd, [1,2,3,4,5])
+filter([1,2,3,4,5], isOdd)
 
+// Accumulations can be implemented by
+func accumulate(op: (Int, Int) -> Int, initial: Int, sequence: [Int]) -> Int {
+    if sequence.isEmpty {
+        return initial
+    } else {
+        return op(car(sequence), accumulate(op, initial, cdr(sequence)))
+    }
+}
 
+accumulate(+, 0, [1,2,3,4,5])
+accumulate(*, 1, [1,2,3,4,5])
+// accumulate(cons, [], [1,2,3,4,5]) // Needs a generic version of accumulate.
 
+reduce([1,2,3,4,5], 0, +)
+reduce([1,2,3,4,5], 1, *)
 
+// All that remains to implement signal-flow diagrams is to enumerate the sequence of elements to be processed. For even-fibs, we need to generate the sequence of integers in a given range, which we can do as follows
 
+func enumerateInterval(low: Int, high:Int) -> [Int] {
+    if low > high {
+        return []
+    } else  {
+        return cons(low, enumerateInterval(low + 1, high))
+    }
+}
 
+enumerateInterval(3, 10)
 
+// or in Swift
+Array(3...10)
 
+// TO enumerate the leaves of a tree we can use
+func enumerateTree(tree: Tree<Int>) -> [Int] {
+    switch tree {
+    case .Leaf(let value):
+        return [value.unbox]
+    case .Node(let values):
+        return reduce(values, []) { $0 + enumerateTree($1.unbox) }
+    }
+}
+
+enumerateTree(b)
+enumerateTree(c)
+
+// Now we can reformulate sum-odd-squares and even-fibs as in the signal-flow diagrams. For sum-odd-squares, we enumerate the sequence of leaves of the tree, filter this to keep only the odd numbers in the sequence, square each element, and sum the results
+
+func sumOddSquares2(tree: Tree<Int>) -> Int {
+    return accumulate(+, 0, map(filterDRP(isOdd, enumerateTree(b)), square))
+}
+sumOddSquares2(b)
+
+func sumOddSquares3(tree: Tree<Int>) -> Int {
+    return reduce(map(filter(enumerateTree(b), isOdd), square), 0, +)
+}
+sumOddSquares3(b)
+
+// For even-fibs, we enumerate the integers from 0 to n, generate the fibonacci number for each of these integers, filter the resulting sequence to keep only the even elements, and accumulate the results into a list
+
+func evenFibs2(n: Int) -> [Int] {
+    return reduce(filter(map(0...n, fib), isEven), []) { $0 + [$1] }
+}
+evenFibs2(10)
+
+// The value of expressing programs as sequence operations is that this helps us make program designs that are modular, that is, designs that are constructed by combining relatively independent pieces. We can encourage modular design by providing a library of standard componsnts together with a conventional intergace for connecting the components in flexible ways.
+// Modular construction is a powerful strategy for controlling complexity in engineering design. In real signal-processing applications, for example, designers regularly build systems by cascading elements selected from standardized families of filters and transducers. Similarly, sequence operations provide a library of standard program elements that we can mix and match. For instance, we can reuse pieces from the sum-odd-squares and even-fibs procedures in a program that constructs a list of the squares of the first n + 1 Fibonaccy numbers:
+
+func listFibSquares(n: Int) -> [Int] {
+    return map(map(0...n, fib), square)
+}
+listFibSquares(10)
+
+// We can rearrange the pieces and use them in computing the product of the squares of the odd integers in a sequence:
+func productOfSquaresOfOddElements(sequence: [Int]) -> Int {
+    return reduce(map(filter(sequence, isOdd), square), 1, *)
+}
+productOfSquaresOfOddElements(Array(1...5))
+
+// We can also formulate conventional data-processing applications in terms of sequence operations. Suppose we have a sequence of personnel records and we want to find the salary of the highest-paid programmer. Assume that we have a selector salary that returns the salary of a record, and a predicate programmer? that tests if a record is for a programmer. Then we can write
+struct Employee {
+    let job: String
+    let salary: Int
+}
+
+func salaryOfHighestPaidProgrammer(records: [Employee]) -> Int {
+    return reduce(filter(records) { $0.job == "Programmer" }, 0) { max($0, $1.salary) }
+}
+
+let employees = [Employee(job: "Programmer", salary: 90000),Employee(job: "Programmer", salary: 70000), Employee(job: "Programmer", salary: 90010), Employee(job: "Gamer", salary: 900000)]
+salaryOfHighestPaidProgrammer(employees)
+
+// These examples give just a hint of the vast range of operations that can be expressed as sequence operations.
+// Sequences, implemented here as lists, serve as a conventional intergace that permits us to combine processing modules. Additionally, when we uniformly represent structures as sequences, we have localized the data-structure dependencies in our programs to a small number of sequence operations. By changing these we can experiment with alternative representations of sequences, while leaving the overall design of our programs intact. We will exploit this capability in Section 3.5, when we generalize the sequence-processing paradigm to admit infinite sequences.
 
 
 

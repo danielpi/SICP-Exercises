@@ -297,7 +297,8 @@ one-through-four
                (next (+ k 1))))))
    (next 0))
 
-(even-fibs 5)
+(display "even-fibs")
+(even-fibs 10)
 ; Despite the fact that these two procedures are structurally very different, a more abstract 
 ; description of the two computations reveals a great deal of similarity. The first program
 ;  - enumerates the leaves of a tree

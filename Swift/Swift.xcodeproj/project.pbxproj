@@ -33,6 +33,8 @@
 		E646C6C81A9421300055017B /* Ex1.31-Product.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.31-Product.playground"; sourceTree = "<group>"; };
 		E646C6C91A95F67F0055017B /* Ex1.32-Accumulate.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.32-Accumulate.playground"; sourceTree = "<group>"; };
 		E64F7C181B12E9C700B27C57 /* Ex2.28-Fringe.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.28-Fringe.playground"; sourceTree = "<group>"; };
+		E6541A371B1C277E00CDDF56 /* Ex2.33-Sequence-Puzzles.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.33-Sequence-Puzzles.playground"; sourceTree = "<group>"; };
+		E6541A381B1C2D1B00CDDF56 /* Ex2.34-Horners-Rule-For-Polynomials.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.34-Horners-Rule-For-Polynomials.playground"; sourceTree = "<group>"; };
 		E661D6F71AD75C6A00C010A0 /* Ex2.20-Variadic-Parameters.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.20-Variadic-Parameters.playground"; sourceTree = "<group>"; };
 		E66236C21ABFADA700F5E780 /* Ex25SingleIntBasedPairs.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Ex25SingleIntBasedPairs.playground; sourceTree = "<group>"; };
 		E6633D511AD0A57900FCC4CE /* Ex2.12-Center-Percent-Interval.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.12-Center-Percent-Interval.playground"; sourceTree = "<group>"; };
@@ -110,6 +112,8 @@
 				E67604C81B1990A1002E000E /* Ex2.30-Square-Tree.playground */,
 				E6680EDB1B1996E500A93CFC /* Ex2.31-Abstract-Square-Tree.playground */,
 				E6260E5E1B19CF9200952F4C /* Ex2.32-Subset.playground */,
+				E6541A371B1C277E00CDDF56 /* Ex2.33-Sequence-Puzzles.playground */,
+				E6541A381B1C2D1B00CDDF56 /* Ex2.34-Horners-Rule-For-Polynomials.playground */,
 			);
 			name = "Chapter 2 Building Abstractions with Data";
 			sourceTree = "<group>";
