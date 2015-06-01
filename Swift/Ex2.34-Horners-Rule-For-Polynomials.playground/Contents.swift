@@ -41,6 +41,12 @@ func hornerEval(x: Double, coefficientSequence: [Double]) -> Double {
 hornerEval(2, [1,3,0,5,0,1])
 
 func hornerEval2(x: Double, coefficientSequence: [Double]) -> Double {
-    return reduce(coefficientSequence, 0) { $0 * x + $1 }
+    return reduce(coefficientSequence, 0.0) { ($0 * x) + $1 }
 }
-hornerEval2(2, [1,3,0,5,0,1])
+hornerEval2(2, [1,0,5,0,3,1])
+// Note that the coefficients needed to have their order reversed to work with reduce. 
+
+
+
+
+
