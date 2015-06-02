@@ -36,7 +36,12 @@ func car<A>(list:[A]) -> A {
 func cdr<A>(list:[A]) -> [A] {
     return Array(list[1..<list.count])
 }
-func accumulate<A>(op: (A, A) -> A, initial: A, sequence: [A]) -> A {
+
+cons(4, a)
+cons(a, c)
+
+
+func accumulate<A,B>(op: (A, [A]) -> [A], initial: [A], sequence: [A]) -> [A] {
     if sequence.isEmpty {
         return initial
     } else {
@@ -44,7 +49,12 @@ func accumulate<A>(op: (A, A) -> A, initial: A, sequence: [A]) -> A {
     }
 }
 
-func accumulateN(op: (Int, Int) -> Int, initial: Int, sequence: [[Int]]) -> [Int] {
+cons(car(c), c)
+//let d: [Int] = accumulate(cons, 1, c)
+
+
+/*
+func accumulateN(op: (Int, [Int]) -> [Int], initial: Int, sequence: [[Int]]) -> [[Int]] {
     if car(sequence).isEmpty {
         return []
     } else {
@@ -53,5 +63,11 @@ func accumulateN(op: (Int, Int) -> Int, initial: Int, sequence: [[Int]]) -> [Int
 }
 
 func transpose(m: [[Int]]) -> [[Int]] {
-    return accumulateN(cons, [[]], m)
+    return accumulateN(cons, 0, m)
 }
+*/
+
+
+
+
+

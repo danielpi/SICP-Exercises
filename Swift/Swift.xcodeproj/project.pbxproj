@@ -59,6 +59,7 @@
 		E696F0701AD6872C00039485 /* Ex2.18-Reverse.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.18-Reverse.playground"; sourceTree = "<group>"; };
 		E696F0711AD694A600039485 /* Ex2.19-Change-Counting-Revisited.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.19-Change-Counting-Revisited.playground"; sourceTree = "<group>"; };
 		E69824641ACBD40400D18A6C /* Ex2.9-Interval-Width.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.9-Interval-Width.playground"; sourceTree = "<group>"; };
+		E69C29AA1B1D71DA00E776CC /* Ex2.38-foldl-foldr.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.38-foldl-foldr.playground"; sourceTree = "<group>"; };
 		E6AB1D151AA32D6C001527C3 /* Ex1.35-Golden-Ratio.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.35-Golden-Ratio.playground"; sourceTree = "<group>"; };
 		E6B05B7C1B12E29700D71401 /* Ex2.27-Deep-Reverse.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.27-Deep-Reverse.playground"; sourceTree = "<group>"; };
 		E6B5D34E1ACBE0E1008B7598 /* Ex2.10-Division-Spanning-Zero.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.10-Division-Spanning-Zero.playground"; sourceTree = "<group>"; };
@@ -120,6 +121,7 @@
 				E61DAC6E1B1C6457001F3774 /* Ex2.35-Count-Leaves-Accumulation.playground */,
 				E61DAC6F1B1C8352001F3774 /* Ex2.36-Accumulate-n.playground */,
 				E61DAC701B1C87E7001F3774 /* Ex-2.37-Matrix-and-Vector.playground */,
+				E69C29AA1B1D71DA00E776CC /* Ex2.38-foldl-foldr.playground */,
 			);
 			name = "Chapter 2 Building Abstractions with Data";
 			sourceTree = "<group>";
