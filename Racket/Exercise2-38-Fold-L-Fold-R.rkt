@@ -27,3 +27,6 @@
 
 ; Give a property that op should satisfy to guarantee that fold-right and fold-left will
 ; produce the same values for any sequence.
+
+; op needs to obey the commutativity property. This means that the function is the same 
+; in one direction as it is in the other.
