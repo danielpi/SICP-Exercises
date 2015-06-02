@@ -21,7 +21,7 @@
 		E61AD7481A871D2B0028163E /* Ex1.27-Carmichael-Numbers.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.27-Carmichael-Numbers.playground"; sourceTree = "<group>"; };
 		E61DAC6E1B1C6457001F3774 /* Ex2.35-Count-Leaves-Accumulation.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.35-Count-Leaves-Accumulation.playground"; sourceTree = "<group>"; };
 		E61DAC6F1B1C8352001F3774 /* Ex2.36-Accumulate-n.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.36-Accumulate-n.playground"; sourceTree = "<group>"; };
-		E61DAC701B1C87E7001F3774 /* Ex-2.37-Matrix-and-Vector.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex-2.37-Matrix-and-Vector.playground"; sourceTree = "<group>"; };
+		E61DAC701B1C87E7001F3774 /* Ex2.37-Matrix-and-Vector.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.37-Matrix-and-Vector.playground"; sourceTree = "<group>"; };
 		E6234E061A8F53A800E88292 /* 1.3-FormulatingAbstractionsWithHigher-Order-Procedures.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "1.3-FormulatingAbstractionsWithHigher-Order-Procedures.playground"; sourceTree = "<group>"; };
 		E623CA841A918C7400ED9D5B /* Ex1.29-SimpsonsIntegration.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.29-SimpsonsIntegration.playground"; sourceTree = "<group>"; };
 		E6260E5E1B19CF9200952F4C /* Ex2.32-Subset.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.32-Subset.playground"; sourceTree = "<group>"; };
@@ -70,6 +70,7 @@
 		E6BCAB741A8AF9690046EF18 /* Ex1.28-Miller-Rabin-Test.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.28-Miller-Rabin-Test.playground"; sourceTree = "<group>"; };
 		E6D3B8AC1AA86E1600CB5BEC /* Ex1.42-compose.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.42-compose.playground"; sourceTree = "<group>"; };
 		E6D4204C1AE3DEF30057712B /* Ex2.25-Moving-Through-Trees.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.25-Moving-Through-Trees.playground"; sourceTree = "<group>"; };
+		E6D59CAD1B1E6A03003F3130 /* Ex2.39-Reverse-with-fold.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.39-Reverse-with-fold.playground"; sourceTree = "<group>"; };
 		E6D5BA341AADB384007C9B20 /* Ex2.2-LinesAndPoints.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.2-LinesAndPoints.playground"; sourceTree = "<group>"; };
 		E6D7913B1ACE57AE00279DE9 /* Ex2.11-Optimised-Interval-Division.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.11-Optimised-Interval-Division.playground"; sourceTree = "<group>"; };
 		E6D7D5E21A9EEE6800777201 /* Ex1.34-FunctionsCallingFunctions.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.34-FunctionsCallingFunctions.playground"; sourceTree = "<group>"; };
@@ -120,8 +121,9 @@
 				E6541A381B1C2D1B00CDDF56 /* Ex2.34-Horners-Rule-For-Polynomials.playground */,
 				E61DAC6E1B1C6457001F3774 /* Ex2.35-Count-Leaves-Accumulation.playground */,
 				E61DAC6F1B1C8352001F3774 /* Ex2.36-Accumulate-n.playground */,
-				E61DAC701B1C87E7001F3774 /* Ex-2.37-Matrix-and-Vector.playground */,
+				E61DAC701B1C87E7001F3774 /* Ex2.37-Matrix-and-Vector.playground */,
 				E69C29AA1B1D71DA00E776CC /* Ex2.38-foldl-foldr.playground */,
+				E6D59CAD1B1E6A03003F3130 /* Ex2.39-Reverse-with-fold.playground */,
 			);
 			name = "Chapter 2 Building Abstractions with Data";
 			sourceTree = "<group>";
