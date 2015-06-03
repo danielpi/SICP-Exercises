@@ -478,6 +478,16 @@ salaryOfHighestPaidProgrammer(employees)
 
 
 
+// Nested Mappings
+// We can extend the sequence paradigm to include many computations that are commonly expressed using nested loops. Consider this problem: Given a positive integer n, find all ordered pairs of distinct positive integers i and j, where 1 <= j <= i <= n, such that i + j is prime. For example if n = 6, then the pairs are the following
+//   i   | 2 3 4 4 5 6 6
+//   j   | 1 2 1 3 2 1 5
+// ----------------------
+// i + j | 3 5 5 7 7 7 11
+
+// A natural way to organise this computaton is to generate the sequence of all ordered pairs of positive integers less than or equal to n, filter to select those whose sum is prime, and then, for each pair (i, j) that passes through the filter, produce the triple (i, j, i + j).
+
+
 
 
 
