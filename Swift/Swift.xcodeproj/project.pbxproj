@@ -61,6 +61,7 @@
 		E69824641ACBD40400D18A6C /* Ex2.9-Interval-Width.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.9-Interval-Width.playground"; sourceTree = "<group>"; };
 		E69C29AA1B1D71DA00E776CC /* Ex2.38-foldl-foldr.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.38-foldl-foldr.playground"; sourceTree = "<group>"; };
 		E6AB1D151AA32D6C001527C3 /* Ex1.35-Golden-Ratio.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.35-Golden-Ratio.playground"; sourceTree = "<group>"; };
+		E6AFD9831B20299F006BA954 /* Ex2.40-Unique-Pairs.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.40-Unique-Pairs.playground"; sourceTree = "<group>"; };
 		E6B05B7C1B12E29700D71401 /* Ex2.27-Deep-Reverse.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.27-Deep-Reverse.playground"; sourceTree = "<group>"; };
 		E6B5D34E1ACBE0E1008B7598 /* Ex2.10-Division-Spanning-Zero.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.10-Division-Spanning-Zero.playground"; sourceTree = "<group>"; };
 		E6B7AE841AD0DAC7006EE934 /* Ex2.15-Parallel-Calculator.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.15-Parallel-Calculator.playground"; sourceTree = "<group>"; };
@@ -131,6 +132,7 @@
 				E61DAC701B1C87E7001F3774 /* Ex2.37-Matrix-and-Vector.playground */,
 				E69C29AA1B1D71DA00E776CC /* Ex2.38-foldl-foldr.playground */,
 				E6D59CAD1B1E6A03003F3130 /* Ex2.39-Reverse-with-fold.playground */,
+				E6AFD9831B20299F006BA954 /* Ex2.40-Unique-Pairs.playground */,
 			);
 			name = "2.2 Hierarchical Data and the Closure Property";
 			sourceTree = "<group>";
@@ -153,18 +155,9 @@
 			);
 			sourceTree = "<group>";
 		};
-		E6F73DFA1A6DF39300EEE0FE /* Chapter 1 Building Abstractions from Procedures */ = {
+		E6AFD9841B2072E9006BA954 /* 1.3 Formulating Abstractions with Higher Order Procedures */ = {
 			isa = PBXGroup;
 			children = (
-				E636147F1A5B581A00E495B9 /* 1.1-TheElementsOfProgramming.playground */,
-				E66A58E31A6DF2ED00557760 /* 1.2-Procedures&theProcessesTheyGenerate.playground */,
-				AA313A1F1A7FA66100A12005 /* Ex1.22-SearchForPrimes.playground */,
-				AA313A1E1A7FA3AC00A12005 /* Ex1.23-SearchForPrimes.playground */,
-				AA5103C21A81000100D145C1 /* Ex1.24-SearchForPrimes-Fermat.playground */,
-				AA8DA81F1A82473500643C12 /* Ex1.25-expMod-Modified.playground */,
-				E60A86D31A839C2200ACBA3C /* Ex1.26-expMod-Modified.playground */,
-				E61AD7481A871D2B0028163E /* Ex1.27-Carmichael-Numbers.playground */,
-				E6BCAB741A8AF9690046EF18 /* Ex1.28-Miller-Rabin-Test.playground */,
 				E6234E061A8F53A800E88292 /* 1.3-FormulatingAbstractionsWithHigher-Order-Procedures.playground */,
 				E623CA841A918C7400ED9D5B /* Ex1.29-SimpsonsIntegration.playground */,
 				E63F83CF1A9312DE00E9AD85 /* Ex1.30-SumIterative.playground */,
@@ -184,6 +177,31 @@
 				E68AE0D21AA9439200BD09DD /* Ex1.44-Smoothing.playground */,
 				E68AE0D31AA95B2F00BD09DD /* Ex1.45-Finding-Roots.playground */,
 				E60401F61AA9673C00211ABE /* Ex1.46-Iterative-Improve.playground */,
+			);
+			name = "1.3 Formulating Abstractions with Higher Order Procedures";
+			sourceTree = "<group>";
+		};
+		E6AFD9851B207310006BA954 /* 1.2 Procedures & the Processes they Generate */ = {
+			isa = PBXGroup;
+			children = (
+				E66A58E31A6DF2ED00557760 /* 1.2-Procedures&theProcessesTheyGenerate.playground */,
+				AA313A1F1A7FA66100A12005 /* Ex1.22-SearchForPrimes.playground */,
+				AA313A1E1A7FA3AC00A12005 /* Ex1.23-SearchForPrimes.playground */,
+				AA5103C21A81000100D145C1 /* Ex1.24-SearchForPrimes-Fermat.playground */,
+				AA8DA81F1A82473500643C12 /* Ex1.25-expMod-Modified.playground */,
+				E60A86D31A839C2200ACBA3C /* Ex1.26-expMod-Modified.playground */,
+				E61AD7481A871D2B0028163E /* Ex1.27-Carmichael-Numbers.playground */,
+				E6BCAB741A8AF9690046EF18 /* Ex1.28-Miller-Rabin-Test.playground */,
+			);
+			name = "1.2 Procedures & the Processes they Generate";
+			sourceTree = "<group>";
+		};
+		E6F73DFA1A6DF39300EEE0FE /* Chapter 1 Building Abstractions from Procedures */ = {
+			isa = PBXGroup;
+			children = (
+				E636147F1A5B581A00E495B9 /* 1.1-TheElementsOfProgramming.playground */,
+				E6AFD9851B207310006BA954 /* 1.2 Procedures & the Processes they Generate */,
+				E6AFD9841B2072E9006BA954 /* 1.3 Formulating Abstractions with Higher Order Procedures */,
 			);
 			name = "Chapter 1 Building Abstractions from Procedures";
 			sourceTree = "<group>";
