@@ -80,7 +80,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
-		E6303E701AAB2AD7002733FE /* Chapter 2 Building Abstractions with Data */ = {
+		E618E2001B20151F00A67D04 /* 2.1 Introduction To Data Abstraction */ = {
 			isa = PBXGroup;
 			children = (
 				E6303E6F1AAB2ACB002733FE /* 2.1-IntroductionToDataAbstraction.playground */,
@@ -100,6 +100,13 @@
 				E630F9CA1AD0D3530004802F /* Ex2.14-Parallel-Resistor-Calculator.playground */,
 				E6B7AE841AD0DAC7006EE934 /* Ex2.15-Parallel-Calculator.playground */,
 				E6E1CE771AD0E33A007CDF5E /* Ex2.16-Improved-Interval.playground */,
+			);
+			name = "2.1 Introduction To Data Abstraction";
+			sourceTree = "<group>";
+		};
+		E618E2011B20153900A67D04 /* 2.2 Hierarchical Data and the Closure Property */ = {
+			isa = PBXGroup;
+			children = (
 				E62C9C111AD15F7200B45633 /* 2.2-HierarchicalDataAndTheClosureProperty.playground */,
 				E696F06F1AD685D700039485 /* Ex2.17-Last-Pair.playground */,
 				E696F0701AD6872C00039485 /* Ex2.18-Reverse.playground */,
@@ -124,6 +131,15 @@
 				E61DAC701B1C87E7001F3774 /* Ex2.37-Matrix-and-Vector.playground */,
 				E69C29AA1B1D71DA00E776CC /* Ex2.38-foldl-foldr.playground */,
 				E6D59CAD1B1E6A03003F3130 /* Ex2.39-Reverse-with-fold.playground */,
+			);
+			name = "2.2 Hierarchical Data and the Closure Property";
+			sourceTree = "<group>";
+		};
+		E6303E701AAB2AD7002733FE /* Chapter 2 Building Abstractions with Data */ = {
+			isa = PBXGroup;
+			children = (
+				E618E2001B20151F00A67D04 /* 2.1 Introduction To Data Abstraction */,
+				E618E2011B20153900A67D04 /* 2.2 Hierarchical Data and the Closure Property */,
 			);
 			name = "Chapter 2 Building Abstractions with Data";
 			sourceTree = "<group>";

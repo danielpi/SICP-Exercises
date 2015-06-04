@@ -480,12 +480,128 @@ salaryOfHighestPaidProgrammer(employees)
 
 // Nested Mappings
 // We can extend the sequence paradigm to include many computations that are commonly expressed using nested loops. Consider this problem: Given a positive integer n, find all ordered pairs of distinct positive integers i and j, where 1 <= j <= i <= n, such that i + j is prime. For example if n = 6, then the pairs are the following
+
 //   i   | 2 3 4 4 5 6 6
 //   j   | 1 2 1 3 2 1 5
 // ----------------------
 // i + j | 3 5 5 7 7 7 11
 
 // A natural way to organise this computaton is to generate the sequence of all ordered pairs of positive integers less than or equal to n, filter to select those whose sum is prime, and then, for each pair (i, j) that passes through the filter, produce the triple (i, j, i + j).
+
+// Here is a way to generate the sequence of pairs: For each integer i <= n, enumerate the integers j < i, and for each such i and j generate the pair (i, j). In terms of sequence operations, we map along the sequence (enumerate-interval 1 n). For each i in this sequence, we map along the sequence (enumerate-interval 1 (- i 1)). For each j in this latter sequence, we generate the pair (list i j). This gives us a sequence of pairs for each i. Combining all the sequences for all the i (by accumulating with append) produces the required sequence of pairs:
+
+let n = 6
+let lists = map({ i in map({ j in return [i,j] }, enumerateInterval(1, i - 1)) }, enumerateInterval(1, n))
+println("\(lists)")
+
+//let flattened: [[Int]] = accumulate(append, [[1]], lists)
+
+// The combination of mapping and accumulating with append is so common in this sort of program that we will isolate it as a separate procedure:
+/*
+func flatMap(proc: (Int) -> Int, seq: [Int]) -> [Int] {
+    return accumulate(append, [], seq)
+}
+*/
+
+// Now filter this sequence of pairs to find those whose sum is prime. The filter predicate is called for each element of the sequence; its argument is a pair and it must extract the integers from the pair. Thus, the predicate to apply to each element in the sequence is
+
+func dividesWithNoRemainder(a: Int, b: Int) -> Bool {
+    return  a % b == 0
+}
+dividesWithNoRemainder(10, 2)
+
+func findDivisor(n: Int, testDivisor: Int) -> Int {
+    switch true {
+    case square(testDivisor) > n:
+        return n
+    case dividesWithNoRemainder(n, testDivisor):
+        return testDivisor
+    default:
+        return findDivisor(n, testDivisor + 1)
+    }
+}
+
+func smallestDivisor(n: Int) -> Int {
+    return findDivisor(n, 2)
+}
+
+func isPrime(n:Int) -> Bool {
+    return n == smallestDivisor(n)
+}
+
+func isPrimeSum(pair: [Int]) -> Bool {
+    return isPrime(pair[0] + pair[1]) // ??? No Type Checking
+}
+
+// Finally, generate the sequence of results by mapping over the filtered pairs using the following procedure, which constructs a triple consisting of the two elements of the pair along with their sum:
+
+func makePairSum(pair: [Int]) -> [Int] {
+    return [pair[0], pair[1], pair[0] + pair[1]]
+}
+
+// Combining all these steps yields the complete procdure
+
+func primeSumPairs(n: Int) -> [[Int]] {
+    let possibles = flatMap(enumerateInterval(1, n)) { i in
+        return map(enumerateInterval(1, i - 1)) { j in
+            return [i,j]
+        }
+    }
+    return map(filter(possibles, isPrimeSum), makePairSum)
+}
+
+primeSumPairs(6)
+
+
+// Can I do better using tuples? This was you can't pass in an array of the wrong length at any stage.
+
+func isPrimeSum(pair: (Int,Int)) -> Bool {
+    return isPrime(pair.0 + pair.1)
+}
+
+func makePairSum(pair: (Int,Int)) -> (Int,Int,Int) {
+    return (pair.0, pair.1, pair.0 + pair.1)
+}
+
+func primeSumPairs2(n: Int) -> [(Int,Int,Int)] {
+    let possibles = enumerateInterval(1, n).flatMap() { i in
+        enumerateInterval(1, i - 1).map() { j in (i,j) }}
+    
+    return possibles.filter(isPrimeSum).map(makePairSum)
+}
+println("\(primeSumPairs2(6))")
+
+// Maybe it would be better if I gave (Int,Int) a name like IntPair???
+// Or would it be best if the tuple components are named
+let (left, right, sum) = makePairSum((2,3))
+// This use of tuples to box up a collection of parameters is interesting. It allows for makePairSum and isPrimeSum to be used very concisely in the map and filter functions above (as opposed to having to use trailing closures so as to fill out multiple parameters). However that does mean that isPrimeSum, which by rights should take two parameters not mysteriously takes a single parameter which happens to contain two values. I can't tell if this is a win or not???
+// There is something a little horrifying about the chained map, filter, reduce calls. They are extremely powerful, elegant and succinct but they are completely unintuitive. Thinking some more about them I can see why the .map syntax is popular. Feels a lot more like the pipe that it is. Still this method kind of feels like it is in reverse.
+
+// Nested mappings are also useful for sequences other than those that enumerate intervals. Suppose we wish to generate all the permutations of a set s; that is, all the ways of ordering the items in the set. 
+// Here is a plan for generating the permutations of S: For each item x in S, recursively generate the sequence of permutations of S - x, and adjoin x to the front of each one. This yields, for each x in S, the sequence of permutations of S that begin with x. Combining these sequences for all x gives all the permutations of S:
+
+func remove(item: Int, sequence: [Int]) -> [Int] {
+    return sequence.filter() { x in x != item }
+}
+
+func permutations(s:[Int]) -> [[Int]] {
+    if s.isEmpty {
+        return [[]]
+    } else {
+        return s.flatMap() { x in
+            map(permutations(remove(x,s))) { p in [x] + p }
+        }
+    }
+}
+
+permutations([1,2,3])
+
+// Notice how this strategy reduces the problem of generating permutations of S to the problem of generating the permutations of sets with fewer elements than S. In the ternminal case, we work our way down to the empty list, which represents a set of no elements. For this, we generate [[]], which is a sequence with one item, namely the set with no elements. The remove procedure used in permutations returns all the items in a given sequence except for a given item.
+
+
+
+// 2.2.4 Example: A Picture Language
+
 
 
 

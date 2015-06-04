@@ -442,3 +442,120 @@ one-through-four
 ; alternative representations of sequences, while leaving the overall design of our programs intact. We will 
 ; exploit this capability in section 3.5, when we generalise the sequence-processing paradigm to admit infinite
 ; sequences.
+
+
+; Nested Mappings
+; We can extend the sequence paradigm to include many computations that are commonly expressed
+; using nested loops. Consider this problem: Given a positive integer n, find all ordered pairs
+; of distinct positive integers i and j, where 1 <= j <= i <= n, such that i + j is prime. For
+; example if n = 6, then the pairs are the following
+
+;   i   | 2 3 4 4 5 6 6
+;   j   | 1 2 1 3 2 1 5
+; -------------------------
+; i + j | 3 5 5 7 7 7 11
+
+; A natural way to organise this computation is to generate the sequence of all ordered pairs of
+; positive intergers less than or equal to n, filter to select those whose sum is prime, and then,
+; for each pair (i, j) that passes through the filter, produce the triple (i, j, i + j)
+
+; Here is a way to generate the sequence of pairs:
+; - For each integer i <= n, 
+;  - enumerate the integers j < i, and
+;  - for each such i and j generate the pair (i, j).
+
+; In terms of sequence operations,
+; - map along the sequence (enumerate-interval 1 n). 
+; - For each i in this sequence we map along the sequence (enumerate-interval 1 (- i 1)).
+; - For each j in this latter sequence, we generate the pair (list i j). 
+; This gives us a sequence of pairs for each i. Combining all the sequences for all the i 
+; (by accumulating with append) produces the required sequence of pairs
+
+(define (ordered-pairs-of-integers n)
+  (accumulate 
+   append '() (map (lambda (i) 
+                     (map (lambda (j) (list i j)) 
+                          (enumerate-interval 1 (- i 1)))) 
+                   (enumerate-interval 1 n))))
+
+(ordered-pairs-of-integers 6)
+
+; The combination of mapping and accumulating with append is so common in this sort of program
+; that we will isolate it as a separate procedure
+
+(define (flatmap proc seq)
+  (accumulate append '() (map proc seq)))
+
+; Now filter this sequence of pairs to find those whose sum is prime. The filter predicate
+; is called for each element of the sequence; its argument is a pair and it must extract the
+; integers from the pair. Thus, the predicate to apply to each element in the sequence is
+
+(define (smallest-divisor n)
+  (find-divisor n 2))
+(define (find-divisor n test-divisor)
+  (cond ((> (square test-divisor) n) n)
+        ((divides? test-divisor n) test-divisor)
+        (else (find-divisor n (+ test-divisor 1)))))
+(define (divides? a b)
+  (= (remainder b a) 0))
+
+; We can test if a number is prime if it's smallest divisor is itself
+
+(define (prime? n)
+  (= n (smallest-divisor n)))
+
+(define (prime-sum? pair)
+  (prime? (+ (car pair) (cadr pair))))
+(prime-sum? (list 3 4))
+
+; Finally, generate the sequence of results by mapping over the filtered pairs using the following 
+; procedure, which constructs a tripple consisting of the two elements of the pair along with
+; their sum:
+
+(define (make-pair-sum pair) 
+  (list (car pair) (cadr pair) (+ (car pair) (cadr pair))))
+
+; Combining all these steps yeilds the complete procedure
+
+(define (prime-sum-pairs n)
+  (map make-pair-sum
+       (filter prime-sum?
+               (flatmap (lambda (i)
+                          (map (lambda (j) (list i j))
+                               (enumerate-interval 1 (- i 1))))
+                        (enumerate-interval 1 n)))))
+(prime-sum-pairs 6)
+  
+; Nested mappings are also useful for sequences other than those that enumerate intervals. Suppose we
+; wish to generate all the permutations of a set S; that is, all the ways of ordering the items in the
+; set. For instance, the permutations of {1,2,3} are {1,2,3},{1,3,2},{2,1,3},{2,3,1},{3,1,2} and {3,2,1}.
+; Here is a plan for generating the permutations of S: For each item x in S, recursively generate the sequence
+; of permuttions of S - x, and adjoin x to the front of each one. This yeilds, for each x in S, the sequence of 
+; permutations of S that begin with x. Combining these sequences for all x gives all the permutations of S:
+
+(define (permutations s)
+  (if (null? s)
+      (list '())
+      (flatmap (lambda (x)
+                 (map (lambda (p) (cons x p))
+                      (permutations (remove x s))))
+               s)))
+(permutations (list 1 2 3))
+  
+
+; Notice how this strategy reduces the problem of generating permutations of S to the problem of 
+; generating the the permutations of sets with fewer elements than S. In the terminal case, we
+; work our way down to the empty list, which represents a set of no elements. For this, we generate
+; (list '()), which is a sequence with one item, namely the set with no elements. The remove
+; procedure used in permutations returns all the items in a given sequence except for a given item.
+; This can be expressed as a simple filter
+
+(define (remove2 item sequence)
+  (filter (lambda (x) (not (= x item)))
+          sequence))
+(remove2 3 (list 1 2 3 4 5))
+
+
+
+; 2.2.4 Example: A Picture Language
+
