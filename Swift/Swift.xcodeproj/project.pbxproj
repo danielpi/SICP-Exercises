@@ -12,6 +12,7 @@
 		AA5103C21A81000100D145C1 /* Ex1.24-SearchForPrimes-Fermat.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.24-SearchForPrimes-Fermat.playground"; sourceTree = "<group>"; };
 		AA8DA81F1A82473500643C12 /* Ex1.25-expMod-Modified.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.25-expMod-Modified.playground"; sourceTree = "<group>"; };
 		E60401F61AA9673C00211ABE /* Ex1.46-Iterative-Improve.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.46-Iterative-Improve.playground"; sourceTree = "<group>"; };
+		E60A1B3C1B217305008E914D /* Ex2.42-Queens-Puzzle.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.42-Queens-Puzzle.playground"; sourceTree = "<group>"; };
 		E60A86D31A839C2200ACBA3C /* Ex1.26-expMod-Modified.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.26-expMod-Modified.playground"; sourceTree = "<group>"; };
 		E60FC5191AC0EAE2007A7197 /* Ex26ChurchNumerals.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Ex26ChurchNumerals.playground; sourceTree = "<group>"; };
 		E6153A081ADA8EEB0031FA24 /* Ex2.21-Square-List.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.21-Square-List.playground"; sourceTree = "<group>"; };
@@ -135,6 +136,7 @@
 				E6D59CAD1B1E6A03003F3130 /* Ex2.39-Reverse-with-fold.playground */,
 				E6AFD9831B20299F006BA954 /* Ex2.40-Unique-Pairs.playground */,
 				E6AFD9861B21202A006BA954 /* Ex2.41-Triple-Sum.playground */,
+				E60A1B3C1B217305008E914D /* Ex2.42-Queens-Puzzle.playground */,
 			);
 			name = "2.2 Hierarchical Data and the Closure Property";
 			sourceTree = "<group>";
