@@ -62,6 +62,7 @@
 		E69C29AA1B1D71DA00E776CC /* Ex2.38-foldl-foldr.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.38-foldl-foldr.playground"; sourceTree = "<group>"; };
 		E6AB1D151AA32D6C001527C3 /* Ex1.35-Golden-Ratio.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.35-Golden-Ratio.playground"; sourceTree = "<group>"; };
 		E6AFD9831B20299F006BA954 /* Ex2.40-Unique-Pairs.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.40-Unique-Pairs.playground"; sourceTree = "<group>"; };
+		E6AFD9861B21202A006BA954 /* Ex2.41-Triple-Sum.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.41-Triple-Sum.playground"; sourceTree = "<group>"; };
 		E6B05B7C1B12E29700D71401 /* Ex2.27-Deep-Reverse.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.27-Deep-Reverse.playground"; sourceTree = "<group>"; };
 		E6B5D34E1ACBE0E1008B7598 /* Ex2.10-Division-Spanning-Zero.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.10-Division-Spanning-Zero.playground"; sourceTree = "<group>"; };
 		E6B7AE841AD0DAC7006EE934 /* Ex2.15-Parallel-Calculator.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.15-Parallel-Calculator.playground"; sourceTree = "<group>"; };
@@ -133,6 +134,7 @@
 				E69C29AA1B1D71DA00E776CC /* Ex2.38-foldl-foldr.playground */,
 				E6D59CAD1B1E6A03003F3130 /* Ex2.39-Reverse-with-fold.playground */,
 				E6AFD9831B20299F006BA954 /* Ex2.40-Unique-Pairs.playground */,
+				E6AFD9861B21202A006BA954 /* Ex2.41-Triple-Sum.playground */,
 			);
 			name = "2.2 Hierarchical Data and the Closure Property";
 			sourceTree = "<group>";
