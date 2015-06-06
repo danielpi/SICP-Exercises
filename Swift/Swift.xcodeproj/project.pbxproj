@@ -71,6 +71,7 @@
 		E6BA3BF41AA5797A00297A9D /* Ex1.38-Euler-e.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.38-Euler-e.playground"; sourceTree = "<group>"; };
 		E6BA3BF51AA58D7500297A9D /* Ex1.39-Tan-Continuous-Function.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.39-Tan-Continuous-Function.playground"; sourceTree = "<group>"; };
 		E6BCAB741A8AF9690046EF18 /* Ex1.28-Miller-Rabin-Test.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.28-Miller-Rabin-Test.playground"; sourceTree = "<group>"; };
+		E6D3B3DC1B230EF3001C9E1A /* Ex2.42-Queens-Puzzle-SICP.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.42-Queens-Puzzle-SICP.playground"; sourceTree = "<group>"; };
 		E6D3B8AC1AA86E1600CB5BEC /* Ex1.42-compose.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.42-compose.playground"; sourceTree = "<group>"; };
 		E6D4204C1AE3DEF30057712B /* Ex2.25-Moving-Through-Trees.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.25-Moving-Through-Trees.playground"; sourceTree = "<group>"; };
 		E6D59CAD1B1E6A03003F3130 /* Ex2.39-Reverse-with-fold.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.39-Reverse-with-fold.playground"; sourceTree = "<group>"; };
@@ -137,6 +138,7 @@
 				E6AFD9831B20299F006BA954 /* Ex2.40-Unique-Pairs.playground */,
 				E6AFD9861B21202A006BA954 /* Ex2.41-Triple-Sum.playground */,
 				E60A1B3C1B217305008E914D /* Ex2.42-Queens-Puzzle.playground */,
+				E6D3B3DC1B230EF3001C9E1A /* Ex2.42-Queens-Puzzle-SICP.playground */,
 			);
 			name = "2.2 Hierarchical Data and the Closure Property";
 			sourceTree = "<group>";
