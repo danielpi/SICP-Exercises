@@ -13,7 +13,7 @@ import Cocoa
 
 // In this procedure rest-of-queens is a way to place k - 1 queens in the first k - 1 columns, and new-row is a proposed row in which to place the queen for the kth column. Complete the program by implementing the representation for sets of board positions, including the procedure adjoin-position, which adjoins a new row-column position to a set of positions, and empty-board, which represents an empty set of positions. You must also write the procedure safe?, which determines for a set of positions, whether the queen in the kth column is safe with respect to the others. (Note that we need only check whether the new queen is safe - the other queens are already guaranteed safe with respect to each other).
 
-/*
+
 struct Queen: Printable {
     let row: Int
     let col: Int
@@ -46,7 +46,7 @@ func isSafe(queen: Queen, solution: Solution) -> Bool {
     return solution.map(isSafeFor(queen)).reduce(true) { $0 && $1 }
 }
 isSafe(Queen(2, 1), [Queen(3, 2), Queen(4, 6)])
-*/
+
 
 
 func addColOfQueens(board: Solutions, col: Int) -> Solutions {
@@ -55,26 +55,21 @@ func addColOfQueens(board: Solutions, col: Int) -> Solutions {
     if board.isEmpty {
         return possibleQueens.map() { [$0] }
     } else {
-        let a = possibleQueens.flatMap() { queen in board.map() { solution in
-            isSafe(queen, solution) ? solution + [queen] : []
+        let a = possibleQueens.flatMap() { queen in
+            board.map() { solution in
+                isSafe(queen, solution) ? solution + [queen] : []
             }
         }
         return a.filter() { !$0.isEmpty }
     }
 }
-let a = addColOfQueens([], 1)
-let b = addColOfQueens(a, 2)
-let c = addColOfQueens(b, 3)
-let d = addColOfQueens(c, 4)
-let e = addColOfQueens(d, 5)
-let f = addColOfQueens(e, 6)
-let g = addColOfQueens(f, 7)
-let h = addColOfQueens(g, 8)
+
+
+func queens() -> SolutionsF {
+    return Array(1...8).reduce([]) { (initial, column) in addColOfQueensF(initial, column) }
+}
+
+let h = queens()
 println(h)
 h.count
-
-
-
-
-
 
