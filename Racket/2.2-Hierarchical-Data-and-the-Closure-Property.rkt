@@ -561,4 +561,66 @@ one-through-four
 (display "2.2.4 Example: A Picture Language") (newline)
 
 ; This section presents a simple language for drawing pictures that illustrates the power of data
-; abstraction
+; abstractionand closure, and also exploits higher-order procedures in an essential way. The language
+; is designed to make it easy to experiment with patterns, which are composed of repeated elements
+; that are shifted and scaled. In this language, the data objects being combined are represented as
+; procedures rather than as list structure. Just as cons , which satisfies the closure property, 
+; allowed us to easily build arbitrarily complicated list structure, the operations in this languag
+; whic also satisfy the closure property, allow us to build arbitrarily complicated patterns.
+
+; The picture language
+; When we began our study of programming in Section 1.1, we emphasized the importance of describing
+; a language by focusing on the language's primitives, its means of combination, and its means of
+; abstraction. We'll follow that framework here.
+
+; Part of the elegance of this picture language is that ther is only ome kind of element, called
+; a painter. A painter draws an image that is shifted and scaled to fit within a designated 
+; parallelogram-shaped frame. For example, there's a primitive painter we'll call wave that makes
+; a crude line drawing. The actual shape of the drawing depends on the frame - all four images in
+; figure 2.10 are produced by the same wave painter, but with respect to four different frames.
+; Painters can be more elaborate that his: The primitive painter called rogers paints a picture of 
+; MIT's founder, William Barton Rogers, as shown in Figure 2.11. The four images in figure 2.11 are 
+; drawn with respect to the same four frames as the wave images in figure 2.10.
+
+; To combine images, we use carious operations that construct new painters from given painters. For
+; example, the beside operation takes two painters and produces a new, compound painter that draws
+; the first painter's image in the left half of the fram and the second painter's image in the right
+; half of the frame. Similary, below takes two painters and produces a compound painter that draws
+; the first painter's image below the second painter's image. Some operations transform a single
+; painter to produce a new painter. For example, flip-vert takes a painteer and produces a painter
+; that draws its image upside down, and flip-horiz produces a painter that draws the original painters's
+; image left-to-right reversed.
+
+; (define wave2 (beside wave (flip-vert wave)))
+; (define wave4 (below wave2 wave2))
+
+; In building up a complex image in this manner we are exploiting the fact that painters are closed
+; under the language's means of combination. The beside or below of two painters is itself a painter; 
+; therefore, we can use it as an element in making more complex painters. As with building up list 
+; structure using cons, the closure of our data under the means of combination is crucial to the 
+; ability to create complex structures while using only a few operations.
+
+; Once we can combine painters, we would like to be able to abstract typical patterns of combining
+; painters. We will implement the painter operations as Scheme procedures. This means that we don't 
+; need a special abstraction mechanism in the picture language: Since the means of combination are 
+; ordinary Scheme procedures, we automatically have the capability to do anything with painter
+; operations that we can do with procedures. For example, we can abstract the pattern in wave4 as
+
+; (define (flipped-pairs painter)
+;   (let ((painter2 (beside painter (flip-vert painter))))
+;     (below painter2 painter2)))
+
+; and define wave4 as an instance of this pattern
+
+; (define wave4 (flipped-pairs wave))
+
+; We can also define recursive operations. Here's one that makes painters split and branch towards 
+; the right.
+
+(define (corner-split painter n)
+  
+
+; By placing four copies of a corner-split appropriately, we obtain a pattern called square-limit,
+; whose application to wave and rogers is shown in Figure 2.9:
+
+
