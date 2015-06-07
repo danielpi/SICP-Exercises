@@ -13,102 +13,28 @@ import Cocoa
 
 // In this procedure rest-of-queens is a way to place k - 1 queens in the first k - 1 columns, and new-row is a proposed row in which to place the queen for the kth column. Complete the program by implementing the representation for sets of board positions, including the procedure adjoin-position, which adjoins a new row-column position to a set of positions, and empty-board, which represents an empty set of positions. You must also write the procedure safe?, which determines for a set of positions, whether the queen in the kth column is safe with respect to the others. (Note that we need only check whether the new queen is safe - the other queens are already guaranteed safe with respect to each other).
 
-struct Pair<A,B> {
-    let left: A
-    let right: B
-}
-
-func cons<A,B>(left: A, right: B) -> Pair<A,B> {
-    return Pair(left: left, right: right)
-}
-func car<A,B>(pair: Pair<A,B>) -> A {
-    return pair.left
-}
-func cdr<A,B>(pair: Pair<A,B>) -> B {
-    return pair.right
-}
-
-func cons<A>(value: A, list: [A]) -> [A] {
-    var newList = list
-    newList.insert(value, atIndex: 0)
-    return newList
-}
-func car<A>(list:[A]) -> A {
-    return list[0]
-}
-func cdr<A>(list:[A]) -> [A] {
-    return Array(list[1..<list.count])
-}
-
-func enumerateInterval(low: Int, high: Int) -> [Int] {
-    return Array(low...high)
-}
-
-typealias Queen = Pair<Int,Int>
-
-let emptyBoard = []
-
-func placeQueen(rank: Int, file: Int) -> Queen {
-    return cons(rank, file)
-}
-func queenRank(queen: Queen) -> Int {
-    return car(queen)
-}
-func queenFile(queen: Queen) -> Int {
-    return cdr(queen)
-}
-
-func adjoinPosition(rank: Int, file: Int, board: [Queen]) -> [Queen] {
-    return cons(placeQueen(rank, file), board)
-}
-
-func findFirst(pred: (Queen) -> Bool, items: [Queen]) -> Queen {
-    switch true {
-    case items.isEmpty:
-        return Queen(left: 0, right: 0)
-    case pred(car(items)):
-        return car(items)
-    default:
-        return findFirst(pred, cdr(items))
-    }
-}
-
-func isSafe(file: Int, board: [Queen]) -> Bool {
-    func getQueenByFile(file: Int, board: [Queen]) -> Queen {
-        return findFirst({ queen in
-            queenFile(queen) == file
-            }, board)
-    }
-    
-    let theQueen = getQueenByFile(file, board)
-    let otherQueens = filter(board) { q in
-           !(queenRank(theQueen) == queenRank(q)) &&
-            (queenFile(theQueen) == queenFile(q))
-    }
-    
-    let a = otherQueens.reduce(false) { (q,p) in q || (queenRank(p) == queenRank(theQueen)) }
-    let b = otherQueens.reduce(false) { (q,p) in q || (abs(queenRank(theQueen) - queenRank(p)) == (abs(queenFile(theQueen) - queenFile(p)))) }
-    
-    return !a && !b
-}
-
-func queens(boardSize: Int) -> [[Queen]] {
+public func queens(boardSize: Int) -> [[Queen]] {
     var queenCols: (Int) -> [[Queen]] = { _ in [[Queen]]() }
     queenCols = { k in
         if k == 0 {
-            return [[Queen]]()
-        } else {
-            let a = flatMap(queenCols(k - 1), { restOfQueens in map(enumerateInterval(1, boardSize), { newRow in adjoinPosition(newRow, k, restOfQueens) }) })
             
-            return a.filter() { positions in isSafe(k, positions) }
+            return [emptyBoard]
+        } else {
+            let a = flatMap(queenCols(k - 1), { restOfQueens in     // 8
+                map(enumerateInterval(1, boardSize), { newRow in    // 1965
+                    adjoinPosition(newRow, k, restOfQueens)         // 15720
+                })
+            })
+            
+            return a.filter() { positions in isSafe(k, positions) } // 15728
+            //return a
         }
     }
     return queenCols(boardSize)
 }
 
-queens(8)
-
-
+let solutions = queens(8)
+solutions.count
 
 
 

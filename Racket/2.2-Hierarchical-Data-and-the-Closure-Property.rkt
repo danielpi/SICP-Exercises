@@ -558,4 +558,7 @@ one-through-four
 
 
 ; 2.2.4 Example: A Picture Language
+(display "2.2.4 Example: A Picture Language") (newline)
 
+; This section presents a simple language for drawing pictures that illustrates the power of data
+; abstraction
