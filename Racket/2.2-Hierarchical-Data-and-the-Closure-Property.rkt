@@ -573,26 +573,26 @@ one-through-four
 ; a language by focusing on the language's primitives, its means of combination, and its means of
 ; abstraction. We'll follow that framework here.
 
-; Part of the elegance of this picture language is that ther is only ome kind of element, called
+; Part of the elegance of this picture language is that there is only one kind of element, called
 ; a painter. A painter draws an image that is shifted and scaled to fit within a designated 
 ; parallelogram-shaped frame. For example, there's a primitive painter we'll call wave that makes
 ; a crude line drawing. The actual shape of the drawing depends on the frame - all four images in
 ; figure 2.10 are produced by the same wave painter, but with respect to four different frames.
-; Painters can be more elaborate that his: The primitive painter called rogers paints a picture of 
+; Painters can be more elaborate than this: The primitive painter called rogers paints a picture of 
 ; MIT's founder, William Barton Rogers, as shown in Figure 2.11. The four images in figure 2.11 are 
 ; drawn with respect to the same four frames as the wave images in figure 2.10.
 
-; To combine images, we use carious operations that construct new painters from given painters. For
+; To combine images, we use various operations that construct new painters from given painters. For
 ; example, the beside operation takes two painters and produces a new, compound painter that draws
-; the first painter's image in the left half of the fram and the second painter's image in the right
+; the first painter's image in the left half of the frame and the second painter's image in the right
 ; half of the frame. Similary, below takes two painters and produces a compound painter that draws
 ; the first painter's image below the second painter's image. Some operations transform a single
-; painter to produce a new painter. For example, flip-vert takes a painteer and produces a painter
-; that draws its image upside down, and flip-horiz produces a painter that draws the original painters's
+; painter to produce a new painter. For example, flip-vert takes a painter and produces a painter
+; that draws its image upside down, and flip-horiz produces a painter that draws the original painter's
 ; image left-to-right reversed.
 
-; (define wave2 (beside wave (flip-vert wave)))
-; (define wave4 (below wave2 wave2))
+(define wave2 (beside wave (flip-vert wave)))
+(define wave4 (below wave2 wave2))
 
 ; In building up a complex image in this manner we are exploiting the fact that painters are closed
 ; under the language's means of combination. The beside or below of two painters is itself a painter; 
@@ -606,9 +606,9 @@ one-through-four
 ; ordinary Scheme procedures, we automatically have the capability to do anything with painter
 ; operations that we can do with procedures. For example, we can abstract the pattern in wave4 as
 
-; (define (flipped-pairs painter)
-;   (let ((painter2 (beside painter (flip-vert painter))))
-;     (below painter2 painter2)))
+(define (flipped-pairs painter)
+  (let ((painter2 (beside painter (flip-vert painter))))
+    (below painter2 painter2)))
 
 ; and define wave4 as an instance of this pattern
 
@@ -617,10 +617,79 @@ one-through-four
 ; We can also define recursive operations. Here's one that makes painters split and branch towards 
 ; the right.
 
+(define (right-split painter n)
+  (if (= n 0)
+      painter
+      (let ((smaller (right-split painter (- n 1))))
+        (beside painter (below smaller smaller)))))
+
+; We can produce balanced patterns by branching upwards as well as towards the right.
+
 (define (corner-split painter n)
-  
+  (if (= n 0)
+      painter
+      (let ((up (up-split painter (- n 1)))
+            (right (right-split painter (- n 1))))
+        (let ((top-left (beside up up))
+              (bottom-right (below right right))
+              (corner (corner-split painter (- n 1))))
+          (beside (below painter top-left)
+                  (below bottom-right corner))))))
 
 ; By placing four copies of a corner-split appropriately, we obtain a pattern called square-limit,
 ; whose application to wave and rogers is shown in Figure 2.9:
+
+(define (square-limit painter n)
+  (let ((quarter (corner-split painter n)))
+        (let ((half (beside (flip-horiz quarter) quarter)))
+          (below (flip-vert half) half))))
+
+
+; Higher-order operations
+; In addition to abstracting patterns of combining painters, we can work at a higher level, abstracting
+; patterns of combining painter operations. That is, we can view the painter operations as elements to
+; manipulate and can write means of combination for these elements-procedures that take painter operations 
+; as arguments and create new painter operations.
+
+; For example, flipped-pairs and square-limit each arrange four copies of a painter's image in a square
+; patter; they differ only in how they orient the copies. One way to abstract this pattern of painter 
+; combination is with the following procedure, which takes four one-argument painter operations and 
+; produces a painter operation that transforms a given painter with those four operations and arranges
+; the results in a square. tl,tr,bl and br are the transformations to apply to the top left copy, the 
+; top right copy, the bottom left copy, and the bottom right copy respectively.
+
+(define (square-of-four tl tr bl br)
+  (lambda (painter)
+    (let ((top (beside (tl painter) (tr painter)))
+          (bottom (beside (bl painter) (br painter))))
+      (below bottom top))))
+
+; Then flipped-pairs can be defined in terms of square-of-four as follows:
+
+(define (flipped-pairs painter)
+  (let ((combine4 (square-of-four identity flip-vert
+                                  identity flip-vert)))
+    (combine4 painter)))
+
+; and square-limit can be expressed as
+
+(define (square-limit painter n)
+  (let ((combine4 (square-of-four flip-horiz identity
+                                  rotate180 flip-vert)))
+    (combine4 (corner-split painter n))))
+
+
+; Frames
+; 
+
+
+
+
+
+
+
+
+
+
 
 
