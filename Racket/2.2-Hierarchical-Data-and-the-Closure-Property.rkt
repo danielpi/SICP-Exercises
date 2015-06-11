@@ -680,7 +680,46 @@ one-through-four
 
 
 ; Frames
-; 
+; Before we can show how to implement painters and their means of combination, we must first 
+; consider frames. A frame can be described by three vectors - an origin vector and twu edge
+; vectors. The origin vector specifies the offset of the frame's origin from some absolute
+; origin in the plane, and the edge vectors specify the offsets of the frame's corners from 
+; its origin. If the edges are perpendicular, the frame will be rectangular. Otherwise the frame
+; will be a more general parallelogram.
+
+; In accordance with data abstraction we need not be specific yet about how frames are represented,
+; other than to say that there is a constructor make-frame, which takes three vectors and produces
+; a frame, and three corresponding selectors origin-frame, edge1-frame, and edge2-frame.
+
+; We will use coordinates in the unit square (0 <= x, y <= 1) to specify images. With each frame,
+; we associate a frame coordinate map, which will be used to shift and scale images to fit the 
+; frame. The map transforms the unit square into the frame by mapping the vector v = (x,y) to the
+; vector sum
+
+;     Origin(Frame) + (x * Edge1(Frame)) + (y * Edge2(Frame))
+
+; For example, (0,0) is mapped to the origin of the frame, (1,1) to the vertex diagonally opposite
+; the origin, and (0.5,0.5) to the center of the frame. We can create a frame's coordinate map
+; with the following procedure.
+
+(define (frame-coord-map frame)
+  (lambda (v)
+    (add-vect
+     (origin-frame frame)
+     (add-vert (scale-vect (xcor-vect v) (edge1-frame frame))
+               (scale-vect (ycor-vect v) (edge2-frame frame))))))
+
+; Observe that applying frame-coord-map to a frame returns a procedure that, given a vector, 
+; returns a vector. If the argument vector is in the unit square, the result vector will be in 
+; the frame. For example,
+
+((frame-coord-map a-frame) (make-vect 0 0))
+
+; returns the same vector as 
+
+(origin-frame a-frame)
+
+
 
 
 
