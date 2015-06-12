@@ -15,16 +15,20 @@
 (define (origin1 frame)
   (car frame))
 (define (edge11 frame)
-  (car (cdr frame)))
+  (cadr frame))
+  ;(car (cdr frame)))
 (define (edge21 frame)
-  (car (cdr (cdr frame))))
+  (caddr frame))
+  ;(car (cdr (cdr frame))))
 
 (define (origin2 frame)
   (car frame))
 (define (edge12 frame)
-  (car (cdr frame)))
+  (cadr frame))
+  ;(car (cdr frame)))
 (define (edge22 frame)
-  (cdr (cdr frame)))
+  (cddr frame))
+  ;(cdr (cdr frame)))
 
 
 
