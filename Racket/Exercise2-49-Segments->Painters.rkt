@@ -122,5 +122,5 @@
                         
 (frame-diamond  (make-frame (make-vect 0 0) (make-vect 10 0) (make-vect 0 10)))
 
-(scale-vect 0.5 (make-vect 0 2))
-(midpoint-segment (make-segment (make-vect 10 0) (make-vect 10 10)))
+
+; d. The wave painter.
