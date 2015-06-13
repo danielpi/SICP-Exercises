@@ -64,13 +64,17 @@
     (dc (lambda (dc dx dy)
           (for-each
            (lambda (segment)
-             (send dc draw-line
-                   (xcor-vect ((frame-coord-map frame) (start-segment segment)))
-                   (ycor-vect ((frame-coord-map frame) (start-segment segment)))
-                   (xcor-vect ((frame-coord-map frame) (end-segment segment)))
-                   (ycor-vect ((frame-coord-map frame) (end-segment segment)))))
+             (let ((start ((frame-coord-map frame) (start-segment segment)))
+                   (end (add-vect ((frame-coord-map frame) (start-segment segment))
+                                  ((frame-coord-map frame) (end-segment segment)))))
+                   (send dc draw-line
+                          (xcor-vect start)
+                          (ycor-vect start)
+                          (xcor-vect end)
+                          (ycor-vect end))))
            segment-list)) 
         150 150)))
+
 
 ;((segments->painter (list (make-segment (make-vect 0 0) (make-vect 20 20))
 ;                          (make-segment (make-vect 20 0) (make-vect 0 20)))) 
@@ -82,10 +86,10 @@
         (p2 (add-vect (origin-frame frame) (edge1-frame frame)))
         (p3 (add-vect (add-vect (origin-frame frame) (edge1-frame frame)) (edge2-frame frame)))
         (p4 (add-vect (origin-frame frame) (edge2-frame frame))))
-    ((segments->painter (list (make-segment p1 p2)
-                              (make-segment p2 p3)
-                              (make-segment p3 p4)
-                              (make-segment p4 p1))) frame)))
+    ((segments->painter (list (make-segment p1 (edge1-frame frame))
+                              (make-segment p1 (edge2-frame frame))
+                              (make-segment p2 (edge2-frame frame))
+                              (make-segment p4 (edge1-frame frame)))) frame)))
 (frame-outline  (make-frame (make-vect 0 0) (make-vect 10 0) (make-vect 0 10)))
  
 ; b. The painter that draws an "X" by connecting opposite corners of the frame.
@@ -93,34 +97,30 @@
   (let ((p1 (origin-frame frame))
         (p2 (add-vect (origin-frame frame) (edge1-frame frame)))
         (p3 (add-vect (add-vect (origin-frame frame) (edge1-frame frame)) (edge2-frame frame)))
-        (p4 (add-vect (origin-frame frame) (edge2-frame frame))))
-    ((segments->painter (list (make-segment p1 p3)
-                              (make-segment p2 p4))) frame)))
+        (p4 (add-vect (origin-frame frame) (edge2-frame frame)))
+        (p1-p3 (add-vect (edge1-frame frame) (edge2-frame frame)))
+        (p2-p4 (sub-vect (edge1-frame frame) (edge2-frame frame))))
+    ((segments->painter (list (make-segment p1 p1-p3)
+                              (make-segment p2 p2-p4))) frame)))
 (frame-cross  (make-frame (make-vect 0 0) (make-vect 10 0) (make-vect 0 10)))
  
 ; c. The painter that draws a diamond shape by connecting the midpoints of the sides of the frame.
 (define (midpoint-segment segment)
   (add-vect (start-segment segment)
             (scale-vect 0.5 (end-segment segment))))
+(define (point-to-point a b)
+  (sub-vect b a))
 (define (frame-diamond frame)
- (let ((p1 (origin-frame frame))
-        (p2 (add-vect (origin-frame frame) (edge1-frame frame)))
-        (p3 (add-vect (add-vect (origin-frame frame) (edge1-frame frame)) (edge2-frame frame)))
-        (p4 (add-vect (origin-frame frame) (edge2-frame frame))))
-    (let ((s1 (make-segment p1 p2))
-          (s2 (make-segment p2 p3))
-          (s3 (make-segment p3 p4))
-          (s4 (make-segment p4 p1)))
-      ((segments->painter (list s1
-                                s2
-                                s3
-                                s4
-                                (make-segment (midpoint-segment s1) (midpoint-segment s2))
-                                (make-segment (midpoint-segment s2) (midpoint-segment s3))
-                                (make-segment (midpoint-segment s3) (midpoint-segment s4))
-                                (make-segment (midpoint-segment s4) (midpoint-segment s1))
-                                )) frame))))
+ (let ((m1 (midpoint-segment (make-segment (origin-frame frame) (edge1-frame frame))))
+       (m2 (midpoint-segment (make-segment (add-vect (origin-frame frame) (edge1-frame frame)) (edge2-frame frame))))
+       (m3 (midpoint-segment (make-segment (add-vect (origin-frame frame) (edge2-frame frame)) (edge1-frame frame))))
+       (m4 (midpoint-segment (make-segment (origin-frame frame) (edge2-frame frame)))))
+   ((segments->painter (list (make-segment m1 (point-to-point m2 m1))
+                             (make-segment m2 (point-to-point m3 m2))
+                             (make-segment m3 (point-to-point m4 m3))
+                             (make-segment m4 (point-to-point m1 m4)))) frame)))
+                        
 (frame-diamond  (make-frame (make-vect 0 0) (make-vect 10 0) (make-vect 0 10)))
 
 (scale-vect 0.5 (make-vect 0 2))
-(midpoint-segment (make-segment (make-vect 2 2) (make-vect 0 2)))
+(midpoint-segment (make-segment (make-vect 10 0) (make-vect 10 10)))
