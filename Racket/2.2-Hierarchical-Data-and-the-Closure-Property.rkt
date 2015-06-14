@@ -1,4307 +1,845 @@
-#reader(lib"read.ss""wxme")WXME0108 ## 
-#|
-   This file uses the GRacket editor format.
-   Open this file in DrRacket version 6.1.1 or later to read it.
+#lang racket
 
-   Most likely, it was created by saving a program in DrRacket,
-   and it probably contains a program with non-text elements
-   (such as images or comment boxes).
+; 2.2 Hierarchical Data and the Closure Property
 
-            http://racket-lang.org/
-|#
- 31 7 #"wxtext\0"
-3 1 6 #"wxtab\0"
-1 1 8 #"wximage\0"
-2 0 8 #"wxmedia\0"
-4 1 34 #"(lib \"syntax-browser.ss\" \"mrlib\")\0"
-1 0 16 #"drscheme:number\0"
-3 0 44 #"(lib \"number-snip.ss\" \"drscheme\" \"private\")\0"
-1 0 36 #"(lib \"comment-snip.ss\" \"framework\")\0"
-1 0 93
-(
- #"((lib \"collapsed-snipclass.ss\" \"framework\") (lib \"collapsed-sni"
- #"pclass-wxme.ss\" \"framework\"))\0"
-) 0 0 43 #"(lib \"collapsed-snipclass.ss\" \"framework\")\0"
-0 0 19 #"drscheme:sexp-snip\0"
-0 0 36 #"(lib \"cache-image-snip.ss\" \"mrlib\")\0"
-1 0 68
-(
- #"((lib \"image-core.ss\" \"mrlib\") (lib \"image-core-wxme.rkt\" \"mr"
- #"lib\"))\0"
-) 1 0 29 #"drscheme:bindings-snipclass%\0"
-1 0 88
-(
- #"((lib \"pict-snip.rkt\" \"drracket\" \"private\") (lib \"pict-snip.r"
- #"kt\" \"drracket\" \"private\"))\0"
-) 0 0 34 #"(lib \"bullet-snip.rkt\" \"browser\")\0"
-0 0 25 #"(lib \"matrix.ss\" \"htdp\")\0"
-1 0 22 #"drscheme:lambda-snip%\0"
-1 0 29 #"drclickable-string-snipclass\0"
-0 0 26 #"drracket:spacer-snipclass\0"
-0 0 57
-#"(lib \"hrule-snip.rkt\" \"macro-debugger\" \"syntax-browser\")\0"
-1 0 26 #"drscheme:pict-value-snip%\0"
-0 0 45 #"(lib \"image-snipr.ss\" \"slideshow\" \"private\")\0"
-1 0 38 #"(lib \"pict-snipclass.ss\" \"slideshow\")\0"
-2 0 55 #"(lib \"vertical-separator-snip.ss\" \"stepper\" \"private\")\0"
-1 0 18 #"drscheme:xml-snip\0"
-1 0 31 #"(lib \"xml-snipclass.ss\" \"xml\")\0"
-1 0 21 #"drscheme:scheme-snip\0"
-2 0 34 #"(lib \"scheme-snipclass.ss\" \"xml\")\0"
-1 0 10 #"text-box%\0"
-1 0 32 #"(lib \"text-snipclass.ss\" \"xml\")\0"
-1 0 1 6 #"wxloc\0"
-          0 0 56 0 1 #"\0"
-0 75 1 #"\0"
-0 12 90 -1 90 -1 3 -1 0 1 0 1 0 0 0 0 0 0 0 0 0 0 0 255 255 255 1 -1 0 9
-#"Standard\0"
-0 75 6 #"Menlo\0"
-0 12 90 -1 90 -1 3 -1 0 1 0 1 0 0 0 0 0 0 0 0 0 0 0 255 255 255 1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 -1 -1 -1 0 0 0 0 0 0 1 1 1 1 1 1 0 0 0 0 0 0 -1 -1 2 24
-#"framework:default-color\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 -1 -1 -1 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 255 255 255 -1 -1 2
-1 #"\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 -1 -1 -1 0 0 0 0 0 0 0 0 0 1 1 1 150 0 150 0 0 0 -1 -1 2 15
-#"text:ports out\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 150 0 150 0 0 0 -1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1.0 0 -1 -1 93 -1 -1 -1 0 0 0 0 0 0 0 0 0 1.0 1.0 1.0 255 0 0 0 0 0 -1
--1 2 15 #"text:ports err\0"
-0 -1 1 #"\0"
-1 0 -1 92 93 -1 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 255 0 0 0 0 0 -1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 -1 -1 -1 0 0 0 0 0 0 0 0 0 1 1 1 0 0 175 0 0 0 -1 -1 2 17
-#"text:ports value\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 0 0 175 0 0 0 -1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1.0 0 92 -1 -1 -1 -1 -1 0 0 0 0 0 0 0 0 0 1.0 1.0 1.0 34 139 34 0 0 0 -1
--1 2 27 #"Matching Parenthesis Style\0"
-0 -1 1 #"\0"
-1.0 0 92 -1 -1 -1 -1 -1 0 0 0 0 0 0 0 0 0 1.0 1.0 1.0 34 139 34 0 0 0 -1
--1 2 1 #"\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 38 38 128 0 0 0 -1 -1 2 37
-#"framework:syntax-color:scheme:symbol\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 38 38 128 0 0 0 -1 -1 2 38
-#"framework:syntax-color:scheme:keyword\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 38 38 128 0 0 0 -1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 194 116 31 0 0 0 -1 -1 2
-38 #"framework:syntax-color:scheme:comment\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 194 116 31 0 0 0 -1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 41 128 38 0 0 0 -1 -1 2 37
-#"framework:syntax-color:scheme:string\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 41 128 38 0 0 0 -1 -1 2 35
-#"framework:syntax-color:scheme:text\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 41 128 38 0 0 0 -1 -1 2 39
-#"framework:syntax-color:scheme:constant\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 41 128 38 0 0 0 -1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 132 60 36 0 0 0 -1 -1 2 49
-#"framework:syntax-color:scheme:hash-colon-keyword\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 132 60 36 0 0 0 -1 -1 2 42
-#"framework:syntax-color:scheme:parenthesis\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 132 60 36 0 0 0 -1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 255 0 0 0 0 0 -1 -1 2 36
-#"framework:syntax-color:scheme:error\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 255 0 0 0 0 0 -1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 0 0 0 0 0 0 -1 -1 2 36
-#"framework:syntax-color:scheme:other\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 0 0 0 0 0 0 -1 -1 2 16
-#"Misspelled Text\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 -1 -1 -1 0 0 0 0 0 0 0 0 0 1 1 1 0 0 0 0 0 0 -1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 81 112 203 0 0 0 -1 -1 2
-38 #"drracket:check-syntax:lexically-bound\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 81 112 203 0 0 0 -1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 178 34 34 0 0 0 -1 -1 2 28
-#"drracket:check-syntax:set!d\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 178 34 34 0 0 0 -1 -1 2 37
-#"drracket:check-syntax:unused-require\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 255 0 0 0 0 0 -1 -1 2 36
-#"drracket:check-syntax:free-variable\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 255 0 0 0 0 0 -1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 68 0 203 0 0 0 -1 -1 2 31
-#"drracket:check-syntax:imported\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 68 0 203 0 0 0 -1 -1 2 47
-#"drracket:check-syntax:my-obligation-style-pref\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 178 34 34 0 0 0 -1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 0 116 0 0 0 0 -1 -1 2 50
-#"drracket:check-syntax:their-obligation-style-pref\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 0 116 0 0 0 0 -1 -1 2 48
-#"drracket:check-syntax:unk-obligation-style-pref\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 0 0 0 0 0 0 -1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 139 142 28 0 0 0 -1 -1 2
-49 #"drracket:check-syntax:both-obligation-style-pref\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 139 142 28 0 0 0 -1 -1 2
-26 #"plt:htdp:test-coverage-on\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 0 0 0 0 0 0 -1 -1 2 1
-#"\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 1 0 0 0 0 0 0 255 165 0 0 0 0 -1 -1 2 27
-#"plt:htdp:test-coverage-off\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 1 0 0 0 0 0 0 255 165 0 0 0 0 -1 -1 4 1
-#"\0"
-0 70 1 #"\0"
-1.0 0 -1 -1 -1 -1 -1 -1 0 0 0 0 0 0 1.0 1.0 1.0 1.0 1.0 1.0 0 0 0 0 0 0
--1 -1 4 4 #"XML\0"
-0 70 1 #"\0"
-1.0 0 -1 -1 -1 -1 -1 -1 0 0 0 0 0 0 1.0 1.0 1.0 1.0 1.0 1.0 0 0 0 0 0 0
--1 -1 2 37 #"plt:module-language:test-coverage-on\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 0 0 0 0 1 1 1 0 0 0 0 0 0 -1 -1 2 38
-#"plt:module-language:test-coverage-off\0"
-0 -1 1 #"\0"
-1 0 -1 92 -1 93 -1 -1 0 1 0 0 0 1 0 0 0 0 0 0 255 165 0 0 0 0 -1 -1 4 1
-#"\0"
-0 71 1 #"\0"
-1.0 0 -1 -1 -1 -1 -1 -1 0 0 0 0 0 0 1.0 1.0 1.0 1.0 1.0 1.0 0 0 0 0 0 0
--1 -1 4 1 #"\0"
-0 -1 1 #"\0"
-1.0 0 -1 -1 -1 -1 -1 -1 1 0 0 0 0 0 0 0 0 1.0 1.0 1.0 0 0 255 0 0 0 -1
--1 4 1 #"\0"
-0 71 1 #"\0"
-1.0 0 -1 -1 -1 -1 -1 -1 1 0 0 0 0 0 0 0 0 1.0 1.0 1.0 0 0 255 0 0 0 -1
--1 4 1 #"\0"
-0 71 1 #"\0"
-1.0 0 -1 -1 -1 -1 -1 -1 0 0 0 0 0 0 0 0 0 1.0 1.0 1.0 0 100 0 0 0 0 -1
--1 2 1 #"\0"
-0 -1 1 #"\0"
-1 0 -1 -1 -1 -1 -1 -1 0 0 0 0 0 0 0 0 0 1 1 1 200 0 0 0 0 0 -1 -1
-          0 3362 0 28 3 12 #"#lang racket"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 48 #"; 2.2 Hierarchical Data and the Closure Property"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 96
-(
- #"; As we have seen , pairs provide a primitive \"glue\" that we can u"
- #"se to construct compound data "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 98
-(
- #"; objects. Cons can be used to combine not only numbers but pairs as"
- #" well. As a consequence, pairs"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 94
-(
- #"; provide a universal building block from which we can construct all"
- #" sorts of data structures."
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 100
-(
- #"; The ability to create pairs whose elements are pairs is the essenc"
- #"e of list structure's importance"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 99
-(
- #"; as a representational tool. We refer to this ability as the closur"
- #"e property of cons. In general,"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 101
-(
- #"; an operation for combining data objects satisfies the closure prop"
- #"erty if the results of combining "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 100
-(
- #"; things with that operation can themselves be combined using the sa"
- #"me operation. Closure is the key"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 97
-(
- #"; to power in any means of combination because it permits us to crea"
- #"te hierarchical structures --"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 80
-(
- #"; structures made up of parts, which themselves are made up of parts"
- #", and so on."
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 30 #"; 2.2.1 Representing Sequences"
-0 0 24 29 1 #"\n"
-0 0 17 3 96
-(
- #"; One of the useful structures we can build with pairs is a sequence"
- #" -- an ordered collection of"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 93
-(
- #"; data objects. There are, of course, many ways to represent sequenc"
- #"es in terms of pairs. One"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 89
-(
- #"; particularly striaghtforward representation is shown below for the"
- #" sequence 1, 2, 3, 4."
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 4 #"cons"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 29 1 #"\n"
-0 0 24 3 7 #"      ("
-0 0 14 3 4 #"cons"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"2"
-0 0 24 29 1 #"\n"
-0 0 24 3 13 #"            ("
-0 0 14 3 4 #"cons"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"3"
-0 0 24 29 1 #"\n"
-0 0 24 3 19 #"                  ("
-0 0 14 3 4 #"cons"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"4"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"'"
-0 0 24 3 6 #"()))))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 98
-(
- #"; The car of each pair is the corresponding item in the chain, and t"
- #"he cdr of the pair is the next"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 95
-(
- #"; pair in the chain. The cdr of the final pair signals the end of th"
- #"e sequence by pointing to a"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 84
-(
- #"; distinguished value that is not a pair (nil in scheme or empty lis"
- #"t in Racket '())"
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 99
-(
- #"; Such a sequence of pairs, formed by nested conses is called a list"
- #". There is a primitive for such"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 25 #"; a construct called list"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"2"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"3"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"4"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 1 #" "
-0 0 14 3 16 #"one-through-four"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"2"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"3"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"4"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 14 3 16 #"one-through-four"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 99
-(
- #"; We can think of car as selecting the first item in the list, and o"
- #"f cdr as selecting the sublist "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 97
-(
- #"; consisting of all but the first item. Nested applications of car a"
- #"nd cdr can be used to extract"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 98
-(
- #"; the second, third, and subsequent items in the list. The construct"
- #"or cons makes a list like the "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 60
-#"; original one but with an additional item at the beginning."
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 3 #"car"
-0 0 24 3 1 #" "
-0 0 14 3 16 #"one-through-four"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 3 #"cdr"
-0 0 24 3 1 #" "
-0 0 14 3 16 #"one-through-four"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 3 #"car"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"cdr"
-0 0 24 3 1 #" "
-0 0 14 3 16 #"one-through-four"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 4 #"cons"
-0 0 24 3 1 #" "
-0 0 21 3 2 #"10"
-0 0 24 3 1 #" "
-0 0 14 3 16 #"one-through-four"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 4 #"cons"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"5"
-0 0 24 3 1 #" "
-0 0 14 3 16 #"one-through-four"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 17 #"; List operations"
-0 0 24 29 1 #"\n"
-0 0 17 3 93
-(
- #"; The use of pairs to represent sequences of elements as lists is ac"
- #"companied by conventional"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 100
-(
- #"; programming techniques for manipulating lists by successively \"cd"
- #"ring down\" the lists. For example"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 103
-(
- #"; the procedure list-ref takes as arguments a list and a number n an"
- #"d returns the nth item of the list."
-) 0 0 24 29 1 #"\n"
-0 0 17 3 95
-(
- #"; It is customary to number the elements of the list beginning with "
- #"0. The method for computing"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 28 #"; list-ref is the following:"
-0 0 24 29 1 #"\n"
-0 0 17 3 57 #"; - For n = o, list-ref should return the car of the list"
-0 0 24 29 1 #"\n"
-0 0 17 3 76
-(
- #"; - Otherwise, list-ref shold return the (n-1)st item of the cdr of "
- #"the list"
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 8 #"list-ref"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"items"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 14 3 2 #"if"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"="
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"0"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 7 #"      ("
-0 0 14 3 3 #"car"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"items"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 7 #"      ("
-0 0 14 3 8 #"list-ref"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"cdr"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"items"
-0 0 24 3 3 #") ("
-0 0 14 3 1 #"-"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 4 #"))))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"squares"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"4"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"9"
-0 0 24 3 1 #" "
-0 0 21 3 2 #"16"
-0 0 24 3 1 #" "
-0 0 21 3 2 #"25"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 8 #"list-ref"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"squares"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"3"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 96
-(
- #"; Often we cdr down the whole list. To aid in this, Racket includes "
- #"a primitive predicate null?,"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 101
-(
- #"; which tests whether its argument is the empty list. The procedure "
- #"length, which returns the number "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 62
-#"; of items in a list, illustrates this typical pattern of use:"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 6 #"length"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"items"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 14 3 2 #"if"
-0 0 24 3 2 #" ("
-0 0 14 3 5 #"null?"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"items"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 6 #"      "
-0 0 21 3 1 #"0"
-0 0 24 29 1 #"\n"
-0 0 24 3 7 #"      ("
-0 0 14 3 1 #"+"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 2 #" ("
-0 0 14 3 6 #"length"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"cdr"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"items"
-0 0 24 3 5 #")))))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"odds"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"3"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"5"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"7"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 6 #"length"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"odds"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 81
-(
- #"; The length procedure implements a simple recursive plan. The reduc"
- #"tion step is:"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 70
-(
- #"; - The length of any list is 1 plus the length of the cdr of the li"
- #"st"
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 60
-#"; This is applied successively until we reach the base case:"
-0 0 24 29 1 #"\n"
-0 0 17 3 38 #"; - The length of the empty list is 0."
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 53 #"; We could also compute length in an iterative style:"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 7 #"length2"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"items"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 11 #"length-iter"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"a"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"count"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 5 #"    ("
-0 0 14 3 2 #"if"
-0 0 24 3 2 #" ("
-0 0 14 3 5 #"null?"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"a"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 8 #"        "
-0 0 14 3 5 #"count"
-0 0 24 29 1 #"\n"
-0 0 24 3 9 #"        ("
-0 0 14 3 11 #"length-iter"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"cdr"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"a"
-0 0 24 3 3 #") ("
-0 0 14 3 1 #"+"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"count"
-0 0 24 3 4 #"))))"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 14 3 11 #"length-iter"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"items"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"0"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 7 #"length2"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"odds"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 95
-(
- #"; Another conventional programming technique is to \"cons up\" an an"
- #"swer list while cdring down a"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 98
-(
- #"; list, as in the procedure append, which takes two lists as argumen"
- #"ts and combines their elements"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 21 #"; to make a new list:"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 6 #"append"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"squares"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"odds"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 6 #"append"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"odds"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"squares"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 101
-(
- #"; Append is also implmented using a recursive plan. To append lists "
- #"list1 and list2, do the following"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 61
-#"; - If list1 is the empty list, then the result is just list2"
-0 0 24 29 1 #"\n"
-0 0 17 3 92
-(
- #"; - Otherwise, append the cdr of list1 and list 2, and cons the car "
- #"of list1 onto the result"
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 7 #"append2"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"list1"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"list2"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 14 3 2 #"if"
-0 0 24 3 2 #" ("
-0 0 14 3 5 #"null?"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"list1"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 6 #"      "
-0 0 14 3 5 #"list2"
-0 0 24 29 1 #"\n"
-0 0 24 3 7 #"      ("
-0 0 14 3 4 #"cons"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"car"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"list1"
-0 0 24 3 3 #") ("
-0 0 14 3 6 #"append"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"cdr"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"list1"
-0 0 24 3 2 #") "
-0 0 14 3 5 #"list2"
-0 0 24 3 4 #"))))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 7 #"append2"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"squares"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"odds"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 7 #"append2"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"odds"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"squares"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 20 #"; Mapping over lists"
-0 0 24 29 1 #"\n"
-0 0 17 3 90
-(
- #"; One extremely useful operation is to apply some transformation to "
- #"each element in a list"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 92
-(
- #"; and generate the list of results. For instance, the following proc"
- #"edure scales each number"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 29 #"; in a list by a given factor"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 10 #"scale-list"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"items"
-0 0 24 3 1 #" "
-0 0 14 3 6 #"factor"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 14 3 2 #"if"
-0 0 24 3 2 #" ("
-0 0 14 3 5 #"null?"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"items"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 6 #"      "
-0 0 21 3 1 #"'"
-0 0 24 3 2 #"()"
-0 0 24 29 1 #"\n"
-0 0 24 3 7 #"      ("
-0 0 14 3 4 #"cons"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"*"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"car"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"items"
-0 0 24 3 2 #") "
-0 0 14 3 6 #"factor"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 13 #"            ("
-0 0 14 3 10 #"scale-list"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"cdr"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"items"
-0 0 24 3 2 #") "
-0 0 14 3 6 #"factor"
-0 0 24 3 4 #"))))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 10 #"scale-list"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"2"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"3"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"4"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"5"
-0 0 24 3 2 #") "
-0 0 21 3 2 #"10"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 17 3 18 #"; (10 20 30 40 50)"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 98
-(
- #"; We can abstract this general idea and capture it as a common patte"
- #"rn expressed as a higher-order"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 96
-(
- #"; procedure, just as in section 1.3. The higher-order procedure here"
- #" is called map. Map takes as"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 94
-(
- #"; arguments a procedure of one argument and a list, and returns a li"
- #"st of the results produced"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 55 #"; by applying the procedure to each element in the list"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"map"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"proc"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"items"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 14 3 2 #"if"
-0 0 24 3 2 #" ("
-0 0 14 3 5 #"null?"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"items"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 6 #"      "
-0 0 21 3 1 #"'"
-0 0 24 3 2 #"()"
-0 0 24 29 1 #"\n"
-0 0 24 3 7 #"      ("
-0 0 14 3 4 #"cons"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"proc"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"car"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"items"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 13 #"            ("
-0 0 14 3 3 #"map"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"proc"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"cdr"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"items"
-0 0 24 3 5 #")))))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 3 #"map"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"abs"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 3 #"-10"
-0 0 24 3 1 #" "
-0 0 21 3 3 #"2.5"
-0 0 24 3 1 #" "
-0 0 21 3 5 #"-11.6"
-0 0 24 3 1 #" "
-0 0 21 3 2 #"17"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 17 3 18 #"; (10 2.5 11.6 17)"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 3 #"map"
-0 0 24 3 2 #" ("
-0 0 15 3 6 #"lambda"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"x"
-0 0 24 3 3 #") ("
-0 0 14 3 1 #"*"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 6 #"     ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"2"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"3"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"4"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 17 3 12 #"; (1 4 9 16)"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 64
-#"; Now we can give a new definition of scale-list in terms of map"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 11 #"scale-list2"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"items"
-0 0 24 3 1 #" "
-0 0 14 3 6 #"factor"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 14 3 3 #"map"
-0 0 24 3 2 #" ("
-0 0 15 3 6 #"lambda"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"x"
-0 0 24 3 3 #") ("
-0 0 14 3 1 #"*"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 1 #" "
-0 0 14 3 6 #"factor"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 7 #"       "
-0 0 14 3 5 #"items"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 11 #"scale-list2"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"2"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"3"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"4"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"5"
-0 0 24 3 2 #") "
-0 0 21 3 2 #"10"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 17 3 18 #"; (10 20 30 40 50)"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 94
-(
- #"; Map is an important construct, not only because it captures a comm"
- #"on pattern, but because it"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 96
-(
- #"; establishes a higherlevel of abstraction in dealing with lists. In"
- #" the original definition of "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 94
-(
- #"; scale-list, the recursive structure of the program draws attention"
- #" to the element-by-element"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 94
-(
- #"; processing of the list. Defining scale-list2 in terms of map suppr"
- #"esses that level of detail"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 96
-(
- #"; and emphasizes that scaling transforms a list of elements to a lis"
- #"t of results. The difference"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 99
-(
- #"; between the two definitions is not that the computer is performing"
- #" a different process (it isn't)"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 96
-(
- #"; but that we think about the process differently. In effect, map he"
- #"lps establish an abstraction"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 94
-(
- #"; barrier that isolates the implementation of procedures that transf"
- #"orm lists from the details"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 95
-(
- #"; of how the elements of the list are extracted and combined. Like t"
- #"he barriers shown in figure"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 97
-(
- #"; 2.1, this abstraction gives us the flexibility to change the los-l"
- #"evel details of how sequences"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 89
-(
- #"; are implemented, while preserving the conceptual framework of oper"
- #"ations that transform"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 91
-(
- #"; sequences to sequences. Section 2.2.3 expands on this use of seque"
- #"nces as a framework for"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 22 #"; organizing programs."
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 30 #"; 2.2.2 Hierachical Structures"
-0 0 24 29 1 #"\n"
-0 0 17 3 96
-(
- #"; The representation of sequences in terms of lists generalizes natu"
- #"rally to represent sequences"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 94
-(
- #"; whose elements may themselves be sequences. For example, we can re"
- #"gard the object (1 2) 3 4)"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 16 #"; constructed by"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 4 #"cons"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"2"
-0 0 24 3 3 #") ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"3"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"4"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 98
-(
- #"; as a list of three items, the first of which is itself a list, (1 "
- #"2). Indeed, this is suggested "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 65
-#"; by the form in which the result is printed by the interpreter. "
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 93
-(
- #"; Another way to think of sequences whose elements are sequences is "
- #"as trees. The elements of"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 92
-(
- #"; the sequence are the branches of the tree, and elements that are t"
- #"hemselves sequences are "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 12 #"; subtrees. "
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 89
-(
- #"; Recursion is a natural tool for dealing with tree structures, sinc"
- #"e we can often reduce"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 97
-(
- #"; operations on trees to operations on their branches, which reduce "
- #"to operations on the branches"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 95
-(
- #"; of the branches, and so on, until we reach the leaves of the tree."
- #" As an example, compare the"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 92
-(
- #"; length procedure of section 2.2.1 with the count-leaves procedure,"
- #" which returns the total"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 28 #"; number of leaves of a tree"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 76
-(
- #"; To implement count-leaves, recall the recursive plan for computing"
- #" length:"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 55 #"; - Length of a list x is 1 plus length of the cdr of x"
-0 0 24 29 1 #"\n"
-0 0 17 3 33 #"; - Length of the empty list is 0"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 68
-#"; Count-leaves is similar. The value for the empty list is the same:"
-0 0 24 29 1 #"\n"
-0 0 17 3 39 #"; - Count-leaves of the empty list is 0"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 94
-(
- #"; But in the reduction step, where we strip off the car of the list,"
- #" we must take into account"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 89
-(
- #"; that the car may itself be a tree whose leaves we need to count. T"
- #"hus, the appropriate "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 19 #"; reduction step is"
-0 0 24 29 1 #"\n"
-0 0 17 3 94
-(
- #"; - Count-leaves of a tree x is count-leaves of the car of c plus co"
- #"unt-leaves of the cdr of x"
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 78
-(
- #"; Finally by taking cars we reach actual leaves, so we need another "
- #"base case:"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 31 #"; - Count-leaves of a leaf is 1"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 90
-(
- #"; To aid in writing recursive procedures on trees, Scheme provides t"
- #"he primitive predicate"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 83
-(
- #"; pair?, which tests whether its argument is a pair. Here is the com"
- #"plete procedure"
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 12 #"count-leaves"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 15 3 4 #"cond"
-0 0 24 3 3 #" (("
-0 0 14 3 5 #"null?"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 2 #") "
-0 0 21 3 1 #"0"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 10 #"        (("
-0 0 14 3 3 #"not"
-0 0 24 3 2 #" ("
-0 0 14 3 5 #"pair?"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 3 #")) "
-0 0 21 3 1 #"1"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 9 #"        ("
-0 0 14 3 4 #"else"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"+"
-0 0 24 3 2 #" ("
-0 0 14 3 12 #"count-leaves"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"car"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 18 #"                 ("
-0 0 14 3 12 #"count-leaves"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"cdr"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 6 #"))))))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"cons"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"2"
-0 0 24 3 3 #") ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"3"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"4"
-0 0 24 3 3 #")))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 6 #"length"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 2 #") "
-0 0 17 3 3 #"; 3"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 12 #"count-leaves"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 2 #") "
-0 0 17 3 3 #"; 4"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 2 #") "
-0 0 17 3 27 #"; (((1 2) 3 4) ((1 2) 3 4))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 6 #"length"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 3 #")) "
-0 0 17 3 3 #"; 2"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 12 #"count-leaves"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 3 #")) "
-0 0 17 3 3 #"; 8"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 20 #"; Mapping over trees"
-0 0 24 29 1 #"\n"
-0 0 17 3 96
-(
- #"; Just as map is a powerful abstraction for dealing with sequences, "
- #"map together with recursion "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 101
-(
- #"; is a powerful abstraction for dealing with trees. For instance, th"
- #"e scale-tree procedure, analogous"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 93
-(
- #"; to scale-list of section 2.2.1, takes as arguments a numeric facto"
- #"r and a tree whose leaves"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 98
-(
- #"; are numbers. It returns a tree of the same shape, where each numbe"
- #"r is multiplied by the factor."
-) 0 0 24 29 1 #"\n"
-0 0 17 3 75
-(
- #"; The recursive plan for scale-tree is similar to the one for count-"
- #"leaves:"
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 10 #"scale-tree"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"tree"
-0 0 24 3 1 #" "
-0 0 14 3 6 #"factor"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 15 3 4 #"cond"
-0 0 24 3 3 #" (("
-0 0 14 3 5 #"null?"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"tree"
-0 0 24 3 2 #") "
-0 0 21 3 1 #"'"
-0 0 24 3 3 #"())"
-0 0 24 29 1 #"\n"
-0 0 24 3 10 #"        (("
-0 0 14 3 3 #"not"
-0 0 24 3 2 #" ("
-0 0 14 3 5 #"pair?"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"tree"
-0 0 24 3 4 #")) ("
-0 0 14 3 1 #"*"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"tree"
-0 0 24 3 1 #" "
-0 0 14 3 6 #"factor"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 9 #"        ("
-0 0 14 3 4 #"else"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"cons"
-0 0 24 3 2 #" ("
-0 0 14 3 10 #"scale-tree"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"car"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"tree"
-0 0 24 3 2 #") "
-0 0 14 3 6 #"factor"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 21 #"                    ("
-0 0 14 3 10 #"scale-tree"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"cdr"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"tree"
-0 0 24 3 2 #") "
-0 0 14 3 6 #"factor"
-0 0 24 3 5 #")))))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 10 #"scale-tree"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"2"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"3"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"4"
-0 0 24 3 2 #") "
-0 0 21 3 1 #"5"
-0 0 24 3 3 #") ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"6"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"7"
-0 0 24 3 3 #")) "
-0 0 21 3 2 #"10"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 94
-(
- #"; Another way to implement scale-tree is to regard the tree as a seq"
- #"uence of sub-trees and use"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 98
-(
- #"; map. We map over the sequence, scaling each sub-tree in turn, and "
- #"return the list of results. In"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 76
-(
- #"; the base case, where the tree is a leaf, we simply multiply by the"
- #" factor:"
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 11 #"scale-tree2"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"tree"
-0 0 24 3 1 #" "
-0 0 14 3 6 #"factor"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 14 3 3 #"map"
-0 0 24 3 2 #" ("
-0 0 15 3 6 #"lambda"
-0 0 24 3 2 #" ("
-0 0 14 3 8 #"sub-tree"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 10 #"         ("
-0 0 14 3 2 #"if"
-0 0 24 3 2 #" ("
-0 0 14 3 5 #"pair?"
-0 0 24 3 1 #" "
-0 0 14 3 8 #"sub-tree"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 14 #"             ("
-0 0 14 3 11 #"scale-tree2"
-0 0 24 3 1 #" "
-0 0 14 3 8 #"sub-tree"
-0 0 24 3 1 #" "
-0 0 14 3 6 #"factor"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 14 #"             ("
-0 0 14 3 1 #"*"
-0 0 24 3 1 #" "
-0 0 14 3 8 #"sub-tree"
-0 0 24 3 1 #" "
-0 0 14 3 6 #"factor"
-0 0 24 3 3 #")))"
-0 0 24 29 1 #"\n"
-0 0 24 3 7 #"       "
-0 0 14 3 4 #"tree"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 11 #"scale-tree2"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"2"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"3"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"4"
-0 0 24 3 2 #") "
-0 0 21 3 1 #"5"
-0 0 24 3 3 #") ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"6"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"7"
-0 0 24 3 3 #")) "
-0 0 21 3 2 #"10"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 92
-(
- #"; Many tree operations can be implemented by similar combinations of"
- #" sequence operations and"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 12 #"; recursion."
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 38 #"; Sequences as Conventional Interfaces"
-0 0 24 29 1 #"\n"
-0 0 17 3 98
-(
- #"; In working with compound data, we've stressed how data abstraction"
- #" permits us to design programs"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 97
-(
- #"; without becoming enmeshed in the details of data representations, "
- #"and how abstraction preserves"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 92
-(
- #"; for us the flexibility to experiment with alternative representati"
- #"ons. In this section, we"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 92
-(
- #"; introduce another powerful design principle for working with data "
- #"structures - the use of "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 26 #"; conventional interfaces."
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 94
-(
- #"; In section 1.3 we saw how program abstractions, implemented as hig"
- #"her-order procedures, can "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 94
-(
- #"; capture common patterns in programs that deal with numerical data."
- #" Our ability to formulate "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 93
-(
- #"; analogous operations for working with compound data depends crucia"
- #"lly on the style in which"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 94
-(
- #"; we manipulate our data structures. Consider, for example, the foll"
- #"owing procedure, analogous"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 95
-(
- #"; to the count-leaves procedure of sections 2.2.2, which takes a tre"
- #"e as argument and computes "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 52 #"; the sum of the squares of the leaves that are odd:"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 6 #"square"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 3 #") ("
-0 0 14 3 1 #"*"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 15 #"sum-odd-squares"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"tree"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 15 3 4 #"cond"
-0 0 24 3 3 #" (("
-0 0 14 3 5 #"null?"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"tree"
-0 0 24 3 2 #") "
-0 0 21 3 1 #"0"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 10 #"        (("
-0 0 14 3 3 #"not"
-0 0 24 3 2 #" ("
-0 0 14 3 5 #"pair?"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"tree"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 10 #"         ("
-0 0 14 3 2 #"if"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"odd?"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"tree"
-0 0 24 3 3 #") ("
-0 0 14 3 6 #"square"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"tree"
-0 0 24 3 2 #") "
-0 0 21 3 1 #"0"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 9 #"        ("
-0 0 14 3 4 #"else"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"+"
-0 0 24 3 2 #" ("
-0 0 14 3 15 #"sum-odd-squares"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"car"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"tree"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 18 #"                 ("
-0 0 14 3 15 #"sum-odd-squares"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"cdr"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"tree"
-0 0 24 3 6 #"))))))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 15 #"sum-odd-squares"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"2"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"3"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"4"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"5"
-0 0 24 3 3 #") ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"6"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"7"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"8"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"9"
-0 0 24 3 3 #")))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 94
-(
- #"; On the surface, this procedure is very different from the followin"
- #"g one, which constructs a "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 90
-(
- #"; list of all the even Fibonacci numbers Fib(k), where k is less tha"
- #"n or equal to a given "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 12 #"; integer n:"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"fib"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 15 3 4 #"cond"
-0 0 24 3 3 #" (("
-0 0 14 3 1 #"="
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"0"
-0 0 24 3 2 #") "
-0 0 21 3 1 #"0"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 11 #"         (("
-0 0 14 3 1 #"="
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 2 #") "
-0 0 21 3 1 #"1"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 10 #"         ("
-0 0 14 3 4 #"else"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"+"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"fib"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"-"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 19 #"                  ("
-0 0 14 3 3 #"fib"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"-"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"2"
-0 0 24 3 6 #"))))))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 9 #"even-fibs"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 4 #"   ("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"next"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"k"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 6 #"     ("
-0 0 14 3 2 #"if"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #">"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"k"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 9 #"         "
-0 0 21 3 1 #"'"
-0 0 24 3 2 #"()"
-0 0 24 29 1 #"\n"
-0 0 24 3 10 #"         ("
-0 0 15 3 3 #"let"
-0 0 24 3 3 #" (("
-0 0 14 3 1 #"f"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"fib"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"k"
-0 0 24 3 3 #")))"
-0 0 24 29 1 #"\n"
-0 0 24 3 12 #"           ("
-0 0 14 3 2 #"if"
-0 0 24 3 2 #" ("
-0 0 14 3 5 #"even?"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"f"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 16 #"               ("
-0 0 14 3 4 #"cons"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"f"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"next"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"+"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"k"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 3 #")))"
-0 0 24 29 1 #"\n"
-0 0 24 3 16 #"               ("
-0 0 14 3 4 #"next"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"+"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"k"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 6 #"))))))"
-0 0 24 29 1 #"\n"
-0 0 24 3 4 #"   ("
-0 0 14 3 4 #"next"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"0"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 7 #"display"
-0 0 24 3 1 #" "
-0 0 19 3 11 #"\"even-fibs\""
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 9 #"even-fibs"
-0 0 24 3 1 #" "
-0 0 21 3 2 #"10"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 17 3 94
-(
- #"; Despite the fact that these two procedures are structurally very d"
- #"ifferent, a more abstract "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 91
-(
- #"; description of the two computations reveals a great deal of simila"
- #"rity. The first program"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 36 #";  - enumerates the leaves of a tree"
-0 0 24 29 1 #"\n"
-0 0 17 3 41 #";  - filters them, selecting the odd ones"
-0 0 24 29 1 #"\n"
-0 0 17 3 42 #";  - squares each of the selected ones and"
-0 0 24 29 1 #"\n"
-0 0 17 3 53 #";  - accumulates the results using +, starting with 0"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 20 #"; The second program"
-0 0 24 29 1 #"\n"
-0 0 17 3 40 #";  - enumerates the integers from 0 to n"
-0 0 24 29 1 #"\n"
-0 0 17 3 51 #";  - computes the Fibonacci number for each integer"
-0 0 24 29 1 #"\n"
-0 0 17 3 46 #";  - filters them, selecting the even ones and"
-0 0 24 29 1 #"\n"
-0 0 17 3 69
-(
- #";  - accumulates the results using cons, starting with the empty lis"
- #"t"
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 94
-(
- #"; A signal processing engineer would find it natural to conceptualiz"
- #"e these processes in terms"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 95
-(
- #"; of signals flowing through a cascade of stages, each of which impl"
- #"ements part of the program "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 96
-(
- #"; plan, as shown in Figure 2.7. In sum-odd-squares, we begin with an"
- #" enumerator, which generates"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 95
-(
- #"; a \"signal\" consisting of the leaves of a given tree. This signal"
- #" is passed through a filter, "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 94
-(
- #"; which eliminates all but the odd elements. The resulting signal is"
- #" in turn passed through a "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 95
-(
- #"; map, which is a \"transducer\" that applies the square procedure t"
- #"o each element. The output of"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 95
-(
- #"; the map is then fed to an accumulator, which combines the elements"
- #" using +, starting from an "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 49 #"; initial 0. The plan for even-fibs is analogous."
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 97
-(
- #"; Unfortunately, the two procedure definitions above fail to exhibit"
- #" this signal-flow structure. "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 92
-(
- #"; For instance, if we examine the sum-odd-squares procedure, we find"
- #" that the enumeration is"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 95
-(
- #"; implemented partly by the null? and pair? tests and partly by the "
- #"tree-recursive structure of"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 91
-(
- #"; the procedure. Similarly, the accumulation is found partly in the "
- #"tests and partly in the"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 93
-(
- #"; addition used in the recursion. In general, there are no distinct "
- #"parts of either procedure"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 94
-(
- #"; that correspond to the elements in the signal-flow description. Ou"
- #"r two procedures decompose"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 98
-(
- #"; the computations in a different way, spreading the enumeration ove"
- #"r the program and mingling it "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 90
-(
- #"; with the map, the filter and the accumulation. If we could organiz"
- #"e our programs to make"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 98
-(
- #"; the signal-flow structure manifest in the rocedures we write, this"
- #" would increase the conceptual"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 32 #"; clarity of the resulting code."
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 21 #"; Sequence Operations"
-0 0 24 29 1 #"\n"
-0 0 17 3 95
-(
- #"; The key to organising programs so as to more clearly reflect the s"
- #"ignal-flow structure is to "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 100
-(
- #"; concentrate on the \"signals\" that flow from one stage in the pro"
- #"cess to the next. If we represent "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 97
-(
- #"; these signals as lists, then we can use list operations to impleme"
- #"nt the processing at each of "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 97
-(
- #"; the stages. For instance, we can implement the mpping stages of th"
- #"e signal-flow diagrams using "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 39 #"; the map procedure from section 2.2.1:"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 3 #"map"
-0 0 24 3 1 #" "
-0 0 14 3 6 #"square"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"2"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"3"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"4"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"5"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 99
-(
- #"; Filtering a sequence to select only those elements that satisfy a "
- #"given predicate is accomplished"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 4 #"; by"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 6 #"filter"
-0 0 24 3 1 #" "
-0 0 14 3 9 #"predicate"
-0 0 24 3 1 #" "
-0 0 15 3 8 #"sequence"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 15 3 4 #"cond"
-0 0 24 3 3 #" (("
-0 0 14 3 5 #"null?"
-0 0 24 3 1 #" "
-0 0 15 3 8 #"sequence"
-0 0 24 3 2 #") "
-0 0 21 3 1 #"'"
-0 0 24 3 3 #"())"
-0 0 24 29 1 #"\n"
-0 0 24 3 10 #"        (("
-0 0 14 3 9 #"predicate"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"car"
-0 0 24 3 1 #" "
-0 0 15 3 8 #"sequence"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 10 #"         ("
-0 0 14 3 4 #"cons"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"car"
-0 0 24 3 1 #" "
-0 0 15 3 8 #"sequence"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 16 #"               ("
-0 0 14 3 6 #"filter"
-0 0 24 3 1 #" "
-0 0 14 3 9 #"predicate"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"cdr"
-0 0 24 3 1 #" "
-0 0 15 3 8 #"sequence"
-0 0 24 3 4 #"))))"
-0 0 24 29 1 #"\n"
-0 0 24 3 9 #"        ("
-0 0 14 3 4 #"else"
-0 0 24 3 2 #" ("
-0 0 14 3 6 #"filter"
-0 0 24 3 1 #" "
-0 0 14 3 9 #"predicate"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"cdr"
-0 0 24 3 1 #" "
-0 0 15 3 8 #"sequence"
-0 0 24 3 5 #")))))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 6 #"filter"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"odd?"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"2"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"3"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"4"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"5"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 37 #"; Accumulations can be implemented by"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 10 #"accumulate"
-0 0 24 3 1 #" "
-0 0 14 3 2 #"op"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"initial"
-0 0 24 3 1 #" "
-0 0 15 3 8 #"sequence"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 14 3 2 #"if"
-0 0 24 3 2 #" ("
-0 0 14 3 5 #"null?"
-0 0 24 3 1 #" "
-0 0 15 3 8 #"sequence"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 6 #"      "
-0 0 14 3 7 #"initial"
-0 0 24 29 1 #"\n"
-0 0 24 3 7 #"      ("
-0 0 14 3 2 #"op"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"car"
-0 0 24 3 1 #" "
-0 0 15 3 8 #"sequence"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 11 #"          ("
-0 0 14 3 10 #"accumulate"
-0 0 24 3 1 #" "
-0 0 14 3 2 #"op"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"initial"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"cdr"
-0 0 24 3 1 #" "
-0 0 15 3 8 #"sequence"
-0 0 24 3 5 #")))))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 10 #"accumulate"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"+"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"0"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"2"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"3"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"4"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"5"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 10 #"accumulate"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"*"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"2"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"3"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"4"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"5"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 10 #"accumulate"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"cons"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"'"
-0 0 24 3 4 #"() ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"2"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"3"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"4"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"5"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 2 #"  "
-0 0 24 29 1 #"\n"
-0 0 17 3 96
-(
- #"; All that remains to implement signal-flow diagrams is to enumerate"
- #" the sequence of elements to"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 93
-(
- #"; be processed. For even-fips, we need to generate the sequence of i"
- #"ntegers in a given range,"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 29 #"; which we can do as follows:"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 18 #"enumerate-interval"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"low"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"high"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 14 3 2 #"if"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #">"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"low"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"high"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 6 #"      "
-0 0 21 3 1 #"'"
-0 0 24 3 2 #"()"
-0 0 24 29 1 #"\n"
-0 0 24 3 7 #"      ("
-0 0 14 3 4 #"cons"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"low"
-0 0 24 3 2 #" ("
-0 0 14 3 18 #"enumerate-interval"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"+"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"low"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 2 #") "
-0 0 14 3 4 #"high"
-0 0 24 3 4 #"))))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 18 #"enumerate-interval"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"2"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"7"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 47 #"; To enumerate the leaves of a tree, we can use"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 14 #"enumerate-tree"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"tree"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 15 3 4 #"cond"
-0 0 24 3 3 #" (("
-0 0 14 3 5 #"null?"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"tree"
-0 0 24 3 2 #") "
-0 0 21 3 1 #"'"
-0 0 24 3 3 #"())"
-0 0 24 29 1 #"\n"
-0 0 24 3 9 #"       (("
-0 0 14 3 3 #"not"
-0 0 24 3 2 #" ("
-0 0 14 3 5 #"pair?"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"tree"
-0 0 24 3 4 #")) ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"tree"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 8 #"       ("
-0 0 14 3 4 #"else"
-0 0 24 3 2 #" ("
-0 0 14 3 6 #"append"
-0 0 24 3 2 #" ("
-0 0 14 3 14 #"enumerate-tree"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"car"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"tree"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 22 #"                     ("
-0 0 14 3 14 #"enumerate-tree"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"cdr"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"tree"
-0 0 24 3 6 #"))))))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 14 #"enumerate-tree"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"2"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"3"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"4"
-0 0 24 3 3 #")) "
-0 0 21 3 1 #"5"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 90
-(
- #"; Now we can reformulate sum-odd-squares and even-fibs as in the sig"
- #"nal-flow diagrams. For"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 92
-(
- #"; sum-odd-squares, we enumerate the sequence of leaves of the tree, "
- #"filter this to keep only"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 72
-(
- #"; odd numbers in the sequence, square each element, and sum the resu"
- #"lts:"
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 16 #"sum-odd-squares2"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"tree"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 14 3 10 #"accumulate"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"+"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"0"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"map"
-0 0 24 3 1 #" "
-0 0 14 3 6 #"square"
-0 0 24 3 2 #" ("
-0 0 14 3 6 #"filter"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"odd?"
-0 0 24 3 2 #" ("
-0 0 14 3 14 #"enumerate-tree"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"tree"
-0 0 24 3 5 #")))))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 16 #"sum-odd-squares2"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"2"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"3"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"4"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"5"
-0 0 24 3 3 #") ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"6"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"7"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"8"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"9"
-0 0 24 3 3 #")))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 94
-(
- #"; For even-fibs, we enumerate the integers from 0 to n, generate the"
- #" fibonacci number for each"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 97
-(
- #"; of these integers, filter the resulting sequence to keep only the "
- #"even elements, and accumulate"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 26 #"; the results into a list:"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 10 #"even-fibs2"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 14 3 10 #"accumulate"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"cons"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"'"
-0 0 24 3 4 #"() ("
-0 0 14 3 6 #"filter"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"even?"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"map"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"fib"
-0 0 24 3 2 #" ("
-0 0 14 3 18 #"enumerate-interval"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"0"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 5 #")))))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 10 #"even-fibs2"
-0 0 24 3 1 #" "
-0 0 21 3 2 #"15"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 93
-(
- #"; The value of expressing programs as sequence operations is that th"
- #"is helps us make program "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 90
-(
- #"; designs that are modular, that is, designs that are constructed by"
- #" combining relatively "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 99
-(
- #"; independent pieces. We can encourage modular design by providing a"
- #" library of standard components"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 88
-(
- #"; together with a conventional interface for connecting the componen"
- #"ts in flexible ways."
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 95
-(
- #"; Modular construction is a powerful strategy for controlling comple"
- #"xity in engineering design."
-) 0 0 24 29 1 #"\n"
-0 0 17 3 101
-(
- #"; In real signal-processing applications, for example, designers reg"
- #"ularly build systems by cascading"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 94
-(
- #"; elements selected from standardized families of filters and transd"
- #"ucers. Similarly, sequence"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 91
-(
- #"; operations provide a library of standard program elements that we "
- #"can mix and match. For "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 94
-(
- #"; instance, we can reuse pieces from the sum-odd-squares and even-fi"
- #"bs procedures in a program"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 77
-(
- #"; that constructs a list of the squares of the first n + 1 Fibonacci"
- #" numbers:"
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 16 #"list-fib-squares"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 14 3 10 #"accumulate"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"cons"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"'"
-0 0 24 3 4 #"() ("
-0 0 14 3 3 #"map"
-0 0 24 3 1 #" "
-0 0 14 3 6 #"square"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"map"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"fib"
-0 0 24 3 2 #" ("
-0 0 14 3 18 #"enumerate-interval"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"0"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 5 #")))))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 16 #"list-fib-squares"
-0 0 24 3 1 #" "
-0 0 21 3 2 #"10"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 102
-(
- #"; We can rearrange the pieces and use them in computing the product "
- #"of the squares of the odd integers"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 15 #"; in a sequence"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 34 #"product-of-squares-of-odd-elements"
-0 0 24 3 1 #" "
-0 0 15 3 8 #"sequence"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 14 3 10 #"accumulate"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"*"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"map"
-0 0 24 3 1 #" "
-0 0 14 3 6 #"square"
-0 0 24 3 2 #" ("
-0 0 14 3 6 #"filter"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"odd?"
-0 0 24 3 1 #" "
-0 0 15 3 8 #"sequence"
-0 0 24 3 4 #"))))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 34 #"product-of-squares-of-odd-elements"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"2"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"3"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"4"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"5"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 106
-(
- #"; We can also formulate conventional data-processing applications in"
- #" terms of sequence operations. Suppose"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 104
-(
- #"; we have a sequence of personnel records and we want to find the sa"
- #"lary of the highest-paid programmer."
-) 0 0 24 29 1 #"\n"
-0 0 17 3 110
-(
- #"; Assume that we have a selector salary that returns the salary of a"
- #" record, and a predicate programmer? that "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 58
-#"; tests if a record is for a programmer. Then we can write"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 53 #"; (define (salary-of-highest-paid-programmer records)"
-0 0 24 29 1 #"\n"
-0 0 17 3 65
-#";   (accumulate max 0 (map salary (filter programmer? records))))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 111
-(
- #"; These examples give just a hint of the vast range of operations th"
- #"at can be expressed as sequence operations."
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 111
-(
- #"; Sequences, implemented here as lists, serve as a conventional inte"
- #"rface that permits us to combine processing"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 115
-(
- #"; modules. Additionally, when we uniformly represent structures as s"
- #"equences, we have localized the data-structure "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 114
-(
- #"; dependencies in our programs to a small number of sequence operati"
- #"ons. By changing these, we can experiment with"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 109
-(
- #"; alternative representations of sequences, while leaving the overal"
- #"l design of our programs intact. We will "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 111
-(
- #"; exploit this capability in section 3.5, when we generalise the seq"
- #"uence-processing paradigm to admit infinite"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 12 #"; sequences."
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 17 #"; Nested Mappings"
-0 0 24 29 1 #"\n"
-0 0 17 3 94
-(
- #"; We can extend the sequence paradigm to include many computations t"
- #"hat are commonly expressed"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 95
-(
- #"; using nested loops. Consider this problem: Given a positive intege"
- #"r n, find all ordered pairs"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 94
-(
- #"; of distinct positive integers i and j, where 1 <= j <= i <= n, suc"
- #"h that i + j is prime. For"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 52 #"; example if n = 6, then the pairs are the following"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 23 #";   i   | 2 3 4 4 5 6 6"
-0 0 24 29 1 #"\n"
-0 0 17 3 23 #";   j   | 1 2 1 3 2 1 5"
-0 0 24 29 1 #"\n"
-0 0 17 3 27 #"; -------------------------"
-0 0 24 29 1 #"\n"
-0 0 17 3 24 #"; i + j | 3 5 5 7 7 7 11"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 96
-(
- #"; A natural way to organise this computation is to generate the sequ"
- #"ence of all ordered pairs of"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 98
-(
- #"; positive intergers less than or equal to n, filter to select those"
- #" whose sum is prime, and then,"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 87
-(
- #"; for each pair (i, j) that passes through the filter, produce the t"
- #"riple (i, j, i + j)"
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 50 #"; Here is a way to generate the sequence of pairs:"
-0 0 24 29 1 #"\n"
-0 0 17 3 29 #"; - For each integer i <= n, "
-0 0 24 29 1 #"\n"
-0 0 17 3 38 #";  - enumerate the integers j < i, and"
-0 0 24 29 1 #"\n"
-0 0 17 3 52 #";  - for each such i and j generate the pair (i, j)."
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 34 #"; In terms of sequence operations,"
-0 0 24 29 1 #"\n"
-0 0 17 3 53 #"; - map along the sequence (enumerate-interval 1 n). "
-0 0 24 29 1 #"\n"
-0 0 17 3 89
-(
- #"; - For each i in this sequence we map along the sequence (enumerate"
- #"-interval 1 (- i 1))."
-) 0 0 24 29 1 #"\n"
-0 0 17 3 73
-(
- #"; - For each j in this latter sequence, we generate the pair (list i"
- #" j). "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 90
-(
- #"; This gives us a sequence of pairs for each i. Combining all the se"
- #"quences for all the i "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 71
-(
- #"; (by accumulating with append) produces the required sequence of pa"
- #"irs"
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 25 #"ordered-pairs-of-integers"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 14 3 10 #"accumulate"
-0 0 24 3 1 #" "
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"   "
-0 0 14 3 6 #"append"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"'"
-0 0 24 3 4 #"() ("
-0 0 14 3 3 #"map"
-0 0 24 3 2 #" ("
-0 0 15 3 6 #"lambda"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"i"
-0 0 24 3 2 #") "
-0 0 24 29 1 #"\n"
-0 0 24 3 22 #"                     ("
-0 0 14 3 3 #"map"
-0 0 24 3 2 #" ("
-0 0 15 3 6 #"lambda"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"j"
-0 0 24 3 3 #") ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"i"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"j"
-0 0 24 3 3 #")) "
-0 0 24 29 1 #"\n"
-0 0 24 3 27 #"                          ("
-0 0 14 3 18 #"enumerate-interval"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"-"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"i"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 5 #")))) "
-0 0 24 29 1 #"\n"
-0 0 24 3 20 #"                   ("
-0 0 14 3 18 #"enumerate-interval"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 4 #"))))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 25 #"ordered-pairs-of-integers"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"6"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 94
-(
- #"; The combination of mapping and accumulating with append is so comm"
- #"on in this sort of program"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 49 #"; that we will isolate it as a separate procedure"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 7 #"flatmap"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"proc"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"seq"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 14 3 10 #"accumulate"
-0 0 24 3 1 #" "
-0 0 14 3 6 #"append"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"'"
-0 0 24 3 4 #"() ("
-0 0 14 3 3 #"map"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"proc"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"seq"
-0 0 24 3 3 #")))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 90
-(
- #"; Now filter this sequence of pairs to find those whose sum is prime"
- #". The filter predicate"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 92
-(
- #"; is called for each element of the sequence; its argument is a pair"
- #" and it must extract the"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 89
-(
- #"; integers from the pair. Thus, the predicate to apply to each eleme"
- #"nt in the sequence is"
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 16 #"smallest-divisor"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 14 3 12 #"find-divisor"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"2"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 12 #"find-divisor"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #" "
-0 0 14 3 12 #"test-divisor"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 15 3 4 #"cond"
-0 0 24 3 3 #" (("
-0 0 14 3 1 #">"
-0 0 24 3 2 #" ("
-0 0 14 3 6 #"square"
-0 0 24 3 1 #" "
-0 0 14 3 12 #"test-divisor"
-0 0 24 3 2 #") "
-0 0 14 3 1 #"n"
-0 0 24 3 2 #") "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 10 #"        (("
-0 0 14 3 8 #"divides?"
-0 0 24 3 1 #" "
-0 0 14 3 12 #"test-divisor"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 2 #") "
-0 0 14 3 12 #"test-divisor"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 9 #"        ("
-0 0 14 3 4 #"else"
-0 0 24 3 2 #" ("
-0 0 14 3 12 #"find-divisor"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"+"
-0 0 24 3 1 #" "
-0 0 14 3 12 #"test-divisor"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 5 #")))))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 8 #"divides?"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"a"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"b"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 14 3 1 #"="
-0 0 24 3 2 #" ("
-0 0 14 3 9 #"remainder"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"b"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"a"
-0 0 24 3 2 #") "
-0 0 21 3 1 #"0"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 69
-(
- #"; We can test if a number is prime if it's smallest divisor is itsel"
- #"f"
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 6 #"prime?"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 14 3 1 #"="
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 2 #" ("
-0 0 14 3 16 #"smallest-divisor"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 3 #")))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 10 #"prime-sum?"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"pair"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 14 3 6 #"prime?"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"+"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"car"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"pair"
-0 0 24 3 3 #") ("
-0 0 14 3 4 #"cadr"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"pair"
-0 0 24 3 4 #"))))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 10 #"prime-sum?"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"3"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"4"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 99
-(
- #"; Finally, generate the sequence of results by mapping over the filt"
- #"ered pairs using the following "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 93
-(
- #"; procedure, which constructs a tripple consisting of the two elemen"
- #"ts of the pair along with"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 12 #"; their sum:"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 13 #"make-pair-sum"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"pair"
-0 0 24 3 2 #") "
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 14 3 4 #"list"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"car"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"pair"
-0 0 24 3 3 #") ("
-0 0 14 3 4 #"cadr"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"pair"
-0 0 24 3 3 #") ("
-0 0 14 3 1 #"+"
-0 0 24 3 2 #" ("
-0 0 14 3 3 #"car"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"pair"
-0 0 24 3 3 #") ("
-0 0 14 3 4 #"cadr"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"pair"
-0 0 24 3 4 #"))))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 57 #"; Combining all these steps yeilds the complete procedure"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 15 #"prime-sum-pairs"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 14 3 3 #"map"
-0 0 24 3 1 #" "
-0 0 14 3 13 #"make-pair-sum"
-0 0 24 29 1 #"\n"
-0 0 24 3 8 #"       ("
-0 0 14 3 6 #"filter"
-0 0 24 3 1 #" "
-0 0 14 3 10 #"prime-sum?"
-0 0 24 29 1 #"\n"
-0 0 24 3 16 #"               ("
-0 0 14 3 7 #"flatmap"
-0 0 24 3 2 #" ("
-0 0 15 3 6 #"lambda"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"i"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 27 #"                          ("
-0 0 14 3 3 #"map"
-0 0 24 3 2 #" ("
-0 0 15 3 6 #"lambda"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"j"
-0 0 24 3 3 #") ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"i"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"j"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 32 #"                               ("
-0 0 14 3 18 #"enumerate-interval"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"-"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"i"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 4 #"))))"
-0 0 24 29 1 #"\n"
-0 0 24 3 25 #"                        ("
-0 0 14 3 18 #"enumerate-interval"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 5 #")))))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 15 #"prime-sum-pairs"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"6"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 2 #"  "
-0 0 24 29 1 #"\n"
-0 0 17 3 101
-(
- #"; Nested mappings are also useful for sequences other than those tha"
- #"t enumerate intervals. Suppose we"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 102
-(
- #"; wish to generate all the permutations of a set S; that is, all the"
- #" ways of ordering the items in the"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 105
-(
- #"; set. For instance, the permutations of {1,2,3} are {1,2,3},{1,3,2}"
- #",{2,1,3},{2,3,1},{3,1,2} and {3,2,1}."
-) 0 0 24 29 1 #"\n"
-0 0 17 3 110
-(
- #"; Here is a plan for generating the permutations of S: For each item"
- #" x in S, recursively generate the sequence"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 112
-(
- #"; of permuttions of S - x, and adjoin x to the front of each one. Th"
- #"is yeilds, for each x in S, the sequence of "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 107
-(
- #"; permutations of S that begin with x. Combining these sequences for"
- #" all x gives all the permutations of S:"
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 12 #"permutations"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"s"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 14 3 2 #"if"
-0 0 24 3 2 #" ("
-0 0 14 3 5 #"null?"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"s"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 7 #"      ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"'"
-0 0 24 3 3 #"())"
-0 0 24 29 1 #"\n"
-0 0 24 3 7 #"      ("
-0 0 14 3 7 #"flatmap"
-0 0 24 3 2 #" ("
-0 0 15 3 6 #"lambda"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"x"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 18 #"                 ("
-0 0 14 3 3 #"map"
-0 0 24 3 2 #" ("
-0 0 15 3 6 #"lambda"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"p"
-0 0 24 3 3 #") ("
-0 0 14 3 4 #"cons"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"p"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 23 #"                      ("
-0 0 14 3 12 #"permutations"
-0 0 24 3 2 #" ("
-0 0 14 3 6 #"remove"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"s"
-0 0 24 3 4 #"))))"
-0 0 24 29 1 #"\n"
-0 0 24 3 15 #"               "
-0 0 14 3 1 #"s"
-0 0 24 3 3 #")))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 12 #"permutations"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"2"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"3"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 2 #"  "
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 97
-(
- #"; Notice how this strategy reduces the problem of generating permuta"
- #"tions of S to the problem of "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 94
-(
- #"; generating the the permutations of sets with fewer elements than S"
- #". In the terminal case, we"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 99
-(
- #"; work our way down to the empty list, which represents a set of no "
- #"elements. For this, we generate"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 92
-(
- #"; (list '()), which is a sequence with one item, namely the set with"
- #" no elements. The remove"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 99
-(
- #"; procedure used in permutations returns all the items in a given se"
- #"quence except for a given item."
-) 0 0 24 29 1 #"\n"
-0 0 17 3 42 #"; This can be expressed as a simple filter"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 7 #"remove2"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"item"
-0 0 24 3 1 #" "
-0 0 15 3 8 #"sequence"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 14 3 6 #"filter"
-0 0 24 3 2 #" ("
-0 0 15 3 6 #"lambda"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"x"
-0 0 24 3 3 #") ("
-0 0 14 3 3 #"not"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"="
-0 0 24 3 1 #" "
-0 0 14 3 1 #"x"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"item"
-0 0 24 3 3 #")))"
-0 0 24 29 1 #"\n"
-0 0 24 3 10 #"          "
-0 0 15 3 8 #"sequence"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 7 #"remove2"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"3"
-0 0 24 3 2 #" ("
-0 0 14 3 4 #"list"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"2"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"3"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"4"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"5"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 35 #"; 2.2.4 Example: A Picture Language"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 7 #"display"
-0 0 24 3 1 #" "
-0 0 19 3 35 #"\"2.2.4 Example: A Picture Language\""
-0 0 24 3 3 #") ("
-0 0 14 3 7 #"newline"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 97
-(
- #"; This section presents a simple language for drawing pictures that "
- #"illustrates the power of data"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 101
-(
- #"; abstractionand closure, and also exploits higher-order procedures "
- #"in an essential way. The language"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 98
-(
- #"; is designed to make it easy to experiment with patterns, which are"
- #" composed of repeated elements"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 99
-(
- #"; that are shifted and scaled. In this language, the data objects be"
- #"ing combined are represented as"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 97
-(
- #"; procedures rather than as list structure. Just as cons , which sat"
- #"isfies the closure property, "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 99
-(
- #"; allowed us to easily build arbitrarily complicated list structure,"
- #" the operations in this languag"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 93
-(
- #"; whic also satisfy the closure property, allow us to build arbitrar"
- #"ily complicated patterns."
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 22 #"; The picture language"
-0 0 24 29 1 #"\n"
-0 0 17 3 99
-(
- #"; When we began our study of programming in Section 1.1, we emphasiz"
- #"ed the importance of describing"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 97
-(
- #"; a language by focusing on the language's primitives, its means of "
- #"combination, and its means of"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 48 #"; abstraction. We'll follow that framework here."
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 97
-(
- #"; Part of the elegance of this picture language is that there is onl"
- #"y one kind of element, called"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 92
-(
- #"; a painter. A painter draws an image that is shifted and scaled to "
- #"fit within a designated "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 97
-(
- #"; parallelogram-shaped frame. For example, there's a primitive paint"
- #"er we'll call wave that makes"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 97
-(
- #"; a crude line drawing. The actual shape of the drawing depends on t"
- #"he frame - all four images in"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 95
-(
- #"; figure 2.10 are produced by the same wave painter, but with respec"
- #"t to four different frames."
-) 0 0 24 29 1 #"\n"
-0 0 17 3 100
-(
- #"; Painters can be more elaborate than this: The primitive painter ca"
- #"lled rogers paints a picture of "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 100
-(
- #"; MIT's founder, William Barton Rogers, as shown in Figure 2.11. The"
- #" four images in figure 2.11 are "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 79
-(
- #"; drawn with respect to the same four frames as the wave images in f"
- #"igure 2.10."
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 99
-(
- #"; To combine images, we use various operations that construct new pa"
- #"inters from given painters. For"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 98
-(
- #"; example, the beside operation takes two painters and produces a ne"
- #"w, compound painter that draws"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 101
-(
- #"; the first painter's image in the left half of the frame and the se"
- #"cond painter's image in the right"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 98
-(
- #"; half of the frame. Similary, below takes two painters and produces"
- #" a compound painter that draws"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 96
-(
- #"; the first painter's image below the second painter's image. Some o"
- #"perations transform a single"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 97
-(
- #"; painter to produce a new painter. For example, flip-vert takes a p"
- #"ainter and produces a painter"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 103
-(
- #"; that draws its image upside down, and flip-horiz produces a painte"
- #"r that draws the original painter's"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 31 #"; image left-to-right reversed."
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"wave2"
-0 0 24 3 2 #" ("
-0 0 14 3 6 #"beside"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"wave"
-0 0 24 3 2 #" ("
-0 0 14 3 9 #"flip-vert"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"wave"
-0 0 24 3 3 #")))"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"wave4"
-0 0 24 3 2 #" ("
-0 0 14 3 5 #"below"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"wave2"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"wave2"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 99
-(
- #"; In building up a complex image in this manner we are exploiting th"
- #"e fact that painters are closed"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 102
-(
- #"; under the language's means of combination. The beside or below of "
- #"two painters is itself a painter; "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 99
-(
- #"; therefore, we can use it as an element in making more complex pain"
- #"ters. As with building up list "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 97
-(
- #"; structure using cons, the closure of our data under the means of c"
- #"ombination is crucial to the "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 73
-(
- #"; ability to create complex structures while using only a few operat"
- #"ions."
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 98
-(
- #"; Once we can combine painters, we would like to be able to abstract"
- #" typical patterns of combining"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 100
-(
- #"; painters. We will implement the painter operations as Scheme proce"
- #"dures. This means that we don't "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 99
-(
- #"; need a special abstraction mechanism in the picture language: Sinc"
- #"e the means of combination are "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 94
-(
- #"; ordinary Scheme procedures, we automatically have the capability t"
- #"o do anything with painter"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 97
-(
- #"; operations that we can do with procedures. For example, we can abs"
- #"tract the pattern in wave4 as"
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 13 #"flipped-pairs"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"painter"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 15 3 3 #"let"
-0 0 24 3 3 #" (("
-0 0 14 3 8 #"painter2"
-0 0 24 3 2 #" ("
-0 0 14 3 6 #"beside"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"painter"
-0 0 24 3 2 #" ("
-0 0 14 3 9 #"flip-vert"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"painter"
-0 0 24 3 4 #"))))"
-0 0 24 29 1 #"\n"
-0 0 24 3 5 #"    ("
-0 0 14 3 5 #"below"
-0 0 24 3 1 #" "
-0 0 14 3 8 #"painter2"
-0 0 24 3 1 #" "
-0 0 14 3 8 #"painter2"
-0 0 24 3 3 #")))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 49 #"; and define wave4 as an instance of this pattern"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 37 #"; (define wave4 (flipped-pairs wave))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 99
-(
- #"; We can also define recursive operations. Here's one that makes pai"
- #"nters split and branch towards "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 12 #"; the right."
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 11 #"right-split"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"painter"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 14 3 2 #"if"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"="
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"0"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 6 #"      "
-0 0 14 3 7 #"painter"
-0 0 24 29 1 #"\n"
-0 0 24 3 7 #"      ("
-0 0 15 3 3 #"let"
-0 0 24 3 3 #" (("
-0 0 14 3 7 #"smaller"
-0 0 24 3 2 #" ("
-0 0 14 3 11 #"right-split"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"painter"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"-"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 4 #"))))"
-0 0 24 29 1 #"\n"
-0 0 24 3 9 #"        ("
-0 0 14 3 6 #"beside"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"painter"
-0 0 24 3 2 #" ("
-0 0 14 3 5 #"below"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"smaller"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"smaller"
-0 0 24 3 5 #")))))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 85
-(
- #"; We can produce balanced patterns by branching upwards as well as t"
- #"owards the right."
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 12 #"corner-split"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"painter"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 14 3 2 #"if"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"="
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"0"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 6 #"      "
-0 0 14 3 7 #"painter"
-0 0 24 29 1 #"\n"
-0 0 24 3 7 #"      ("
-0 0 15 3 3 #"let"
-0 0 24 3 3 #" (("
-0 0 14 3 2 #"up"
-0 0 24 3 2 #" ("
-0 0 14 3 8 #"up-split"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"painter"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"-"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 3 #")))"
-0 0 24 29 1 #"\n"
-0 0 24 3 13 #"            ("
-0 0 14 3 5 #"right"
-0 0 24 3 2 #" ("
-0 0 14 3 11 #"right-split"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"painter"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"-"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 4 #"))))"
-0 0 24 29 1 #"\n"
-0 0 24 3 9 #"        ("
-0 0 15 3 3 #"let"
-0 0 24 3 3 #" (("
-0 0 14 3 8 #"top-left"
-0 0 24 3 2 #" ("
-0 0 14 3 6 #"beside"
-0 0 24 3 1 #" "
-0 0 14 3 2 #"up"
-0 0 24 3 1 #" "
-0 0 14 3 2 #"up"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 15 #"              ("
-0 0 14 3 12 #"bottom-right"
-0 0 24 3 2 #" ("
-0 0 14 3 5 #"below"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"right"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"right"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 15 #"              ("
-0 0 14 3 6 #"corner"
-0 0 24 3 2 #" ("
-0 0 14 3 12 #"corner-split"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"painter"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"-"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"1"
-0 0 24 3 4 #"))))"
-0 0 24 29 1 #"\n"
-0 0 24 3 11 #"          ("
-0 0 14 3 6 #"beside"
-0 0 24 3 2 #" ("
-0 0 14 3 5 #"below"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"painter"
-0 0 24 3 1 #" "
-0 0 14 3 8 #"top-left"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 19 #"                  ("
-0 0 14 3 5 #"below"
-0 0 24 3 1 #" "
-0 0 14 3 12 #"bottom-right"
-0 0 24 3 1 #" "
-0 0 14 3 6 #"corner"
-0 0 24 3 6 #"))))))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 98
-(
- #"; By placing four copies of a corner-split appropriately, we obtain "
- #"a pattern called square-limit,"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 62
-#"; whose application to wave and rogers is shown in Figure 2.9:"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 12 #"square-limit"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"painter"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 15 3 3 #"let"
-0 0 24 3 3 #" (("
-0 0 14 3 7 #"quarter"
-0 0 24 3 2 #" ("
-0 0 14 3 12 #"corner-split"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"painter"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 3 #")))"
-0 0 24 29 1 #"\n"
-0 0 24 3 9 #"        ("
-0 0 15 3 3 #"let"
-0 0 24 3 3 #" (("
-0 0 14 3 4 #"half"
-0 0 24 3 2 #" ("
-0 0 14 3 6 #"beside"
-0 0 24 3 2 #" ("
-0 0 14 3 10 #"flip-horiz"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"quarter"
-0 0 24 3 2 #") "
-0 0 14 3 7 #"quarter"
-0 0 24 3 3 #")))"
-0 0 24 29 1 #"\n"
-0 0 24 3 11 #"          ("
-0 0 14 3 5 #"below"
-0 0 24 3 2 #" ("
-0 0 14 3 9 #"flip-vert"
-0 0 24 3 1 #" "
-0 0 14 3 4 #"half"
-0 0 24 3 2 #") "
-0 0 14 3 4 #"half"
-0 0 24 3 4 #"))))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 25 #"; Higher-order operations"
-0 0 24 29 1 #"\n"
-0 0 17 3 103
-(
- #"; In addition to abstracting patterns of combining painters, we can "
- #"work at a higher level, abstracting"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 102
-(
- #"; patterns of combining painter operations. That is, we can view the"
- #" painter operations as elements to"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 107
-(
- #"; manipulate and can write means of combination for these elements-p"
- #"rocedures that take painter operations "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 49 #"; as arguments and create new painter operations."
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 103
-(
- #"; For example, flipped-pairs and square-limit each arrange four copi"
- #"es of a painter's image in a square"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 102
-(
- #"; patter; they differ only in how they orient the copies. One way to"
- #" abstract this pattern of painter "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 100
-(
- #"; combination is with the following procedure, which takes four one-"
- #"argument painter operations and "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 102
-(
- #"; produces a painter operation that transforms a given painter with "
- #"those four operations and arranges"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 102
-(
- #"; the results in a square. tl,tr,bl and br are the transformations t"
- #"o apply to the top left copy, the "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 79
-(
- #"; top right copy, the bottom left copy, and the bottom right copy re"
- #"spectively."
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 14 #"square-of-four"
-0 0 24 3 1 #" "
-0 0 14 3 2 #"tl"
-0 0 24 3 1 #" "
-0 0 14 3 2 #"tr"
-0 0 24 3 1 #" "
-0 0 14 3 2 #"bl"
-0 0 24 3 1 #" "
-0 0 14 3 2 #"br"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 15 3 6 #"lambda"
-0 0 24 3 2 #" ("
-0 0 14 3 7 #"painter"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 5 #"    ("
-0 0 15 3 3 #"let"
-0 0 24 3 3 #" (("
-0 0 14 3 3 #"top"
-0 0 24 3 2 #" ("
-0 0 14 3 6 #"beside"
-0 0 24 3 2 #" ("
-0 0 14 3 2 #"tl"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"painter"
-0 0 24 3 3 #") ("
-0 0 14 3 2 #"tr"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"painter"
-0 0 24 3 3 #")))"
-0 0 24 29 1 #"\n"
-0 0 24 3 11 #"          ("
-0 0 14 3 6 #"bottom"
-0 0 24 3 2 #" ("
-0 0 14 3 6 #"beside"
-0 0 24 3 2 #" ("
-0 0 14 3 2 #"bl"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"painter"
-0 0 24 3 3 #") ("
-0 0 14 3 2 #"br"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"painter"
-0 0 24 3 4 #"))))"
-0 0 24 29 1 #"\n"
-0 0 24 3 7 #"      ("
-0 0 14 3 5 #"below"
-0 0 24 3 1 #" "
-0 0 14 3 6 #"bottom"
-0 0 24 3 1 #" "
-0 0 14 3 3 #"top"
-0 0 24 3 4 #"))))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 74
-(
- #"; Then flipped-pairs can be defined in terms of square-of-four as fo"
- #"llows:"
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 13 #"flipped-pairs"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"painter"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 15 3 3 #"let"
-0 0 24 3 3 #" (("
-0 0 14 3 8 #"combine4"
-0 0 24 3 2 #" ("
-0 0 14 3 14 #"square-of-four"
-0 0 24 3 1 #" "
-0 0 14 3 8 #"identity"
-0 0 24 3 1 #" "
-0 0 14 3 9 #"flip-vert"
-0 0 24 29 1 #"\n"
-0 0 24 3 34 #"                                  "
-0 0 14 3 8 #"identity"
-0 0 24 3 1 #" "
-0 0 14 3 9 #"flip-vert"
-0 0 24 3 3 #")))"
-0 0 24 29 1 #"\n"
-0 0 24 3 5 #"    ("
-0 0 14 3 8 #"combine4"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"painter"
-0 0 24 3 3 #")))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 38 #"; and square-limit can be expressed as"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 12 #"square-limit"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"painter"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 15 3 3 #"let"
-0 0 24 3 3 #" (("
-0 0 14 3 8 #"combine4"
-0 0 24 3 2 #" ("
-0 0 14 3 14 #"square-of-four"
-0 0 24 3 1 #" "
-0 0 14 3 10 #"flip-horiz"
-0 0 24 3 1 #" "
-0 0 14 3 8 #"identity"
-0 0 24 29 1 #"\n"
-0 0 24 3 34 #"                                  "
-0 0 14 3 9 #"rotate180"
-0 0 24 3 1 #" "
-0 0 14 3 9 #"flip-vert"
-0 0 24 3 3 #")))"
-0 0 24 29 1 #"\n"
-0 0 24 3 5 #"    ("
-0 0 14 3 8 #"combine4"
-0 0 24 3 2 #" ("
-0 0 14 3 12 #"corner-split"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"painter"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"n"
-0 0 24 3 4 #"))))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 8 #"; Frames"
-0 0 24 29 1 #"\n"
-0 0 17 3 93
-(
- #"; Before we can show how to implement painters and their means of co"
- #"mbination, we must first "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 87
-(
- #"; consider frames. A frame can be described by three vectors - an or"
- #"igin vector and two"
-) 0 0 17 3 5 #" edge"
-0 0 24 29 1 #"\n"
-0 0 17 3 90
-(
- #"; vectors. The origin vector specifies the offset of the frame's ori"
- #"gin from some absolute"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 92
-(
- #"; origin in the plane, and the edge vectors specify the offsets of t"
- #"he frame's corners from "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 96
-(
- #"; its origin. If the edges are perpendicular, the frame will be rect"
- #"angular. Otherwise the frame"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 39 #"; will be a more general parallelogram."
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 99
-(
- #"; In accordance with data abstraction we need not be specific yet ab"
- #"out how frames are represented,"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 98
-(
- #"; other than to say that there is a constructor make-frame, which ta"
- #"kes three vectors and produces"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 88
-(
- #"; a frame, and three corresponding selectors origin-frame, edge1-fra"
- #"me, and edge2-frame."
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 97
-(
- #"; We will use coordinates in the unit square (0 <= x, y <= 1) to spe"
- #"cify images. With each frame,"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 95
-(
- #"; we associate a frame coordinate map, which will be used to shift a"
- #"nd scale images to fit the "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 97
-(
- #"; frame. The map transforms the unit square into the frame by mappin"
- #"g the vector v = (x,y) to the"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 12 #"; vector sum"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 61
-#";     Origin(Frame) + (x * Edge1(Frame)) + (y * Edge2(Frame))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 98
-(
- #"; For example, (0,0) is mapped to the origin of the frame, (1,1) to "
- #"the vertex diagonally opposite"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 94
-(
- #"; the origin, and (0.5,0.5) to the center of the frame. We can creat"
- #"e a frame's coordinate map"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 31 #"; with the following procedure."
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 15 #"frame-coord-map"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"frame"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 15 3 6 #"lambda"
-0 0 24 3 2 #" ("
-0 0 14 3 1 #"v"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 5 #"    ("
-0 0 14 3 8 #"add-vect"
-0 0 24 29 1 #"\n"
-0 0 24 3 6 #"     ("
-0 0 14 3 12 #"origin-frame"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"frame"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 6 #"     ("
-0 0 14 3 8 #"add-vert"
-0 0 24 3 2 #" ("
-0 0 14 3 10 #"scale-vect"
-0 0 24 3 2 #" ("
-0 0 14 3 9 #"xcor-vect"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"v"
-0 0 24 3 3 #") ("
-0 0 14 3 11 #"edge1-frame"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"frame"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 16 #"               ("
-0 0 14 3 10 #"scale-vect"
-0 0 24 3 2 #" ("
-0 0 14 3 9 #"ycor-vect"
-0 0 24 3 1 #" "
-0 0 14 3 1 #"v"
-0 0 24 3 3 #") ("
-0 0 14 3 11 #"edge2-frame"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"frame"
-0 0 24 3 6 #"))))))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 93
-(
- #"; Observe that applying frame-coord-map to a frame returns a procedu"
- #"re that, given a vector, "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 95
-(
- #"; returns a vector. If the argument vector is in the unit square, th"
- #"e result vector will be in "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 25 #"; the frame. For example,"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 2 #"(("
-0 0 14 3 15 #"frame-coord-map"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"a-frame"
-0 0 24 3 3 #") ("
-0 0 14 3 9 #"make-vect"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"0"
-0 0 24 3 1 #" "
-0 0 21 3 1 #"0"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 29 #"; returns the same vector as "
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 14 3 12 #"origin-frame"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"a-frame"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 10 #"; Painters"
-0 0 24 29 1 #"\n"
-0 0 17 3 93
-(
- #"; A painter is represented as a procedure that, given a frame as arg"
- #"ument, draws a particular"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 101
-(
- #"; image shifted and scaled to fit the frame. That is to say, if p is"
- #" a painter and f is a frame, then"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 61
-#"; we produces p's image in f by calling p with f as argument."
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 96
-(
- #"; The details of how primitive painters are implemented depend on th"
- #"e particular characteristics"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 101
-(
- #"; of the graphics system and the type of image to be drawn. For inst"
- #"ance, suppose we have a procedure"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 100
-(
- #"; draw-line that draws a lin on the screen between two specified poi"
- #"nts. Then we can create painters"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 93
-(
- #"; for line drawings, such as the wave painter in Figure 2.10, from l"
- #"ists of line segements as"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 10 #"; follows:"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 3 1 #"("
-0 0 15 3 6 #"define"
-0 0 24 3 2 #" ("
-0 0 14 3 17 #"segments->painter"
-0 0 24 3 1 #" "
-0 0 14 3 12 #"segment-list"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 3 #"  ("
-0 0 15 3 6 #"lambda"
-0 0 24 3 2 #" ("
-0 0 14 3 5 #"frame"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 5 #"    ("
-0 0 14 3 8 #"for-each"
-0 0 24 29 1 #"\n"
-0 0 24 3 6 #"     ("
-0 0 15 3 6 #"lambda"
-0 0 24 3 2 #" ("
-0 0 14 3 7 #"segment"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 8 #"       ("
-0 0 14 3 9 #"draw-line"
-0 0 24 29 1 #"\n"
-0 0 24 3 10 #"        (("
-0 0 14 3 15 #"frame-coord-map"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"frame"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 10 #"         ("
-0 0 14 3 13 #"start-segment"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"segment"
-0 0 24 3 2 #"))"
-0 0 24 29 1 #"\n"
-0 0 24 3 10 #"        (("
-0 0 14 3 15 #"frame-coord-map"
-0 0 24 3 1 #" "
-0 0 14 3 5 #"frame"
-0 0 24 3 1 #")"
-0 0 24 29 1 #"\n"
-0 0 24 3 10 #"         ("
-0 0 14 3 11 #"end-segment"
-0 0 24 3 1 #" "
-0 0 14 3 7 #"segment"
-0 0 24 3 4 #"))))"
-0 0 24 29 1 #"\n"
-0 0 24 3 5 #"     "
-0 0 14 3 12 #"segment-list"
-0 0 24 3 4 #" )))"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 96
-(
- #"; The segments are given using coordinates with respect to the unit "
- #"square. For each segment in "
-) 0 0 24 29 1 #"\n"
-0 0 17 3 97
-(
- #"; the list, the painter transforms the segment end-points with the f"
- #"rame coordinate map and draws"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 40 #"; a line between the transformed points."
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 17 3 100
-(
- #"; Representing painters as procedures erects a powerful abstraction "
- #"barrier in the picture language."
-) 0 0 24 29 1 #"\n"
-0 0 17 3 92
-(
- #"; We can create and intermix all sorts of primitive painters, based "
- #"on a variety of graphics"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 95
-(
- #"; capabilities. The details of their implementation do not matter. A"
- #"ny procedure can serve as a"
-) 0 0 24 29 1 #"\n"
-0 0 17 3 98
-(
- #"; painter, provided that it takes a frame as argument and draws some"
- #"thing scaled to fit the frame."
-) 0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0 0 24 29 1 #"\n"
-0           0
+; As we have seen , pairs provide a primitive "glue" that we can use to construct compound data 
+; objects. Cons can be used to combine not only numbers but pairs as well. As a consequence, pairs
+; provide a universal building block from which we can construct all sorts of data structures.
+
+; The ability to create pairs whose elements are pairs is the essence of list structure's importance
+; as a representational tool. We refer to this ability as the closure property of cons. In general,
+; an operation for combining data objects satisfies the closure property if the results of combining 
+; things with that operation can themselves be combined using the same operation. Closure is the key
+; to power in any means of combination because it permits us to create hierarchical structures --
+; structures made up of parts, which themselves are made up of parts, and so on.
+
+
+; 2.2.1 Representing Sequences
+; One of the useful structures we can build with pairs is a sequence -- an ordered collection of
+; data objects. There are, of course, many ways to represent sequences in terms of pairs. One
+; particularly striaghtforward representation is shown below for the sequence 1, 2, 3, 4.
+
+(cons 1
+      (cons 2
+            (cons 3
+                  (cons 4 '()))))
+
+; The car of each pair is the corresponding item in the chain, and the cdr of the pair is the next
+; pair in the chain. The cdr of the final pair signals the end of the sequence by pointing to a
+; distinguished value that is not a pair (nil in scheme or empty list in Racket '())
+
+; Such a sequence of pairs, formed by nested conses is called a list. There is a primitive for such
+; a construct called list
+
+(list 1 2 3 4)
+
+(define one-through-four (list 1 2 3 4))
+one-through-four
+
+; We can think of car as selecting the first item in the list, and of cdr as selecting the sublist 
+; consisting of all but the first item. Nested applications of car and cdr can be used to extract
+; the second, third, and subsequent items in the list. The constructor cons makes a list like the 
+; original one but with an additional item at the beginning.
+
+(car one-through-four)
+
+(cdr one-through-four)
+(car (cdr one-through-four))
+
+(cons 10 one-through-four)
+(cons 5 one-through-four)
+
+
+; List operations
+; The use of pairs to represent sequences of elements as lists is accompanied by conventional
+; programming techniques for manipulating lists by successively "cdring down" the lists. For example
+; the procedure list-ref takes as arguments a list and a number n and returns the nth item of the list.
+; It is customary to number the elements of the list beginning with 0. The method for computing
+; list-ref is the following:
+; - For n = o, list-ref should return the car of the list
+; - Otherwise, list-ref shold return the (n-1)st item of the cdr of the list
+
+(define (list-ref items n)
+  (if (= n 0)
+      (car items)
+      (list-ref (cdr items) (- n 1))))
+
+(define squares (list 1 4 9 16 25))
+(list-ref squares 3)
+
+; Often we cdr down the whole list. To aid in this, Racket includes a primitive predicate null?,
+; which tests whether its argument is the empty list. The procedure length, which returns the number 
+; of items in a list, illustrates this typical pattern of use:
+
+(define (length items)
+  (if (null? items)
+      0
+      (+ 1 (length (cdr items)))))
+
+(define odds (list 1 3 5 7))
+
+(length odds)
+
+; The length procedure implements a simple recursive plan. The reduction step is:
+; - The length of any list is 1 plus the length of the cdr of the list
+
+; This is applied successively until we reach the base case:
+; - The length of the empty list is 0.
+
+; We could also compute length in an iterative style:
+
+(define (length2 items)
+  (define (length-iter a count)
+    (if (null? a)
+        count
+        (length-iter (cdr a) (+ 1 count))))
+  (length-iter items 0))
+(length2 odds)
+
+; Another conventional programming technique is to "cons up" an answer list while cdring down a
+; list, as in the procedure append, which takes two lists as arguments and combines their elements
+; to make a new list:
+
+(append squares odds)
+(append odds squares)
+
+; Append is also implmented using a recursive plan. To append lists list1 and list2, do the following
+; - If list1 is the empty list, then the result is just list2
+; - Otherwise, append the cdr of list1 and list 2, and cons the car of list1 onto the result
+
+(define (append2 list1 list2)
+  (if (null? list1)
+      list2
+      (cons (car list1) (append (cdr list1) list2))))
+(append2 squares odds)
+(append2 odds squares)
+
+
+; Mapping over lists
+; One extremely useful operation is to apply some transformation to each element in a list
+; and generate the list of results. For instance, the following procedure scales each number
+; in a list by a given factor
+
+(define (scale-list items factor)
+  (if (null? items)
+      '()
+      (cons (* (car items) factor)
+            (scale-list (cdr items) factor))))
+(scale-list (list 1 2 3 4 5) 10)
+; (10 20 30 40 50)
+
+; We can abstract this general idea and capture it as a common pattern expressed as a higher-order
+; procedure, just as in section 1.3. The higher-order procedure here is called map. Map takes as
+; arguments a procedure of one argument and a list, and returns a list of the results produced
+; by applying the procedure to each element in the list
+
+(define (map proc items)
+  (if (null? items)
+      '()
+      (cons (proc (car items))
+            (map proc (cdr items)))))
+(map abs (list -10 2.5 -11.6 17))
+; (10 2.5 11.6 17)
+
+(map (lambda (x) (* x x))
+     (list 1 2 3 4))
+; (1 4 9 16)
+
+; Now we can give a new definition of scale-list in terms of map
+
+(define (scale-list2 items factor)
+  (map (lambda (x) (* x factor))
+       items))
+(scale-list2 (list 1 2 3 4 5) 10)
+; (10 20 30 40 50)
+
+; Map is an important construct, not only because it captures a common pattern, but because it
+; establishes a higherlevel of abstraction in dealing with lists. In the original definition of 
+; scale-list, the recursive structure of the program draws attention to the element-by-element
+; processing of the list. Defining scale-list2 in terms of map suppresses that level of detail
+; and emphasizes that scaling transforms a list of elements to a list of results. The difference
+; between the two definitions is not that the computer is performing a different process (it isn't)
+; but that we think about the process differently. In effect, map helps establish an abstraction
+; barrier that isolates the implementation of procedures that transform lists from the details
+; of how the elements of the list are extracted and combined. Like the barriers shown in figure
+; 2.1, this abstraction gives us the flexibility to change the los-level details of how sequences
+; are implemented, while preserving the conceptual framework of operations that transform
+; sequences to sequences. Section 2.2.3 expands on this use of sequences as a framework for
+; organizing programs.
+
+
+; 2.2.2 Hierachical Structures
+; The representation of sequences in terms of lists generalizes naturally to represent sequences
+; whose elements may themselves be sequences. For example, we can regard the object (1 2) 3 4)
+; constructed by
+
+(cons (list 1 2) (list 3 4))
+
+; as a list of three items, the first of which is itself a list, (1 2). Indeed, this is suggested 
+; by the form in which the result is printed by the interpreter. 
+
+; Another way to think of sequences whose elements are sequences is as trees. The elements of
+; the sequence are the branches of the tree, and elements that are themselves sequences are 
+; subtrees. 
+
+; Recursion is a natural tool for dealing with tree structures, since we can often reduce
+; operations on trees to operations on their branches, which reduce to operations on the branches
+; of the branches, and so on, until we reach the leaves of the tree. As an example, compare the
+; length procedure of section 2.2.1 with the count-leaves procedure, which returns the total
+; number of leaves of a tree
+
+; To implement count-leaves, recall the recursive plan for computing length:
+; - Length of a list x is 1 plus length of the cdr of x
+; - Length of the empty list is 0
+
+; Count-leaves is similar. The value for the empty list is the same:
+; - Count-leaves of the empty list is 0
+
+; But in the reduction step, where we strip off the car of the list, we must take into account
+; that the car may itself be a tree whose leaves we need to count. Thus, the appropriate 
+; reduction step is
+; - Count-leaves of a tree x is count-leaves of the car of c plus count-leaves of the cdr of x
+
+; Finally by taking cars we reach actual leaves, so we need another base case:
+; - Count-leaves of a leaf is 1
+
+; To aid in writing recursive procedures on trees, Scheme provides the primitive predicate
+; pair?, which tests whether its argument is a pair. Here is the complete procedure
+
+(define (count-leaves x)
+  (cond ((null? x) 0)
+        ((not (pair? x)) 1)
+        (else (+ (count-leaves (car x))
+                 (count-leaves (cdr x))))))
+
+(define x (cons (list 1 2) (list 3 4)))
+(length x) ; 3
+(count-leaves x) ; 4
+
+(list x x) ; (((1 2) 3 4) ((1 2) 3 4))
+(length (list x x)) ; 2
+
+(count-leaves (list x x)) ; 8
+
+
+; Mapping over trees
+; Just as map is a powerful abstraction for dealing with sequences, map together with recursion 
+; is a powerful abstraction for dealing with trees. For instance, the scale-tree procedure, analogous
+; to scale-list of section 2.2.1, takes as arguments a numeric factor and a tree whose leaves
+; are numbers. It returns a tree of the same shape, where each number is multiplied by the factor.
+; The recursive plan for scale-tree is similar to the one for count-leaves:
+
+(define (scale-tree tree factor)
+  (cond ((null? tree) '())
+        ((not (pair? tree)) (* tree factor))
+        (else (cons (scale-tree (car tree) factor)
+                    (scale-tree (cdr tree) factor)))))
+(scale-tree (list 1 (list 2 (list 3 4) 5) (list 6 7)) 10)
+
+; Another way to implement scale-tree is to regard the tree as a sequence of sub-trees and use
+; map. We map over the sequence, scaling each sub-tree in turn, and return the list of results. In
+; the base case, where the tree is a leaf, we simply multiply by the factor:
+
+(define (scale-tree2 tree factor)
+  (map (lambda (sub-tree)
+         (if (pair? sub-tree)
+             (scale-tree2 sub-tree factor)
+             (* sub-tree factor)))
+       tree))
+(scale-tree2 (list 1 (list 2 (list 3 4) 5) (list 6 7)) 10)
+
+; Many tree operations can be implemented by similar combinations of sequence operations and
+; recursion.
+
+
+; Sequences as Conventional Interfaces
+; In working with compound data, we've stressed how data abstraction permits us to design programs
+; without becoming enmeshed in the details of data representations, and how abstraction preserves
+; for us the flexibility to experiment with alternative representations. In this section, we
+; introduce another powerful design principle for working with data structures - the use of 
+; conventional interfaces.
+
+; In section 1.3 we saw how program abstractions, implemented as higher-order procedures, can 
+; capture common patterns in programs that deal with numerical data. Our ability to formulate 
+; analogous operations for working with compound data depends crucially on the style in which
+; we manipulate our data structures. Consider, for example, the following procedure, analogous
+; to the count-leaves procedure of sections 2.2.2, which takes a tree as argument and computes 
+; the sum of the squares of the leaves that are odd:
+
+(define (square x) (* x x))
+
+(define (sum-odd-squares tree)
+  (cond ((null? tree) 0)
+        ((not (pair? tree))
+         (if (odd? tree) (square tree) 0))
+        (else (+ (sum-odd-squares (car tree))
+                 (sum-odd-squares (cdr tree))))))
+
+(sum-odd-squares (list 1 2 3 (list 4 5) (list 6 7 8 9)))
+
+; On the surface, this procedure is very different from the following one, which constructs a 
+; list of all the even Fibonacci numbers Fib(k), where k is less than or equal to a given 
+; integer n:
+
+(define (fib n)
+  (cond ((= n 0) 0)
+         ((= n 1) 1)
+         (else (+ (fib (- n 1))
+                  (fib (- n 2))))))
+
+(define (even-fibs n)
+   (define (next k)
+     (if (> k n)
+         '()
+         (let ((f (fib k)))
+           (if (even? f)
+               (cons f (next (+ k 1)))
+               (next (+ k 1))))))
+   (next 0))
+
+(display "even-fibs")
+(even-fibs 10)
+; Despite the fact that these two procedures are structurally very different, a more abstract 
+; description of the two computations reveals a great deal of similarity. The first program
+;  - enumerates the leaves of a tree
+;  - filters them, selecting the odd ones
+;  - squares each of the selected ones and
+;  - accumulates the results using +, starting with 0
+
+; The second program
+;  - enumerates the integers from 0 to n
+;  - computes the Fibonacci number for each integer
+;  - filters them, selecting the even ones and
+;  - accumulates the results using cons, starting with the empty list
+
+; A signal processing engineer would find it natural to conceptualize these processes in terms
+; of signals flowing through a cascade of stages, each of which implements part of the program 
+; plan, as shown in Figure 2.7. In sum-odd-squares, we begin with an enumerator, which generates
+; a "signal" consisting of the leaves of a given tree. This signal is passed through a filter, 
+; which eliminates all but the odd elements. The resulting signal is in turn passed through a 
+; map, which is a "transducer" that applies the square procedure to each element. The output of
+; the map is then fed to an accumulator, which combines the elements using +, starting from an 
+; initial 0. The plan for even-fibs is analogous.
+
+; Unfortunately, the two procedure definitions above fail to exhibit this signal-flow structure. 
+; For instance, if we examine the sum-odd-squares procedure, we find that the enumeration is
+; implemented partly by the null? and pair? tests and partly by the tree-recursive structure of
+; the procedure. Similarly, the accumulation is found partly in the tests and partly in the
+; addition used in the recursion. In general, there are no distinct parts of either procedure
+; that correspond to the elements in the signal-flow description. Our two procedures decompose
+; the computations in a different way, spreading the enumeration over the program and mingling it 
+; with the map, the filter and the accumulation. If we could organize our programs to make
+; the signal-flow structure manifest in the rocedures we write, this would increase the conceptual
+; clarity of the resulting code.
+
+
+; Sequence Operations
+; The key to organising programs so as to more clearly reflect the signal-flow structure is to 
+; concentrate on the "signals" that flow from one stage in the process to the next. If we represent 
+; these signals as lists, then we can use list operations to implement the processing at each of 
+; the stages. For instance, we can implement the mpping stages of the signal-flow diagrams using 
+; the map procedure from section 2.2.1:
+
+(map square (list 1 2 3 4 5))
+
+; Filtering a sequence to select only those elements that satisfy a given predicate is accomplished
+; by
+
+(define (filter predicate sequence)
+  (cond ((null? sequence) '())
+        ((predicate (car sequence))
+         (cons (car sequence)
+               (filter predicate (cdr sequence))))
+        (else (filter predicate (cdr sequence)))))
+
+(filter odd? (list 1 2 3 4 5))
+
+; Accumulations can be implemented by
+
+(define (accumulate op initial sequence)
+  (if (null? sequence)
+      initial
+      (op (car sequence)
+          (accumulate op initial (cdr sequence)))))
+
+(accumulate + 0 (list 1 2 3 4 5))
+(accumulate * 1 (list 1 2 3 4 5))
+(accumulate cons '() (list 1 2 3 4 5))
+  
+; All that remains to implement signal-flow diagrams is to enumerate the sequence of elements to
+; be processed. For even-fips, we need to generate the sequence of integers in a given range,
+; which we can do as follows:
+
+(define (enumerate-interval low high)
+  (if (> low high)
+      '()
+      (cons low (enumerate-interval (+ low 1) high))))
+(enumerate-interval 2 7)
+
+; To enumerate the leaves of a tree, we can use
+
+(define (enumerate-tree tree)
+  (cond ((null? tree) '())
+       ((not (pair? tree)) (list tree))
+       (else (append (enumerate-tree (car tree))
+                     (enumerate-tree (cdr tree))))))
+(enumerate-tree (list 1 (list 2 (list 3 4)) 5))
+
+; Now we can reformulate sum-odd-squares and even-fibs as in the signal-flow diagrams. For
+; sum-odd-squares, we enumerate the sequence of leaves of the tree, filter this to keep only
+; odd numbers in the sequence, square each element, and sum the results:
+
+(define (sum-odd-squares2 tree)
+  (accumulate + 0 (map square (filter odd? (enumerate-tree tree)))))
+
+(sum-odd-squares2 (list 1 2 3 (list 4 5) (list 6 7 8 9)))
+
+; For even-fibs, we enumerate the integers from 0 to n, generate the fibonacci number for each
+; of these integers, filter the resulting sequence to keep only the even elements, and accumulate
+; the results into a list:
+
+(define (even-fibs2 n)
+  (accumulate cons '() (filter even? (map fib (enumerate-interval 0 n)))))
+
+(even-fibs2 15)
+
+; The value of expressing programs as sequence operations is that this helps us make program 
+; designs that are modular, that is, designs that are constructed by combining relatively 
+; independent pieces. We can encourage modular design by providing a library of standard components
+; together with a conventional interface for connecting the components in flexible ways.
+
+; Modular construction is a powerful strategy for controlling complexity in engineering design.
+; In real signal-processing applications, for example, designers regularly build systems by cascading
+; elements selected from standardized families of filters and transducers. Similarly, sequence
+; operations provide a library of standard program elements that we can mix and match. For 
+; instance, we can reuse pieces from the sum-odd-squares and even-fibs procedures in a program
+; that constructs a list of the squares of the first n + 1 Fibonacci numbers:
+
+(define (list-fib-squares n)
+  (accumulate cons '() (map square (map fib (enumerate-interval 0 n)))))
+(list-fib-squares 10)
+
+; We can rearrange the pieces and use them in computing the product of the squares of the odd integers
+; in a sequence
+
+(define (product-of-squares-of-odd-elements sequence)
+  (accumulate * 1 (map square (filter odd? sequence))))
+(product-of-squares-of-odd-elements (list 1 2 3 4 5))
+
+; We can also formulate conventional data-processing applications in terms of sequence operations. Suppose
+; we have a sequence of personnel records and we want to find the salary of the highest-paid programmer.
+; Assume that we have a selector salary that returns the salary of a record, and a predicate programmer? that 
+; tests if a record is for a programmer. Then we can write
+
+; (define (salary-of-highest-paid-programmer records)
+;   (accumulate max 0 (map salary (filter programmer? records))))
+
+; These examples give just a hint of the vast range of operations that can be expressed as sequence operations.
+
+; Sequences, implemented here as lists, serve as a conventional interface that permits us to combine processing
+; modules. Additionally, when we uniformly represent structures as sequences, we have localized the data-structure 
+; dependencies in our programs to a small number of sequence operations. By changing these, we can experiment with
+; alternative representations of sequences, while leaving the overall design of our programs intact. We will 
+; exploit this capability in section 3.5, when we generalise the sequence-processing paradigm to admit infinite
+; sequences.
+
+
+; Nested Mappings
+; We can extend the sequence paradigm to include many computations that are commonly expressed
+; using nested loops. Consider this problem: Given a positive integer n, find all ordered pairs
+; of distinct positive integers i and j, where 1 <= j <= i <= n, such that i + j is prime. For
+; example if n = 6, then the pairs are the following
+
+;   i   | 2 3 4 4 5 6 6
+;   j   | 1 2 1 3 2 1 5
+; -------------------------
+; i + j | 3 5 5 7 7 7 11
+
+; A natural way to organise this computation is to generate the sequence of all ordered pairs of
+; positive intergers less than or equal to n, filter to select those whose sum is prime, and then,
+; for each pair (i, j) that passes through the filter, produce the triple (i, j, i + j)
+
+; Here is a way to generate the sequence of pairs:
+; - For each integer i <= n, 
+;  - enumerate the integers j < i, and
+;  - for each such i and j generate the pair (i, j).
+
+; In terms of sequence operations,
+; - map along the sequence (enumerate-interval 1 n). 
+; - For each i in this sequence we map along the sequence (enumerate-interval 1 (- i 1)).
+; - For each j in this latter sequence, we generate the pair (list i j). 
+; This gives us a sequence of pairs for each i. Combining all the sequences for all the i 
+; (by accumulating with append) produces the required sequence of pairs
+
+(define (ordered-pairs-of-integers n)
+  (accumulate 
+   append '() (map (lambda (i) 
+                     (map (lambda (j) (list i j)) 
+                          (enumerate-interval 1 (- i 1)))) 
+                   (enumerate-interval 1 n))))
+
+(ordered-pairs-of-integers 6)
+
+; The combination of mapping and accumulating with append is so common in this sort of program
+; that we will isolate it as a separate procedure
+
+(define (flatmap proc seq)
+  (accumulate append '() (map proc seq)))
+
+; Now filter this sequence of pairs to find those whose sum is prime. The filter predicate
+; is called for each element of the sequence; its argument is a pair and it must extract the
+; integers from the pair. Thus, the predicate to apply to each element in the sequence is
+
+(define (smallest-divisor n)
+  (find-divisor n 2))
+(define (find-divisor n test-divisor)
+  (cond ((> (square test-divisor) n) n)
+        ((divides? test-divisor n) test-divisor)
+        (else (find-divisor n (+ test-divisor 1)))))
+(define (divides? a b)
+  (= (remainder b a) 0))
+
+; We can test if a number is prime if it's smallest divisor is itself
+
+(define (prime? n)
+  (= n (smallest-divisor n)))
+
+(define (prime-sum? pair)
+  (prime? (+ (car pair) (cadr pair))))
+(prime-sum? (list 3 4))
+
+; Finally, generate the sequence of results by mapping over the filtered pairs using the following 
+; procedure, which constructs a tripple consisting of the two elements of the pair along with
+; their sum:
+
+(define (make-pair-sum pair) 
+  (list (car pair) (cadr pair) (+ (car pair) (cadr pair))))
+
+; Combining all these steps yeilds the complete procedure
+
+(define (prime-sum-pairs n)
+  (map make-pair-sum
+       (filter prime-sum?
+               (flatmap (lambda (i)
+                          (map (lambda (j) (list i j))
+                               (enumerate-interval 1 (- i 1))))
+                        (enumerate-interval 1 n)))))
+(prime-sum-pairs 6)
+  
+; Nested mappings are also useful for sequences other than those that enumerate intervals. Suppose we
+; wish to generate all the permutations of a set S; that is, all the ways of ordering the items in the
+; set. For instance, the permutations of {1,2,3} are {1,2,3},{1,3,2},{2,1,3},{2,3,1},{3,1,2} and {3,2,1}.
+; Here is a plan for generating the permutations of S: For each item x in S, recursively generate the sequence
+; of permuttions of S - x, and adjoin x to the front of each one. This yeilds, for each x in S, the sequence of 
+; permutations of S that begin with x. Combining these sequences for all x gives all the permutations of S:
+
+(define (permutations s)
+  (if (null? s)
+      (list '())
+      (flatmap (lambda (x)
+                 (map (lambda (p) (cons x p))
+                      (permutations (remove x s))))
+               s)))
+(permutations (list 1 2 3))
+  
+
+; Notice how this strategy reduces the problem of generating permutations of S to the problem of 
+; generating the the permutations of sets with fewer elements than S. In the terminal case, we
+; work our way down to the empty list, which represents a set of no elements. For this, we generate
+; (list '()), which is a sequence with one item, namely the set with no elements. The remove
+; procedure used in permutations returns all the items in a given sequence except for a given item.
+; This can be expressed as a simple filter
+
+(define (remove2 item sequence)
+  (filter (lambda (x) (not (= x item)))
+          sequence))
+(remove2 3 (list 1 2 3 4 5))
+
+
+
+; 2.2.4 Example: A Picture Language
+(display "2.2.4 Example: A Picture Language") (newline)
+
+; This section presents a simple language for drawing pictures that illustrates the power of data
+; abstractionand closure, and also exploits higher-order procedures in an essential way. The language
+; is designed to make it easy to experiment with patterns, which are composed of repeated elements
+; that are shifted and scaled. In this language, the data objects being combined are represented as
+; procedures rather than as list structure. Just as cons , which satisfies the closure property, 
+; allowed us to easily build arbitrarily complicated list structure, the operations in this languag
+; whic also satisfy the closure property, allow us to build arbitrarily complicated patterns.
+
+; The picture language
+; When we began our study of programming in Section 1.1, we emphasized the importance of describing
+; a language by focusing on the language's primitives, its means of combination, and its means of
+; abstraction. We'll follow that framework here.
+
+; Part of the elegance of this picture language is that there is only one kind of element, called
+; a painter. A painter draws an image that is shifted and scaled to fit within a designated 
+; parallelogram-shaped frame. For example, there's a primitive painter we'll call wave that makes
+; a crude line drawing. The actual shape of the drawing depends on the frame - all four images in
+; figure 2.10 are produced by the same wave painter, but with respect to four different frames.
+; Painters can be more elaborate than this: The primitive painter called rogers paints a picture of 
+; MIT's founder, William Barton Rogers, as shown in Figure 2.11. The four images in figure 2.11 are 
+; drawn with respect to the same four frames as the wave images in figure 2.10.
+
+; To combine images, we use various operations that construct new painters from given painters. For
+; example, the beside operation takes two painters and produces a new, compound painter that draws
+; the first painter's image in the left half of the frame and the second painter's image in the right
+; half of the frame. Similary, below takes two painters and produces a compound painter that draws
+; the first painter's image below the second painter's image. Some operations transform a single
+; painter to produce a new painter. For example, flip-vert takes a painter and produces a painter
+; that draws its image upside down, and flip-horiz produces a painter that draws the original painter's
+; image left-to-right reversed.
+
+(define wave2 (beside wave (flip-vert wave)))
+(define wave4 (below wave2 wave2))
+
+; In building up a complex image in this manner we are exploiting the fact that painters are closed
+; under the language's means of combination. The beside or below of two painters is itself a painter; 
+; therefore, we can use it as an element in making more complex painters. As with building up list 
+; structure using cons, the closure of our data under the means of combination is crucial to the 
+; ability to create complex structures while using only a few operations.
+
+; Once we can combine painters, we would like to be able to abstract typical patterns of combining
+; painters. We will implement the painter operations as Scheme procedures. This means that we don't 
+; need a special abstraction mechanism in the picture language: Since the means of combination are 
+; ordinary Scheme procedures, we automatically have the capability to do anything with painter
+; operations that we can do with procedures. For example, we can abstract the pattern in wave4 as
+
+(define (flipped-pairs painter)
+  (let ((painter2 (beside painter (flip-vert painter))))
+    (below painter2 painter2)))
+
+; and define wave4 as an instance of this pattern
+
+; (define wave4 (flipped-pairs wave))
+
+; We can also define recursive operations. Here's one that makes painters split and branch towards 
+; the right.
+
+(define (right-split painter n)
+  (if (= n 0)
+      painter
+      (let ((smaller (right-split painter (- n 1))))
+        (beside painter (below smaller smaller)))))
+
+; We can produce balanced patterns by branching upwards as well as towards the right.
+
+(define (corner-split painter n)
+  (if (= n 0)
+      painter
+      (let ((up (up-split painter (- n 1)))
+            (right (right-split painter (- n 1))))
+        (let ((top-left (beside up up))
+              (bottom-right (below right right))
+              (corner (corner-split painter (- n 1))))
+          (beside (below painter top-left)
+                  (below bottom-right corner))))))
+
+; By placing four copies of a corner-split appropriately, we obtain a pattern called square-limit,
+; whose application to wave and rogers is shown in Figure 2.9:
+
+(define (square-limit painter n)
+  (let ((quarter (corner-split painter n)))
+        (let ((half (beside (flip-horiz quarter) quarter)))
+          (below (flip-vert half) half))))
+
+
+; Higher-order operations
+; In addition to abstracting patterns of combining painters, we can work at a higher level, abstracting
+; patterns of combining painter operations. That is, we can view the painter operations as elements to
+; manipulate and can write means of combination for these elements-procedures that take painter operations 
+; as arguments and create new painter operations.
+
+; For example, flipped-pairs and square-limit each arrange four copies of a painter's image in a square
+; patter; they differ only in how they orient the copies. One way to abstract this pattern of painter 
+; combination is with the following procedure, which takes four one-argument painter operations and 
+; produces a painter operation that transforms a given painter with those four operations and arranges
+; the results in a square. tl,tr,bl and br are the transformations to apply to the top left copy, the 
+; top right copy, the bottom left copy, and the bottom right copy respectively.
+
+(define (square-of-four tl tr bl br)
+  (lambda (painter)
+    (let ((top (beside (tl painter) (tr painter)))
+          (bottom (beside (bl painter) (br painter))))
+      (below bottom top))))
+
+; Then flipped-pairs can be defined in terms of square-of-four as follows:
+
+(define (flipped-pairs painter)
+  (let ((combine4 (square-of-four identity flip-vert
+                                  identity flip-vert)))
+    (combine4 painter)))
+
+; and square-limit can be expressed as
+
+(define (square-limit painter n)
+  (let ((combine4 (square-of-four flip-horiz identity
+                                  rotate180 flip-vert)))
+    (combine4 (corner-split painter n))))
+
+
+; Frames
+; Before we can show how to implement painters and their means of combination, we must first 
+; consider frames. A frame can be described by three vectors - an origin vector and two edge
+; vectors. The origin vector specifies the offset of the frame's origin from some absolute
+; origin in the plane, and the edge vectors specify the offsets of the frame's corners from 
+; its origin. If the edges are perpendicular, the frame will be rectangular. Otherwise the frame
+; will be a more general parallelogram.
+
+; In accordance with data abstraction we need not be specific yet about how frames are represented,
+; other than to say that there is a constructor make-frame, which takes three vectors and produces
+; a frame, and three corresponding selectors origin-frame, edge1-frame, and edge2-frame.
+
+; We will use coordinates in the unit square (0 <= x, y <= 1) to specify images. With each frame,
+; we associate a frame coordinate map, which will be used to shift and scale images to fit the 
+; frame. The map transforms the unit square into the frame by mapping the vector v = (x,y) to the
+; vector sum
+
+;     Origin(Frame) + (x * Edge1(Frame)) + (y * Edge2(Frame))
+
+; For example, (0,0) is mapped to the origin of the frame, (1,1) to the vertex diagonally opposite
+; the origin, and (0.5,0.5) to the center of the frame. We can create a frame's coordinate map
+; with the following procedure.
+
+(define (frame-coord-map frame)
+  (lambda (v)
+    (add-vect
+     (origin-frame frame)
+     (add-vert (scale-vect (xcor-vect v) (edge1-frame frame))
+               (scale-vect (ycor-vect v) (edge2-frame frame))))))
+
+; Observe that applying frame-coord-map to a frame returns a procedure that, given a vector, 
+; returns a vector. If the argument vector is in the unit square, the result vector will be in 
+; the frame. For example,
+
+((frame-coord-map a-frame) (make-vect 0 0))
+
+; returns the same vector as 
+
+(origin-frame a-frame)
+
+
+; Painters
+; A painter is represented as a procedure that, given a frame as argument, draws a particular
+; image shifted and scaled to fit the frame. That is to say, if p is a painter and f is a frame, then
+; we produces p's image in f by calling p with f as argument.
+
+; The details of how primitive painters are implemented depend on the particular characteristics
+; of the graphics system and the type of image to be drawn. For instance, suppose we have a procedure
+; draw-line that draws a lin on the screen between two specified points. Then we can create painters
+; for line drawings, such as the wave painter in Figure 2.10, from lists of line segements as
+; follows:
+
+(define (segments->painter segment-list)
+  (lambda (frame)
+    (for-each
+     (lambda (segment)
+       (draw-line
+        ((frame-coord-map frame)
+         (start-segment segment))
+        ((frame-coord-map frame)
+         (end-segment segment))))
+     segment-list )))
+
+; The segments are given using coordinates with respect to the unit square. For each segment in 
+; the list, the painter transforms the segment end-points with the frame coordinate map and draws
+; a line between the transformed points.
+
+; Representing painters as procedures erects a powerful abstraction barrier in the picture language.
+; We can create and intermix all sorts of primitive painters, based on a variety of graphics
+; capabilities. The details of their implementation do not matter. Any procedure can serve as a
+; painter, provided that it takes a frame as argument and draws something scaled to fit the frame.
+
+
+; Transforming and combining painters
+; An operation on painters (such as flip-vert or beside) works by creating a painter that invokes
+; the original painters with respect to frames derived from the argument frame. Thus, for example
+; flip-vert doesn't have to know how a painter works in order to flip it - it just has to know how
+; to turn a frame upside down: The flipped painter just uses the original painter, but in the 
+; inverted frame.
+
+; Painter operations are based on the procedure transform-painter, which takes as arguments a
+; painter and information on how to transform a frame and produces a new painter. The transformed
+; painter, when called on a frame, transforms the frame and calls the original painter on the
+; transformed frame. The arguments to transform-painter are points (represented as vectors) that 
+; specify the corners of the new frame: When mapped into the frame, the first point specifies
+; the new frame's origin and the other two specify the ends of its edge vectors. Thus, arguments
+; within the unit square specify a frame contained within the original frame.
+
+(define (transform-painter painter origin corner1 corner2)
+  (lambda (frame)
+    (let ((m (frame-coord-map frame)))
+      (let ((new-origin (m origin)))
+        (painter (make-frame
+                  new-origin
+                  (sub-vect (m corner1) new-origin)
+                  (sub-vect (m corner2) new-origin)))))))
+
+; Here's how to flip painter images vertically
+
+(define (flip-vert painter)
+  (transform-painter painter
+                     (make-vect 0.0 1.0)   ; new origin
+                     (make-vect 1.0 1.0)   ; new end of edge1
+                     (make-vect 0.0 0.0))) ; new end of edge2
+
+; Using transform-painter, we can easily define new transformations. For example, we can define
+; a painter that shrinks its image to the upper-right quarter of the frame it is given:
+
+(define (shrink-to-upper-right painter)
+  (transform-painter
+   painter (make-vect 0.5 0.5)
+   (make-vect 1.0 0.5) (make-vect 0.5 1.0)))
+
+; Other transformations rotate images counterclockwise by 90 degrees
+
+(define (rotate90 painter)
+  (transform-painter painter
+                     (make-vect 1.0 0.0)
+                     (make-vect 1.0 1.0)
+                     (make-vect 0.0 0.0)))
+
+; or squash imapes towards the center of the frame:
+
+(define (squash-inwards painter)
+  (transform-painter painter
+                     (make-vect 0.0 0.0)
+                     (make-vect 0.65 0.35)
+                     (make-vect 0.35 0.65)))
+
+; Frame transformation is als the key to defining means of combining two or more painters.
+; The beside procedure, for example, takes two painters, transforms them to paint in the left 
+; and right halves of an argument frame respectively, and prduces a new, compoint painter.
+
+; When the compound painter is given a frame, it calls the first transformed painter to paint 
+; in the left half of the frame and calls the second transformed painter to paint in the right 
+; half of the frame:
+
+(define (beside painter1 painter2)
+  (let ((split-point (make-vect 0.5 0.0)))
+    (let ((paint-left (transform-painter painter1 (make-vect 0.0 0.0) 
+                                         split-point (make-vect 0.0 1.0)))
+          (paint-right (transform-painter painter2 (make-vect 1.0 0.0) 
+                                          split-point (make-vect 1.0 0.0) (make-vect 0.5 1.0))))
+      (lambda (frame)
+        (paint-left frame)
+        (paint-right frame)))))
+
+; Observe how the painter data abstraction, and in particular the representation of painters as
+; procedures, makes beside easy to implement. The beside procedure need not know anything about
+; the details of the component painters other than that each painter will draw something in 
+; its designated frame.
+
+
+
+
+
+
+
+
+
+
+
+
+
