@@ -4,7 +4,8 @@
 ; Define the transformation flip-horiz, which flips painters horizontally, and transformations
 ; that roatate painters counterclockwise by 180 degrees and 270 degrees.
 
-(require pict)
+(require racket/draw)
+(require racket/gui)
 
 (define (make-vect x y)
   (cons x y))
@@ -46,61 +47,56 @@
      (add-vect (scale-vect (xcor-vect v) (edge1-frame frame))
                (scale-vect (ycor-vect v) (edge2-frame frame))))))
 
+
 (define (segments->painter segment-list)
   (lambda (frame)
-    (dc (lambda (dc dx dy)
-          (for-each
-           (lambda (segment)
-             (let ((start ((frame-coord-map frame) (start-segment segment)))
-                   (end (add-vect ((frame-coord-map frame) (start-segment segment))
-                                  ((frame-coord-map frame) (end-segment segment)))))
-                   (send dc draw-line
-                          (xcor-vect start)
-                          (ycor-vect start)
-                          (xcor-vect end)
-                          (ycor-vect end))))
-           segment-list)) 
-        150 150)))
+    (define target (make-bitmap 100 100))
+    (define dc (new bitmap-dc% [bitmap target]))
+    (for-each
+     (lambda (segment)
+       (let ((start ((frame-coord-map frame) (start-segment segment)))
+             (end ((frame-coord-map frame) (end-segment segment))))
+         (send dc draw-line 
+               (xcor-vect start)
+               (ycor-vect start)
+               (xcor-vect end)
+               (ycor-vect end))))
+     segment-list)
+    (make-object image-snip% target)))
 
+(define (segments->text segment-list)
+  (lambda (frame)
+    (for-each
+     (lambda (segment)
+       (let ((start ((frame-coord-map frame) (start-segment segment)))
+             (end ((frame-coord-map frame) (end-segment segment))))
+         (fprintf (current-output-port) "Draw Line:StartX:~a Y:~a EndX:~a Y:~a\n" (xcor-vect start) (ycor-vect start) (xcor-vect end) (ycor-vect end))))
+     segment-list)))
+         
 
 (define (frame-outline frame)
-  (let ((p1 (origin-frame frame))
-        (p2 (add-vect (origin-frame frame) (edge1-frame frame)))
-        (p3 (add-vect (add-vect (origin-frame frame) (edge1-frame frame)) (edge2-frame frame)))
-        (p4 (add-vect (origin-frame frame) (edge2-frame frame))))
-    ((segments->painter (list (make-segment p1 (edge1-frame frame))
-                              (make-segment p1 (edge2-frame frame))
-                              (make-segment p2 (edge2-frame frame))
-                              (make-segment p4 (edge1-frame frame)))) frame)))
-(frame-outline  (make-frame (make-vect 0 0) (make-vect 10 0) (make-vect 0 10)))
- 
-(define (frame-cross frame)
-  (let ((p1 (origin-frame frame))
-        (p2 (add-vect (origin-frame frame) (edge1-frame frame)))
-        (p3 (add-vect (add-vect (origin-frame frame) (edge1-frame frame)) (edge2-frame frame)))
-        (p4 (add-vect (origin-frame frame) (edge2-frame frame)))
-        (p1-p3 (add-vect (edge1-frame frame) (edge2-frame frame)))
-        (p2-p4 (sub-vect (edge1-frame frame) (edge2-frame frame))))
-    ((segments->painter (list (make-segment p1 p1-p3)
-                              (make-segment p2 p2-p4))) frame)))
-(frame-cross  (make-frame (make-vect 0 0) (make-vect 10 0) (make-vect 0 10)))
+  ((segments->painter (list (make-segment (make-vect 0 0) (make-vect 1 0))
+                              (make-segment (make-vect 1 0) (make-vect 1 1))
+                              (make-segment (make-vect 1 1) (make-vect 0 1))
+                              (make-segment (make-vect 0 1) (make-vect 0 0)))) frame))
 
-(define (midpoint-segment segment)
-  (add-vect (start-segment segment)
-            (scale-vect 0.5 (end-segment segment))))
-(define (point-to-point a b)
-  (sub-vect b a))
+ 
+
+
+(define (frame-cross frame)
+  ((segments->painter (list (make-segment (make-vect 0 0) (make-vect 1 1))
+                           (make-segment (make-vect 1 0) (make-vect 0 1)))) frame))
+
+
+
+
+
 (define (frame-diamond frame)
- (let ((m1 (midpoint-segment (make-segment (origin-frame frame) (edge1-frame frame))))
-       (m2 (midpoint-segment (make-segment (add-vect (origin-frame frame) (edge1-frame frame)) (edge2-frame frame))))
-       (m3 (midpoint-segment (make-segment (add-vect (origin-frame frame) (edge2-frame frame)) (edge1-frame frame))))
-       (m4 (midpoint-segment (make-segment (origin-frame frame) (edge2-frame frame)))))
-   ((segments->painter (list (make-segment m1 (point-to-point m2 m1))
-                             (make-segment m2 (point-to-point m3 m2))
-                             (make-segment m3 (point-to-point m4 m3))
-                             (make-segment m4 (point-to-point m1 m4)))) frame)))
-                        
-(frame-diamond  (make-frame (make-vect 0 0) (make-vect 10 0) (make-vect 0 10)))
+ ((segments->painter (list (make-segment (make-vect 0 0.5) (make-vect 0.5 1))
+                             (make-segment (make-vect 0.5 1) (make-vect 1 0.5))
+                             (make-segment (make-vect 1 0.5) (make-vect 0.5 0))
+                             (make-segment (make-vect 0.5 0) (make-vect 0 0.5)))) frame))
+
 
 (define (transform-painter painter origin corner1 corner2)
   (lambda (frame)
@@ -111,14 +107,53 @@
                   (sub-vect (m corner1) new-origin)
                   (sub-vect (m corner2) new-origin)))))))
 
+(define (flip-vert painter)
+  (transform-painter painter
+                     (make-vect 0.0 1.0)   ; new origin
+                     (make-vect 1.0 1.0)   ; new end of edge1
+                     (make-vect 0.0 0.0))) ; new end of edge2
+
+(define (shrink-to-upper-right painter)
+  (transform-painter painter 
+                     (make-vect 0.5 0.5)
+                     (make-vect 1.0 0.5) 
+                     (make-vect 0.5 1.0)))
+
+(define (rotate90 painter)
+  (transform-painter painter
+                     (make-vect 1.0 0.0)
+                     (make-vect 1.0 1.0)
+                     (make-vect 0.0 0.0)))
+
+(define (squash-inwards painter)
+  (transform-painter painter
+                     (make-vect 0.0 0.0)
+                     (make-vect 0.65 0.35)
+                     (make-vect 0.35 0.65)))
+
+
 (define (beside painter1 painter2)
   (let ((split-point (make-vect 0.5 0.0)))
-    (let ((paint-left (transform-painter painter1 (make-vect 0.0 0.0) 
-                                         split-point (make-vect 0.0 1.0)))
-          (paint-right (transform-painter painter2 
-                                          split-point (make-vect 1.0 0.0) (make-vect 0.5 1.0))))
+    (let ((paint-left (transform-painter painter1 (make-vect 0.0 0.0) split-point (make-vect 0.0 1.0)))
+          (paint-right (transform-painter painter2 split-point (make-vect 1.0 0.0) (make-vect 0.5 1.0))))
       (lambda (frame)
         (paint-left frame)
         (paint-right frame)))))
 
-((beside frame-diamond frame-cross) (make-frame (make-vect 0 0) (make-vect 20 0) (make-vect 0 20)))
+(define (do-nothing painter)
+  (transform-painter painter
+                     (make-vect 0.5 0.5)
+                     (make-vect 1.0 1.0)
+                     (make-vect 0.0 1.0)))
+
+(define aFrame (make-frame (make-vect 0 0) (make-vect 50.0 0.0) (make-vect 0.0 50.0)))
+(frame-outline  aFrame)
+(frame-cross  aFrame)
+(frame-diamond  aFrame)
+((flip-vert frame-diamond) aFrame)
+((shrink-to-upper-right frame-outline) aFrame)
+((do-nothing frame-cross) aFrame)
+;((rotate90 frame-cross) aFrame)
+;((squash-inwards frame-diamond) aFrame)
+;((beside frame-diamond frame-diamond) aFrame)
+
