@@ -17,8 +17,8 @@
   (make-vect (+ (xcor-vect vec1) (xcor-vect vec2))
              (+ (ycor-vect vec1) (ycor-vect vec2))))
 (define (sub-vect vec1 vec2)
-  (make-vect (- (xcor-vect vec2) (xcor-vect vec1))
-             (- (ycor-vect vec2) (ycor-vect vec1))))
+  (make-vect (- (xcor-vect vec1) (xcor-vect vec2))
+             (- (ycor-vect vec1) (ycor-vect vec2))))
 (define (scale-vect scale vect)
   (make-vect (* scale (xcor-vect vect))
              (* scale (ycor-vect vect))))
@@ -30,14 +30,16 @@
 (define (end-segment segment)
   (cdr segment))
 
-(define (make-frame origin edge1 edge2)
-  (list origin edge1 edge2))
+(define (make-frame origin edge1 edge2 dc)
+  (list origin edge1 edge2 dc))
 (define (origin-frame frame)
   (car frame))
 (define (edge1-frame frame)
   (cadr frame))
 (define (edge2-frame frame)
   (caddr frame))
+(define (dc frame)
+  (cadddr frame))
 
 
 (define (frame-coord-map frame)
@@ -50,19 +52,18 @@
 
 (define (segments->painter segment-list)
   (lambda (frame)
-    (define target (make-bitmap 100 100))
-    (define dc (new bitmap-dc% [bitmap target]))
     (for-each
      (lambda (segment)
        (let ((start ((frame-coord-map frame) (start-segment segment)))
              (end ((frame-coord-map frame) (end-segment segment))))
-         (send dc draw-line 
+         (send (dc frame) draw-line 
                (xcor-vect start)
                (ycor-vect start)
                (xcor-vect end)
                (ycor-vect end))))
-     segment-list)
-    (make-object image-snip% target)))
+     segment-list)))
+
+
 
 (define (segments->text segment-list)
   (lambda (frame)
@@ -105,7 +106,8 @@
         (painter (make-frame
                   new-origin
                   (sub-vect (m corner1) new-origin)
-                  (sub-vect (m corner2) new-origin)))))))
+                  (sub-vect (m corner2) new-origin)
+                  (dc frame)))))))
 
 (define (flip-vert painter)
   (transform-painter painter
@@ -127,7 +129,7 @@
 
 (define (squash-inwards painter)
   (transform-painter painter
-                     (make-vect 0.0 0.0)
+                     (make-vect 0.35 0.35)
                      (make-vect 0.65 0.35)
                      (make-vect 0.35 0.65)))
 
@@ -142,18 +144,60 @@
 
 (define (do-nothing painter)
   (transform-painter painter
-                     (make-vect 0.5 0.5)
-                     (make-vect 1.0 1.0)
+                     (make-vect 0.0 0.0)
+                     (make-vect 1.0 0.0)
                      (make-vect 0.0 1.0)))
 
-(define aFrame (make-frame (make-vect 0 0) (make-vect 50.0 0.0) (make-vect 0.0 50.0)))
-(frame-outline  aFrame)
-(frame-cross  aFrame)
+(define target (make-bitmap 100 100))
+(define aDC (new bitmap-dc% [bitmap target]))
+(define aFrame (make-frame (make-vect 00 0) (make-vect 50.0 0.0) (make-vect 0.0 50.0) aDC))
 (frame-diamond  aFrame)
-((flip-vert frame-diamond) aFrame)
-((shrink-to-upper-right frame-outline) aFrame)
-((do-nothing frame-cross) aFrame)
+(make-object image-snip% target)
+
+
+;(frame-cross  aFrame)
+;(frame-diamond  aFrame)
+;((flip-vert frame-diamond) aFrame)
+;((shrink-to-upper-right frame-outline) aFrame)
+;((do-nothing frame-outline) aFrame)
 ;((rotate90 frame-cross) aFrame)
-;((squash-inwards frame-diamond) aFrame)
-;((beside frame-diamond frame-diamond) aFrame)
+;((squash-inwards frame-cross) aFrame)
+
+(define (flip-horiz painter)
+  (transform-painter painter
+                     (make-vect 1.0 0.0)   ; new origin
+                     (make-vect 0.0 0.0)   ; new end of edge1
+                     (make-vect 1.0 1.0))) ; new end of edge2
+
+(define targetB (make-bitmap 100 100))
+(define bDC (new bitmap-dc% [bitmap targetB]))
+(define bFrame (make-frame (make-vect 00 0) (make-vect 50.0 0.0) (make-vect 0.0 50.0) bDC))
+((flip-horiz (beside frame-cross frame-diamond)) bFrame)
+(make-object image-snip% targetB)
+
+
+(define (rotate180 painter)
+  (transform-painter painter
+                     (make-vect 1.0 1.0)
+                     (make-vect 0.0 1.0)
+                     (make-vect 1.0 0.0)))
+
+(define targetC (make-bitmap 100 100))
+(define cDC (new bitmap-dc% [bitmap targetC]))
+(define cFrame (make-frame (make-vect 00 0) (make-vect 50.0 0.0) (make-vect 0.0 50.0) cDC))
+((rotate180 (beside frame-cross frame-diamond)) cFrame)
+(make-object image-snip% targetC)
+
+
+(define (rotate270 painter)
+  (transform-painter painter
+                     (make-vect 0.0 1.0)
+                     (make-vect 0.0 0.0)
+                     (make-vect 1.0 1.0)))
+
+(define targetD (make-bitmap 100 100))
+(define dDC (new bitmap-dc% [bitmap targetD]))
+(define dFrame (make-frame (make-vect 00 0) (make-vect 50.0 0.0) (make-vect 0.0 50.0) dDC))
+((rotate270 (beside frame-cross frame-diamond)) dFrame)
+(make-object image-snip% targetD)
 
