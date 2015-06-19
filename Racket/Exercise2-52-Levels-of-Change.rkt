@@ -1,13 +1,16 @@
 #lang racket
 
-; Exercise 2.45
-; right-split and up-split can be expressed as instances of a general splitting operation. Define
-; a procedure split with the property that evaluating
-;
-; (define right-split (split beside below))
-; (define up-split (split below beside))
-;
-; produces procedures right-split and up-split with the same behaviours as the ones already defined
+; Exercise 2.52
+; Make changes to the square limit of wave shown in Figure 2.9 by working at
+; each of the levels described above. In particular:
+
+; a. Add some segements to the primitive wave painter of exercise 2.49 (to add a 
+;    smile for example)
+; b. Change the pattern constructed by corner-split (for example, by using only 
+;    one copy of the up-split and right-split images instead of two).
+; c. Modify the version of square-limit that uses square-of-four so as to assemble
+;    the corners in a different pattern. (for example, you might make the big Mr
+;    Rogers look outward from each corner of the square).
 
 
 (require racket/draw)
@@ -190,44 +193,37 @@
   (let ((painter2 (beside painter (flip-vert painter))))
     (below painter2 painter2)))
 
-
-
-; Code for this problem begines here
-(define (right-split-prev painter n)
+(define (right-split painter n)
   (if (= n 0)
       painter
-      (let ((smaller (right-split-prev painter (- n 1))))
+      (let ((smaller (right-split painter (- n 1))))
         (beside painter (below smaller smaller)))))
 
-(define (up-split-prev painter n)
+(define (up-split painter n)
   (if (= n 0)
       painter
-      (let ((smaller (up-split-prev painter (- n 1))))
+      (let ((smaller (up-split painter (- n 1))))
         (below painter (beside smaller smaller)))))
 
-(define (split orig-placer split-placer)
-  (define (split-internal painter n)
-    (if (= n 0)
-        painter
-        (let ((smaller (split-internal painter (- n 1))))
-          (orig-placer painter (split-placer smaller smaller) ))))
-  split-internal)
+(define (corner-split painter n)
+  (if (= n 0)
+      painter
+      (let ((up (up-split painter (- n 1)))
+            (right (right-split painter (- n 1))))
+        (let ((top-left (beside up up))
+              (bottom-right (below right right))
+              (corner (corner-split painter (- n 1))))
+          (beside (below painter top-left)
+                  (below painter corner))))))
 
-(define right-split (split beside below))
+(define (square-limit painter n)
+  (let ((quarter (corner-split painter n)))
+        (let ((half (beside (flip-horiz quarter) quarter)))
+          (below (flip-vert half) half))))
 
-(display "right-split") (newline)
-(define target-1 (make-bitmap 100 100))
-(define DC-1 (new bitmap-dc% [bitmap target-1]))
-(define frame-1 (make-frame (make-vect 0 0) (make-vect 100.0 0.0) (make-vect 0.0 100.0) DC-1))
-(make-object image-snip% target-1)
-((right-split wave 1) frame-1)
-
-
-(define up-split (split below beside))
-
-(display "up-split") (newline)
-(define target-2 (make-bitmap 100 100))
-(define DC-2 (new bitmap-dc% [bitmap target-2]))
-(define frame-2 (make-frame (make-vect 0 0) (make-vect 100.0 0.0) (make-vect 0.0 100.0) DC-2))
-(make-object image-snip% target-2)
-((up-split wave 1) frame-2)
+(display "square-limit") (newline)
+(define target-8 (make-bitmap 200 200))
+(define DC-8 (new bitmap-dc% [bitmap target-8]))
+(define frame-8 (make-frame (make-vect 0 0) (make-vect 200.0 0.0) (make-vect 0.0 200.0) DC-8))
+(make-object image-snip% target-8)
+((square-limit wave 4) frame-8)

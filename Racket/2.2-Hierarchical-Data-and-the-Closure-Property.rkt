@@ -563,6 +563,47 @@ one-through-four
 ; for the picture language to be displayed in Racket.
 
 
+; Levels of language for robust design
+; The picture language exercises some of the critical ideas we've introduced about abstraction
+; with procedures and data. The fundamental data abstractions, painters, are implemented using
+; procedural representations, which enables the language to handle different basic drawing
+; capabilities in a uniform way. The means of combination satisfy the closure property, which
+; permits us to easily build up complex designs. Finally, all the tools for abstracting procedures
+; are available to us for abstracting means of combination for painters.
+
+; We have also obtained a glimpse of another crucial idea about languages and program design. This
+; is the approach of stratified design, the notion that a complex system should be structured as
+; a sequence of levels that are described using a sequence of languages. Each level is constructed
+; by combining parts that are regarded as primitive at that level, and the parts constructed at
+; each level are used as primitives at the next level. The language used at each level of a
+; stratified design has primitives, means of combination, and means of abstraction appropriate
+; to that level of detail.
+
+; Stratified design pervades the engineering of complex systems. For example in computer
+; engineering, resistors and transistors are combined (and described using a language of analog
+; circuits) to produce parts such as and-gates and or-gates, which form the primitives of a 
+; language for digital-circuit design. These parts are combined to build processors, bus structures
+; and memory systems, which are in turn combined to form computers, using languages appropriate to 
+; computer architecture. Computers are combined to form distributed systems, using languages
+; appropriate for describing network interconnections, and so on.
+
+; As a tiny example of stratification, our picture language uses primitive elements (primitive 
+; painters) that are created using a language that specifies points and lines to provide the
+; lists of line segments for segments->painter, or the shading details for a painter like rogers.
+; The bulk of our description of the picture language focused on combining these primitives,
+; using geometric combiners such as beside and below. We also worked at a higher level, regarding
+; beside and below as primitives to be manipulated in a language whose operations, such as
+; square-of-four, capture common patterns of combining geometric combiners.
+
+; Stratified design helps make programs robust, that is it makes it likely that small changes 
+; in a specification will require correspondingly small changes in the program. For instance, 
+; suppose we wanted to change the image based on wave shown in Figure 2.9. We could work at the
+; lowest level to change the detailed appearance of the wave element; we could work at the middle
+; level to change the way corner-split replicates the wave, we could work at the highest level
+; to change how square-limit arranges the four copies of the corner. In general, each level of a 
+; stratified design provides a different vocabulary for expressing the characteristics of the 
+; system, and a different kind of ability to change it.
+
 
 
 
