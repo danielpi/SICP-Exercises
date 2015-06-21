@@ -1,86 +1,70 @@
-import Foundation
-
-struct Vector {
-    let x: Double
-    let y: Double
-}
-
-func + (lhs: Vector, rhs: Vector) -> Vector {
-    return Vector(x: lhs.x + rhs.x, y: lhs.y + rhs.y)
-}
-func - (lhs: Vector, rhs: Vector) -> Vector {
-    return Vector(x: lhs.x - rhs.x, y: lhs.y - rhs.y)
-}
-func * (lhs: Double, rhs:Vector) -> Vector {
-    return Vector(x: lhs * rhs.x, y: lhs * rhs.y)
-}
-func * (lhs: Vector, rhs: Double) -> Vector {
-    return Vector(x: rhs * lhs.x, y: rhs * lhs.y)
-}
-
-typealias Point = Vector
-
-struct Segment {
-    let startPoint: Point
-    let endPoint: Point
-}
-
-// Frame
-struct Frame {
-    let origin: Point
-    let edge1: Vector
-    let edge2: Vector
-}
-
-func frameCoordMap(frame: Frame) -> (Vector) -> Vector {
-    return { vector in
-        return frame.origin + ((vector.x * frame.edge1) + (vector.y * frame.edge2))
-    }
-}
+import Cocoa
 
 
-// Painter Generators
-typealias Painter = (Frame) -> Void
+/*
+public typealias Position = CGPoint
+public typealias Distance = CGFloat
+public typealias Region = Position -> Bool
 
-func segmentsToText(segments: [Segment]) -> Painter {
-    return { frame in
-        for segment in segments {
-            let start = frameCoordMap(frame)(segment.startPoint)
-            let end = frameCoordMap(frame)(segment.endPoint)
-            print("Draw Line from \(start) to \(end)")
+public func visualizeRegion(region: Region, inRect: NSRect) -> NSImage {
+    
+    let squareSize: CGFloat = 500
+    var imgSize = NSMakeSize(squareSize, squareSize)
+    var img = NSImage(size: imgSize)
+    img.lockFocus()
+    
+    let background = NSColor(calibratedHue: 0.0, saturation: 0.0, brightness: 0.8, alpha: 1.0)
+    let truthColor = NSColor(calibratedHue: 0.8, saturation: 0.7, brightness: 0.7, alpha: 0.5)
+    let falseColor = NSColor(calibratedHue: 0.0, saturation: 0.0, brightness: 0.99, alpha: 0.8)
+    
+    // Background
+    background.setFill()
+    NSRectFill(NSMakeRect(0, 0, imgSize.width, imgSize.height))
+    
+    let xform = NSAffineTransform()
+    xform.scaleBy(squareSize / inRect.size.width)
+    xform.concat()
+    
+    //let translation = CGAffineTransformMakeTranslation(imgSize.width / 100, imgSize.height / 500)
+    
+    // Point cloud
+    var point = Position(x: 0, y: 0)
+    srand48(1234);
+    for i in 0...2000 {
+        let x = CGFloat(drand48()) * inRect.size.width + inRect.origin.x //(drand48() * inRect.size.width) + inRect.origin.x
+        let y = CGFloat(drand48()) * inRect.size.height + inRect.origin.y //(drand48() *
+        point = Position(x: x, y: y)
+        if region(point) {
+            truthColor.set()
+        } else {
+            falseColor.set()
         }
+        //NSRectFill(NSMakeRect(point.x - inRect.origin.x , point.y - inRect.origin.y, 1.0, 1.0))
+        let dot = NSBezierPath(ovalInRect: NSMakeRect(point.x - inRect.origin.x - 0.2 , point.y - inRect.origin.y - 0.2, 0.4, 0.4))
+        dot.fill()
     }
+    
+    
+    img.unlockFocus()
+    return img
 }
 
-// Painters
-func frameOutline(frame: Frame) {
-    segmentsToText([Segment(startPoint: Point(x: 0, y: 0), endPoint: Point(x: 1, y: 0)),
-        Segment(startPoint: Point(x: 1, y: 0), endPoint: Point(x: 1, y: 1)),
-        Segment(startPoint: Point(x: 1, y: 1), endPoint: Point(x: 0, y: 1)),
-        Segment(startPoint: Point(x: 0, y: 1), endPoint: Point(x: 0, y: 0))])(frame)
+var imgSize = NSMakeSize(squareSize, squareSize)
+var img = NSImage(size: imgSize)
+img.lockFocus()
+img.unlockFocus()
+return img
+
+public func newImage() -> NSImage {
+let squareSize: CGFloat = 500
+var imgSize = NSMakeSize(squareSize, squareSize)
+var img = NSImage(size: imgSize)
+img.lockFocus()
+return img
 }
+*/
 
 
-// Transformer Generator
-func transformPainter(painter: Painter, origin: Point, corner1: Point, corner2: Point) -> Painter {
-    return { frame in
-        let m = frameCoordMap(frame)
-        let newOrigin = m(origin)
-        painter(Frame(origin: newOrigin, edge1: m(corner1) - newOrigin, edge2: m(corner2) - newOrigin))
-    }
-}
-
-
-// Transformers
-func beside(left: Painter, right: Painter) -> Painter {
-    let splitPoint = Point(x: 0.5, y: 0)
-    let paintLeft = transformPainter(left, Point(x: 0, y: 0), splitPoint, Point(x: 0, y: 1))
-    let paintRight = transformPainter(right, splitPoint, Point(x: 1, y: 0), Point(x: 0.5, y: 1))
-    return { frame in
-        paintLeft(frame)
-        paintRight(frame)
-    }
-}
 
 
 
