@@ -117,7 +117,7 @@ func frameOutline(frame: Frame) {
 }
 
 // Transformer Generator
-func transformPainter(painter: Painter, origin: Point, corner1: Point, corner2: Point) -> Painter {
+public func transformPainter(painter: Painter, origin: Point, corner1: Point, corner2: Point) -> Painter {
     return { frame in
         let m = frameCoordMap(frame)
         let newOrigin = m(origin)
@@ -127,6 +127,8 @@ func transformPainter(painter: Painter, origin: Point, corner1: Point, corner2: 
 
 
 // Transformers
+public typealias Transformer = (Painter) -> Painter
+
 public func beside(left: Painter, right: Painter) -> Painter {
     let splitPoint = Point(x: 0.5, y: 0)
     let paintLeft = transformPainter(left, Point(x: 0, y: 0), splitPoint, Point(x: 0, y: 1))
@@ -161,6 +163,7 @@ public func flipHoriz(painter: Painter) -> Painter {
     }
 }
 
+// Visualisation
 public func draw(painter: Painter) -> NSImage {
     let squareSize: CGFloat = 500
     var imgSize = NSMakeSize(squareSize, squareSize)

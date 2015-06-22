@@ -87,6 +87,49 @@ draw(squareLimit(wave, 4))
 
 
 // Higher-order Operations
+// In addition to abstracting patterns of combining painters, we can work at a higher level, abstracting patterns of combining painter operations. That is, we can view the painter operations as elements to manipulate and can write means of combination for these elements - procedures that take painter operations as arguments and create new painter operations.
+// For example, flippedPairs and squareLimit each arrange four copies of a painter's image in a square pattern; they differ only in how they orient the copies. One way to abstract this pattern of painter combination is with the following procedure, which takes four one-argument painter operations and produces a painter operation that transforms a given painter with those four operations and arranges the results in a square. tl, tr, bl, and br are the transformations to aply to the top left copy, the top right copy, the bottem left copy and the bottom right copy, respectively.
+
+func squareOfFour(tl: Transformer, tr: Transformer, bl: Transformer, br: Transformer) -> Transformer {
+    return { painter in
+        let top = beside(tl(painter), tr(painter))
+        let bottom = beside(bl(painter), br(painter))
+        return below(bottom, top)
+    }
+}
+
+func identity(painter: Painter) -> Painter {
+    return painter
+}
+
+// Then flippedPairs can be defined in terms of squareOfFour as follows:
+
+func flippedPairs2(painter: Painter) -> Painter {
+    let combine4 = squareOfFour(identity, flipVert, identity, flipVert)
+    return combine4(painter)
+}
+draw(flippedPairs2(wave))
+
+// and squareLimit can be expressed as
+
+func rotate180(painter: Painter) -> Painter {
+    return transformPainter(painter, Point(x: 1, y: 1), Point(x: 0, y: 1), Point(x: 1, y: 0))
+}
+
+func squareLimit2(painter: Painter, n: Int) -> Painter {
+    let combine4 = squareOfFour(rotate180, flipVert, flipHoriz, identity)
+    return combine4(cornerSplit(painter, n))
+}
+draw(squareLimit2(wave, 4))
+
+
+// Frames
+
+
+
+
+
+
 
 
 
