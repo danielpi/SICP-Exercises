@@ -30,6 +30,7 @@
 		E62C9C111AD15F7200B45633 /* 2.2-HierarchicalDataAndTheClosureProperty.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "2.2-HierarchicalDataAndTheClosureProperty.playground"; sourceTree = "<group>"; };
 		E6303E6F1AAB2ACB002733FE /* 2.1-IntroductionToDataAbstraction.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "2.1-IntroductionToDataAbstraction.playground"; sourceTree = "<group>"; };
 		E630F9CA1AD0D3530004802F /* Ex2.14-Parallel-Resistor-Calculator.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.14-Parallel-Resistor-Calculator.playground"; sourceTree = "<group>"; };
+		E632A6081B3832E600FC61A0 /* Ex2.45-General-Splitting.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.45-General-Splitting.playground"; sourceTree = "<group>"; };
 		E636147F1A5B581A00E495B9 /* 1.1-TheElementsOfProgramming.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "1.1-TheElementsOfProgramming.playground"; sourceTree = "<group>"; };
 		E63C8E731AA812020092B551 /* Ex1.40-Solve-Cubic.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.40-Solve-Cubic.playground"; sourceTree = "<group>"; };
 		E63C8E741AA8142D0092B551 /* Ex1.41-double.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.41-double.playground"; sourceTree = "<group>"; };
@@ -145,6 +146,7 @@
 				E6D3B3DC1B230EF3001C9E1A /* Ex2.42-Queens-Puzzle-SICP.playground */,
 				E6F1C4C11B23DBA700DEAEFD /* Ex2.43-Queens-Puzzle-Slow.playground */,
 				E6E6655B1B37CBDC004747C6 /* Ex2.44-Up-Split.playground */,
+				E632A6081B3832E600FC61A0 /* Ex2.45-General-Splitting.playground */,
 			);
 			name = "2.2 Hierarchical Data and the Closure Property";
 			sourceTree = "<group>";
