@@ -19,6 +19,7 @@
 		E6153A091ADAA0050031FA24 /* Ex2.22-Iterative-Square-List.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.22-Iterative-Square-List.playground"; sourceTree = "<group>"; };
 		E61601471ADB50C70081BF21 /* Ex2.23-For-Each.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.23-For-Each.playground"; sourceTree = "<group>"; };
 		E616A2161AAF108E00BCE97E /* Ex2.3-Rectangles.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.3-Rectangles.playground"; sourceTree = "<group>"; };
+		E618DBFA1B39169A00FF9E3C /* Ex2.47-Frame.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.47-Frame.playground"; sourceTree = "<group>"; };
 		E61AD7481A871D2B0028163E /* Ex1.27-Carmichael-Numbers.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.27-Carmichael-Numbers.playground"; sourceTree = "<group>"; };
 		E61DAC6E1B1C6457001F3774 /* Ex2.35-Count-Leaves-Accumulation.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.35-Count-Leaves-Accumulation.playground"; sourceTree = "<group>"; };
 		E61DAC6F1B1C8352001F3774 /* Ex2.36-Accumulate-n.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.36-Accumulate-n.playground"; sourceTree = "<group>"; };
@@ -149,6 +150,7 @@
 				E6E6655B1B37CBDC004747C6 /* Ex2.44-Up-Split.playground */,
 				E632A6081B3832E600FC61A0 /* Ex2.45-General-Splitting.playground */,
 				E6D9CB0D1B391014003E86B8 /* Ex2.46-Vectors.playground */,
+				E618DBFA1B39169A00FF9E3C /* Ex2.47-Frame.playground */,
 			);
 			name = "2.2 Hierarchical Data and the Closure Property";
 			sourceTree = "<group>";
