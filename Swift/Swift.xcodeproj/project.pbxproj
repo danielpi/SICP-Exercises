@@ -58,6 +58,9 @@
 		E68AE0D21AA9439200BD09DD /* Ex1.44-Smoothing.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.44-Smoothing.playground"; sourceTree = "<group>"; };
 		E68AE0D31AA95B2F00BD09DD /* Ex1.45-Finding-Roots.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.45-Finding-Roots.playground"; sourceTree = "<group>"; };
 		E68E2C6A1AC031A300CED4BA /* Ex24Pairs.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Ex24Pairs.playground; sourceTree = "<group>"; };
+		E6908FE51B39899000D2D02B /* Ex2.50-Flip-Horiz.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.50-Flip-Horiz.playground"; sourceTree = "<group>"; };
+		E6908FE61B398C1900D2D02B /* Ex2.51-Below.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.51-Below.playground"; sourceTree = "<group>"; };
+		E6908FE71B39918400D2D02B /* Ex2.52-Making-Changes.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.52-Making-Changes.playground"; sourceTree = "<group>"; };
 		E691E6C91B1408E200DBAA12 /* Ex2.29-Binary-Mobile.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.29-Binary-Mobile.playground"; sourceTree = "<group>"; };
 		E693FA471AC65C9300459BF7 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; };
 		E695B1651B12E0E800C92955 /* Ex2.26-Append-Cons-List.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.26-Append-Cons-List.playground"; sourceTree = "<group>"; };
@@ -155,6 +158,9 @@
 				E618DBFA1B39169A00FF9E3C /* Ex2.47-Frame.playground */,
 				E618DBFB1B391F5700FF9E3C /* Ex2.48-Segment.playground */,
 				E618DBFC1B39203700FF9E3C /* Ex2.49-Segments-To-Painters.playground */,
+				E6908FE51B39899000D2D02B /* Ex2.50-Flip-Horiz.playground */,
+				E6908FE61B398C1900D2D02B /* Ex2.51-Below.playground */,
+				E6908FE71B39918400D2D02B /* Ex2.52-Making-Changes.playground */,
 			);
 			name = "2.2 Hierarchical Data and the Closure Property";
 			sourceTree = "<group>";
