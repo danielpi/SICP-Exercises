@@ -54,7 +54,7 @@ public struct Frame {
 // Painter Generators
 public typealias Painter = (Frame) -> Void
 
-func frameCoordMap(frame: Frame) -> (Vector) -> Vector {
+public func frameCoordMap(frame: Frame) -> (Vector) -> Vector {
     return { vector in
         return frame.origin + ((vector.x * frame.edge1) + (vector.y * frame.edge2))
     }
@@ -109,12 +109,26 @@ public func wave(frame: Frame) {
         Segment(startPoint: Point(x: 0.245, y: 0.065), endPoint: Point(x: 0.245, y: 0.265))])(frame)
 }
 
-func frameOutline(frame: Frame) {
+public func frameOutline(frame: Frame) {
     segmentsToPainter([Segment(startPoint: Point(x: 0, y: 0), endPoint: Point(x: 1, y: 0)),
         Segment(startPoint: Point(x: 1, y: 0), endPoint: Point(x: 1, y: 1)),
         Segment(startPoint: Point(x: 1, y: 1), endPoint: Point(x: 0, y: 1)),
         Segment(startPoint: Point(x: 0, y: 1), endPoint: Point(x: 0, y: 0))])(frame)
 }
+
+public func frameCross(frame: Frame) {
+    segmentsToPainter([Segment(startPoint: Point(x: 0, y: 0), endPoint: Point(x: 1, y: 1)),
+        Segment(startPoint: Point(x: 1, y: 0), endPoint: Point(x: 0, y: 1))])(frame)
+}
+
+
+public func frameDiamond(frame: Frame) {
+    segmentsToPainter([Segment(startPoint: Point(x: 0.5, y: 0), endPoint: Point(x: 1, y: 0.5)),
+        Segment(startPoint: Point(x: 1, y: 0.5), endPoint: Point(x: 0.5, y: 1)),
+        Segment(startPoint: Point(x: 0.5, y: 1), endPoint: Point(x: 0, y: 0.5)),
+        Segment(startPoint: Point(x: 0, y: 0.5), endPoint: Point(x: 0.5, y: 0))])(frame)
+}
+
 
 // Transformer Generator
 public func transformPainter(painter: Painter, origin: Point, corner1: Point, corner2: Point) -> Painter {

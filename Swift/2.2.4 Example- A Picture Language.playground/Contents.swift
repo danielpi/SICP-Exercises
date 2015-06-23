@@ -176,8 +176,63 @@ func segmentsToPainter2(segments: [Segment]) -> Painter {
 // Representing painters as procedures erects a powerful abstraction barrier in the picture language. We can create and intermix all sorts of primitive painters, based on a variety of graphics capabilities. The details of their implementation do not matter. Any procedure can serve as a painter, provided that it takes a frame as argument and draws somthing scaked to fit the frame.
 
 
+// Transforming and combining painters
+// An operation on painters (such as flipVert or beside) works by creating a painter that invokes the original painters with respect to frames derived from the argument frame. Thus, for example, flipVert doesn't have to know how a painter works in order to flip it - it just has to know how to turn a frame upside down: The flipped painter just uses the original painter, but in the inverted frame.
+// Painter operations are based on the procedure transformPainter, which takes as arguments a painter and information on how to transform a frame and produces a new painter. The transformed painter, when called on a frame, transforms the frame and calls the original painter on the transformed frame. The arguments to transformPainter are points (represented as vectors) that specify the corners of the new frame: When mapped into the frame, the first point specifies the new frame's origin and the other two specify the ends fo its edge vectors. Thus, arguments within the unit square specify a frame contained within the original frame. 
+
+/*
+// The function below crashes if it is uncommented. I think it has to do with the frames dc property. This is a drawing context which is just an NSImage. Seems to work fine when it is hidden in the draw() function in Sources but causes issues if I try to access it directly in the playground.
+
+public func transformPainter(painter: Painter, origin: Point, corner1: Point, corner2: Point) -> Painter {
+    return { frame in
+        let m = frameCoordMap(frame)
+        let newOrigin = m(origin)
+        painter(Frame(origin: newOrigin, edge1: m(corner1) - newOrigin, edge2: m(corner2) - newOrigin, dc: frame.dc))
+    }
+}
+*/
+
+// Here's how to flip painter images vertically:
+
+func flipVert2(painter: Painter) -> Painter {
+    return transformPainter(painter, Point(x: 0, y: 1), Point(x: 1, y: 1), Point(x: 0, y: 0))
+}
+draw(flipVert2(wave))
+
+// Other transformations rotate images counterclockwise by 90 degrees
+
+func rotate90(painter: Painter) -> Painter {
+    return transformPainter(painter, Point(x: 1, y: 0), Point(x: 1, y: 1), Point(x: 0, y: 0))
+}
+draw(rotate90(wave))
+
+// or squash images towards the center of the frame:
+
+func squashInwards(painter: Painter) -> Painter {
+    return transformPainter(painter, Point(x: 0.35, y: 0.35), Point(x: 0.65, y: 0.35), Point(x: 0.35, y: 0.65))
+}
+draw(squashInwards(wave))
+
+// Frame transformation is also the key to defining means of combining two or more painters. The beside procedure, for example, takes two painters, transforms them to paint in the left and right halves of an argument frame respectively, and produces a new, compound painter.
+// When the compound painter is given a frame, it calls the first transformed painter to paint in the left half of the frame and calls the second transformed painter to paint in the right half of the frame:
+/*
+func beside2(painter1: Painter, painter2: Painter) -> Painter {
+    let splitPoint = Point(x: 0.5, y: 0)
+    let paintLeft = transformPainter(painter1, Point(x: 0, y: 0), splitPoint, Point(x: 0, y: 1))
+    let paintRight = transformPainter(painter2, splitPoint, Point(x: 1, y: 0), Point(x: 0.5, y: 1))
+    return { frame in
+        paintLeft(frame)
+        paintRight(frame)
+    }
+}
+*/
+
+func besidePainter(frame: Frame) {
+    beside(wave, wave)(frame)
+}
+draw(besidePainter)
 
 
-
+// Observe how the painter data abstraction, and in particular the represetation of painters as procedures, makes beside easy to implement. The beside procedure need not know anything about the details of the component painters other than that each painter will draw something in its designated frame.
 
 
