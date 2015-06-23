@@ -81,6 +81,7 @@
 		E6D7913B1ACE57AE00279DE9 /* Ex2.11-Optimised-Interval-Division.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.11-Optimised-Interval-Division.playground"; sourceTree = "<group>"; };
 		E6D7D5E21A9EEE6800777201 /* Ex1.34-FunctionsCallingFunctions.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.34-FunctionsCallingFunctions.playground"; sourceTree = "<group>"; };
 		E6D8B2561AD0AC6F000ED7EA /* Ex2.13-Interval-small-tolerances.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.13-Interval-small-tolerances.playground"; sourceTree = "<group>"; };
+		E6D9CB0D1B391014003E86B8 /* Ex2.46-Vectors.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.46-Vectors.playground"; sourceTree = "<group>"; };
 		E6E1CE771AD0E33A007CDF5E /* Ex2.16-Improved-Interval.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.16-Improved-Interval.playground"; sourceTree = "<group>"; };
 		E6E6655B1B37CBDC004747C6 /* Ex2.44-Up-Split.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.44-Up-Split.playground"; sourceTree = "<group>"; };
 		E6F1C4C11B23DBA700DEAEFD /* Ex2.43-Queens-Puzzle-Slow.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.43-Queens-Puzzle-Slow.playground"; sourceTree = "<group>"; };
@@ -147,6 +148,7 @@
 				E6F1C4C11B23DBA700DEAEFD /* Ex2.43-Queens-Puzzle-Slow.playground */,
 				E6E6655B1B37CBDC004747C6 /* Ex2.44-Up-Split.playground */,
 				E632A6081B3832E600FC61A0 /* Ex2.45-General-Splitting.playground */,
+				E6D9CB0D1B391014003E86B8 /* Ex2.46-Vectors.playground */,
 			);
 			name = "2.2 Hierarchical Data and the Closure Property";
 			sourceTree = "<group>";

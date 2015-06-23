@@ -10,16 +10,16 @@ public struct Vector {
     }
 }
 
-func + (lhs: Vector, rhs: Vector) -> Vector {
+public func + (lhs: Vector, rhs: Vector) -> Vector {
     return Vector(x: lhs.x + rhs.x, y: lhs.y + rhs.y)
 }
-func - (lhs: Vector, rhs: Vector) -> Vector {
+public func - (lhs: Vector, rhs: Vector) -> Vector {
     return Vector(x: lhs.x - rhs.x, y: lhs.y - rhs.y)
 }
-func * (lhs: Double, rhs:Vector) -> Vector {
+public func * (lhs: Double, rhs:Vector) -> Vector {
     return Vector(x: lhs * rhs.x, y: lhs * rhs.y)
 }
-func * (lhs: Vector, rhs: Double) -> Vector {
+public func * (lhs: Vector, rhs: Double) -> Vector {
     return Vector(x: rhs * lhs.x, y: rhs * lhs.y)
 }
 
@@ -172,8 +172,6 @@ public func draw(painter: Painter) -> NSImage {
     painter(aFrame)
     return img
 }
-
-
 
 
 

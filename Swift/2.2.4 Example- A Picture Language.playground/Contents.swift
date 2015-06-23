@@ -139,7 +139,22 @@ func frameCoordMap2(frame: Frame) -> (Vector) -> Vector {
     }
 }
 
+// Observe that applying frameCoordMap to a frame returns a procedure that, given a vector, returns a vector. If the argument vector is in the unit square, the result vector will be in the frame. For example
 
+let aFrame = Frame(origin: Point(x: 1, y: 1), edge1: Vector(x: 2, y: 1.25), edge2: Vector(x: 1.5, y: 2), dc: NSImage(size: NSMakeSize(500, 500)))
+
+frameCoordMap2(aFrame)(Vector(x: 0, y: 0))
+
+// returns the same vector as
+
+aFrame.origin
+
+// or
+
+frameCoordMap2(aFrame)(Vector(x: 0.5, y: 0.5))
+
+
+// Painters
 
 
 
