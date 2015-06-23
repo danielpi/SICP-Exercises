@@ -155,6 +155,25 @@ frameCoordMap2(aFrame)(Vector(x: 0.5, y: 0.5))
 
 
 // Painters
+// A painter is represented as a procedure that, given a frame as argument, draws a particular image shifted and scaled to fit the frame. That is to say if p is a painter and f is a frame, then we produces p's image in f by calling p with f as argument.
+// The details of how primitive painters are implemented depend on the particular characteristics of the graphics system and the type of image to be drawn. For instance, suppose we have a procedure draw-line that draws a line on the screen between two specified points. Then we can create painters for line drawings, such as the wave painter in Figure 2.10, from lists of line segments as follows:
+
+func drawLine(start: Point, end: Point) {
+    println("Draw Line from \(start.x),\(start.y) to \(end.x),\(end.y)")
+}
+
+func segmentsToPainter2(segments: [Segment]) -> Painter {
+    return { frame in
+        for segment in segments {
+            let start = frameCoordMap2(frame)(segment.startPoint)
+            let end = frameCoordMap2(frame)(segment.endPoint)
+            drawLine(start,end)
+        }
+    }
+}
+
+// The segments are given using coordinates with respect to the unitsquare. For each segment in the list, the painter transforms the segment end-points with the frame coordinate map and draws a line between the transformed points.
+// Representing painters as procedures erects a powerful abstraction barrier in the picture language. We can create and intermix all sorts of primitive painters, based on a variety of graphics capabilities. The details of their implementation do not matter. Any procedure can serve as a painter, provided that it takes a frame as argument and draws somthing scaked to fit the frame.
 
 
 
