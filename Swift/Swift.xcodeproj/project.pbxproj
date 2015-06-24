@@ -69,6 +69,7 @@
 		E696F0711AD694A600039485 /* Ex2.19-Change-Counting-Revisited.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.19-Change-Counting-Revisited.playground"; sourceTree = "<group>"; };
 		E69824641ACBD40400D18A6C /* Ex2.9-Interval-Width.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.9-Interval-Width.playground"; sourceTree = "<group>"; };
 		E69C29AA1B1D71DA00E776CC /* Ex2.38-foldl-foldr.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.38-foldl-foldr.playground"; sourceTree = "<group>"; };
+		E6A2F1B21B3A4BF600AAD236 /* 2.3-Symbolic-Data.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "2.3-Symbolic-Data.playground"; sourceTree = "<group>"; };
 		E6AB1D151AA32D6C001527C3 /* Ex1.35-Golden-Ratio.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.35-Golden-Ratio.playground"; sourceTree = "<group>"; };
 		E6AFD9831B20299F006BA954 /* Ex2.40-Unique-Pairs.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.40-Unique-Pairs.playground"; sourceTree = "<group>"; };
 		E6AFD9861B21202A006BA954 /* Ex2.41-Triple-Sum.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.41-Triple-Sum.playground"; sourceTree = "<group>"; };
@@ -170,6 +171,7 @@
 			children = (
 				E618E2001B20151F00A67D04 /* 2.1 Introduction To Data Abstraction */,
 				E618E2011B20153900A67D04 /* 2.2 Hierarchical Data and the Closure Property */,
+				E6A2F1B21B3A4BF600AAD236 /* 2.3-Symbolic-Data.playground */,
 			);
 			name = "Chapter 2 Building Abstractions with Data";
 			sourceTree = "<group>";
