@@ -38,6 +38,37 @@ enum General: Int {
 [General.a, General.b]
 //[&a, b]
 
+// Symbols are sort of like dictionary keys as well. Doesn't work out practically though.
+var symbols = ["a": 1, "b": 2]
+[symbols["a"], symbols["b"]]
+Array(symbols.keys)[0]
+Array(symbols.keys)[1]
+
+// Maybe we can make our own symbol type. When I do this has some good information http://www.phyast.pitt.edu/~micheles/scheme/scheme7.html
+/*
+struct Symbol<T> {
+    let string: String
+    var value: T?
+}
+
+func quote(name: String) -> Symbol {
+    return Symbol(string: name)
+}
+
+func hash(symbol: Symbol) -> Int {
+
+}
+
+func eq?(lhs: Symbol, rhs: Symbol) -> Bool {
+
+}
+
+prefix func ' (name: String) -> Symbol {
+    return quote(name)
+}
+let a =
+*/
+
 //: Quotation also allows us to type in combound objects, using the conventional printed representation for lists:
 
 // (car '(a b c))
@@ -68,5 +99,7 @@ memq("apple", ["pear","banana","prune"])
 memq("apple", ["x", "apple sauce", "y", "apple", "pear"])
 
 // is ["apple", "pear"]
+
+
 
 
