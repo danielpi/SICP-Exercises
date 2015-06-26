@@ -27,11 +27,8 @@
 
 (define (memr item x)
   (if (pair? x)
-      (reverse (cdr (memq item (reverse x))))
+      (reverse (memq item (reverse x)))
       x))
-
-(memq '+ '(x * 3 + y * 5))
-(memr '+ '(x * 3 + y * 5))
 
 (define (operation expr)
   (cond ((memq '+ expr) '+)
@@ -55,7 +52,7 @@
 (define (sum? x) (eq? '+ (operation x)))
 
 (define (addend s) 
-  (let ((result (memr '+ s)))
+  (let ((result (reverse (cdr (reverse (memr '+ s))))))
     (if (= (length result) 1)
         (car result)
         result)))
@@ -77,7 +74,7 @@
 (define (product? x) (eq? '* (operation x)))
 
 (define (multiplier p)
-  (let ((result (memr p '*)))
+  (let ((result (reverse (cdr (reverse (memr '* p))))))
     (if (= (length result) 1)
         (car result)
         result)))
@@ -134,6 +131,9 @@
 ; with the least precedence first and split off everything before it and after it. We then evalate
 ; the before and after bits first (this means that the operator with the least precedence will 
 ; do its thing last). 
+
+; Did a bit by myself adding memr to simplify multiplier and addend and made it handle exponentials 
+; too
 
 (sum? '(x * 3 + (x + y + 2)))
 (product? '(x * 3 + (x + y + 2)))
