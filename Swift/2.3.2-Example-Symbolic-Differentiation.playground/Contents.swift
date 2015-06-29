@@ -41,11 +41,24 @@ class Box<T>{
     }
 }
 
-enum Expr {
+enum Expr: Printable {
     case Sum(Box<Expr>, Box<Expr>)
     case Product(Box<Expr>, Box<Expr>)
     case Constant(Int)
     case Variable(String)
+    
+    var description: String {
+        switch self {
+        case .Sum(let a1, let a2):
+            return a1.unbox.description + " + " + a2.unbox.description
+        case .Product(let m1, let m2):
+            return m1.unbox.description + " * " + m2.unbox.description
+        case .Constant(let value):
+            return String(value)
+        case .Variable(let label):
+            return label
+        }
+    }
 }
 
 // The variables are symbols. The are identified by the primitive predicate symbol?:
@@ -136,6 +149,8 @@ func multiplicand(p: Expr) -> Expr {
     }
 }
 
+
+
 func deriv(exp: Expr, variable: Expr) -> Expr {
     switch exp {
     case .Constant(_):
@@ -151,9 +166,12 @@ func deriv(exp: Expr, variable: Expr) -> Expr {
     }
 }
 
-let a = deriv(makeSum(Expr.Variable("x"), Expr.Constant(3)), Expr.Variable("x"))
+let expression1 = makeSum(Expr.Variable("x"), Expr.Constant(3))
+println(expression1)
+let deriv1 = deriv(makeSum(Expr.Variable("x"), Expr.Constant(3)), Expr.Variable("x"))
+println(deriv1)
 
-print(a)
+
 
 // deriv(exp: x + 3, variable: x) // 1
 // deriv(exp: x * y, variable: x) // y
