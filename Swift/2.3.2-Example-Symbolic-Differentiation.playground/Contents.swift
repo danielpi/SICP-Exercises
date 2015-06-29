@@ -41,18 +41,40 @@ class Box<T>{
     }
 }
 
-enum Expr: Printable {
+enum Expr {
     case Sum(Box<Expr>, Box<Expr>)
     case Product(Box<Expr>, Box<Expr>)
     case Constant(Int)
     case Variable(String)
+}
+
+extension Expr: IntegerLiteralConvertible {
+    init(integerLiteral value: IntegerLiteralType) {
+        self = .Constant(value)
+    }
+}
+
+extension Expr: StringLiteralConvertible {
+    init(stringLiteral value: String) {
+        self = .Variable(value)
+    }
     
+    init(extendedGraphemeClusterLiteral value: String) {
+        self = .Variable(value)
+    }
+    
+    init(unicodeScalarLiteral value: String) {
+        self = .Variable(value)
+    }
+}
+
+extension Expr: Printable {
     var description: String {
         switch self {
         case .Sum(let a1, let a2):
-            return a1.unbox.description + " + " + a2.unbox.description
+            return "(" + a1.unbox.description + " + " + a2.unbox.description + ")"
         case .Product(let m1, let m2):
-            return m1.unbox.description + " * " + m2.unbox.description
+            return "(" + m1.unbox.description + " * " + m2.unbox.description + ")"
         case .Constant(let value):
             return String(value)
         case .Variable(let label):
@@ -60,6 +82,15 @@ enum Expr: Printable {
         }
     }
 }
+
+func + (lhs: Expr, rhs: Expr) -> Expr {
+    return makeSum(lhs, rhs)
+}
+
+func * (lhs: Expr, rhs: Expr) -> Expr {
+    return makeProduct(lhs, rhs)
+}
+
 
 // The variables are symbols. The are identified by the primitive predicate symbol?:
 func isVariable<T>(exp: Expr) -> Bool {
@@ -171,11 +202,14 @@ println(expression1)
 let deriv1 = deriv(makeSum(Expr.Variable("x"), Expr.Constant(3)), Expr.Variable("x"))
 println(deriv1)
 
+let expression2: Expr = "y" + 5
+println(expression2)
 
 
-// deriv(exp: x + 3, variable: x) // 1
-// deriv(exp: x * y, variable: x) // y
-// deriv(exp: (x * y) * (x + 3), variable: x) //
+
+println(deriv("x" + 3, "x")) // 1
+println(deriv("x" * "y", "x")) // y
+println(deriv(("x" * "y") * ("x" + 3), "x")) //
 
 
 
