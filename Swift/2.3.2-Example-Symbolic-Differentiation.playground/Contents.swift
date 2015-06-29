@@ -113,10 +113,10 @@ func isSameVariable(v1: Expr, v2: Expr) -> Bool {
 }
 
 // Sums and products are constructed as lists:
-func makeSum(a1:Expr, a2: Expr) -> Expr {
+func makeSum1(a1:Expr, a2: Expr) -> Expr {
     return Expr.Sum(Box(a1), Box(a2))
 }
-func makeProduct(m1: Expr, m2: Expr) -> Expr {
+func makeProduct1(m1: Expr, m2: Expr) -> Expr {
     return Expr.Product(Box(m1), Box(m2))
 }
 
@@ -182,6 +182,71 @@ func multiplicand(p: Expr) -> Expr {
 
 
 
+func deriv1(exp: Expr, variable: Expr) -> Expr {
+    switch exp {
+    case .Constant(_):
+        return .Constant(0)
+    case .Variable(_):
+        return isSameVariable(exp, variable) ? .Constant(1) : .Constant(0)
+    case .Sum(_, _):
+        return makeSum1(deriv(addend(exp), variable), deriv1(augend(exp), variable))
+    case .Product(_, _):
+        return makeSum1(makeProduct1(multiplier(exp), deriv1(multiplicand(exp), variable)), makeProduct1(deriv1(multiplier(exp), variable), multiplicand(exp)))
+    default:
+        fatalError("unknown expression type: DERIV")
+    }
+}
+
+
+println(deriv1("x" + 3, "x")) // 1
+println(deriv1("x" * "y", "x")) // y
+println(deriv1(("x" * "y") * ("x" + 3), "x")) //
+
+
+//: The program produces answers that are correct; however, they are unsimplified. It is true that
+//:
+//:     d(xy)
+//:     ----- = x * 0 + 1 * y
+//:       dx
+//:
+//: but we would like the program to know that x * 0 = 0, 1 * y = y, and 0 + y = y. The answer for the second example should have been simply y. As the third example shows, tis becomes a serious issue when the expressions are complex.
+
+//: Our difficulty is much like the one we encountered with the rational-number implementation: we haven't reduced answers to simplist form. To accomplish the rational-number reduction, we needed to change only the constructors and the selectors of the implementation. We can adopt a similar strategy here. We won't change deriv at all. Instead, we will change makeSum so that if both summands are numbers, makeSum will add them and return their sum. Also, if one of the summands is 0, then makeSum will return the other summand.
+
+func makeSum(a1: Expr, a2: Expr) -> Expr {
+    switch (a1, a2) {
+    case (.Constant(0), _):
+        return a2
+    case (_, .Constant(0)):
+        return a1
+    case (.Constant(let a), .Constant(let b)):
+        return .Constant(a + b)
+    default:
+        return Expr.Sum(Box(a1), Box(a2))
+    }
+}
+
+//: This uses swifts pattern matching.
+
+func makeProduct(m1: Expr, m2: Expr) -> Expr {
+    switch (m1, m2) {
+    case (.Constant(0), _):
+        return .Constant(0)
+    case (_, .Constant(0)):
+        return .Constant(0)
+    case (.Constant(1), _):
+        return m2
+    case (_, .Constant(1)):
+        return m1
+    case (.Constant(let a), .Constant(let b)):
+        return .Constant(a * b)
+    default:
+        return Expr.Product(Box(m1), Box(m2))
+    }
+}
+
+//: Here is how this version works on our three examples:
+
 func deriv(exp: Expr, variable: Expr) -> Expr {
     switch exp {
     case .Constant(_):
@@ -197,19 +262,12 @@ func deriv(exp: Expr, variable: Expr) -> Expr {
     }
 }
 
-let expression1 = makeSum(Expr.Variable("x"), Expr.Constant(3))
-println(expression1)
-let deriv1 = deriv(makeSum(Expr.Variable("x"), Expr.Constant(3)), Expr.Variable("x"))
-println(deriv1)
-
-let expression2: Expr = "y" + 5
-println(expression2)
-
-
-
 println(deriv("x" + 3, "x")) // 1
 println(deriv("x" * "y", "x")) // y
 println(deriv(("x" * "y") * ("x" + 3), "x")) //
+
+//: Although this is quite an improvement, the third example shows that there is still a long way to go before we get a program that puts expressions into a form that we might agree is "simplest". The problem of algebraic simplification is complex because, among other reasons, a form that may be simplest for one purpose may not be for another.
+
 
 
 
