@@ -82,6 +82,8 @@
 		E6BA3BF51AA58D7500297A9D /* Ex1.39-Tan-Continuous-Function.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.39-Tan-Continuous-Function.playground"; sourceTree = "<group>"; };
 		E6BCAB741A8AF9690046EF18 /* Ex1.28-Miller-Rabin-Test.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.28-Miller-Rabin-Test.playground"; sourceTree = "<group>"; };
 		E6CE5BA21B42145C0048EBD5 /* Ex2.56-Exponential-Differentiation.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.56-Exponential-Differentiation.playground"; sourceTree = "<group>"; };
+		E6CE5BA31B4232610048EBD5 /* Ex2.57-Variadic-Parameters.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.57-Variadic-Parameters.playground"; sourceTree = "<group>"; };
+		E6CE5BA41B42355E0048EBD5 /* Ex2.58-Infix-Notation.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.58-Infix-Notation.playground"; sourceTree = "<group>"; };
 		E6D3B3DC1B230EF3001C9E1A /* Ex2.42-Queens-Puzzle-SICP.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.42-Queens-Puzzle-SICP.playground"; sourceTree = "<group>"; };
 		E6D3B8AC1AA86E1600CB5BEC /* Ex1.42-compose.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.42-compose.playground"; sourceTree = "<group>"; };
 		E6D4204C1AE3DEF30057712B /* Ex2.25-Moving-Through-Trees.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.25-Moving-Through-Trees.playground"; sourceTree = "<group>"; };
@@ -176,6 +178,8 @@
 				E6A2F1B21B3A4BF600AAD236 /* 2.3-Symbolic-Data.playground */,
 				E62A953B1B3D6FB00000A079 /* 2.3.2-Example-Symbolic-Differentiation.playground */,
 				E6CE5BA21B42145C0048EBD5 /* Ex2.56-Exponential-Differentiation.playground */,
+				E6CE5BA31B4232610048EBD5 /* Ex2.57-Variadic-Parameters.playground */,
+				E6CE5BA41B42355E0048EBD5 /* Ex2.58-Infix-Notation.playground */,
 			);
 			name = "Chapter 2 Building Abstractions with Data";
 			sourceTree = "<group>";
