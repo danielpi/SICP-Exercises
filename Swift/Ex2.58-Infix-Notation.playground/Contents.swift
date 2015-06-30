@@ -1,9 +1,9 @@
 import Cocoa
 
-//: # Exercise 2.58
+//: ## Exercise 2.58
 //: Suppose we want to modify the differentiation program so that it works with ordinary mathematical notation, in which + and * are infix rather than prefix operators. Since the differentiation program is defined in terms of abstract data, we can modify it to work with different representations of expressions solely by changing the predicates, selectors and constructors that define the representation of the algebraic expressions on which the differentiator is to operate.
 
-// This might be better if I wer to go back the other way such that 
+// This might be better if I were to go back the other way such that 
 // deriv([* [* "x" "y"] [* "y" [+ "x" 3]]], "x")
 // deriv([* "x" "y" [+ "x" 3]], "x")
 // deriv("x" * "y" * ("x" + 3), "x")
