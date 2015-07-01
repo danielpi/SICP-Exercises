@@ -76,14 +76,79 @@
 ; sets involved, or O(n^2) for two sets of size n. The same will be true of union-set.
 
 
-; Exercise 2.59
 (define (union-set1 set1 set2)
   (if (null? set1)
       set2
       (union-set1 (cdr set1) (adjoin-set1 (car set1) set2)))) 
-
 (display "union-set1")(newline)
-(union-set1 set1 (list 2 3 4 5 6 7))
+(union-set1 (list 1 2 6 7 8 9 0)  (list 2 3 4 5 6 7))
 
 
-; Exercise 2.60 
+; Sets as ordered lists
+; One way to speed up our set operations is to change the representation so that the set elements
+; are listed in increasing order. To do this, we need some way to compare two objects so that we
+; can say which is bigger. For example, we could compare symbols lexicographically, or we could
+; agree on some method for assigning a unique number to an object and then compare the elements
+; by comparing the corresponding numbers. To keep our discussion simple, we will consider only
+; the case where the set elements are numbers, so that we can compare elements using > and <.
+; we will represent a set of numbers by listing its elements in increasing order. Whereas our
+; first representation above allowed us to represent the set {1,3,6,10} by listing the elements
+; in any order, our new representation allows only the list {1 3 6 10).
+
+; One advantage of ordering shows up in element-of-set?: In checking for the presence of an item
+; we no linger have to scan the entire set. If we reach a set element that is larger than the
+; item we are looking for, then we know that the item is not in the set:
+
+(define (element-of-set?2 x set)
+  (cond ((null? set) false)
+        ((= x (car set)) true)
+        ((< x (car set)) false)
+        (else (element-of-set?2 x (cdr set)))))
+
+(display "element-of-set?2")(newline)
+(element-of-set?2 2 set1)
+(element-of-set?2 3 set1)
+
+; How many steps does this save? In the worst case, the item we are looking for may be the 
+; largest one in the set, so the number of steps is the same as for the unordered representation.
+; On the other hand, if we search for items of many different sizes we can expect that sometimes
+; we will be able to stop searching at a point near the beginning of the list and that other times 
+; we will still need to examine most of the list. On the average we should expect to have to examine
+; about half of the items in the set. Thus, the average number of steps required will be about
+; n/2. This is still O(n) growth, but it does save us, on the average, a factor of 2 in number
+; of steps over the previous implementation.
+
+; We obtain a more impressive speedup with intersection-set. In the unordered representation this
+; operation required O(n^2) steps, because we performed a complete scan of set2 for each element
+; of set1. But with the ordered representation, we can use a more clever method. Begin by comparing
+; the initial elements, x1 and x2, of the two sets. If x1 equals x2, then that gives an element of 
+; the intersection, and the rest of the intersection is the intersection of the cdr-s of the 
+; two sets. Suppose however, that x1 is less than x2. Since x2 is the smallest element in set2,
+; we can immediately conclude that x1 cannot appear anywhere in set2 and hence is not in the 
+; intersection. Hence, the intersection is equal to the intersection of set2 with the cdr of set1.
+; Similarly, if x2 is less than x1, then the intersection is given by the intersection of set1
+; with the cdr of set2. 
+
+
+(define (intersection-set2 set1 set2)
+  (if (or (null? set1) (null? set2))
+      '()
+      (let ((x1 (car set1)) (x2 (car set2)))
+        (cond ((= x1 x2)
+               (cons x1 (intersection-set2 (cdr set1)
+                                           (cdr set2))))
+              ((< x1 x2)
+               (intersection-set2 (cdr set1) set2))
+              ((< x2 x1)
+               (intersection-set2 set1 (cdr set2)))))))
+
+
+(display "intersection-set2")(newline)
+(intersection-set2 (list 1 2 5 7 8 9 10) (list 2 3 4 5 6))
+
+; To estimate the number of steps required by this process, observe that at each step we reduce
+; the intersection problem to computing intersections of smaller sets - removing the first
+; element from set1 or set2 or both. Thus, the number of steps required is at most the sum of the 
+; sizes of set1 and set2, rather than the product of the sizes as with the unordered representation.
+; This is O(n) growth rathern than O(n^2) - a considerable speedup, even for sets of moderate size.
+
