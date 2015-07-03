@@ -125,7 +125,7 @@
 ; leaf, and the weight:
 
 (define (make-leaf symbol weight) (list 'leaf symbol weight))
-(define (leaf? object) (eq? (car object) '(leaf))) ; ??? Typo in the book here
+(define (leaf? object) (eq? (car object) 'leaf)) ; ??? Typo in the book here
 (define (symbol-leaf x) (cadr x))
 (define (weight-leaf x) (caddr x))
 
