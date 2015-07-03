@@ -129,7 +129,96 @@
 (define (symbol-leaf x) (cadr x))
 (define (weight-leaf x) (caddr x))
 
+; A general tree will be a list of a left branch, a right branch, a set of symbols, and a weight.
+; The set of symbols will be simply a list of the symbols, rather than some more sophisticated
+; set representation. When we make a tree by merging two nodes, we obtain the weight of the tree
+; as the sum of the weights of the nodes. Since our symbol sets are represented as lists, we can
+; form the union by using the append procedure we defined in Section 2.2.1:
+
+(define (left-branch tree) (car tree))
+(define (right-branch tree) (cadr tree))
+(define (symbols tree)
+  (if (leaf? tree)
+      (list (symbol-leaf tree))
+      (caddr tree)))
+(define (weight tree)
+  (if (leaf? tree)
+      (weight-leaf tree)
+      (cadddr tree)))
+
+(define (make-code-tree left right)
+  (list left
+        right
+        (append (symbols left) (symbols right))
+        (+ (weight left) (weight right))))
+
+; The procedures symbol and weight must do something slightly different depending on whether
+; they are called with a lead or a general tree. These are simple examples of generic procedures
+; (procedures that can handle more than one kind of data), which we will have much more to say
+; about in Section 2.4 and Section 2.5.
 
 
+; The decoding procedure
+; The following procedure implements the decoding algorithm. It takes as arguments a list of
+; zeros and ones, together with a Huffman tree.
 
+(define (choose-branch bit branch)
+  (cond ((= bit 0) (left-branch branch))
+        ((= bit 1) (right-branch branch))
+        (else (error "bad bit: CHOOSE-BRANCH" bit))))
+
+(define (decode bits tree)
+  (define (decode-1 bits current-branch)
+    (if (null? bits)
+        '()
+        (let ((next-branch
+               (choose-branch (car bits) current-branch)))
+          (if (leaf? next-branch)
+              (cons (symbol-leaf next-branch)
+                    (decode-1 (cdr bits) tree))
+              (decode-1 (cdr bits) next-branch)))))
+  (decode-1 bits tree))
+
+; The procedure decode-1 takes two arguments: the list of remaining bits and the current position
+; in the tree. It keeps moving "down" the tree, choosing a left or a right branch according to 
+; whether the next bit in the list is a zero or a one. (This is done with the procedure 
+; choose-branch). When it reaches a lead, it returns the symbol at that leaf as the next symbol 
+; in the message by consing it onto the result of decoding the rest of the message, starting at 
+; the root of the tree. Note the eroor check in the final clause of choose-branch, which 
+; complains if the procedure finds something other than a zero or a one in the input data.
+
+
+; Sets of weighted elements
+; In our representation of tress, each non-leaf node contains a set of symbols, which we have
+; represented as a simple list. However, the tree generating algorithm discussed above requires
+; that we also work with sets of leaves and trees, successively merging the two smallest items.
+; Since we will be required to repeatedly find the smallest item in a set, if is convenient to
+; use an ordered representation for this kind of set.
+
+; We will represent a set of leaves and trees as a lis of elements, arranged in increasing order
+; of weight. The following adjon-set procedure for constructing sets is similar to the one 
+; described in Exercise 2.61; however, items are compared by their weights, and the element
+; being added to the set is never already in it.
+
+(define (adjoin-set x set)
+  (cond ((null? set) (list x))
+        ((< (weight x) (weight (car set))) (cons x set))
+        (else (cons (car set)
+                    (adjoin-set x (cdr set))))))
+
+; The following procedure takes a list of symbol-frequency pairs such as ((A 4) (B 2) (C 1) (D 1))
+; and constructs an initial ordered set of leaves, ready to be merged according to the Huffman
+; algorithm:
+
+(define (make-leaf-set pairs)
+  (if (null? pairs)
+      '()
+      (let ((pair (car pairs)))
+        (adjoin-set (make-leaf (car pair)   ; symbol
+                               (cadr pair)) ; frequency
+                    (make-leaf-set (cdr pairs))))))
+
+
+                               
+                   
 
