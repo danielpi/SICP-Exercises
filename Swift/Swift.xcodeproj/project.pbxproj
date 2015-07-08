@@ -97,6 +97,9 @@
 		E6E1CE771AD0E33A007CDF5E /* Ex2.16-Improved-Interval.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.16-Improved-Interval.playground"; sourceTree = "<group>"; };
 		E6E6655B1B37CBDC004747C6 /* Ex2.44-Up-Split.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.44-Up-Split.playground"; sourceTree = "<group>"; };
 		E6F1C4C11B23DBA700DEAEFD /* Ex2.43-Queens-Puzzle-Slow.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.43-Queens-Puzzle-Slow.playground"; sourceTree = "<group>"; };
+		E6F8FBCB1B4B6FD5002A16FC /* 2.3.3-Example-Representing-Sets.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "2.3.3-Example-Representing-Sets.playground"; sourceTree = "<group>"; };
+		E6F8FBCC1B4CFA02002A16FC /* Ex2.59-Union-Set.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.59-Union-Set.playground"; sourceTree = "<group>"; };
+		E6F8FBCD1B4D1792002A16FC /* Ex2.60-Set-With-Duplicates.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.60-Set-With-Duplicates.playground"; sourceTree = "<group>"; };
 		E6FCEBC61A98A6E500E1AB59 /* Ex1.33-Filtered-Accumulate.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.33-Filtered-Accumulate.playground"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -182,6 +185,9 @@
 				E6CE5BA31B4232610048EBD5 /* Ex2.57-Variadic-Parameters.playground */,
 				E6CE5BA41B42355E0048EBD5 /* Ex2.58-Infix-Notation.playground */,
 				E6CE5BA51B4268170048EBD5 /* SymbolicDifferentiation.playground */,
+				E6F8FBCB1B4B6FD5002A16FC /* 2.3.3-Example-Representing-Sets.playground */,
+				E6F8FBCC1B4CFA02002A16FC /* Ex2.59-Union-Set.playground */,
+				E6F8FBCD1B4D1792002A16FC /* Ex2.60-Set-With-Duplicates.playground */,
 			);
 			name = "Chapter 2 Building Abstractions with Data";
 			sourceTree = "<group>";
