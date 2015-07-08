@@ -60,9 +60,26 @@ intersectionSet1(unorderedSet1, unorderedSet2)
 
 //: ### Sets as ordered lists
 //: One way to speed up our set operations is to change the representation so that the set elements are listed in increasing order. To do this, we need some way to compare two objects so that we can say which is bigger. For example, we could compare symbols lexicographically, or we could agree on some method for assigning a unique number to an object and the compare the elements by comparing the corresponding numbers. To  keep our discussion simple, we will consider only the case where the set elements are numbers, so that we can compare elements using > and <. We will represent a set of numbers by listing its elements in increasing order. Whereas our first representation above allowed us to represent the set {1,3,6,10} by listing the elements in any order, our new representation allows only the list [1,3,6,10].
+//:
 //: One advantage of ordering shows up in isElementOfSet: In checking for the presence of an item, we no longer have to scan the entire set. If we reach a set element that is larger than the item we are looking for, then we know that the item is not in the set:
 
-
+func isElementOfSet2<T: Comparable>(x: T, set: [T]) -> Bool {
+    if let (head, tail) = set.match {
+        switch head {
+        case x:
+            return true
+        case _ where head > x:
+            return false
+        default:
+            return isElementOfSet2(x, tail)
+        }
+    } else {
+        return false
+    }
+}
+let orderedSet1 = [2,5,7,8,9]
+isElementOfSet2(5, orderedSet1)
+isElementOfSet2(3, orderedSet1)
 
 
 
