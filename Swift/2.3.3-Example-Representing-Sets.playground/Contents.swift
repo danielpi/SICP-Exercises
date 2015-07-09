@@ -108,5 +108,127 @@ intersectionSet2(orderedSet1, orderedSet2)
 //: To estimate the number of steps required by this process, observe that at each step we reduce the intersection problem to computing intersections of smaller sets - removing the first element from set1 or set2 or both. Thus, the number of steps required is at most the sum of the sizes of set1 and set2, rather than the product of the sizes as with the unordered representation. This is O(n) growth rather than O(n^2) - a considerable speedup, even for sets of moderate size.
 
 //: ### Sets as binary trees
-//: We can do better
+//: We can do better than the ordered-list representation by arranging the set elements in the form of a tree. Each node of the tree holds one element of the set, called the "entry" at that node, and a link to each of two other (possibly empty) nodes. The "left" link points to elements smaller than the one at the node, and the "right" link to elements greater than the one at the node. Figure 2.16 shows some trees that represent the set {1,3,5,7,9,11}. The only thing we require for a valid representtion is that all elements in the left subtree be smaller than the node entry and that all elements in the right subtree be larger.
+
+let figure216 = NSImage(named: "figure2-16.png")
+
+
+//: **Figure 2.16:** Various trees that represent the set {1,3,5,7,9,11}. 
+
+//: The advantage of the tree representation is this: Suppose we want to check whether a number x is contained in a set. We begin by comparing x with the entry in the top node. If x is less than this, we know that we need only search the left subtree; if x is greater, we need only search the right subtree. Now, if the tree is "balanced," each of these subtrees will be about half the size of the original. Thus, in one step we have reduced the problem of searching a tree of size n to searching a tree of size n/2. Since the size of the tree is halved at each step, we should expect that the number of steps needed to search a tree of size n grows as O(log n). For large sets, this will be a significant speedup over the previous representations.
+//:
+//: We can represent trees by using lists. Each node will be a list of three items: the entry at the node, the left subtree, and the right subtree. A left or right subtree of the empty list will indicate that there is no subtree connected there. We can describe this representation by the following procedures;
+//:
+//: For Swift I'm not even going to attempt the approach listed in the book (of using a list as the data structure). Instead I'll use enums with associated types.
+
+class Box<T> {
+    let unbox: T
+    init(_ value: T) {
+        self.unbox = value
+    }
+}
+
+enum TreeSet<T>: Printable {
+    case Empty
+    case Tree(entry:Box<T>, left:Box<TreeSet<T>>, right: Box<TreeSet<T>>)
+    
+    var description : String {
+        switch self {
+        case .Empty:
+            return "()"
+        case let .Tree(entry, left, right):
+            return "(\(entry.unbox) \(left.unbox) \(right.unbox))"
+        }
+    }
+}
+
+func entry<T>(tree: TreeSet<T>) -> T {
+    switch tree {
+    case let .Tree(entry, left, right):
+        return entry.unbox
+    default:
+        fatalError("Tried to read an entry from an empty tree")
+    }
+}
+
+func leftBranch<T>(tree: TreeSet<T>) -> TreeSet<T> {
+    switch tree {
+    case let .Tree(_, left, _):
+        return left.unbox
+    default:
+        fatalError("Tried to read the left branch from an empty tree")
+    }
+}
+
+func rightBranch<T>(tree: TreeSet<T>) -> TreeSet<T> {
+    switch tree {
+    case let .Tree(_, _, right):
+        return right.unbox
+    default:
+        fatalError("Tried to read the right branch from an empty tree")
+    }
+}
+
+func makeTree<T>(entry: T, left:TreeSet<T>, right:TreeSet<T>) -> TreeSet<T> {
+    return TreeSet.Tree(entry: Box(entry), left: Box(left), right: Box(right))
+}
+
+let a = makeTree(5, .Empty, .Empty)
+println(a)
+entry(a)
+println(leftBranch(a))
+println(rightBranch(a))
+
+//: Now we can write the isElementOfSet procedure using the strategy described above:
+
+func isElementOfSet3<T: Comparable>(x: T, set: TreeSet<T>) -> Bool {
+    switch set {
+    case .Empty:
+        return false
+    case let .Tree(entry, _, _) where entry.unbox == x:
+        return true
+    case let .Tree(entry, left, _) where entry.unbox < x:
+        return isElementOfSet3(x, left.unbox)
+    case let .Tree(entry, _, right) where entry.unbox > x:
+        return isElementOfSet3(x, right.unbox)
+    default:
+        fatalError("isElementOfSet3 has an unhandled case when x:\(x) and set:\(set)")
+    }
+}
+isElementOfSet3(5, a)
+isElementOfSet3(6, a)
+
+//: Adjoining an item to a set is implemented similarly and also requires O(log n) steps. To adjoin an item x, we compare x with the node entry to determine whether x should be added to the right or to the left branch, and having adjoined x to the appropriate branch we piece this newly constructed branch together with the original entry and the other branch. If x is equal to the entry, we just return the node. If we are asked to adjoin x to an empty tree, we generate a tree that has x as the entry and empty right and left branches. Here is the procedure:
+
+func adjoinSet3<T: Comparable>(x: T, set: TreeSet<T>) -> TreeSet<T> {
+    switch set {
+    case .Empty:
+        return makeTree(x, .Empty, .Empty)
+    case let .Tree(entry, _, _) where entry.unbox == x:
+        return set
+    case let .Tree(entry, left, right) where entry.unbox < x:
+        return makeTree(entry.unbox, adjoinSet3(x, left.unbox), right.unbox)
+    case let .Tree(entry, left, right) where entry.unbox > x:
+        return makeTree(entry.unbox, left.unbox, adjoinSet3(x, right.unbox))
+    default:
+        fatalError("adjoinSet3 didn't handle all cases when x:\(x) set:\(set)")
+    }
+}
+let b = adjoinSet3(7, a)
+let c = adjoinSet3(3, b)
+let d = adjoinSet3(4, c)
+let e = adjoinSet3(5, d)
+println(e)
+
+//: The above claim that searching the tree can be performed in a logarithmic number of steps rests on the assumption that the tree is "balanced," i.e., that the left and right subtree of every tree have approximately the same number of elements, so that each subtree contains about half the elements of its parent. But how can we be certain that the trees we construct will be balanced? Even if we start with a balanced tree, adding elements with adjoinSet may produce an unbalanced result. Since the position of a newly adjoined element depends on how the element compares with the items already in the set, we can expect that if we add elements "randomly" the tree will tend to be balanced on the average. But this is not a guarantee. For example, if we start with an empty set and adjoin the numbers 1 through 7 in sequence we end up with the highly unbalanced tree shown in Figure 2.17. In this tree all the left subtrees are empty, so it has no advantage over a simple ordered list. One way to solve this problem is to define an operation that transforms an arbitrary tree into a balanced tree with the same elements. Then we can perform this transformation after every few adjoinSet operations to keep our set in balance. There are also other ways to solve this problem, most of which involve designing new data structures for which searching and insertion both can be done in O(log n) steps.
+
+let figure217 = NSImage(named: "figure2-17.png")
+
+let f = adjoinSet3(7, adjoinSet3(6, adjoinSet3(5, adjoinSet3(4, adjoinSet3(3, adjoinSet3(2, adjoinSet3(1, .Empty)))))))
+println(f)
+
+//: **Figure 2.17** Unbalanced tree produced by adjoining 1 through 7 in sequence
+
+//: ## Sets and information retrieval
+
 
