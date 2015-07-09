@@ -81,6 +81,32 @@ let orderedSet1 = [2,5,7,8,9]
 isElementOfSet2(5, orderedSet1)
 isElementOfSet2(3, orderedSet1)
 
+//: How many steps does this save? In the worst case, the item we are looking for may be the largest one in the set, so the number of steps is the same as for the unordered representation. On the other hand, if we search for items of many different sizes we can expect that sometimes we will be able to stop searching at a point near the beginning of the list and that other times we will still need to examine most of the list. On the average we should expect to have to examine about half of the items in the set. Thus, the average number of steps required will be about n/2. This is still O(n) growth, but it does save us, on the average, a factor of 2 in number of steps over the previous implementation.
+//:
+//: We obtain a more impressive speedup with intersectionSet. In the unordered representation this operation required O(n^2) steps, because we performed a complete scan of set2 for each element of set1. But with the ordered representation, we can use a more clever method. Begin by comparing the initial elements, x1 and x2, of the two sets. If x1 equals x2, then that gives an element of the intersection, and the rest of the intersection is the intersection of the tails of the two sets. Suppose, however, that x1 is less than x2. Since x2 is the smallest element in set2, we can immedietely conclude that x1 cannot appear anywhere in set2 and hence is not in the intersection. Hence, the intersection is equal to the intersection of set2 with the tail of set1. Similarly, if x2 is less than x1, then the intersection is given by the intersection of set1 with the tail of set2. Here is the procedure:
 
+func intersectionSet2<T: Comparable>(set1: [T], set2: [T]) -> [T] {
+    if let (x1, tail1) = set1.match,
+        (x2, tail2) = set2.match {
+            switch true {
+            case x1 == x2:
+                return [x1] + intersectionSet2(tail1, tail2)
+            case x1 < x2:
+                return intersectionSet2(tail1, set2)
+            case x1 > x2:
+                return intersectionSet2(set1, tail2)
+            default:
+                fatalError("intersectionSet2 failed with values of x1:\(x1) and x2:\(x2)")
+            }
+    } else {
+        return []
+    }
+}
+let orderedSet2 = [1,2,3,4,6,7,9]
+intersectionSet2(orderedSet1, orderedSet2)
 
+//: To estimate the number of steps required by this process, observe that at each step we reduce the intersection problem to computing intersections of smaller sets - removing the first element from set1 or set2 or both. Thus, the number of steps required is at most the sum of the sizes of set1 and set2, rather than the product of the sizes as with the unordered representation. This is O(n) growth rather than O(n^2) - a considerable speedup, even for sets of moderate size.
+
+//: ### Sets as binary trees
+//: We can do better
 
