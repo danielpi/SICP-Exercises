@@ -96,6 +96,8 @@
 		E6D7D5E21A9EEE6800777201 /* Ex1.34-FunctionsCallingFunctions.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.34-FunctionsCallingFunctions.playground"; sourceTree = "<group>"; };
 		E6D8B2561AD0AC6F000ED7EA /* Ex2.13-Interval-small-tolerances.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.13-Interval-small-tolerances.playground"; sourceTree = "<group>"; };
 		E6D9CB0D1B391014003E86B8 /* Ex2.46-Vectors.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.46-Vectors.playground"; sourceTree = "<group>"; };
+		E6E0D4F51B4F800900EEE84D /* Ex2.63-tree->list.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.63-tree->list.playground"; sourceTree = "<group>"; };
+		E6E0D4F61B4F995600EEE84D /* Ex2.64-list->tree.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.64-list->tree.playground"; sourceTree = "<group>"; };
 		E6E1CE771AD0E33A007CDF5E /* Ex2.16-Improved-Interval.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.16-Improved-Interval.playground"; sourceTree = "<group>"; };
 		E6E6655B1B37CBDC004747C6 /* Ex2.44-Up-Split.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.44-Up-Split.playground"; sourceTree = "<group>"; };
 		E6F1C4C11B23DBA700DEAEFD /* Ex2.43-Queens-Puzzle-Slow.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.43-Queens-Puzzle-Slow.playground"; sourceTree = "<group>"; };
@@ -192,6 +194,8 @@
 				E6F8FBCD1B4D1792002A16FC /* Ex2.60-Set-With-Duplicates.playground */,
 				E60355671B4DE5740055C32A /* Ex2.61-adjoinSet-ordered.playground */,
 				E60355681B4DF06A0055C32A /* Ex2.62-unionSet-ordered.playground */,
+				E6E0D4F51B4F800900EEE84D /* Ex2.63-tree->list.playground */,
+				E6E0D4F61B4F995600EEE84D /* Ex2.64-list->tree.playground */,
 			);
 			name = "Chapter 2 Building Abstractions with Data";
 			sourceTree = "<group>";

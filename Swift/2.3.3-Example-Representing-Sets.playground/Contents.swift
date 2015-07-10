@@ -206,9 +206,9 @@ func adjoinSet3<T: Comparable>(x: T, set: TreeSet<T>) -> TreeSet<T> {
         return makeTree(x, .Empty, .Empty)
     case let .Tree(entry, _, _) where entry.unbox == x:
         return set
-    case let .Tree(entry, left, right) where entry.unbox < x:
-        return makeTree(entry.unbox, adjoinSet3(x, left.unbox), right.unbox)
     case let .Tree(entry, left, right) where entry.unbox > x:
+        return makeTree(entry.unbox, adjoinSet3(x, left.unbox), right.unbox)
+    case let .Tree(entry, left, right) where entry.unbox < x:
         return makeTree(entry.unbox, left.unbox, adjoinSet3(x, right.unbox))
     default:
         fatalError("adjoinSet3 didn't handle all cases when x:\(x) set:\(set)")
