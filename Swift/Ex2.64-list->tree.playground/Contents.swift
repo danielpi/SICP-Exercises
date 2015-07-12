@@ -32,5 +32,15 @@ treeToList(blah)
 
 // a. Write a short paragraph explaining as clearly as you can how partialTree works. Draw the tree produced by listToTree for the list (1 3 5 7 9 11).
 
+//     5
+//   /   \
+//  1     9
+//   \   / \
+//    3 7   11
+
+// If n is 0 then we are at a leaf and thus we need an empty tree. Otherwise we recursively grab half of the remaining values and make one branch of the tree with them and make another branch from the other half.
+
 // b. What is the order of growth in the number of steps required by listToTree to convert a list of n elements?
+
+// O(n)
 
