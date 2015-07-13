@@ -28,6 +28,7 @@
 		E61DAC6E1B1C6457001F3774 /* Ex2.35-Count-Leaves-Accumulation.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.35-Count-Leaves-Accumulation.playground"; sourceTree = "<group>"; };
 		E61DAC6F1B1C8352001F3774 /* Ex2.36-Accumulate-n.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.36-Accumulate-n.playground"; sourceTree = "<group>"; };
 		E61DAC701B1C87E7001F3774 /* Ex2.37-Matrix-and-Vector.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.37-Matrix-and-Vector.playground"; sourceTree = "<group>"; };
+		E622C9711B53E2D500FA5D9F /* Ex2.65-union-intersection-set.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.65-union-intersection-set.playground"; sourceTree = "<group>"; };
 		E6234E061A8F53A800E88292 /* 1.3-FormulatingAbstractionsWithHigher-Order-Procedures.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "1.3-FormulatingAbstractionsWithHigher-Order-Procedures.playground"; sourceTree = "<group>"; };
 		E623CA841A918C7400ED9D5B /* Ex1.29-SimpsonsIntegration.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.29-SimpsonsIntegration.playground"; sourceTree = "<group>"; };
 		E6260E5E1B19CF9200952F4C /* Ex2.32-Subset.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.32-Subset.playground"; sourceTree = "<group>"; };
@@ -196,6 +197,7 @@
 				E60355681B4DF06A0055C32A /* Ex2.62-unionSet-ordered.playground */,
 				E6E0D4F51B4F800900EEE84D /* Ex2.63-tree->list.playground */,
 				E6E0D4F61B4F995600EEE84D /* Ex2.64-list->tree.playground */,
+				E622C9711B53E2D500FA5D9F /* Ex2.65-union-intersection-set.playground */,
 			);
 			name = "Chapter 2 Building Abstractions with Data";
 			sourceTree = "<group>";
