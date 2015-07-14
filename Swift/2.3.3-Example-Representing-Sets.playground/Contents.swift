@@ -10,7 +10,7 @@ import Cocoa
 
 extension Array {
     var match: (head: T, tail: [T])? {
-        return (count > 0) ? (self[0],Array(self[1..<count])) : nil
+        return (count > 0) ? (self[0], Array(self[1..<count])) : nil
     }
 }
 
@@ -230,5 +230,40 @@ println(f)
 //: **Figure 2.17** Unbalanced tree produced by adjoining 1 through 7 in sequence
 
 //: ## Sets and information retrieval
+//: We have examined options for using lists to represent sets and have seen how the choice of representation for a data object can have a large impact on the performance of the programs that use the data. Another reason for concentrating on sets is that the techniques discussed here appear again and again in applications involving information retrieval.
+//:
+//: Consider a data base containing a large number of individual records, such as the personnel files for a company or the transactions in an accounting system. A typical data-management system spends a large amount of time accessing or modifying the data in the records and therefore requires an efficient method for accessing records. This is done by identifying a part of each record to serve as an identifying key. A key can be anything that uniquely identifies the record. For a personnel file, it might be an employee's ID number, For an accounting system, it might be a transaction number. Whatever the key is, when we define the record as a data structrure we should include a key selector procedure that retrieves the key associated with a given record.
+//:
+//: Now we represent the data base as a set of records. To locate the record with a given key we use a procedure lookup, which takes as arguments a key and a data base and which returns the record that has that key, or false if there is no such record. lookup is implemented in almost the same way as isElementOfSet. For example, if the set of records is implemented as an unordered list, we could use
+
+//typealias Record = (Int, String)
+
+struct Record {
+    var key: Int
+    var value: String
+    
+    init(_ key: Int, _ value: String) {
+        self.key = key
+        self.value = value
+    }
+}
+
+func lookup(key: Int, records: [Record]) -> Record? {
+    if let (head, tail) = records.match {
+        if key == head.key {
+            return head
+        } else {
+            return lookup(key, tail)
+        }
+    } else {
+        return nil
+    }
+}
+
+let records = [Record(1,"a"),Record(3,"c"),Record(2,"b"),Record(4,"d")]
+lookup(5,records)
+
+//: Of course, there are better ways to represent large sets than as unordered lists. Information-retrieval systems in which records have to be "randomly accessed" are typically implemented by a tree-based method, such as the binary-tree representation discussed previously. In designing such a system the methodology of data abstraction can be a great help. The designer can create an initial implementation using a simple, straightforward representation such as unordered lists. This will be unsuitable for the eventual system, but it can be useful in providing a "quick and dirty" data base with which to test the rest of the system. Later on, the data representation can be modified to be more sophisticated. If the data base is accessed in terms of abstract selectors and constructors, this change in representation will not require any changes to the rest of the system.
+
 
 
