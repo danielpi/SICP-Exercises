@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>21E5E3F9-3162-4505-BF4C-463A28B28063</string>
 	<key>IDESourceControlProjectName</key>
-	<string>Swift</string>
+	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>C2D458A42E2E08370AD9F848AA16B0D10F18C0DA</key>
 		<string>https://github.com/danielpi/SICP-Exercises.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>Swift/Swift.xcodeproj</string>
+	<string>Swift/Swift.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>C2D458A42E2E08370AD9F848AA16B0D10F18C0DA</key>

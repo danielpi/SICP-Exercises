@@ -37,7 +37,28 @@ let figure218 = NSImage(named: "figure218-huffman.png")
 //: To decode a bit sequence using a Huffman tree, we begin at the root and use the successive zeros and ones of the bit sequence to determine whether to move down the left or the right branch. Each time we come to a leaf, we have generated a new symbol inthe message, at which point we start over from the root of the tree to find the next symbol. For example, suppose we are given the tree above and the sequence 10001010. Starting at the root, we move down the right branch, (since the first bit of the string is 1), then down the left branch(since the second bit is 0), then down the left branch (since the third bit is also 0). This brings us to the leaf for B, so the first symbol of the decoded message is B. Now we start again at the root, and we make a left move because the next bit in the string is 0. This brings us to the leaf for A. Then we start again at the root with the rest of the string 1010, so we move right, left, right, left and reach C. Thus the entire message is BAC.
 //:
 //: ### Generating Huffman trees
-//: 
+//: Given an "alphabet" of symbols and their relative frequencies, how do we construct the "best" code? (In other words, which tree will encode messages with the fewest bits?) Huffman gave an algorithm for doing this and showed that the resulting code is indeed the best variable-length code for messages where the relative frequency of the symbols matches the frequencies wih which the code was constructed. We will not prove this optimality of Huffman codes here, but we will show how Huffman trees are constructed.
+//:
+//: The algorithm for generating a Huffman tree is very simple. The idea is to arrange the tree so that the symbols with the lowest frequency appear farthest away from the root. Begin with the set of leaf nodes, containing symbols and their frequencies, as determined by the initial data from which the code is to be constructed. Now find two leafes with the lowest weights and merge them to produce a node that has these two nodes as its left and right branches. The weight of the new node is the sum of the two weights. Remove the two leaves from the original set and replace them by this new node. Now continue this process. At each step, merge two nodes with the smallest weights, removing them from the set and replacing them with a node that has these two as its left and right branches. The process stops when there is only one node left, which is the root of the entire tree. Here is how the Huffman tree of Figure 2.18 was generated:
+//:
+//:    Initial leaves  {(A 8) (B 3) (C 1) (D 1) (E 1) (F 1) (G 1) (H 1)}
+//:             Merge  {(A 8) (B 3) ({C D} 2) (E 1) (F 1) (G 1) (H 1)}
+//:             Merge  {(A 8) (B 3) ({C D} 2) ({E F} 2) (G 1) (H 1)}
+//:             Merge  {(A 8) (B 3) ({C D} 2) ({E F} 2) ({G H} 2)}
+//:             Merge  {(A 8) (B 3) ({C D} 2) ({E F G H} 4)}
+//:             Merge  {(A 8) ({B C D} 5) ({E F G H} 4)}
+//:             Merge  {(A 8) ({B C D E F G H} 9)}
+//:       Final Merge  {(A B C D E F G H} 17)}
+//:
+//: The algorithm does not always specify a unique tree, because there may not be unique smallest-weight nodes at each step. Also, the choice of the order in which the two nodes are merged (i.e., which will be the right branch and which will be the left branch) is arbitrary.
+//:
+//: ### Representing Huffman trees
+//: In the exercises below we will work with a system that uses Huffman trees to encode and decode messages and generates Huffman trees according to the algorithm outlined above. We will begin by discussing how trees are represented.
+//:
+//: Leaves of the tree are represented by a list consisting of the symbol leaf, the symbol at the leaf, and the weight:
+
+func makeLeaf(symbol: 
+
 
 
 
