@@ -53,6 +53,7 @@
 		E6633D511AD0A57900FCC4CE /* Ex2.12-Center-Percent-Interval.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.12-Center-Percent-Interval.playground"; sourceTree = "<group>"; };
 		E6680EDB1B1996E500A93CFC /* Ex2.31-Abstract-Square-Tree.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.31-Abstract-Square-Tree.playground"; sourceTree = "<group>"; };
 		E66A58E31A6DF2ED00557760 /* 1.2-Procedures&theProcessesTheyGenerate.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "1.2-Procedures&theProcessesTheyGenerate.playground"; sourceTree = "<group>"; };
+		E66D11511B56633500470CC6 /* 2.3.4-Example-Huffman-Encoding-Trees.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "2.3.4-Example-Huffman-Encoding-Trees.playground"; sourceTree = "<group>"; };
 		E66F21681B34E1670058B104 /* 2.2.4 Example- A Picture Language.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "2.2.4 Example- A Picture Language.playground"; sourceTree = "<group>"; };
 		E67604C81B1990A1002E000E /* Ex2.30-Square-Tree.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.30-Square-Tree.playground"; sourceTree = "<group>"; };
 		E67937D81ACBCF88002447DE /* Ex2.7-Make-Interval.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.7-Make-Interval.playground"; sourceTree = "<group>"; };
@@ -200,6 +201,7 @@
 				E6E0D4F61B4F995600EEE84D /* Ex2.64-list->tree.playground */,
 				E622C9711B53E2D500FA5D9F /* Ex2.65-union-intersection-set.playground */,
 				E6556FC31B54E56400D70B6B /* Ex2.66-Tree-Lookup.playground */,
+				E66D11511B56633500470CC6 /* 2.3.4-Example-Huffman-Encoding-Trees.playground */,
 			);
 			name = "Chapter 2 Building Abstractions with Data";
 			sourceTree = "<group>";
