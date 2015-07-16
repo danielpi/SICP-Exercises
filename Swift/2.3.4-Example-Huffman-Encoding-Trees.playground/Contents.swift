@@ -57,7 +57,172 @@ let figure218 = NSImage(named: "figure218-huffman.png")
 //:
 //: Leaves of the tree are represented by a list consisting of the symbol leaf, the symbol at the leaf, and the weight:
 
-func makeLeaf(symbol: 
+class Box<T> {
+    let unbox: T
+    init(_ value: T) {
+        self.unbox = value
+    }
+}
+
+enum Tree {
+    case Leaf(symbol: String, weight: Int)
+    case Branch(left: Box<Tree>, right: Box<Tree>, symbols: [String], weight: Int)
+}
+
+func makeLeaf(symbol: String, weight: Int) -> Tree {
+    return Tree.Leaf(symbol: symbol, weight: weight)
+}
+
+func isLeaf(object: Tree) -> Bool {
+    switch object {
+    case .Leaf(symbol: _, weight: _):
+        return true
+    default:
+        return false
+    }
+}
+
+func symbol(x: Tree) -> String {
+    switch x {
+    case let .Leaf(symbol: s, weight: _):
+        return s
+    default:
+        fatalError("symbol failed \(x)")
+    }
+}
+/*
+// This is redefined more generally later on
+func weight(x: Tree) -> Int {
+    switch x {
+    case let .Leaf(symbol: _, weight: w):
+        return w
+    default:
+        fatalError("weight failed \(x)")
+    }
+}
+*/
+// The above code was 4 lines in Racket
+
+//: A general tree will be a list of a left branch, a right branch, a set of symbols, and a weight. The set of symbols will be simply a list of the symbols, rather than some more sophisticated set representation. When we make a tree by merging two nodes, we obtain the weight of the tree as the sum of the weights of the nodes, and the set of symbols as the union of the sets of symbols for the nodes. Since our symbol sets are represented as lists, we can form the union by using the append procedure we defined in Section 2.2.1:
+
+func makeCodeTree(left: Tree, right: Tree) -> Tree {
+    switch (left, right) {
+    case let (.Leaf(symbol:s1, weight:w1), .Leaf(symbol:s2, weight:w2)):
+        return Tree.Branch(left: Box(left), right: Box(right), symbols: [s1] + [s2], weight: w1 + w2)
+    case let (.Leaf(symbol:s1, weight:w1), .Branch(left: l2, right: r2, symbols:s2, weight:w2)):
+        return Tree.Branch(left: Box(left), right: Box(right), symbols: [s1] + s2, weight: w1 + w2)
+    case let (.Branch(left: l1, right: r1, symbols:s1, weight:w1), .Leaf(symbol:s2, weight:w2)):
+        return Tree.Branch(left: Box(left), right: Box(right), symbols: s1 + [s2], weight: w1 + w2)
+    case let (.Branch(left: l1, right: r1, symbols:s1, weight:w1), .Branch(left: l2, right: r2, symbols:s2, weight:w2)):
+        return Tree.Branch(left: Box(left), right: Box(right), symbols: s1 + s2, weight: w1 + w2)
+        
+    }
+}
+
+//: If we make a tree in this way, we have the following selectors:
+
+func leftBranch(tree: Tree) -> Tree {
+    switch tree {
+    case let .Branch(left: left, right: _, symbols: _, weight: _):
+        return left.unbox
+    default:
+        fatalError("leftBranch failed \(tree)")
+    }
+}
+
+func rightBranch(tree: Tree) -> Tree {
+    switch tree {
+    case let .Branch(left: _, right: right, symbols: _, weight: _):
+        return right.unbox
+    default:
+        fatalError("rightBranch failed \(tree)")
+    }
+}
+
+func symbols(tree: Tree) -> [String] {
+    switch tree {
+    case let .Leaf(symbol: symbol, weight: _):
+        return [symbol]
+    case let .Branch(left: _, right: _, symbols: symbols, weight: _):
+        return symbols
+    }
+}
+
+func weight(tree: Tree) -> Int {
+    switch tree {
+    case let .Leaf(symbol: _, weight: w1):
+        return w1
+    case let .Branch(left: _, right: _, symbols: _, weight: w):
+        return w
+    }
+}
+
+//: The procedures symbols and weight must do something slightly different depending on whether they are called with a leaf or a general tree. These are simple examples of *generic procedures* (procedures that can handle more than one kind of data), which we will have much more to say about in Section 2.4 and Section 2.5.
+//:
+//: ### The decoding procedure
+//: The following proceudre implements the decoding algorithm. It takes as arguments a list of zeros and ones, together with a Huffman tree.
+
+func chooseBranch(bit: Int, branch: Tree) -> Tree {
+    switch bit {
+    case 0:
+        return leftBranch(branch)
+    case 1:
+        return rightBranch(branch)
+    default:
+        fatalError("chooseBranch failed \(bit)")
+    }
+}
+
+extension Array {
+    var match: (head: T, tail: [T])? {
+        return (count > 0) ? (self[0], Array(self[1..<count])) : nil
+    }
+}
+
+func decode(bits: [Int], tree: Tree) -> [String] {
+    var decode1: ([Int], Tree) -> [String] = { _, _ in return [] }
+    decode1 = { bits1, currentBranch in
+        if let (head, tail) = bits1.match {
+            let nextBranch = chooseBranch(bits1[0], currentBranch)
+            switch nextBranch {
+            case let .Leaf(symbol: s, weight: _):
+                return [s] + decode1(tail, tree)
+            default:
+                return decode1(tail, nextBranch)
+            }
+        } else {
+            return []
+        }
+    }
+    return decode1(bits, tree)
+}
+
+//: The procedure decode1 takes two arguments: the list of remaining bits and the current position in the tree. It keeps moving "down" the tree, choosing a left or a right branch according to whether the next bit in the list is a zero or a one. (This is done with the procedure chooseBranch.) When it reaches a leaf, it returns the symbol at that leaf as the next symbol in the message by combining it onto the result of decoding the rest of the message, starting at the root of the tree. Note the error check in the final clause of chooseBranch, which complains if the procedure finds something other than a zero or a one in the input data.
+//:
+//: ### Sets of weighted elements
+//: In our representation of trees, each non-leaf node contains a set of symbols, which we have represented as an array. However, the tree-generating algorithm discussed above requires that we also work with sets of leaves and trees, successively merging the two smallest items. Since we will be required to repeatedly find the smallest item in a set, it is convenient to use an ordered representation for thsi kind of set.
+//:
+//: We will represent a set of leaves and trees as a list of elements, arranged in increasing order of weight. The following adjoinSet procedure for constructing sets is similar to the one described in Exercise 2.61; however, items are compared by their weights, and the element being added to the set is never already in it.
+
+func adjoinSet(x: Tree, set: [Tree]) -> [Tree] {
+    if let (head, tail) = set.match {
+        switch x {
+        case let .Leaf(symbol: _, weight: w) where w < weight(head):
+            return [x] + set
+        default:
+            return adjoinSet(x, tail)
+        }
+    } else {
+        return [x]
+    }
+}
+
+//: The following procedure takes a list of symbol-frequency pairs such as ((A 4) (B 2) (C 1) (D 1)) and constructs an initial ordered set of leaves, ready to be merged according to the Huffman algorithm:
+
+func makeLeafSet(pairs: 
+
+
+
 
 
 
