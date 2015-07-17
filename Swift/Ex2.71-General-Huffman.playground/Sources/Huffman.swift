@@ -128,6 +128,32 @@ public func decode(bits: [Int], tree: Tree) -> [String] {
     return decode1(bits, tree)
 }
 
+public func encodeSymbol(symbol: String, tree: Tree) -> [Int] {
+    switch tree {
+    case let .Leaf(symbol: symbol, weight: w):
+        return []
+    case let .Branch(left: left, right: right, symbols: syms, weight: _):
+        if contains(syms, symbol) {
+            if contains(symbols(left.unbox), symbol) {
+                return [0] + encodeSymbol(symbol, left.unbox)
+            } else {
+                return [1] + encodeSymbol(symbol, right.unbox)
+            }
+        } else {
+            fatalError("The symbol:(\(symbol)) is not contained in the tree:(\(tree))")
+        }
+    }
+}
+
+public func encode(message:[String], tree:Tree) -> [Int] {
+    if let (head, tail) = message.match {
+        return encodeSymbol(head, tree) + encode(tail, tree)
+    } else {
+        return []
+    }
+}
+
+
 public func adjoinSet(x: Tree, set: [Tree]) -> [Tree] {
     if let (head, tail) = set.match {
         if weight(x) < weight(head) {
@@ -139,3 +165,26 @@ public func adjoinSet(x: Tree, set: [Tree]) -> [Tree] {
         return [x]
     }
 }
+
+public typealias SymFreqPair = (String, Int)
+
+public func makeLeafSet(pairs: [SymFreqPair]) -> [Tree] {
+    var result: [Tree] = []
+    for pair in pairs {
+        result = adjoinSet(makeLeaf(pair.0, pair.1), result)
+    }
+    return result
+}
+
+public func successiveMerge(leafSet: [Tree]) -> [Tree] {
+    if leafSet.count <= 1 {
+        return leafSet
+    } else {
+        return successiveMerge(adjoinSet(makeCodeTree(leafSet[0], leafSet[1]), Array(leafSet[2..<leafSet.count])))
+    }
+}
+
+public func generateHuffmanTree(pairs: [SymFreqPair]) -> Tree {
+    return successiveMerge(makeLeafSet(pairs))[0]
+}
+

@@ -206,11 +206,10 @@ func decode(bits: [Int], tree: Tree) -> [String] {
 
 func adjoinSet(x: Tree, set: [Tree]) -> [Tree] {
     if let (head, tail) = set.match {
-        switch x {
-        case let .Leaf(symbol: _, weight: w) where w < weight(head):
+        if weight(x) < weight(head) {
             return [x] + set
-        default:
-            return adjoinSet(x, tail)
+        } else {
+            return [head] + adjoinSet(x, tail)
         }
     } else {
         return [x]
