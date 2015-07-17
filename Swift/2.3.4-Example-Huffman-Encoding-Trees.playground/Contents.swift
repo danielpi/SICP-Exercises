@@ -219,7 +219,15 @@ func adjoinSet(x: Tree, set: [Tree]) -> [Tree] {
 
 //: The following procedure takes a list of symbol-frequency pairs such as ((A 4) (B 2) (C 1) (D 1)) and constructs an initial ordered set of leaves, ready to be merged according to the Huffman algorithm:
 
-func makeLeafSet(pairs: 
+typealias SymFreqPair = (String, Int)
+
+func makeLeafSet(pairs: [SymFreqPair]) -> [Tree] {
+    if let (head,tail) = pairs.match {
+        return adjoinSet(makeLeaf(head.0, head.1), makeLeafSet(tail))
+    } else {
+        return []
+    }
+}
 
 
 
