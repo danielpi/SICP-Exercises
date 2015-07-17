@@ -14,6 +14,7 @@
 		E60355671B4DE5740055C32A /* Ex2.61-adjoinSet-ordered.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.61-adjoinSet-ordered.playground"; sourceTree = "<group>"; };
 		E60355681B4DF06A0055C32A /* Ex2.62-unionSet-ordered.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.62-unionSet-ordered.playground"; sourceTree = "<group>"; };
 		E60401F61AA9673C00211ABE /* Ex1.46-Iterative-Improve.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.46-Iterative-Improve.playground"; sourceTree = "<group>"; };
+		E607D25F1B58B0E2006FB709 /* Ex2.69-generate-Huffman-tree.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.69-generate-Huffman-tree.playground"; sourceTree = "<group>"; };
 		E60A1B3C1B217305008E914D /* Ex2.42-Queens-Puzzle.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.42-Queens-Puzzle.playground"; sourceTree = "<group>"; };
 		E60A86D31A839C2200ACBA3C /* Ex1.26-expMod-Modified.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.26-expMod-Modified.playground"; sourceTree = "<group>"; };
 		E60FC5191AC0EAE2007A7197 /* Ex26ChurchNumerals.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Ex26ChurchNumerals.playground; sourceTree = "<group>"; };
@@ -206,6 +207,7 @@
 				E66D11511B56633500470CC6 /* 2.3.4-Example-Huffman-Encoding-Trees.playground */,
 				E62161261B5898A500252487 /* Ex2.67-encoding-tree.playground */,
 				E62161271B589AF400252487 /* Ex2.68-encode.playground */,
+				E607D25F1B58B0E2006FB709 /* Ex2.69-generate-Huffman-tree.playground */,
 			);
 			name = "Chapter 2 Building Abstractions with Data";
 			sourceTree = "<group>";
