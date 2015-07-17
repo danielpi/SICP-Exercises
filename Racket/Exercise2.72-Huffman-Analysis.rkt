@@ -17,6 +17,6 @@
 ; So in the specific case of an unbalanced tree the order of growth for the most
 ; frequent symbols will be O(n) as you just have to search element-of-set? once.
 
-; The least frequent though requries that you search every every branch
+; The least frequent though requries that you search every branch
 ; O(n) + O(n-1) + O(n-2) + ... + O(1)
 ; The series above would compute out to (n^2)/2 which would be O(n^2) complexity.
