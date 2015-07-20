@@ -155,14 +155,87 @@
 
 (define (square x) (* x x))
 
-(define (make-from-real-imag x y) (cons x y))
-(define (real-part z) (car z))
-(define (imag-part z) (cdr z))
-
-(define (make-from-mag-ang r a)
+(define (real-part1 z) (car z))
+(define (imag-part1 z) (cdr z))
+(define (magnitude1 z)
+  (sqrt (+ (square (real-part1 z))
+           (square (imag-part1 z)))))
+(define (angle1 z)
+  (atan (imag-part1 z) (real-part1 z)))
+(define (make-from-real-imag1 x y) (cons x y))
+(define (make-from-mag-ang1 r a)
   (cons (* r (cos a)) (* r (sin a))))
-(define (magnitude z)
-  (sqrt (+ (square (real-part z))
-           (square (imag-part z)))))
-(define (angle z)
-  (atan (imag-part z) (real-part z)))
+
+
+(define (add-complex1 z1 z2)
+  (make-from-real-imag1 (+ (real-part1 z1) (real-part1 z2))
+                        (+ (imag-part1 z1) (imag-part1 z2))))
+(define (sub-complex1 z1 z2)
+  (make-from-real-imag1 (- (real-part1 z1) (real-part1 z2))
+                        (- (imag-part1 z1) (imag-part1 z2))))
+(define (mul-complex1 z1 z2)
+  (make-from-mag-ang1 (* (magnitude1 z1) (magnitude1 z2))
+                      (+ (angle1 z1) (angle1 z2))))
+(define (div-complex1 z1 z2)
+  (make-from-mag-ang1 (/ (magnitude1 z1) (magnitude1 z2))
+                      (- (angle1 z1) (angle1 z2))))
+
+; To complete the complex-number package, we must choose a representation and we must implement
+; the constructors and selectors in terms of primitive numbers and primitive list structure. There
+; are two obvious ways to do this: We can represent a complex number in "rectangular form" as a
+; pair (real part, imaginary part) or in "polar form" as a pair (magnitude, angle). Which shall
+; we choose?
+
+; In order to make the different choices concrete, imagine that there are two programmers, Ben
+; Bitdiddle and Alyssa P. Hacker, who are independently designing representations for the complex-
+; number system. Ben chooses to represent complex numbers in rectangular form. With this choice,
+; selecting the real and imaginary parts of a complex number is straightforward, as is constructing
+; a complex number with given real and imaginary parts. To find the magnitude and the angle, or
+; to construct a complex number with a given magnitude and angle, he uses the trigonometric
+; relations
+
+;    x = r cos A,     r = (x^2 + y^2)^0.5
+;    y = r sin A,     A = arctan(y,x)
+
+; which relate the real and imaginary parts (x,y) to the magnitude and the angle (r,A). Ben's
+; representation is therefore given by the following selectors and constructors: Shown above
+
+; Alyssa, in contrast, chooses to represent complex numbers in polar form. For her, selecting the
+; magnitude and angle is straightforward, but she has to use the trigonometric relations to
+; obtain the real and imaginary parts. Alyssa's representation is:
+
+(define (real-part2 z) (* (magnitude2 z) (cos (angle2 z))))
+(define (imag-part2 z) (* (magnitude2 z) (sin (angle2 z))))
+(define (magnitude2 z) (car z))
+(define (angle2 z) (cdr z))
+(define (make-from-real-imag2 x y)
+  (cons (sqrt (+ (square x) (square y)))
+        (atan y x)))
+(define (make-from-mag-ang2 r a) (cons r a))
+
+; The discipline of data abstraction ensures that the same implementation of add-complex, 
+; sub-complex, mul-complex, and div-complex will work with either Ben's representation or
+; Alyssa's representation.
+
+
+; 2.4.2 Tagged data
+; One way to view data abstraction is as an application of the "princible or least commitment."
+; In implementing the complex-number system in Section 2.4.1, we can use either Ben's rectangular 
+; representation or Alyssa's polar representation. The abstraction barrier formed by the selectors 
+; and constructors permits us to defer to the last possible moment the choice of a concrete
+; representation for our data objects and thus retain maximum flexibility in our system design.
+
+; The principle of least commitment can be carried to even further extremes. If we desire, we
+; can maintain the ambiguity of representation even after we have designed the selectors and
+; constructors, and elect to use both Ben's representation and Alyssa's representation. If both
+; representations are included in a single system, however, we will need some way to distinguish
+; data in polar form from data in rectangular form. Otherwise, if we were asked, for instance, to
+; find the magnitude of the pair (3, 4), we wouldn't know whether to answer 5 (interpreting the 
+; number in rectangular form) or 3 (interpreting the number in polar form). A straightforward
+; way to accomplish this distinction is to include a type tag - the symbol rectangular or polar
+; - as part of each complex number. Then when we need to manipulate a complex number we can use
+; the tag to decide which selector to apply.
+
+
+
+
