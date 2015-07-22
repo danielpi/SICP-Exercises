@@ -304,19 +304,19 @@
 ; extract the bare, untagged datum and send this to the rectangular or polar procedure as
 ; required:
 
-(define (real-part z)
+(define (real-part3 z)
   (cond ((rectangular? z) (real-part-rectangular (contents z)))
         ((polar? z) (real-part-polar (contents z)))
         (else (error "Unknown type: REAL-PART" z))))
-(define (imag-part z)
+(define (imag-part3 z)
   (cond ((rectangular? z) (imag-part-rectangular (contents z)))
         ((polar? z) (imag-part-polar (contents z)))
         (else (error "Unknown type: IMAG-PART" z))))
-(define (magnitude z)
+(define (magnitude3 z)
   (cond ((rectangular? z) (magnitude-rectangular (contents z)))
         ((polar? z) (magnitude-polar (contents z)))
         (else (error "Unknown type: MAGNITUDE" z))))
-(define (angle z)
+(define (angle3 z)
   (cond ((rectangular? z) (angle-rectangular (contents z)))
         ((polar? z) (angle-polar (contents z)))
         (else (error "Unknown type: ANGLE" z))))
@@ -327,16 +327,16 @@
 ; example, the procedure add-complex is still
 
 (define (add-complex z1 z2)
-  (make-from-real-imag (+ (real-part z1) (real-part z2))
+  (make-from-real-imag3 (+ (real-part z1) (real-part z2))
                        (+ (imag-part z1) (imag-part z2))))
 (define (sub-complex z1 z2)
-  (make-from-real-imag (- (real-part z1) (real-part z2))
+  (make-from-real-imag3 (- (real-part z1) (real-part z2))
                        (- (imag-part z1) (imag-part z2))))
 (define (mul-complex z1 z2)
-  (make-from-mag-ang (* (magnitude z1) (magnitude z2))
+  (make-from-mag-ang3 (* (magnitude z1) (magnitude z2))
                      (+ (angle z1) (angle z2))))
 (define (div-complex z1 z2)
-  (make-from-mag-ang (/ (magnitude z1) (magnitude z2))
+  (make-from-mag-ang3 (/ (magnitude z1) (magnitude z2))
                      (- (angle z1) (angle z2))))
 
 ; Finally, we must choose whether to construct complex numbers using Ben's 
@@ -344,9 +344,9 @@
 ; rectangular numbers whenever we have real and imaginary parts and to construct polar
 ; numbers whenever we have magnitudes and angles:
 
-(define (make-from-real-imag x y)
+(define (make-from-real-imag3 x y)
   (make-from-real-imag-rectangular x y))
-(define (make-from-mag-ang r a)
+(define (make-from-mag-ang3 r a)
   (make-from-mag-ang-polar r a))
 
 ;                Programs that use complex numbers
@@ -544,4 +544,43 @@
   'done)
 
 ; Even though Ben and Alyssa both still use their original procedures defined with the
-; same names as each other's (e.g., real-part), these 
+; same names as each other's (e.g., real-part), these definitions are now internal to 
+; different procedures (see Secton 1.1.8), so there is no name conflict.
+
+; The complex-arithmetic selectors access the table by means of a general "operation"
+; procedure called apply-generic, which applies a generic operation to some arguments.
+; apply-generic looks in the table under the name of the operation and the types of the
+; arguments and applies the resulting procedure if one is present:
+
+(define (apply-generic op . args)
+  (let ((type-tags (map type-tag args)))
+    (let ((proc (get op type-tags)))
+      (if proc
+          (apply proc (map contents args))
+          (error "No method for these types: APPLY-GENERIC"
+                 (list op type-tags))))))
+
+; Using apply-generic, we can define our generic selectors as follows:
+
+(define (real-part z) (apply-generic 'real-part z))
+(define (imag-part z) (apply-generic 'imag-part z))
+(define (magnitude z) (apply-generic 'magnitude z))
+(define (angle z) (apply-generic 'angle z))
+
+; Observe that these do not change at all if a new representation is added to the system.
+
+; We can also extract from the table the constructors to be used by the programs external 
+; to the packages in making complex numbers from real and imaginary parts and from 
+; magnitudes and angles. As in Section 2.4.2, we construct rectangular numbers whenever
+; we have real and imaginary parts, and polar numbers whenever we have magnitudes and
+; angles:
+
+(define (make-from-real-imag x y)
+  ((get 'make-from-real-imag 'rectangular) x y))
+(define (make-from-mag-ang r a)
+  ((get 'make-from-mag-ang 'polar) r a))
+
+
+; Message passing
+
+; 
