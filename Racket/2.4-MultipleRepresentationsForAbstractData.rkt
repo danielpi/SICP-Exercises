@@ -386,5 +386,162 @@
 
 
 ; 2.4.3 Data-Directed Programming and Additivity
-; 
+; The general strategy of checking the type of a datum and calling an appropriate
+; procedure is called dispatching on type. This is a powerful strategy for obtaining
+; modularity in system design. On the other hand, implementing the dispatch as in Section
+; 2.4.2 has two significant weaknesses. One weakness is that the generic interface procedures
+; (real-part, imag-part, magnitude, and angle) must know about all the different 
+; representations. For instance, suppose we wanted to incorporate a new representation for
+; complex numbers into our complex-number syste. We would need to identify this new
+; representation with a type, and then add a clause to each of the generic interface
+; procedures to check for the new type and apply the appropriate selector for that
+; representation.
 
+; Another weakness of the technique is that even though the individual representations
+; can be designed separately, we must guarantee that no two procedures in the entire
+; system have the same name. This is why Ben and Alyssa had to change the names of their
+; original procedures from Section 2.4.1.
+
+; The issue underlying both of these weaknesses is that the technique for implementing
+; generic interfaces is not additive. The person implementing the generic selector
+; procedures must modify those procedures each time a new representation is installed, and
+; the people interfacing the individual representations must modify their code to avoid
+; name conflicts. In each of these cases, the changes that must be made to the code are 
+; straightforward, but they must be made nonetheless, and this is a source of inconvenience
+; and error. This is not much of a problem for the complex-number system as it stands,
+; but suppose there were not two but hundreds of different representations for complex
+; numbers. And suppose that there were many generic selectors to be maintained in the 
+; abstract-data interface. Suppose, in fact, that no one programmer know all the interface
+; procedures or all the representations. The problem is real and must be addressed in such
+; programs as large-scale data-base-management systems.
+
+; What we need is a means for modulariing the system design even further. This is provided
+; by the programming technique known as data-directed programming. To understand how
+; data-directed programming works, begin with the observation that whenever we deal with
+; a set of generic operations that are common to a set of different types we are, in effect
+; dealing with a two-dimensional table that contains the possible operations on one axis
+; and the possible types on the other axis. The entries in the table are the procedures that
+; implement each operation for each type of argument presented. In the complex-number
+; system developed in the previous section, the correspondence between operation name, data
+; type, and actual procedure was spread out among the various conditional clauses in the
+; generic interface procedures. But the same information could have been organized in a table, 
+; as shown in Figure 2.22.
+
+;                                          Types
+;                            Polar           |     Rectangular
+;                   +------------------------+-----------------------
+;         real-part | real-part-polar        | real-part-rectangular
+; Oper-   imag-part | imag-part-polar        | imag-part-rectangular
+; ations  magnitude | magnitude-polar        | magnitude-rectangular
+;         angle     | angle-polar            | angle-rectangular
+;
+; Figure 2.22: Table of operations for the complex-number system
+
+; Data-directed programming is the technique of designing programs to work with such a 
+; table directly. Previously, we implemented the mechanism that interfaces the complex-
+; arithmetic code with the two representation packages as a set of procedures that each
+; perform an explicit dispatch on type. Here we will implement the interface as a single
+; procedure that looks up the combination of the operation name and argument type in the
+; table to find the correct procedure to apply, and then applies it to the contents of 
+; the argument. If we do this, then to add a new representation package to the system we
+; need not change any existing procedures; we only add new entries to the table. 
+
+; To implement this plan, assume that we have two procedures, put and get, for manipulating
+; the operation-and-type table:
+; - (put <op> <type> <item>) installs the <item> in the table, indexed by the 
+;   <op> and the <type>
+; - (get <op> <type>) looks up the <op>, <type> entry in the table and returns 
+;   the item found there. If no item is found, get returns false.
+
+; For now we can assume that put and get are included in our language. In Chapter 3
+; (section 3.3.3) we will see how to implement these and other operations for manipulating
+; tables.
+
+; Here is how data-directed programming can be used in the complex-number system. Ben, who
+; developed the rectangular representation, implements his code just as he did originally.
+; He defines a collection of procedures, or a package, and interfaces these to the rest of
+; the system by adding entries to the table that tell the system how to operate on rectangular
+; numbers. This is accomplished by calling the following procedure:
+
+(define global-array '())
+
+(define (make-entry k v) (list k v))
+(define (key entry) (car entry))
+(define (value entry) (cadr entry))
+
+(define (put op type item)
+  (define (put-helper k array)
+    (cond ((null? array) (list(make-entry k item)))
+          ((equal? (key (car array)) k) array)
+          (else (cons (car array) (put-helper k (cdr array))))))
+  (set! global-array (put-helper (list op type) global-array)))
+
+(define (get op type)
+  (define (get-helper k array)
+    (cond ((null? array) #f)
+          ((equal? (key (car array)) k) (value (car array)))
+          (else (get-helper k (cdr array)))))
+  (get-helper (list op type) global-array))
+; from http://stackoverflow.com/questions/5499005/how-do-i-get-the-functions-put-and-get-in-sicp-scheme-exercise-2-78-and-on
+
+(define (install-rectangular-package)
+  ;; Internal procedures
+  (define (real-part z) (car z))
+  (define (imag-part z) (cdr z))
+  (define (make-from-real-imag x y) (cons x y))
+  (define (magnitude z)
+    (sqrt (+ (square (real-part z))
+             (square (imag-part z)))))
+  (define (angle z)
+    (atan (imag-part z) (real-part z)))
+  (define (make-from-mag-ang r a)
+    (cons (* r (cos a)) (* r (sin a))))
+  
+  ;; interface to the rest of the system
+  (define (tag x) (attach-tag 'rectangular x))
+  (put 'real-part '(rectangular) real-part)
+  (put 'imag-part '(rectangular) imag-part)
+  (put 'magnitude '(rectangular) magnitude)
+  (put 'angle '(rectangular) angle)
+  (put 'make-from-real-imag 'rectangular 
+       (lambda (x y) (tag (make-from-real-imag x y))))
+  (put 'make-from-mag-ang 'rectangular
+       (lambda (r a) (tag (make-from-mag-ang r a))))
+  'done)
+
+; Notice that the internal procedures here are the same procedures from Section 2.4.1 that
+; Ben wrote when he was working in isolation. No changes are necessary in order to interface
+; them to the rest of the system. Moreover, since these procedure definitions are internal
+; to the installation procedure, Ben needn't worry about name conflicts with other procedures 
+; outside the rectangular package. To interface these to the rest of the system, Ben installs 
+; his real-part procedure under the operation name real-part and the type (rectangular), and
+; similarly for the other selectors. The interface also defines the constructors to be used
+; by the external system. These are identical to Ben's internally defined constructors, except
+; that they attach the tag.
+
+; Alyssa's polar package is analogous
+
+(define (install-polar-package)
+  ;; internal procedures
+  (define (magnitude z) (car z))
+  (define (angle z) (cdr z))
+  (define (make-from-mag-ang r a) (cons r a))
+  (define (real-part z) (* (magnitude z) (cos (angle z))))
+  (define (imag-part z) (* (magnitude z) (sin (angle z))))
+  (define (make-from-real-imag x y)
+    (cons (sqrt (+ (square x) (square y)))
+          (atan y x)))
+  ;; interface to the rest of the system
+  (define (tag x) (attach-tag 'polar x))
+  (put 'real-part '(polar) real-part)
+  (put 'imag-part '(polar) imag-part)
+  (put 'magnitude '(polar) magnitude)
+  (put 'angle '(polar) angle)
+  (put 'make-from-real-imag 'polar
+       (lambda (x y) (tag (make-from-real-imag x y))))
+  (put 'make-from-mag-ang 'polar
+       (lambda (r a) (tag (make-from-mag-ang r a))))
+  'done)
+
+; Even though Ben and Alyssa both still use their original procedures defined with the
+; same names as each other's (e.g., real-part), these 
