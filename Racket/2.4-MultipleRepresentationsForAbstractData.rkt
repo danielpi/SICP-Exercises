@@ -580,6 +580,15 @@
 (define (make-from-mag-ang r a)
   ((get 'make-from-mag-ang 'polar) r a))
 
+(install-rectangular-package)
+(install-polar-package)
+
+(define complex1 (make-from-real-imag 3 4))
+(define complex2 (make-from-mag-ang 5 0.9272952180016122))
+
+(angle complex1)
+(real-part complex2)
+(imag-part complex2)
 
 ; Message passing
 
