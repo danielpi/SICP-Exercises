@@ -25,11 +25,11 @@
 ; being performed is deriv. We can transform this program into data-directed
 ; style by rewriting the basic derivative procedure as
 
-(define (deriv1 exp var)
+(define (deriv exp var)
   (cond ((number? exp) 0)
         ((variable? exp) (if (same-variable? exp var) 1 0))
         (else ((get 'deriv (operator exp))
-               (operands exp) var))))
+               exp var))))
 (define (operator exp) (car exp))
 (define (operands exp) (cdr exp))
 
@@ -84,24 +84,29 @@
                  (list op type-tags))))))
 
 (define (install-sum-package)
-  (define (make-sum a1 a2) (cons a1 a2))
+  (define (make-sum a1 a2) (list a1 a2))
   (define (addend s) (cadr s))
   (define (augend s) (caddr s))
-  (define (deriv-sum s)
-    (make-sum (deriv (addend s)) (deriv (augend s))))
+  (define (deriv-sum s var)
+    (make-sum (deriv (addend s) var) (deriv (augend s) var)))
   
   (define (tag x) (attach-tag '+ x))
-  (put 'deriv '(+) deriv-sum)
+  (put 'deriv '+ deriv-sum)
   (put 'make-sum '+
        (lambda (x y) (tag (make-sum x y))))
   'done)
 
 (define (make-sum x y)
   ((get 'make-sum '+) x y))
+(define (addend s)
+  ((get 'addend '(+)) s))
 
-(define (deriv x) (apply-generic 'deriv x))
+
+;(define (deriv x) (apply-generic 'deriv x))
 
 (install-sum-package)
 
 (deriv (make-sum 'x 'y) 'y)
 (deriv 'x 'x)
+
+(deriv '(+ x 3) 'x)
