@@ -98,15 +98,31 @@
 
 (define (make-sum x y)
   ((get 'make-sum '+) x y))
-(define (addend s)
-  ((get 'addend '(+)) s))
 
+(define (install-product-package)
+  (define (make-product a1 a2) (list a1 a2))
+  (define (multiplier p) (cadr p))
+  (define (multiplicand p) (caddr p))
+  (define (deriv-product p var)
+    (make-sum (make-product (multiplier p)
+                            (deriv (multiplicand p) var))
+              (make-product (deriv (multiplier p) var)
+                            (multiplicand p))))
+  (define (tag x) (attach-tag '* x))
+  (put 'deriv '* deriv-product)
+  (put 'make-product '*
+       (lambda (x y) (tag (make-product x y))))
+  'done)
+
+(define (make-product x y)
+  ((get 'make-product '*) x y))
 
 ;(define (deriv x) (apply-generic 'deriv x))
 
 (install-sum-package)
+(install-product-package)
 
-(deriv (make-sum 'x 'y) 'y)
-(deriv 'x 'x)
 
-(deriv '(+ x 3) 'x)
+(deriv '(+ x 3) 'x)               ; 1
+(deriv '(* x y) 'x)               ; 'y
+(deriv '(* (* x y) ( + x 3)) 'x)  ; '(+ (* x y) (* y (+ x 3)))
