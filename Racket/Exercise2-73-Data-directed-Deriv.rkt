@@ -84,23 +84,36 @@
                  (list op type-tags))))))
 
 (define (install-sum-package)
-  (define (make-sum a1 a2) (list a1 a2))
+  (define (=number? exp num) (and (number? exp) (= exp num)))
+  (define (make-sum a1 a2) 
+    (cond ((=number? a1 0) a2)
+          ((=number? a2 0) a1)
+          ((and (number? a1) (number? a2))
+           (+ a1 a2))
+          (else (tag (list a1 a2)))))
   (define (addend s) (cadr s))
   (define (augend s) (caddr s))
   (define (deriv-sum s var)
-    (make-sum (deriv (addend s) var) (deriv (augend s) var)))
+    (make-sum (deriv (addend s) var) 
+              (deriv (augend s) var)))
   
   (define (tag x) (attach-tag '+ x))
   (put 'deriv '+ deriv-sum)
   (put 'make-sum '+
-       (lambda (x y) (tag (make-sum x y))))
+       (lambda (x y) (make-sum x y)))
   'done)
 
 (define (make-sum x y)
   ((get 'make-sum '+) x y))
 
 (define (install-product-package)
-  (define (make-product a1 a2) (list a1 a2))
+  (define (=number? exp num) (and (number? exp) (= exp num)))
+  (define (make-product a1 a2) 
+    (cond ((or (=number? a1 0) (=number? a2 0)) 0)
+          ((=number? a1 1) a2)
+          ((=number? a2 1) a1)
+          ((and (number? a1) (number? a2)) (* a1 a2))
+          (else (tag (list a1 a2)))))
   (define (multiplier p) (cadr p))
   (define (multiplicand p) (caddr p))
   (define (deriv-product p var)
@@ -111,7 +124,7 @@
   (define (tag x) (attach-tag '* x))
   (put 'deriv '* deriv-product)
   (put 'make-product '*
-       (lambda (x y) (tag (make-product x y))))
+       (lambda (x y) (make-product x y)))
   'done)
 
 (define (make-product x y)
@@ -125,4 +138,4 @@
 
 (deriv '(+ x 3) 'x)               ; 1
 (deriv '(* x y) 'x)               ; 'y
-(deriv '(* (* x y) ( + x 3)) 'x)  ; '(+ (* x y) (* y (+ x 3)))
+(deriv '(* (* x y) (+ x 3)) 'x)  ; '(+ (* x y) (* y (+ x 3)))
