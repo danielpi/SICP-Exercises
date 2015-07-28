@@ -36,6 +36,16 @@
 ; a. Explain what was done above. Why can't we assimilate the predicates 
 ;    number? and variable? into the data-directed dispatch?
 
+; deriv now doesn't contain the implementation for each type of mathematical
+; formula that we want to find the derivitive of. Instead we use a lookup
+; table of procedures to use based on the elements tag. We didn't do this for
+; numbers and variables as they are primitive types that we are not going to 
+; tag (the tagging would add an extra layer of complexity as we would have to
+; use our own constructors for numbers and symbols rather than the standard
+; methods).
+
+
+
 ; b. Write the procedures for derivatives of sums and products, and the
 ;    auxiliary code required to install them in the table used by the 
 ;    program above.
@@ -138,4 +148,44 @@
 
 (deriv '(+ x 3) 'x)               ; 1
 (deriv '(* x y) 'x)               ; 'y
-(deriv '(* (* x y) (+ x 3)) 'x)  ; '(+ (* x y) (* y (+ x 3)))
+(deriv '(* (* x y) (+ x 3)) 'x)   ; '(+ (* x y) (* y (+ x 3)))
+
+
+; c. Choose any additional differentiation rule that you like, such as the one for 
+;    exponents and install it in this data-directed system.
+
+(define (install-exponential-package)
+  (define (=number? exp num) (and (number? exp) (= exp num)))
+  (define (make-exponentiation base exponent)
+    (cond ((=number? exponent 0) 1)
+          ((=number? exponent 1) base)
+          (else (tag (list base exponent)))))
+  (define (base x) (cadr x))
+  (define (exponent x) (caddr x))
+  (define (deriv-exponentiation x var)
+    (make-product (make-product (exponent x)
+                                (make-exponentiation (base x) (- (exponent x) 1)))
+                  (deriv (base x) var)))
+  (define (tag x) (attach-tag '** x))
+  (put 'deriv '** deriv-exponentiation)
+  (put 'make-exponentiation '**
+       (lambda (x y) (make-exponentiation x y)))
+  'done)
+
+(define (make-exponentiation x y)
+  ((get 'make-exponentiation '**) x y))
+(define (exponent x)
+  ((get 'exponent '**) x))
+
+(install-exponential-package)
+
+(deriv '(** x 3) 'x)
+
+; d. In this simple algebraic manipulator the type of an expression is the algebraic 
+;    operator that binds it together. Suppose, however, we indexed the procedures in
+;    the opposite way, so that the dispatch line in deriv looked like 
+
+;    ((get (operator exp) 'deriv) (operands exp) var)
+
+;    What corresponding changes to the derivative system are required?
+
