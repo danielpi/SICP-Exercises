@@ -16,9 +16,11 @@
 (define (deriv exp var)
   (cond ((number? exp) 0)
         ((variable? exp) (if (same-variable? exp var) 1 0))
-        (else ((get (operator exp) 'deriv) (operands exp) var))))
+        (else ((get (operator exp) 'deriv) exp var))))
 (define (operator exp) (car exp))
 (define (operands exp) (cdr exp))
+
+
 
 (define (variable? x) (symbol? x))
 (define (same-variable? v1 v2)
@@ -63,25 +65,8 @@
           (error "No method for these types: APPLY-GENERIC"
                  (list op type-tags))))))
 
-(define (install-deriv-package)
+(define (install-sum-package)
   (define (=number? exp num) (and (number? exp) (= exp num)))
-  (define (make-product a1 a2) 
-    (cond ((or (=number? a1 0) (=number? a2 0)) 0)
-          ((=number? a1 1) a2)
-          ((=number? a2 1) a1)
-          ((and (number? a1) (number? a2)) (* a1 a2))
-          (else (tag (list a1 a2)))))
-  (define (multiplier p) (cadr p))
-  (define (multiplicand p) (caddr p))
-  (define (deriv-product p var)
-    (make-sum (make-product (multiplier p)
-                            (deriv (multiplicand p) var))
-              (make-product (deriv (multiplier p) var)
-                            (multiplicand p))))
-  (put '* 'deriv deriv-product)
-  (put 'make-product 'deriv
-       (lambda (x y) (make-product x y)))
-  
   (define (make-sum a1 a2) 
     (cond ((=number? a1 0) a2)
           ((=number? a2 0) a1)
@@ -93,25 +78,49 @@
   (define (deriv-sum s var)
     (make-sum (deriv (addend s) var) 
               (deriv (augend s) var)))
+  
+  (define (tag x) (attach-tag '+ x))
   (put '+ 'deriv deriv-sum)
-  (put 'make-sum 'deriv
+  (put '+ 'make-sum
        (lambda (x y) (make-sum x y)))
-  
-  (define (tag x) (attach-tag 'deriv x))
-  
   'done)
 
 (define (make-sum x y)
-  ((get 'make-sum 'deriv) x y))
+  ((get '+ 'make-sum ) x y))
+
+(define (install-product-package)
+  (define (=number? exp num) (and (number? exp) (= exp num)))
+  (define (make-product a1 a2) 
+    (cond ((or (=number? a1 0) (=number? a2 0)) 0)
+          ((=number? a1 1) a2)
+          ((=number? a2 1) a1)
+          ((and (number? a1) (number? a2)) (* a1 a2))
+          (else (tag (list a1 a2)))))
+  (define (multiplier p) (cadr p))
+  (define (multiplicand p) (caddr p))
+  (define (deriv-product p var)
+    ;(display p) (display (multiplier p)) (display (multiplicand p))
+    ;(newline)
+    (make-sum (make-product (multiplier p)
+                            (deriv (multiplicand p) var))
+              (make-product (deriv (multiplier p) var)
+                            (multiplicand p))))
+  (define (tag x) (attach-tag '* x))
+  (put '* 'deriv deriv-product)
+  (put '* 'make-product
+       (lambda (x y) (make-product x y)))
+  'done)
+
 (define (make-product x y)
-  ((get 'make-product 'deriv) x y))
+  ((get '* 'make-product) x y))
 
-(install-deriv-package)
+(install-sum-package)
+(install-product-package)
 
-(make-sum 2 'x)
-(make-product 3 'y)
 
-(deriv 3 'x)
-;(deriv '(+ x 3) 'x)               ; 1
+(deriv '(+ x 3) 'x)               ; 1
 (deriv '(* x y) 'x)               ; 'y
 (deriv '(* (* x y) (+ x 3)) 'x)   ; '(+ (* x y) (* y (+ x 3)))
+
+; The only change that was required was to switch the order of the op and type in the
+; put calls.
