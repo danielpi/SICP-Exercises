@@ -590,6 +590,54 @@
 (real-part complex2)
 (imag-part complex2)
 
-; Message passing
 
+
+; Message passing
+; The key idea of data-directed programming is to handle generic operations in
+; programs by dealing explicitly with operations-an-type tables, such as the table in
+; figure 2.22. The style of programming we used in section 2.4.2 organized the required
+; dispatching on type by having each operation take care of its own dispatching. In
+; effect, this decomposes the operation-and-type table into rows, with each generic
+; operation procedure representing a row of the table.
+
+; An alternative implementation strategy is to decompose the table into columns and,
+; instead of using "intelligent operations" that dispatch on data types, to work with
+; "intelligent data objects" that dispatch on operation names. We can do this by
+; arranging things so that a data object, such as a rectangular number, is represented
+; as a procedure that takes as input the required operation name and performs the
+; operation indicated. In such a discipline, make-from-real-imag could be written as
+
+(define (make-from-real-imagMP x y)
+  (define (dispatch op)
+  (cond ((eq? op 'real-part) x)
+        ((eq? op 'imag-part) y)
+        ((eq? op 'magnitude)
+         (sqrt (+ (square x) (square y))))
+        ((eq? op 'angle) (atan y x))
+        (else
+         (error "Unknown op -- MAKE-FROM-REAL-IMAG" op))))
+  dispatch)
+
+(define number (make-from-real-imagMP 2 3))
+number
+
+; The corresponding apply-generic procedure, which applies a generic operation to an
+; argument, now simply feeds the operation's name to the data object and lets the object
+; do the work:
+
+(define (apply-genericMP op arg) (arg op))
+
+; Note that the value returned by make-from-real-imag is a procedure -- the internal
+; dispatch procedure. This is the procedure that is invoked when apply-generic requests
+; an operation to be performed.
+
+; This stype of programming is called message passing. The name comes from the image
+; that a data object is an entity that receives the requested operation name as a
+; "message". We have already seen an example of message passing in section 2.13, where we
+; saw how cons, car and cdr could be defined with no data objects but only procedures.
+; Here we see that message passing is not a mathematical trick but a useful technique for
+; organizing systems with generic operations. In the remainder of this chapter we will
+; continue to use data-directed programming, rather than message passing, to discuss
+; generic arithmetic operations. In chapter 3 we will return to message passing, and we
+; will see that it can be a powerful tool for structuring simulation programs.
 ; 
