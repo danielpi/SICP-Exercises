@@ -113,6 +113,7 @@
 		E6F8FBCB1B4B6FD5002A16FC /* 2.3.3-Example-Representing-Sets.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "2.3.3-Example-Representing-Sets.playground"; sourceTree = "<group>"; };
 		E6F8FBCC1B4CFA02002A16FC /* Ex2.59-Union-Set.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.59-Union-Set.playground"; sourceTree = "<group>"; };
 		E6F8FBCD1B4D1792002A16FC /* Ex2.60-Set-With-Duplicates.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.60-Set-With-Duplicates.playground"; sourceTree = "<group>"; };
+		E6FB5A8F1B88B4310006F4AC /* 2.4-Multiple-Representations-for-Abstract-Data.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "2.4-Multiple-Representations-for-Abstract-Data.playground"; sourceTree = "<group>"; };
 		E6FCEBC61A98A6E500E1AB59 /* Ex1.33-Filtered-Accumulate.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.33-Filtered-Accumulate.playground"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -192,28 +193,8 @@
 			children = (
 				E618E2001B20151F00A67D04 /* 2.1 Introduction To Data Abstraction */,
 				E618E2011B20153900A67D04 /* 2.2 Hierarchical Data and the Closure Property */,
-				E6A2F1B21B3A4BF600AAD236 /* 2.3-Symbolic-Data.playground */,
-				E62A953B1B3D6FB00000A079 /* 2.3.2-Example-Symbolic-Differentiation.playground */,
-				E6CE5BA21B42145C0048EBD5 /* Ex2.56-Exponential-Differentiation.playground */,
-				E6CE5BA31B4232610048EBD5 /* Ex2.57-Variadic-Parameters.playground */,
-				E6CE5BA41B42355E0048EBD5 /* Ex2.58-Infix-Notation.playground */,
-				E6CE5BA51B4268170048EBD5 /* SymbolicDifferentiation.playground */,
-				E6F8FBCB1B4B6FD5002A16FC /* 2.3.3-Example-Representing-Sets.playground */,
-				E6F8FBCC1B4CFA02002A16FC /* Ex2.59-Union-Set.playground */,
-				E6F8FBCD1B4D1792002A16FC /* Ex2.60-Set-With-Duplicates.playground */,
-				E60355671B4DE5740055C32A /* Ex2.61-adjoinSet-ordered.playground */,
-				E60355681B4DF06A0055C32A /* Ex2.62-unionSet-ordered.playground */,
-				E6E0D4F51B4F800900EEE84D /* Ex2.63-tree->list.playground */,
-				E6E0D4F61B4F995600EEE84D /* Ex2.64-list->tree.playground */,
-				E622C9711B53E2D500FA5D9F /* Ex2.65-union-intersection-set.playground */,
-				E6556FC31B54E56400D70B6B /* Ex2.66-Tree-Lookup.playground */,
-				E66D11511B56633500470CC6 /* 2.3.4-Example-Huffman-Encoding-Trees.playground */,
-				E62161261B5898A500252487 /* Ex2.67-encoding-tree.playground */,
-				E62161271B589AF400252487 /* Ex2.68-encode.playground */,
-				E607D25F1B58B0E2006FB709 /* Ex2.69-generate-Huffman-tree.playground */,
-				E607D2601B58C496006FB709 /* Ex2.70-50s-lyrics.playground */,
-				E6E56BA51B591FB600257078 /* Ex2.71-General-Huffman.playground */,
-				E6E56BA61B5923BA00257078 /* Ex2.72-Huffman-Analysis.playground */,
+				E6FB5A901B88B4750006F4AC /* 2.3 Symbolic Data */,
+				E6FB5A8F1B88B4310006F4AC /* 2.4-Multiple-Representations-for-Abstract-Data.playground */,
 			);
 			name = "Chapter 2 Building Abstractions with Data";
 			sourceTree = "<group>";
@@ -276,6 +257,35 @@
 				E6AFD9841B2072E9006BA954 /* 1.3 Formulating Abstractions with Higher Order Procedures */,
 			);
 			name = "Chapter 1 Building Abstractions from Procedures";
+			sourceTree = "<group>";
+		};
+		E6FB5A901B88B4750006F4AC /* 2.3 Symbolic Data */ = {
+			isa = PBXGroup;
+			children = (
+				E6A2F1B21B3A4BF600AAD236 /* 2.3-Symbolic-Data.playground */,
+				E62A953B1B3D6FB00000A079 /* 2.3.2-Example-Symbolic-Differentiation.playground */,
+				E6CE5BA21B42145C0048EBD5 /* Ex2.56-Exponential-Differentiation.playground */,
+				E6CE5BA31B4232610048EBD5 /* Ex2.57-Variadic-Parameters.playground */,
+				E6CE5BA41B42355E0048EBD5 /* Ex2.58-Infix-Notation.playground */,
+				E6CE5BA51B4268170048EBD5 /* SymbolicDifferentiation.playground */,
+				E6F8FBCB1B4B6FD5002A16FC /* 2.3.3-Example-Representing-Sets.playground */,
+				E6F8FBCC1B4CFA02002A16FC /* Ex2.59-Union-Set.playground */,
+				E6F8FBCD1B4D1792002A16FC /* Ex2.60-Set-With-Duplicates.playground */,
+				E60355671B4DE5740055C32A /* Ex2.61-adjoinSet-ordered.playground */,
+				E60355681B4DF06A0055C32A /* Ex2.62-unionSet-ordered.playground */,
+				E6E0D4F51B4F800900EEE84D /* Ex2.63-tree->list.playground */,
+				E6E0D4F61B4F995600EEE84D /* Ex2.64-list->tree.playground */,
+				E622C9711B53E2D500FA5D9F /* Ex2.65-union-intersection-set.playground */,
+				E6556FC31B54E56400D70B6B /* Ex2.66-Tree-Lookup.playground */,
+				E66D11511B56633500470CC6 /* 2.3.4-Example-Huffman-Encoding-Trees.playground */,
+				E62161261B5898A500252487 /* Ex2.67-encoding-tree.playground */,
+				E62161271B589AF400252487 /* Ex2.68-encode.playground */,
+				E607D25F1B58B0E2006FB709 /* Ex2.69-generate-Huffman-tree.playground */,
+				E607D2601B58C496006FB709 /* Ex2.70-50s-lyrics.playground */,
+				E6E56BA51B591FB600257078 /* Ex2.71-General-Huffman.playground */,
+				E6E56BA61B5923BA00257078 /* Ex2.72-Huffman-Analysis.playground */,
+			);
+			name = "2.3 Symbolic Data";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
