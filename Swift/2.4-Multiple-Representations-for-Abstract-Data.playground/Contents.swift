@@ -61,5 +61,58 @@ import Cocoa
 //:         Angle(z1 . z2) = Angle(z1) + Angle(z2).
 //:
 //: Thus, there are two different representations for complex numbers, which are appropriate for different operations. Yet, from the viewpoint of someone writing a program that uses complex numbers, the principle of data abstraction suggests that all the operations for manipulating complex numbers should be available regardless of which representation is used by the computer. For example, it is often useful to be able to find the magnitude of a complex number that is specified by rectangular coordinates. Similarly, it is often useful to be able to determine the real part of a complex number that is specified by polar coordinates.
+//:
+//: To design such a system, we can follow the same data-abstraction strategy we followed in designing the rational-number package in Section 2.1.1. Assume that the operations on complex numbers are implemented in terms of four selectors: real-part, imag-part, magnitude and angle. Also assume that we have two procedures for constructing complex numbers: make-from-real-imag returns a complex number with specified real and imaginary parts, and make-from-mag-ang returns a complex number with specified magnitude and angle. These procedures have the property that, for any complex number z, both 
+//:
+//:     makeFromRealImag(realPart(z), imagPart(z))
+//:
+//: and
+//: 
+//:    makeFromMagAng(magnitude(z), angle(z))
+//:
+//: produce complex numbers that are equal to z.
+//:
+//: Using these constructors and selectors, we can implement arithmetic on complex numbers using the "abstract data" specified by the constructors and selectors, just as we did for rational numbers in Section 2.11. As shown in the formulas above, we can add and subtract complex numbers in terms of real and imaginary parts while multiplying and dividing complex numbers in terms of magnitudes and angles:
 
+func square(x: Double) -> Double { return x * x }
+//func sqrt(x: Double) -> Double { return pow(x, 0.5) }
 
+typealias RectangularForm = (Double, Double)
+func realPart1(z: RectangularForm) -> Double { return z.0 }
+func imagPart1(z: RectangularForm) -> Double { return z.1 }
+func magnitude1(z: RectangularForm) -> Double { return sqrt(square(realPart1(z)) + square(imagPart1(z))) }
+func angle1(z: RectangularForm) -> Double { return atan2(imagPart1(z), realPart1(z)) }
+func makeFromRealImag1(x: Double, y: Double) -> RectangularForm { return (x, y) }
+func makeFromMagAng1(r: Double, a: Double) -> RectangularForm { return (r * cos(a), r * sin(a)) }
+
+let a = makeFromRealImag1(3, 4)
+realPart1(a)
+imagPart1(a)
+magnitude1(a)
+angle1(a)
+
+let b = makeFromMagAng1(1, 3.14 / 4)
+realPart1(b)
+imagPart1(b)
+magnitude1(b)
+angle1(b)
+
+func addComplex1(z1: RectangularForm, z2: RectangularForm) -> RectangularForm {
+    return makeFromRealImag1(realPart1(z1) + realPart1(z2), imagPart1(z1) + imagPart1(z2))
+}
+func subComplex1(z1: RectangularForm, z2: RectangularForm) -> RectangularForm {
+    return makeFromRealImag1(realPart1(z1) - realPart1(z2), imagPart1(z1) - imagPart1(z2))
+}
+func mulComplex1(z1: RectangularForm, z2: RectangularForm) -> RectangularForm {
+    return makeFromMagAng1(magnitude1(z1) * magnitude1(z2), angle1(z1) + angle1(z2))
+}
+func divComplex1(z1: RectangularForm, z2: RectangularForm) -> RectangularForm {
+    return makeFromMagAng1(magnitude1(z1) / magnitude1(z2), angle1(z1) - angle1(z2))
+}
+
+addComplex1(a, b)
+subComplex1(a, b)
+mulComplex1(a, b)
+divComplex1(a, b)
+
+//: To complete the complex-number package, 
