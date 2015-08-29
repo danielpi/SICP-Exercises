@@ -115,4 +115,41 @@ subComplex1(a, b)
 mulComplex1(a, b)
 divComplex1(a, b)
 
-//: To complete the complex-number package, 
+//: To complete the complex-number package, we must choose a representations and we must implement the constructors and selectors in terms of primitive numbers and primitive list structure. There are two obvious ways to do this: we can represent a complex number in "rectangular form" as a pair (real part, imaginary part) or in "polar form" as a pair (magnitude, angle). Which shall we choose?
+//:
+//: In order to make the different choices concrete, imagine that there are two programmers, Ben Bitdiddle and Alyssa P. Hacker, who are independently designing representations for the complex-number system. Ben chooses to represent complex numbers in rectangular form. With this choice, selecting the real and imaginary parts of a complex number is straightforward, as is constructing a omplex number with given real and imaginary parts. To find the magnitude and the angle, or to construct a complex number with a given magnitude and angle, he uses the trigonometric relations.
+//:
+//:    x = r cos A,  r = (x^2 + y^2)^0.5
+//:    y = r sin A,  A = arctan(y,x)
+//:
+//: which relate the real and imaginary parts (x,y) to the magnitude and the angle (r,A). Ben's representation is therefore given by the following selectors and constructors.
+//:
+//: See above
+//:
+//: Alyssa, in contrast, chooses to represent complex numbers in polar form. For her, selecting the magnitude and angle is straighforward, but she has to use the trigonometric relations to obtain the real and imaginary parts. Alyssa's representation is:
+
+typealias PolarForm = (Double, Double)
+func realPart2(z: PolarForm) -> Double {
+    return magnitude2(z) * cos(angle2(z))
+}
+func imagPart2(z: PolarForm) -> Double {
+    return magnitude2(z) * sin(angle2(z))
+}
+func magnitude2(z: PolarForm) -> Double { return z.0 }
+func angle2(z: PolarForm) -> Double { return z.1 }
+func makeFromRealImag2(x: Double, y: Double) -> PolarForm {
+    return PolarForm(sqrt(square(x) + square(y)), atan2(y, x))
+}
+func makeFromMagAng2(r: Double, A: Double) -> PolarForm {
+    return PolarForm(r, A)
+}
+
+//: The discipline of data abstraction ensures that the same implementation of add-complex, sub-complex, mul-complex, and div-complex will work with either Ben's representation or Alyssa's representation.
+//:
+//:
+//: ## 2.4.2 Tagged data
+//:
+//: One way to view data abstraction is as an application of the "principle of least commitment." In implementing the complex-number system in Section 2.4.11, we can use either Ben's rectangular representation or Alyssa's polar representation. The abstraction barrier formed by the selectors and constructors permits us to defer to the  last possible moment the choice of a concrete representation for our data objects and thus retain maximum flexibility in our system design.
+//:
+//: 
+
