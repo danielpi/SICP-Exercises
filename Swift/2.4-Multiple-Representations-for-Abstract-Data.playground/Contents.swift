@@ -151,5 +151,32 @@ func makeFromMagAng2(r: Double, A: Double) -> PolarForm {
 //:
 //: One way to view data abstraction is as an application of the "principle of least commitment." In implementing the complex-number system in Section 2.4.11, we can use either Ben's rectangular representation or Alyssa's polar representation. The abstraction barrier formed by the selectors and constructors permits us to defer to the  last possible moment the choice of a concrete representation for our data objects and thus retain maximum flexibility in our system design.
 //:
-//: 
+//: The principle of least commitment can be carried to even further extremes. If we desire, we can maintain the ambiquity of representation even after we have designed the selectors and constructors, and elect to use both Ben's representation *and* Alyssa's representation. If both representations are included in a single system, however, we will need some way to distinquish data in polar form from data in rectangular form. Otherwise, if we were asked, for instance, to find the magnitude of the pair (3,4), we wouldn't know whether to answer 5 (interpreting the number in rectangular form) or 3 (interpreting the number in polar form). A straightforward way to accomplish this distinction is to include a type tag - the symbol rectangle or polar - as part of each complex number. Then when we need to manipulate a complex number we can use the tag to decide which selector to apply.
+//:
+//: In order to manipulate tagged data, we will assume that we have procedures type-tag and contents that extract from a data object the tag and the actual contents (the polar or rectangular coordinates, in the case of a complex number). We will also postulate a procedure attach-tag that takes a tag and contents and produces a tagged data object. A straightforward way to implement this is to use ordinary list structure:
+
+
+enum ComplexNumberType { case Rectangular, Polar }
+typealias Datum = (ComplexNumberType, Double, Double)
+
+func attachTag(typeTag: ComplexNumberType, contents: (Double, Double)) -> Datum {
+    return (typeTag, contents.0, contents.1)
+}
+func typeTag(datum: Datum) -> ComplexNumberType {
+    return datum.0
+}
+func contents(datum: Datum) -> (Double, Double) {
+    return (datum.2, datum.2)
+}
+
+//: Using these procedures, we can define predicates rectangular? and polar?, which recognize rectangular and polar numbers, respectively:
+
+func isRectangular(z: Datum) -> Bool {
+    return z.0 == .Rectangular
+}
+func isPolar(z: Datum) -> Bool {
+    return z.0 == .Polar
+}
+
+//: With type tags, Ben and Alyssa can now modify their code so that their two different representations can coexist in the same system. Whenever Ben constructs a complex number, he tags it as rectangular. Whenever Alyssa constructs a complex number, she tags it as polar. In addition, Ben and Alyssa must make sure that the names of their procedures do not conflict. One way to do this is for Ben to append the suffix rectangular
 
