@@ -164,16 +164,17 @@ angle2(polarB)
 
 
 enum ComplexNumberType { case Rectangular, Polar }
-typealias Datum = (ComplexNumberType, Double, Double)
+typealias ComplexNumber = (Double, Double)
+typealias Datum = (ComplexNumberType, ComplexNumber)
 
-func attachTag(typeTag: ComplexNumberType, contents: (Double, Double)) -> Datum {
-    return (typeTag, contents.0, contents.1)
+func attachTag(typeTag: ComplexNumberType, contents: ComplexNumber) -> Datum {
+    return (typeTag, (contents.0, contents.1))
 }
 func typeTag(datum: Datum) -> ComplexNumberType {
     return datum.0
 }
-func contents(datum: Datum) -> (Double, Double) {
-    return (datum.2, datum.2)
+func contents(datum: Datum) -> ComplexNumber {
+    return datum.1
 }
 
 //: Using these procedures, we can define predicates rectangular? and polar?, which recognize rectangular and polar numbers, respectively:
@@ -187,12 +188,12 @@ func isPolar(z: Datum) -> Bool {
 
 //: With type tags, Ben and Alyssa can now modify their code so that their two different representations can coexist in the same system. Whenever Ben constructs a complex number, he tags it as rectangular. Whenever Alyssa constructs a complex number, she tags it as polar. In addition, Ben and Alyssa must make sure that the names of their procedures do not conflict. One way to do this is for Ben to append the suffix rectangular to the name of each of his representation procedures and for Alyssa to append polar to the names of hers. Here is Ben's revised rectangular representation from Section 2.4.1:
 
-func realPartRectangular(z: Datum) -> Double { return z.1 }
-func imagPartRectangular(z: Datum) -> Double { return z.2 }
-func magnitudeRectangular(z: Datum) -> Double {
+func realPartRectangular(z: ComplexNumber) -> Double { return z.0 }
+func imagPartRectangular(z: ComplexNumber) -> Double { return z.1 }
+func magnitudeRectangular(z: ComplexNumber) -> Double {
     return pow(square(realPartRectangular(z)) + square(imagPartRectangular(z)), 0.5)
 }
-func angleRectangular(z: Datum) -> Double {
+func angleRectangular(z: ComplexNumber) -> Double {
     return atan2(imagPartRectangular(z), realPartRectangular(z))
 }
 func makeFromRealImagRectangular(x: Double, y: Double) -> Datum {
@@ -207,14 +208,14 @@ let rectangularDatumB = makeFromMagAngRectangular(10,-2)
 
 //: and here is Alyssa's revised polar representation:
 
-func realPartPolar(z: Datum) -> Double {
+func realPartPolar(z: ComplexNumber) -> Double {
     return magnitudePolar(z) * cos(anglePolar(z))
 }
-func imagPartPolar(z: Datum) -> Double {
+func imagPartPolar(z: ComplexNumber) -> Double {
     return magnitudePolar(z) * sin(anglePolar(z))
 }
-func magnitudePolar(z: Datum) -> Double { return z.1 }
-func anglePolar(z: Datum) -> Double { return z.2 }
+func magnitudePolar(z: ComplexNumber) -> Double { return z.0 }
+func anglePolar(z: ComplexNumber) -> Double { return z.1 }
 func makeFromRealImagPolar(x: Double, y: Double) -> Datum {
     let tag: ComplexNumberType = .Polar
     let r = pow(square(x) + square(y), 0.5)
@@ -233,33 +234,33 @@ let polarDatumB = makeFromMagAngPolar(6, 0.8)
 func realPart3(z: Datum) -> Double {
     switch typeTag(z) {
     case .Rectangular:
-        return realPartRectangular(z)
+        return realPartRectangular(contents(z))
     case .Polar:
-        return realPartPolar(z)
+        return realPartPolar(contents(z))
     }
 }
 func imagPart3(z: Datum) -> Double {
     switch typeTag(z) {
     case .Rectangular:
-        return imagPartRectangular(z)
+        return imagPartRectangular(contents(z))
     case .Polar:
-        return imagPartPolar(z)
+        return imagPartPolar(contents(z))
     }
 }
 func magnitude3(z: Datum) -> Double {
     switch typeTag(z) {
     case .Rectangular:
-        return magnitudeRectangular(z)
+        return magnitudeRectangular(contents(z))
     case .Polar:
-        return magnitudePolar(z)
+        return magnitudePolar(contents(z))
     }
 }
 func angle3(z: Datum) -> Double {
     switch typeTag(z) {
     case .Rectangular:
-        return angleRectangular(z)
+        return angleRectangular(contents(z))
     case .Polar:
-        return anglePolar(z)
+        return anglePolar(contents(z))
     }
 }
 
@@ -283,6 +284,30 @@ func makeFromMagAng3(r: Double, A: Double) -> Datum {
 let AAA = makeFromRealImag3(3, 4)
 let BBB = makeFromMagAng3(5, 0.2)
 let CCC = addComplex(AAA, BBB)
+
+//:                    Programs that use complex numbers
+//:          ------------------------------------------------------
+//:     ----|  add-complex  sub-complex  mul-complex  div-complex  |----
+//:          ------------------------------------------------------
+//:                        Complex-arithmetic package
+//:                        --------------------------
+//:     __________________|  real-part    magnitude  |__________________
+//:                       |  imag-part      angle    |
+//:                        --------------------------
+//:             Rectangular            |               Polar
+//:           representation           |           representation
+//:     ----------------------------------------------------------------
+//:
+//: **Figure 2.2.1:** *Structure of the generic complex-arithmetic system.*
+
+//: The resulting complex-number system has the structure shown in Figure 2.21. The system has been decomposed into three relatively independent parts: the complex-number arithmetic operations, Alyssa's polar implementation, and Ben's rectangular implementation. The polar and rectangular implementations could have been written by Ben and Alyssa working separately, and both of these can be used as underlying representations by a third programmer implementing the complex arithmetic procedures in terms of the abstract constructor/selector interface.
+//:
+//: Since each data object is tagged with its type, the selectors operate on the data in a generic manner. That is, each selector is defined to have a behaviour that depends upon the particular type of data it is applied to. Notice the general mechanism for interfacing the separate representations: Within a given representation implementation (say, Alyssa's polar package) a complex number is an untyped pair (magnitude, angle). When a generic selector operates on a number of polar type, it strips off the tag and passes the contents on to Alyssa's code. Conversely, when Alyssa constructs a number for general use, she tags it with a type so that it can be appropriately recognised by the higher-level procedures. This discipline of stripping off and attaching tags as data objects are passed from level to level can be an important organizational strategy, as we shall see in Section 2.5.
+
+
+//: ## 2.4.3 Data-Directed Programming and Additivity
+
+
 
 
 
