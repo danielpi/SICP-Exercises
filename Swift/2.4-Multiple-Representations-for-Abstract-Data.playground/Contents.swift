@@ -306,7 +306,12 @@ let CCC = addComplex(AAA, BBB)
 
 
 //: ## 2.4.3 Data-Directed Programming and Additivity
-
+//:
+//: The general strategy of checking the type of a datum and calling an appropriate procedure is called *dispatching on type*. This is a powerful strategy for obtaining modularity in system design. On the other hand, implementing the dispatch as in Section 2.4.2 has two significant weaknesses. One weakness is that the generic interface procedures (real-part, imag-part, magnitude, and angle) must know about all the different representations. For instance, suppose we wanted to incorporate a new representation for complex numbers into our complex-number system. We would need to identify this new representation with a type, and then add a clause to each of the generic interface procedures to check for the new type and apply the appropriate selector for that representation.
+//:
+//: Another weakness of the technique is that even though the individual representations can be designed separately, we must guarantee that no two procedures in the entire system have the same name. This is why Ben and Alyssa had to change the names of their original procedures from Section 2.4.1.
+//:
+//: The issue underlying both of these weaknesses is that the technique for implementing generic interfaces is not *additive*.
 
 
 
