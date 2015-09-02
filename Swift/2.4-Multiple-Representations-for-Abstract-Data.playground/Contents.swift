@@ -311,7 +311,33 @@ let CCC = addComplex(AAA, BBB)
 //:
 //: Another weakness of the technique is that even though the individual representations can be designed separately, we must guarantee that no two procedures in the entire system have the same name. This is why Ben and Alyssa had to change the names of their original procedures from Section 2.4.1.
 //:
-//: The issue underlying both of these weaknesses is that the technique for implementing generic interfaces is not *additive*.
+//: The issue underlying both of these weaknesses is that the technique for implementing generic interfaces is not *additive*. The person implementing the generic selector procedures must modify those procedures each time a new representation is installed, and the people interfacing the individual representations must modify their code to avoid name conflicts. In each of these cases, the changes that must be made to the code are straightforward, but they must be made nonetheless, and this is a source of inconvenience and error. This is not much of a problem for the complex-number system as it stands, but suppose there were not two but hundreds of different representations for complex numbers. And suppose that there were many generic selectors to be maintained in the abstract-data interface. Suppose, in fact, that no one programmer knew all the interface procedures or all the representations. The problem is real and must be addressed in such programs as large-scale data-base-management systems.
+//:
+//: What we need is a means for modularizing the system design even further. This is provided by the programming technique known as *data-directed programming*. To understand how data-directed programming works, begin with the observation that whenver we deal with a set of generic operations that are common to a set of different types we are, in effect, dealing with a two-dimensional table that contains the possible operations on one axis and the possible types on the other axis. The entries in the table are the procedures that implement each operation for each type of argument presented. In the complex-number system developed in the previous section, the correspondence between operation name, data type, and actual procedure was spread out among the various conditional clauses in the generic interface procedures. But the same information could have been organized in a table, as shown in Figure 2.22.
+//:
+//:    Operations |               Types
+//:               |     Polar       |      Rectangular
+//:               |-----------------|-----------------------
+//:    real-part  | real-part-polar | real-part-rectangular
+//:    imag-part  | imag-part-polar | imag-part-rectangular
+//:    magnitude  | magnitude-polar | magnitude-rectangular
+//:    angle      | angle-polar     | angle-rectangular
+//:
+//: **Figure 2.22:** Table of operations for the complex- number system
+//:
+//: Data-directed programming is the technique of designing programs to work with such a table directly. Previously, we implemented the mechanism that interfaces the complex-arithmetic code with the two representation packages as a set of procedures that each perform an explicit dispatch on type. Here we will implement the interface as a single procedure that looks up the combination of the operation name and argument type in the table to find the correct procedure to apply, and then applies it to the contents of the argument. If we do this, then to add a new representation package to the system we need not change any existing procedures; we need only add new entries to the table.
+//:
+//: To implement this plan, assume that we have two procedures, put and get, for manipulating the operation-and-type table:
+//:
+//: - put(op: String, type: String, item: (ComplexNumber) -> Double) { installs the <item> in the table, indexed by the <op> and the <type>.
+//: - get(op: String, type: String) -> (ComplexNumber) -> Double { looks up the <op>, <type> entry in the table and returns the item found there. If no item is found, get returns false.
+//:
+//: For now, we can assume that put and get are included in our language. In chapter 3 (Section 3.3.3) we will see how to implement these and other operations for manipulating tables.
+//:
+//: Here is how data-directed programming can be used in the complex-number system. Ben, who developed the rectangular representation, implements his code just as he did originally. He defines a collection of procedures, or a *package*, and interfaces these to the rest of the system by adding entries to the table that tell the system how to operate on rectangular numbers. This is accomplished by calling the following procedure:
+
+
+
 
 
 
