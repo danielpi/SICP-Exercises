@@ -336,9 +336,119 @@ let CCC = addComplex(AAA, BBB)
 //:
 //: Here is how data-directed programming can be used in the complex-number system. Ben, who developed the rectangular representation, implements his code just as he did originally. He defines a collection of procedures, or a *package*, and interfaces these to the rest of the system by adding entries to the table that tell the system how to operate on rectangular numbers. This is accomplished by calling the following procedure:
 
+typealias ComplexNumberSelector = (ComplexNumber) -> Double
+typealias ComplexNumberConstructor = (Double, Double) -> ComplexNumber
 
+var globalSelectorTable = [ComplexNumberType: [String: ComplexNumberSelector]]()
+var globalConstructorTable = [ComplexNumberType: [String: ComplexNumberConstructor]]()
 
+func put(op: String, type: ComplexNumberType, item: ComplexNumberSelector) {
+    if let typeColumn = globalSelectorTable[type] {
+        globalSelectorTable[type]![op] = item
+    } else {
+        globalSelectorTable[type] = [op: item]
+    }
+}
+func put(op: String, type: ComplexNumberType, item: ComplexNumberConstructor) {
+    if let typeColumn = globalConstructorTable[type] {
+        globalConstructorTable[type]![op] = item
+    } else {
+        globalConstructorTable[type] = [op: item]
+    }
+}
 
+func get(op: String, type: ComplexNumberType) -> ComplexNumberSelector {
+    if let typeColumn = globalSelectorTable[type] {
+        if let function = typeColumn[op] {
+            return function
+        } else {
+            fatalError("There is no selector named \(op) for data of type \(type) registered with \(globalSelectorTable)")
+        }
+    } else {
+        fatalError("There is no type \(type) registered with \(globalSelectorTable)")
+    }
+}
+func get(op: String, type: ComplexNumberType) -> ComplexNumberConstructor {
+    if let typeColumn = globalConstructorTable[type] {
+        if let function = typeColumn[op] {
+            return function
+        } else {
+            fatalError("There is no selector named \(op) for data of type \(type) registered with \(globalConstructorTable)")
+        }
+    } else {
+        fatalError("There is no type \(type) registered with \(globalConstructorTable)")
+    }
+}
 
+func installRectangularPackage() {
+    // Internal Procedures
+    func realPart(z: ComplexNumber) -> Double { return z.0 }
+    func imagPart(z: ComplexNumber) -> Double { return z.1 }
+    func magnitude(z: ComplexNumber) -> Double {
+        return pow(square(realPartRectangular(z)) + square(imagPartRectangular(z)), 0.5)
+    }
+    func angle(z: ComplexNumber) -> Double {
+        return atan2(imagPartRectangular(z), realPartRectangular(z))
+    }
+    func makeFromRealImag(x: Double, y: Double) -> ComplexNumber {
+        return (x, y)
+    }
+    func makeFromMagAng(r: Double, A: Double) -> ComplexNumber {
+        return (r * cos(A), r * sin(A))
+    }
+    
+    // Interface to the rest of the system
+    func tag(x: ComplexNumber) -> Datum {
+        return attachTag(.Rectangular, x)
+    }
+    put("realPart", .Rectangular, realPart)
+    put("imagPart", .Rectangular, imagPart)
+    put("magnitude", .Rectangular, magnitude)
+    put("angle", .Rectangular, angle)
+    put("makeFromRealImag", .Rectangular, makeFromRealImag)
+}
 
+//: Notice that the internal procedures here are the same procedures from Section 2.4.1 that Ben wrote when he was working in isolation. No changes are necessary in order to interface them to the rest of the system. Moreover, since these procedure definitions are internal to the installation procedure, Ben needn't worry about name conflicts with other procedures outside the rectangular package. To interface these to the rest of the system, Ben installs his real-part procedure under the operation name real-part and the type (rectangular), and similarly for the other selectors. The interface also defines the constructors to be used by the external system. These are identical to Ben's internally defined constructors, except that they attach the tag.
+//:
+//: Alyssa's polar package is analogous:
+
+func installPolarPackage() {
+    // Internal Procedures
+    func magnitude(z: ComplexNumber) -> Double { return z.0 }
+    func angle(z: ComplexNumber) -> Double { return z.1 }
+    func realPart(z: ComplexNumber) -> Double {
+        return magnitude(z) * cos(angle(z))
+    }
+    func imagPart(z: ComplexNumber) -> Double {
+        return magnitude(z) * sin(angle(z))
+    }
+    func makeFromMagAng(r: Double, A: Double) -> ComplexNumber {
+        return (r, A)
+    }
+    func makeFromRealImag(x: Double, y: Double) -> ComplexNumber {
+        return (pow(square(x) + square(y), 0.5), atan2(y, x))
+    }
+    
+    // interface to the rest of the system
+    func tag(x: ComplexNumber) -> Datum {
+        return attachTag(.Polar, x)
+    }
+    put("magnitude", .Polar, magnitude)
+    put("angle", .Polar, angle)
+    put("realPart", .Polar, realPart)
+    put("imagPart", .Polar, imagPart)
+    put("makeFromMagAng", .Polar, makeFromMagAng)
+    put("makeFromRealImag", .Polar, makeFromMagAng)
+}
+
+//: Even though Ben and Alyssa both still use their original procedures defined with the same names as each other's (e.g., realPart), these definitions are now internal to different procedures (see Section 1.1.8), so there is no name conflict.
+//:
+//: The complex-arithmetic selectors access the table by means of a general "operation" procedure called applyGeneric, which applies a generic operation to some arguments. applyGeneric looks in the table under the name of the operation and the types of the arguments and applies the resulting procedure if one is present:
+
+func applyGeneric(op: String, args: Datum) {
+    let type = typeTag(args)
+    let proc: ComplexNumberSelector = get(op, type)
+    
+    
+}
 
