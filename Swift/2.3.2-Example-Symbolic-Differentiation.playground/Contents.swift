@@ -189,7 +189,7 @@ func deriv1(exp: Expr, variable: Expr) -> Expr {
     case .Variable(_):
         return isSameVariable(exp, variable) ? .Constant(1) : .Constant(0)
     case .Sum(_, _):
-        return makeSum1(deriv(addend(exp), variable), deriv1(augend(exp), variable))
+        return makeSum1(deriv1(addend(exp), variable), deriv1(augend(exp), variable))
     case .Product(_, _):
         return makeSum1(makeProduct1(multiplier(exp), deriv1(multiplicand(exp), variable)), makeProduct1(deriv1(multiplier(exp), variable), multiplicand(exp)))
     default:

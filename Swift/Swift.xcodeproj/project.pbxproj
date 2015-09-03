@@ -72,6 +72,7 @@
 		E6908FE61B398C1900D2D02B /* Ex2.51-Below.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.51-Below.playground"; sourceTree = "<group>"; };
 		E6908FE71B39918400D2D02B /* Ex2.52-Making-Changes.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.52-Making-Changes.playground"; sourceTree = "<group>"; };
 		E691E6C91B1408E200DBAA12 /* Ex2.29-Binary-Mobile.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.29-Binary-Mobile.playground"; sourceTree = "<group>"; };
+		E692F1231B987923005B6BAE /* Ex2.73-Data-directed-Deriv.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.73-Data-directed-Deriv.playground"; sourceTree = "<group>"; };
 		E693FA471AC65C9300459BF7 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; };
 		E695B1651B12E0E800C92955 /* Ex2.26-Append-Cons-List.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.26-Append-Cons-List.playground"; sourceTree = "<group>"; };
 		E696F06F1AD685D700039485 /* Ex2.17-Last-Pair.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.17-Last-Pair.playground"; sourceTree = "<group>"; };
@@ -195,6 +196,7 @@
 				E618E2011B20153900A67D04 /* 2.2 Hierarchical Data and the Closure Property */,
 				E6FB5A901B88B4750006F4AC /* 2.3 Symbolic Data */,
 				E6FB5A8F1B88B4310006F4AC /* 2.4-Multiple-Representations-for-Abstract-Data.playground */,
+				E692F1231B987923005B6BAE /* Ex2.73-Data-directed-Deriv.playground */,
 			);
 			name = "Chapter 2 Building Abstractions with Data";
 			sourceTree = "<group>";
