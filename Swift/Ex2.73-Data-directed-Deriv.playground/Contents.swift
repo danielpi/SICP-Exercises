@@ -179,13 +179,146 @@ func deriv(exp: Expr, variable: Expr) -> Expr {
     }
 }
 
-println(deriv("x" + 3, "x")) // 1
-println(deriv("x" * "y", "x")) // y
-println(deriv(("x" * "y") * ("x" + 3), "x")) //
+println(deriv("x" + 3, "x"))                    // 1
+println(deriv("x" * "y", "x"))                  // y
+println(deriv(("x" * "y") * ("x" + 3), "x"))    // ((x * y) + (y * (x + 3)))
+
 
 //: We can regard this program as performing a dispatch on the type of the expression to be differentiated. In this situation the "type tag" of the datum is the algebraic operator symbol (such as +) and the operation being performed is deriv. We can transform this program into data-directed style by rewriting the basic derivative procedure as 
 
+
+typealias DerivativeFunction = (exp: Expr, variable: Expr) -> Expr
+
+var globalSelectorTable = [String: [String: DerivativeFunction]]()
+
+func put(op: String, type: String, item: DerivativeFunction) {
+    if let typeColumn = globalSelectorTable[type] {
+        globalSelectorTable[type]![op] = item
+    } else {
+        globalSelectorTable[type] = [op: item]
+    }
+}
+
+func get(op: String, type: String) -> DerivativeFunction? {
+    return globalSelectorTable[type]?[op]
+}
+
+
+func operator_(exp: Expr) -> String {
+    switch exp {
+    case .Sum(_, _):
+        return "+"
+    case .Product(_, _):
+        return "*"
+    default:
+        fatalError("Unhandled expression: \(exp)")
+    }
+}
+func operands(exp: Expr) -> (Expr,Expr) {
+    switch exp {
+    case let .Sum(a, b):
+        return (a.unbox, b.unbox)
+    case let .Product(a, b):
+        return (a.unbox, b.unbox)
+    default:
+        fatalError("Unhandled expression: \(exp)")
+    }
+}
+
+//println(deriv2("x" + 3, "x")) // 1
+//println(deriv2("x" * "y", "x")) // y
+//println(deriv2(("x" * "y") * ("x" + 3), "x")) //
+
+/*
+case .Sum(_, _):
+return makeSum(deriv(addend(exp), variable), deriv(augend(exp), variable))
+case .Product(_, _):
+return makeSum(makeProduct(multiplier(exp), deriv(multiplicand(exp), variable)), makeProduct(deriv(multiplier(exp), variable), multiplicand(exp)))
+*/
+
 //: - Explain what was done above. Why can't we assimilate the predicates number? and variable? into the data-directed dispatch?
+
+
+
 //: - Write the procedures for derivatives of sums and products, and the auxiliary code required to install them in the table used by the program above.
+
+func deriv2(exp: Expr, variable: Expr) -> Expr {
+    switch exp {
+    case .Constant(_):
+        return .Constant(0)
+    case .Variable(_):
+        return isSameVariable(exp, variable) ? .Constant(1) : .Constant(0)
+    default:
+        let oper = operator_(exp)
+        let rands = operands(exp)
+        let function = get("deriv", operator_(exp))!
+        print(variable)
+        let result = function(exp: exp, variable: variable)
+        return result
+    }
+}
+
+
+func installDerivativeSumPackage() {
+    // Internal Procedures
+    func makeSum(a1: Expr, a2: Expr) -> Expr {
+        switch (a1, a2) {
+        case (.Constant(0), _):
+            return a2
+        case (_, .Constant(0)):
+            return a1
+        case (.Constant(let a), .Constant(let b)):
+            return .Constant(a + b)
+        default:
+            return Expr.Sum(Box(a1), Box(a2))
+        }
+    }
+    
+    func derivSum(exp: Expr, variable: Expr) -> Expr {
+        return makeSum(deriv2(addend(exp), variable), deriv2(augend(exp), variable))
+    }
+    
+    // Interface to the rest of the system
+    put("deriv", "+", derivSum)
+}
+
+installDerivativeSumPackage()
+globalSelectorTable
+
+func installDerivativeProductPackage() {
+    func makeProduct(m1: Expr, m2: Expr) -> Expr {
+        switch (m1, m2) {
+        case (.Constant(0), _):
+            return .Constant(0)
+        case (_, .Constant(0)):
+            return .Constant(0)
+        case (.Constant(1), _):
+            return m2
+        case (_, .Constant(1)):
+            return m1
+        case (.Constant(let a), .Constant(let b)):
+            return .Constant(a * b)
+        default:
+            return Expr.Product(Box(m1), Box(m2))
+        }
+    }
+    
+    func derivProduct(exp: Expr, variable: Expr) -> Expr {
+        return makeSum(makeProduct(multiplier(exp), deriv2(multiplicand(exp), variable)), makeProduct(deriv2(multiplier(exp), variable), multiplicand(exp)))
+    }
+    
+    put("deriv", "*", derivProduct)
+}
+
+installDerivativeProductPackage()
+globalSelectorTable
+
+
+println(deriv2("x", "x"))                       // 1
+println(deriv2(4, "x"))                         // 0
+println(deriv2("x" + 3, "x"))                   // 1
+println(deriv2("x" * "y", "x"))                 // y
+println(deriv2(("x" * "y") * ("x" + 3), "x"))   // ((x * y) + (y * (x + 3)))
+
 //: -Choose any additional differentiation rule that you like, such as the one for exponents (Exercise 2.56), and install it in this data-directed system.
 //: - In this simple algebraic manipulator the type of an expression is the algebraic operator that binds it together. Suppose, however, we indexed the procedures in the opposite way, so that the dispatch line in deriv looked like ((get (operator exp) 'deriv) (operands exp) var) What corresponding changes to the derivative system are required?
