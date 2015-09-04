@@ -51,6 +51,40 @@ extension Expr: Printable {
     }
 }
 
+extension Expr: Equatable { }
+func == (lhs: Expr, rhs: Expr) -> Bool {
+    switch (lhs, rhs) {
+    case let (.Variable(a),.Variable(b)):
+        return a == b
+    case let (.Constant(a), .Constant(b)):
+        return a == b
+    case let (.Sum(a,c), .Sum(b,d)):
+        return (a.unbox == b.unbox) && (c.unbox == d.unbox)
+    case let(.Product(a,c), .Product(b,d)):
+        return (a.unbox == b.unbox) && (c.unbox == d.unbox)
+    default:
+        return false
+    }
+}
+
+
+extension Expr: Hashable {
+    var hashValue: Int {
+        switch self {
+        case let .Sum(a, b):
+            return a.unbox.hashValue + b.unbox.hashValue
+        case let .Product(a, b):
+            return a.unbox.hashValue * b.unbox.hashValue
+        case let .Constant(a):
+            return a.hashValue
+        case let .Variable(a):
+            return a.hashValue
+        }
+    }
+}
+
+
+
 func + (lhs: Expr, rhs: Expr) -> Expr {
     return makeSum(lhs, rhs)
 }
@@ -184,7 +218,7 @@ println(deriv("x" * "y", "x"))                  // y
 println(deriv(("x" * "y") * ("x" + 3), "x"))    // ((x * y) + (y * (x + 3)))
 
 
-//: We can regard this program as performing a dispatch on the type of the expression to be differentiated. In this situation the "type tag" of the datum is the algebraic operator symbol (such as +) and the operation being performed is deriv. We can transform this program into data-directed style by rewriting the basic derivative procedure as 
+//: We can regard this program as performing a dispatch on the type of the expression to be differentiated. In this situation the "type tag" of the datum is the algebraic operator symbol (such as +) and the operation being performed is deriv. We can transform this program into data-directed style by rewriting the basic derivative procedure as
 
 
 typealias DerivativeFunction = (exp: Expr, variable: Expr) -> Expr
@@ -199,12 +233,13 @@ func put(op: String, type: String, item: DerivativeFunction) {
     }
 }
 
+
 func get(op: String, type: String) -> DerivativeFunction? {
     return globalSelectorTable[type]?[op]
 }
 
 
-func operator_(exp: Expr) -> String {
+func operatorAsString(exp: Expr) -> String {
     switch exp {
     case .Sum(_, _):
         return "+"
@@ -214,33 +249,6 @@ func operator_(exp: Expr) -> String {
         fatalError("Unhandled expression: \(exp)")
     }
 }
-func operands(exp: Expr) -> (Expr,Expr) {
-    switch exp {
-    case let .Sum(a, b):
-        return (a.unbox, b.unbox)
-    case let .Product(a, b):
-        return (a.unbox, b.unbox)
-    default:
-        fatalError("Unhandled expression: \(exp)")
-    }
-}
-
-//println(deriv2("x" + 3, "x")) // 1
-//println(deriv2("x" * "y", "x")) // y
-//println(deriv2(("x" * "y") * ("x" + 3), "x")) //
-
-/*
-case .Sum(_, _):
-return makeSum(deriv(addend(exp), variable), deriv(augend(exp), variable))
-case .Product(_, _):
-return makeSum(makeProduct(multiplier(exp), deriv(multiplicand(exp), variable)), makeProduct(deriv(multiplier(exp), variable), multiplicand(exp)))
-*/
-
-//: - Explain what was done above. Why can't we assimilate the predicates number? and variable? into the data-directed dispatch?
-
-
-
-//: - Write the procedures for derivatives of sums and products, and the auxiliary code required to install them in the table used by the program above.
 
 func deriv2(exp: Expr, variable: Expr) -> Expr {
     switch exp {
@@ -249,15 +257,16 @@ func deriv2(exp: Expr, variable: Expr) -> Expr {
     case .Variable(_):
         return isSameVariable(exp, variable) ? .Constant(1) : .Constant(0)
     default:
-        let oper = operator_(exp)
-        let rands = operands(exp)
-        let function = get("deriv", operator_(exp))!
-        print(variable)
-        let result = function(exp: exp, variable: variable)
-        return result
+        let function = get("deriv", operatorAsString(exp))!
+        return function(exp: exp, variable: variable)
     }
 }
 
+//: - Explain what was done above. Why can't we assimilate the predicates number? and variable? into the data-directed dispatch?
+
+
+
+//: - Write the procedures for derivatives of sums and products, and the auxiliary code required to install them in the table used by the program above.
 
 func installDerivativeSumPackage() {
     // Internal Procedures
@@ -320,5 +329,7 @@ println(deriv2("x" + 3, "x"))                   // 1
 println(deriv2("x" * "y", "x"))                 // y
 println(deriv2(("x" * "y") * ("x" + 3), "x"))   // ((x * y) + (y * (x + 3)))
 
-//: -Choose any additional differentiation rule that you like, such as the one for exponents (Exercise 2.56), and install it in this data-directed system.
+//: - Choose any additional differentiation rule that you like, such as the one for exponents (Exercise 2.56), and install it in this data-directed system.
+
+
 //: - In this simple algebraic manipulator the type of an expression is the algebraic operator that binds it together. Suppose, however, we indexed the procedures in the opposite way, so that the dispatch line in deriv looked like ((get (operator exp) 'deriv) (operands exp) var) What corresponding changes to the derivative system are required?
