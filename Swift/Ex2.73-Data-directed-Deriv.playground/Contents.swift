@@ -12,6 +12,7 @@ class Box<T>{
 enum Expr {
     case Sum(Box<Expr>, Box<Expr>)
     case Product(Box<Expr>, Box<Expr>)
+    case Exponential(Box<Expr>, Box<Expr>)
     case Constant(Int)
     case Variable(String)
 }
@@ -47,6 +48,8 @@ extension Expr: Printable {
             return String(value)
         case .Variable(let label):
             return label
+        case .Exponential(let e1, let e2):
+            return "(" + e1.unbox.description + " ** " + e2.unbox.description + ")"
         }
     }
 }
@@ -79,10 +82,11 @@ extension Expr: Hashable {
             return a.hashValue
         case let .Variable(a):
             return a.hashValue
+        case let .Exponential(base, exp):
+            return Int(pow(Double(base.unbox.hashValue), Double(exp.unbox.hashValue)))
         }
     }
 }
-
 
 
 func + (lhs: Expr, rhs: Expr) -> Expr {
@@ -264,6 +268,7 @@ func deriv2(exp: Expr, variable: Expr) -> Expr {
 
 //: - Explain what was done above. Why can't we assimilate the predicates number? and variable? into the data-directed dispatch?
 
+// For the operator types we have switched out static dispatching for a lookup mechanism that allows us to install new operator types. In the swift case we could assimilate the .Constant and .Variable types if we wanted to. This is because we have effectively tagged them by defining them as a part of the Expr enum. In the original Scheme code though the variables are symbols and the constants are just numbers which means their type is difficult to look up in a table???
 
 
 //: - Write the procedures for derivatives of sums and products, and the auxiliary code required to install them in the table used by the program above.
@@ -331,5 +336,98 @@ println(deriv2(("x" * "y") * ("x" + 3), "x"))   // ((x * y) + (y * (x + 3)))
 
 //: - Choose any additional differentiation rule that you like, such as the one for exponents (Exercise 2.56), and install it in this data-directed system.
 
+func installDerivativeExponentPackage() {
+    func base(exp: Expr) -> Expr {
+        switch exp {
+        case .Exponential(let b, _):
+            return b.unbox
+        default:
+            fatalError("Tried to get the base from an expression that was not an Exponential")
+        }
+    }
+    
+    func exponent(exp: Expr) -> Expr {
+        switch exp {
+        case .Exponential(_, let e):
+            return e.unbox
+        default:
+            fatalError("Tried to get the exponent from an expression that was not an Exponential")
+        }
+    }
+    
+    func makeSum(a1: Expr, a2: Expr) -> Expr {
+        switch (a1, a2) {
+        case (.Constant(0), _):
+            return a2
+        case (_, .Constant(0)):
+            return a1
+        case (.Constant(let a), .Constant(let b)):
+            return .Constant(a + b)
+        default:
+            return Expr.Sum(Box(a1), Box(a2))
+        }
+    }
+    
+    func makeProduct(m1: Expr, m2: Expr) -> Expr {
+        switch (m1, m2) {
+        case (.Constant(0), _):
+            return .Constant(0)
+        case (_, .Constant(0)):
+            return .Constant(0)
+        case (.Constant(1), _):
+            return m2
+        case (_, .Constant(1)):
+            return m1
+        case (.Constant(let a), .Constant(let b)):
+            return .Constant(a * b)
+        default:
+            return Expr.Product(Box(m1), Box(m2))
+        }
+    }
+    
+    func makeExponentiation(base: Expr, exponent:Expr) -> Expr {
+        switch (base, exponent) {
+        case (_, .Constant(0)):
+            return .Constant(1)
+        case (_, .Constant(1)):
+            return base
+        case (.Constant(let b), .Constant(let e)):
+            return Expr.Constant(Int(pow(Double(b),Double(e))))
+        default:
+            return Expr.Exponential(Box(base), Box(exponent))
+        }
+    }
+    
+    func derivExponentiation(exp: Expr, variable: Expr) -> Expr{
+        let base = base(exp)
+        let exponent = exponent(exp)
+        
+        return makeProduct(makeProduct(exponent,
+                makeExponentiation(base,
+                 makeSum(exponent, Expr.Constant(-1)))), deriv2(base, variable))
+    }
+    
+    put("make", "**", makeExponentiation)
+    put("deriv", "**", derivExponentiation)
+}
+
+installDerivativeExponentPackage()
+
+infix operator ** { associativity left precedence 160 }
+func ** (lhs: Expr, rhs: Expr) -> Expr {
+    let makeExponentiation = get("make", "**")
+    return makeExponentiation!(exp: lhs, variable: rhs)
+}
+
+print(globalSelectorTable)
+
+println(deriv2("x" ** 4, "x"))
+
+println(deriv2("x", "x"))                       // 1
+println(deriv2(4, "x"))                         // 0
+println(deriv2("x" + 3, "x"))                   // 1
+println(deriv2("x" * "y", "x"))                 // y
+println(deriv2(("x" * "y") * ("x" + 3), "x"))   // ((x * y) + (y * (x + 3)))
+println(deriv2(2 * ("x" ** 4) + (6 * "y" ** 2), "y"))
 
 //: - In this simple algebraic manipulator the type of an expression is the algebraic operator that binds it together. Suppose, however, we indexed the procedures in the opposite way, so that the dispatch line in deriv looked like ((get (operator exp) 'deriv) (operands exp) var) What corresponding changes to the derivative system are required?
