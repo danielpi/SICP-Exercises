@@ -249,6 +249,8 @@ func operatorAsString(exp: Expr) -> String {
         return "+"
     case .Product(_, _):
         return "*"
+    case .Exponential(_, _):
+        return "**"
     default:
         fatalError("Unhandled expression: \(exp)")
     }
@@ -419,7 +421,7 @@ func ** (lhs: Expr, rhs: Expr) -> Expr {
     return makeExponentiation!(exp: lhs, variable: rhs)
 }
 
-print(globalSelectorTable)
+println(globalSelectorTable)
 
 println(deriv2("x" ** 4, "x"))
 
