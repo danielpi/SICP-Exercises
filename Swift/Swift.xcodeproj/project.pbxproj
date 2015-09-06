@@ -91,6 +91,7 @@
 		E6BA3BF41AA5797A00297A9D /* Ex1.38-Euler-e.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.38-Euler-e.playground"; sourceTree = "<group>"; };
 		E6BA3BF51AA58D7500297A9D /* Ex1.39-Tan-Continuous-Function.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.39-Tan-Continuous-Function.playground"; sourceTree = "<group>"; };
 		E6BCAB741A8AF9690046EF18 /* Ex1.28-Miller-Rabin-Test.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.28-Miller-Rabin-Test.playground"; sourceTree = "<group>"; };
+		E6CD52FE1B9C61C4000B8A62 /* Ex2.74-Insatiable-Enterprises.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.74-Insatiable-Enterprises.playground"; sourceTree = "<group>"; };
 		E6CE5BA21B42145C0048EBD5 /* Ex2.56-Exponential-Differentiation.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.56-Exponential-Differentiation.playground"; sourceTree = "<group>"; };
 		E6CE5BA31B4232610048EBD5 /* Ex2.57-Variadic-Parameters.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.57-Variadic-Parameters.playground"; sourceTree = "<group>"; };
 		E6CE5BA41B42355E0048EBD5 /* Ex2.58-Infix-Notation.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.58-Infix-Notation.playground"; sourceTree = "<group>"; };
@@ -195,8 +196,7 @@
 				E618E2001B20151F00A67D04 /* 2.1 Introduction To Data Abstraction */,
 				E618E2011B20153900A67D04 /* 2.2 Hierarchical Data and the Closure Property */,
 				E6FB5A901B88B4750006F4AC /* 2.3 Symbolic Data */,
-				E6FB5A8F1B88B4310006F4AC /* 2.4-Multiple-Representations-for-Abstract-Data.playground */,
-				E692F1231B987923005B6BAE /* Ex2.73-Data-directed-Deriv.playground */,
+				E6CD52FD1B9C614F000B8A62 /* 2.4 Multiple Representations for Abstract Data */,
 			);
 			name = "Chapter 2 Building Abstractions with Data";
 			sourceTree = "<group>";
@@ -249,6 +249,16 @@
 				E6BCAB741A8AF9690046EF18 /* Ex1.28-Miller-Rabin-Test.playground */,
 			);
 			name = "1.2 Procedures & the Processes they Generate";
+			sourceTree = "<group>";
+		};
+		E6CD52FD1B9C614F000B8A62 /* 2.4 Multiple Representations for Abstract Data */ = {
+			isa = PBXGroup;
+			children = (
+				E6FB5A8F1B88B4310006F4AC /* 2.4-Multiple-Representations-for-Abstract-Data.playground */,
+				E692F1231B987923005B6BAE /* Ex2.73-Data-directed-Deriv.playground */,
+				E6CD52FE1B9C61C4000B8A62 /* Ex2.74-Insatiable-Enterprises.playground */,
+			);
+			name = "2.4 Multiple Representations for Abstract Data";
 			sourceTree = "<group>";
 		};
 		E6F73DFA1A6DF39300EEE0FE /* Chapter 1 Building Abstractions from Procedures */ = {

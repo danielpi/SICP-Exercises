@@ -433,3 +433,5 @@ println(deriv2(("x" * "y") * ("x" + 3), "x"))   // ((x * y) + (y * (x + 3)))
 println(deriv2(2 * ("x" ** 4) + (6 * "y" ** 2), "y"))
 
 //: - In this simple algebraic manipulator the type of an expression is the algebraic operator that binds it together. Suppose, however, we indexed the procedures in the opposite way, so that the dispatch line in deriv looked like ((get (operator exp) 'deriv) (operands exp) var) What corresponding changes to the derivative system are required?
+
+// Shouldn't look much different at all, just need to swap the rows and columns in the function table.
