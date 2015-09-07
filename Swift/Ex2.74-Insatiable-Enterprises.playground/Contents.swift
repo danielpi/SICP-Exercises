@@ -9,3 +9,48 @@ import Cocoa
 //: - Implement for headquarters a get-salary procedure that returns the salary information from a given employee's record from any division's personnel file. How should the record be structured in order to make this operation work?
 //: - Implement for headquarters a find-employee-record procedure. This should search all the divisions' files for the record of a given employee and return the record. Assume that this procedure takes as arguments an employee's name and a list of all the divisions' files.
 //: - When Insatiable takes over a new company, what changes must be made in order to incorporate the new personnel information into the central system?
+
+struct EmployeeRecord {
+    var name: String
+    var address: String
+    var salary: String
+}
+
+class DivisionFile {
+    var contents = [String: EmployeeRecord]()
+    
+    func addEmployee(record: EmployeeRecord) {
+        contents[record.name] = record
+    }
+}
+
+
+var engineeringFile = DivisionFile()
+
+engineeringFile.addEmployee(EmployeeRecord(name: "Daniel", address: "Brisbane", salary: "50"))
+engineeringFile.addEmployee(EmployeeRecord(name: "Sarah", address: "Sydney", salary: "150"))
+engineeringFile.addEmployee(EmployeeRecord(name: "Jane", address: "Perth", salary: "200"))
+engineeringFile.addEmployee(EmployeeRecord(name: "Robert", address: "Darwin", salary: "50"))
+
+var productionFile = DivisionFile()
+productionFile.addEmployee(EmployeeRecord(name: "Daniel", address: "Mackay", salary: "100"))
+productionFile.addEmployee(EmployeeRecord(name: "Simon", address: "Melbourne", salary: "154"))
+productionFile.addEmployee(EmployeeRecord(name: "Jamie", address: "Ballarat", salary: "12"))
+
+
+typealias Function = (name: String) -> String
+
+var globalSelectorTable = [String: [String: Function]]()
+
+func put(op: String, type: String, item: Function) {
+    if let typeColumn = globalSelectorTable[type] {
+        globalSelectorTable[type]![op] = item
+    } else {
+        globalSelectorTable[type] = [op: item]
+    }
+}
+
+func get(op: String, type: String) -> Function? {
+    return globalSelectorTable[type]?[op]
+}
+
