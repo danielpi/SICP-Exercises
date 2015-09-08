@@ -16,6 +16,8 @@ struct EmployeeRecord {
     var salary: String
 }
 
+typealias TaggedRecord = (String, EmployeeRecord)
+
 class DivisionFile {
     var contents = [String: EmployeeRecord]()
     
@@ -54,3 +56,18 @@ func get(op: String, type: String) -> Function? {
     return globalSelectorTable[type]?[op]
 }
 
+// Each division needs to write a package to install their access routines
+
+func installEngineeringPackage() {
+    func tag(x: EmployeeRecord) -> TaggedRecord {
+        return ("engineering", x)
+    }
+    
+    func getRecord(name: String, file: DivisionFile) -> TaggedRecord? {
+        if file.contents[name] == nil {
+            return nil
+        } else {
+            return tag(file.contents[name]!)
+        }
+    }
+}
