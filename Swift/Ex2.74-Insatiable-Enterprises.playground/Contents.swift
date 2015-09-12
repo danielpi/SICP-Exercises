@@ -15,8 +15,8 @@ struct EmployeeRecord {
     var address: String
     var salary: String
 }
-
 typealias TaggedRecord = (String, EmployeeRecord)
+
 
 class DivisionFile {
     var contents = [String: EmployeeRecord]()
@@ -25,6 +25,8 @@ class DivisionFile {
         contents[record.name] = record
     }
 }
+typealias TaggedFile = (String, DivisionFile)
+
 
 
 var engineeringFile = DivisionFile()
@@ -33,28 +35,44 @@ engineeringFile.addEmployee(EmployeeRecord(name: "Daniel", address: "Brisbane", 
 engineeringFile.addEmployee(EmployeeRecord(name: "Sarah", address: "Sydney", salary: "150"))
 engineeringFile.addEmployee(EmployeeRecord(name: "Jane", address: "Perth", salary: "200"))
 engineeringFile.addEmployee(EmployeeRecord(name: "Robert", address: "Darwin", salary: "50"))
+let taggedEngineering = ("engineering", engineeringFile)
 
 var productionFile = DivisionFile()
 productionFile.addEmployee(EmployeeRecord(name: "Daniel", address: "Mackay", salary: "100"))
 productionFile.addEmployee(EmployeeRecord(name: "Simon", address: "Melbourne", salary: "154"))
 productionFile.addEmployee(EmployeeRecord(name: "Jamie", address: "Ballarat", salary: "12"))
+let taggedProduction = ("production", productionFile)
 
 
-typealias Function = (name: String) -> String
 
-var globalSelectorTable = [String: [String: Function]]()
+typealias FileLookup = (String, DivisionFile) -> TaggedRecord?
+var globalFileSelectorTable = [String: [String: FileLookup]]()
 
-func put(op: String, type: String, item: Function) {
-    if let typeColumn = globalSelectorTable[type] {
-        globalSelectorTable[type]![op] = item
+func put(op: String, type: String, item: FileLookup) {
+    if let typeColumn = globalFileSelectorTable[type] {
+        globalFileSelectorTable[type]![op] = item
     } else {
-        globalSelectorTable[type] = [op: item]
+        globalFileSelectorTable[type] = [op: item]
     }
 }
-
-func get(op: String, type: String) -> Function? {
-    return globalSelectorTable[type]?[op]
+func get(op: String, type: String) -> FileLookup? {
+    return globalFileSelectorTable[type]?[op]
 }
+
+
+typealias RecordLookup = (EmployeeRecord) -> String
+var globalRecordSelectorTable = [String: [String: RecordLookup]]()
+func put(op: String, type: String, item: RecordLookup) {
+    if let typeColumn = globalRecordSelectorTable[type] {
+        globalRecordSelectorTable[type]![op] = item
+    } else {
+        globalRecordSelectorTable[type] = [op: item]
+    }
+}
+func get(op: String, type: String) -> RecordLookup? {
+    return globalRecordSelectorTable[type]?[op]
+}
+
 
 // Each division needs to write a package to install their access routines
 
@@ -70,4 +88,75 @@ func installEngineeringPackage() {
             return tag(file.contents[name]!)
         }
     }
+    
+    func getSalary(record: EmployeeRecord) -> String {
+        return record.salary
+    }
+    
+    put("getRecord", "engineering", getRecord)
+    put("getSalary", "engineering", getSalary)
 }
+installEngineeringPackage()
+
+func installProductionPackage() {
+    func tag(x: EmployeeRecord) -> TaggedRecord {
+        return ("production", x)
+    }
+    
+    func getRecord(name: String, file: DivisionFile) -> TaggedRecord? {
+        if file.contents[name] == nil {
+            return nil
+        } else {
+            return tag(file.contents[name]!)
+        }
+    }
+    
+    func getSalary(record: EmployeeRecord) -> String {
+        return record.salary
+    }
+    
+    put("getRecord", "production", getRecord)
+    put("getSalary", "production", getSalary)
+}
+installProductionPackage()
+
+func getRecord(name: String, file: TaggedFile) -> TaggedRecord? {
+    if let function: FileLookup = get("getRecord", file.0) {
+        return function(name, file.1)
+    } else {
+        return nil
+    }
+}
+
+func getSalary(record: TaggedRecord) -> String? {
+    if let function: RecordLookup = get("getSalary", record.0) {
+        return function(record.1)
+    } else {
+        return nil
+    }
+}
+
+
+let danielEngineering = getRecord("Daniel", taggedEngineering)
+let danielProduction = getRecord("Daniel", taggedProduction)
+
+if let d = danielEngineering {
+    getSalary(d)
+}
+
+if let d = danielProduction {
+    getSalary(d)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
