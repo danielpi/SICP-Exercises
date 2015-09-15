@@ -68,7 +68,7 @@ extension Expr: StringLiteralConvertible {
     }
 }
 
-extension Expr: Printable {
+extension Expr: CustomStringConvertible {
     var description: String {
         switch self {
         case .Sum(let a1, let a2):
@@ -84,11 +84,11 @@ extension Expr: Printable {
 }
 
 func + (lhs: Expr, rhs: Expr) -> Expr {
-    return makeSum(lhs, rhs)
+    return makeSum(lhs, a2: rhs)
 }
 
 func * (lhs: Expr, rhs: Expr) -> Expr {
-    return makeProduct(lhs, rhs)
+    return makeProduct(lhs, m2: rhs)
 }
 
 
@@ -187,20 +187,20 @@ func deriv1(exp: Expr, variable: Expr) -> Expr {
     case .Constant(_):
         return .Constant(0)
     case .Variable(_):
-        return isSameVariable(exp, variable) ? .Constant(1) : .Constant(0)
+        return isSameVariable(exp, v2: variable) ? .Constant(1) : .Constant(0)
     case .Sum(_, _):
-        return makeSum1(deriv1(addend(exp), variable), deriv1(augend(exp), variable))
+        return makeSum1(deriv1(addend(exp), variable: variable), a2: deriv1(augend(exp), variable: variable))
     case .Product(_, _):
-        return makeSum1(makeProduct1(multiplier(exp), deriv1(multiplicand(exp), variable)), makeProduct1(deriv1(multiplier(exp), variable), multiplicand(exp)))
+        return makeSum1(makeProduct1(multiplier(exp), m2: deriv1(multiplicand(exp), variable: variable)), a2: makeProduct1(deriv1(multiplier(exp), variable: variable), m2: multiplicand(exp)))
     default:
         fatalError("unknown expression type: DERIV")
     }
 }
 
 
-println(deriv1("x" + 3, "x")) // 1
-println(deriv1("x" * "y", "x")) // y
-println(deriv1(("x" * "y") * ("x" + 3), "x")) //
+print(deriv1("x" + 3, variable: "x")) // 1
+print(deriv1("x" * "y", variable: "x")) // y
+print(deriv1(("x" * "y") * ("x" + 3), variable: "x")) //
 
 
 //: The program produces answers that are correct; however, they are unsimplified. It is true that
@@ -252,24 +252,18 @@ func deriv(exp: Expr, variable: Expr) -> Expr {
     case .Constant(_):
         return .Constant(0)
     case .Variable(_):
-        return isSameVariable(exp, variable) ? .Constant(1) : .Constant(0)
+        return isSameVariable(exp, v2: variable) ? .Constant(1) : .Constant(0)
     case .Sum(_, _):
-        return makeSum(deriv(addend(exp), variable), deriv(augend(exp), variable))
+        return makeSum(deriv(addend(exp), variable: variable), a2: deriv(augend(exp), variable: variable))
     case .Product(_, _):
-        return makeSum(makeProduct(multiplier(exp), deriv(multiplicand(exp), variable)), makeProduct(deriv(multiplier(exp), variable), multiplicand(exp)))
+        return makeSum(makeProduct(multiplier(exp), m2: deriv(multiplicand(exp), variable: variable)), a2: makeProduct(deriv(multiplier(exp), variable: variable), m2: multiplicand(exp)))
     default:
         fatalError("unknown expression type: DERIV")
     }
 }
 
-println(deriv("x" + 3, "x")) // 1
-println(deriv("x" * "y", "x")) // y
-println(deriv(("x" * "y") * ("x" + 3), "x")) //
+print(deriv("x" + 3, variable: "x")) // 1
+print(deriv("x" * "y", variable: "x")) // y
+print(deriv(("x" * "y") * ("x" + 3), variable: "x")) //
 
-//: Although this is quite an improvement, the third example shows that there is still a long way to go before we get a program that puts expressions into a form that we might agree is "simplest". The problem of algebraic simplification is complex because, among other reasons, a form that may be simplest for one purpose may not be for another.
-
-
-
-
-
-
+//: Although this is quite an improvement, the third example shows that there is still a long way to go before we get a program that puts expressions into a form 

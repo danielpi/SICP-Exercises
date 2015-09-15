@@ -37,7 +37,7 @@ extension Expr: StringLiteralConvertible {
     }
 }
 
-extension Expr: Printable {
+extension Expr: CustomStringConvertible {
     var description: String {
         switch self {
         case .Sum(let a1, let a2):
@@ -90,14 +90,14 @@ extension Expr: Hashable {
 
 
 func + (lhs: Expr, rhs: Expr) -> Expr {
-    return makeSum(lhs, rhs)
+    return makeSum(lhs, a2: rhs)
 }
 
 func * (lhs: Expr, rhs: Expr) -> Expr {
-    return makeProduct(lhs, rhs)
+    return makeProduct(lhs, m2: rhs)
 }
 
-func isVariable<T>(exp: Expr) -> Bool {
+func isVariable(exp: Expr) -> Bool {
     switch exp {
     case .Variable(_):
         return true
@@ -133,7 +133,7 @@ func isSum(exp: Expr) -> Bool {
 
 func addend(s: Expr) -> Expr {
     switch s {
-    case .Sum(let a1, let a2):
+    case .Sum(let a1, _):
         return a1.unbox
     default:
         fatalError("Tried to get the addend from an expression that was not a sum")
@@ -142,7 +142,7 @@ func addend(s: Expr) -> Expr {
 
 func augend(s: Expr) -> Expr {
     switch s {
-    case .Sum(let a1, let a2):
+    case .Sum(_, let a2):
         return a2.unbox
     default:
         fatalError("Tried to get the augend from an expression that was not a sum")
@@ -207,19 +207,19 @@ func deriv(exp: Expr, variable: Expr) -> Expr {
     case .Constant(_):
         return .Constant(0)
     case .Variable(_):
-        return isSameVariable(exp, variable) ? .Constant(1) : .Constant(0)
+        return isSameVariable(exp, v2: variable) ? .Constant(1) : .Constant(0)
     case .Sum(_, _):
-        return makeSum(deriv(addend(exp), variable), deriv(augend(exp), variable))
+        return makeSum(deriv(addend(exp), variable: variable), a2: deriv(augend(exp), variable: variable))
     case .Product(_, _):
-        return makeSum(makeProduct(multiplier(exp), deriv(multiplicand(exp), variable)), makeProduct(deriv(multiplier(exp), variable), multiplicand(exp)))
+        return makeSum(makeProduct(multiplier(exp), m2: deriv(multiplicand(exp), variable: variable)), a2: makeProduct(deriv(multiplier(exp), variable: variable), m2: multiplicand(exp)))
     default:
         fatalError("unknown expression type: DERIV")
     }
 }
 
-println(deriv("x" + 3, "x"))                    // 1
-println(deriv("x" * "y", "x"))                  // y
-println(deriv(("x" * "y") * ("x" + 3), "x"))    // ((x * y) + (y * (x + 3)))
+print(deriv("x" + 3, variable: "x"))                    // 1
+print(deriv("x" * "y", variable: "x"))                  // y
+print(deriv(("x" * "y") * ("x" + 3), variable: "x"))    // ((x * y) + (y * (x + 3)))
 
 
 //: We can regard this program as performing a dispatch on the type of the expression to be differentiated. In this situation the "type tag" of the datum is the algebraic operator symbol (such as +) and the operation being performed is deriv. We can transform this program into data-directed style by rewriting the basic derivative procedure as
@@ -261,9 +261,9 @@ func deriv2(exp: Expr, variable: Expr) -> Expr {
     case .Constant(_):
         return .Constant(0)
     case .Variable(_):
-        return isSameVariable(exp, variable) ? .Constant(1) : .Constant(0)
+        return isSameVariable(exp, v2: variable) ? .Constant(1) : .Constant(0)
     default:
-        let function = get("deriv", operatorAsString(exp))!
+        let function = get("deriv", type: operatorAsString(exp))!
         return function(exp: exp, variable: variable)
     }
 }
@@ -291,11 +291,11 @@ func installDerivativeSumPackage() {
     }
     
     func derivSum(exp: Expr, variable: Expr) -> Expr {
-        return makeSum(deriv2(addend(exp), variable), deriv2(augend(exp), variable))
+        return makeSum(deriv2(addend(exp), variable: variable), a2: deriv2(augend(exp), variable: variable))
     }
     
     // Interface to the rest of the system
-    put("deriv", "+", derivSum)
+    put("deriv", type: "+", item: derivSum)
 }
 
 installDerivativeSumPackage()
@@ -320,21 +320,21 @@ func installDerivativeProductPackage() {
     }
     
     func derivProduct(exp: Expr, variable: Expr) -> Expr {
-        return makeSum(makeProduct(multiplier(exp), deriv2(multiplicand(exp), variable)), makeProduct(deriv2(multiplier(exp), variable), multiplicand(exp)))
+        return makeSum(makeProduct(multiplier(exp), m2: deriv2(multiplicand(exp), variable: variable)), a2: makeProduct(deriv2(multiplier(exp), variable: variable), m2: multiplicand(exp)))
     }
     
-    put("deriv", "*", derivProduct)
+    put("deriv", type: "*", item: derivProduct)
 }
 
 installDerivativeProductPackage()
 globalSelectorTable
 
 
-println(deriv2("x", "x"))                       // 1
-println(deriv2(4, "x"))                         // 0
-println(deriv2("x" + 3, "x"))                   // 1
-println(deriv2("x" * "y", "x"))                 // y
-println(deriv2(("x" * "y") * ("x" + 3), "x"))   // ((x * y) + (y * (x + 3)))
+print(deriv2("x", variable: "x"))                       // 1
+print(deriv2(4, variable: "x"))                         // 0
+print(deriv2("x" + 3, variable: "x"))                   // 1
+print(deriv2("x" * "y", variable: "x"))                 // y
+print(deriv2(("x" * "y") * ("x" + 3), variable: "x"))   // ((x * y) + (y * (x + 3)))
 
 //: - Choose any additional differentiation rule that you like, such as the one for exponents (Exercise 2.56), and install it in this data-directed system.
 
@@ -405,33 +405,31 @@ func installDerivativeExponentPackage() {
         let exponent = exponent(exp)
         
         return makeProduct(makeProduct(exponent,
-                makeExponentiation(base,
-                 makeSum(exponent, Expr.Constant(-1)))), deriv2(base, variable))
+                m2: makeExponentiation(base,
+                 exponent: makeSum(exponent, a2: Expr.Constant(-1)))), m2: deriv2(base, variable: variable))
     }
     
-    put("make", "**", makeExponentiation)
-    put("deriv", "**", derivExponentiation)
+    put("make", type: "**", item: makeExponentiation)
+    put("deriv", type: "**", item: derivExponentiation)
 }
 
 installDerivativeExponentPackage()
 
 infix operator ** { associativity left precedence 160 }
 func ** (lhs: Expr, rhs: Expr) -> Expr {
-    let makeExponentiation = get("make", "**")
+    let makeExponentiation = get("make", type: "**")
     return makeExponentiation!(exp: lhs, variable: rhs)
 }
 
-println(globalSelectorTable)
+print(globalSelectorTable)
 
-println(deriv2("x" ** 4, "x"))
+print(deriv2("x" ** 4, variable: "x"))
 
-println(deriv2("x", "x"))                       // 1
-println(deriv2(4, "x"))                         // 0
-println(deriv2("x" + 3, "x"))                   // 1
-println(deriv2("x" * "y", "x"))                 // y
-println(deriv2(("x" * "y") * ("x" + 3), "x"))   // ((x * y) + (y * (x + 3)))
-println(deriv2(2 * ("x" ** 4) + (6 * "y" ** 2), "y"))
+print(deriv2("x", variable: "x"))                       // 1
+print(deriv2(4, variable: "x"))                         // 0
+print(deriv2("x" + 3, variable: "x"))                   // 1
+print(deriv2("x" * "y", variable: "x"))                 // y
+print(deriv2(("x" * "y") * ("x" + 3), variable: "x"))   // ((x * y) + (y * (x + 3)))
+print(deriv2(2 * ("x" ** 4) + (6 * "y" ** 2), variable: "y"))
 
-//: - In this simple algebraic manipulator the type of an expression is the algebraic operator that binds it together. Suppose, however, we indexed the procedures in the opposite way, so that the dispatch line in deriv looked like ((get (operator exp) 'deriv) (operands exp) var) What corresponding changes to the derivative system are required?
-
-// Shouldn't look much different at all, just need to swap the rows and columns in the function table.
+//: - In this simple algebraic manipulator the type of an expression is the algebraic operator tha

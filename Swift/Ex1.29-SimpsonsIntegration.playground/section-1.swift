@@ -40,7 +40,7 @@ func sum<T:Comparable,U:AddableType>(term:(T) -> U, a:T, next:(T) -> T, b:T) -> 
     if a > b {
         return 0
     } else {
-        return term(a) + sum(term, next(a), next, b)
+        return term(a) + sum(term, a: next(a), next: next, b: b)
     }
 }
 
@@ -50,22 +50,22 @@ func integral(f:(Double) -> Double, a:Double, b:Double, n:Int) -> Double {
         return (b - a) / Double(n)
     }
     func yk(f:(Double) -> Double, a: Double, b: Double, n:Int, k:Int) -> Double {
-        let x = a + (Double(k) * h(a,b,n))
+        let x = a + (Double(k) * h(a,b: b,n: n))
         return f(x)
     }
     func simpsonsTerm(k:Int) -> Double {
         switch true {
         case k == 0 || k == n:
-            return yk(f, a, b, n, k)
+            return yk(f, a: a, b: b, n: n, k: k)
         case isEven(k):
-            return 2 * yk(f, a, b, n, k)
+            return 2 * yk(f, a: a, b: b, n: n, k: k)
         default:
-            return 4 * yk(f, a, b, n, k)
+            return 4 * yk(f, a: a, b: b, n: n, k: k)
         }
     }
-    return (h(a,b,n) / 3.0) * sum(simpsonsTerm, 0, inc, n)
+    return (h(a,b: b,n: n) / 3.0) * sum(simpsonsTerm, a: 0, next: inc, b: n)
 }
-integral(cube, 0, 1, 100)
+integral(cube, a: 0, b: 1, n: 100)
 //integral(cube, 0, 1, 1000)
-integral(identity, 0, 1, 100)
+integral(identity, a: 0, b: 1, n: 100)
 //integral(identity, 0, 1, 1000)

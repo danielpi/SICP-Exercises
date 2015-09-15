@@ -115,8 +115,8 @@ func transformPainter(painter: Painter, origin: Point, corner1: Point, corner2: 
 // Transformers
 public func beside(left: Painter, right: Painter) -> Painter {
     let splitPoint = Point(x: 0.5, y: 0)
-    let paintLeft = transformPainter(left, Point(x: 0, y: 0), splitPoint, Point(x: 0, y: 1))
-    let paintRight = transformPainter(right, splitPoint, Point(x: 1, y: 0), Point(x: 0.5, y: 1))
+    let paintLeft = transformPainter(left, origin: Point(x: 0, y: 0), corner1: splitPoint, corner2: Point(x: 0, y: 1))
+    let paintRight = transformPainter(right, origin: splitPoint, corner1: Point(x: 1, y: 0), corner2: Point(x: 0.5, y: 1))
     return { frame in
         paintLeft(frame)
         paintRight(frame)
@@ -125,8 +125,8 @@ public func beside(left: Painter, right: Painter) -> Painter {
 
 public func below(top: Painter, bottom: Painter) -> Painter {
     let splitPoint = Point(x: 0.0, y: 0.5)
-    let paintTop = transformPainter(top, Point(x:0, y:0), Point(x: 1, y: 0), splitPoint)
-    let paintBot = transformPainter(bottom, splitPoint, Point(x: 1, y: 0.5), Point(x: 0, y: 1))
+    let paintTop = transformPainter(top, origin: Point(x:0, y:0), corner1: Point(x: 1, y: 0), corner2: splitPoint)
+    let paintBot = transformPainter(bottom, origin: splitPoint, corner1: Point(x: 1, y: 0.5), corner2: Point(x: 0, y: 1))
     return { frame in
         paintTop(frame)
         paintBot(frame)
@@ -136,8 +136,8 @@ public func below(top: Painter, bottom: Painter) -> Painter {
 
 public func draw(painter: Painter) -> NSImage {
     let squareSize: CGFloat = 500
-    var imgSize = NSMakeSize(squareSize, squareSize)
-    var img = NSImage(size: imgSize)
+    let imgSize = NSMakeSize(squareSize, squareSize)
+    let img = NSImage(size: imgSize)
     let aFrame = Frame(origin: Point(x: 0, y: 0), edge1: Vector(x: 0, y: 1), edge2: Vector(x: 1, y: 0), dc: img)
     painter(aFrame)
     return img
@@ -149,8 +149,4 @@ func upSplit(painter: Painter, n: Int) -> Painter {
     if n == 0 {
         return painter
     } else {
-        let smaller = upSplit(painter, n - 1)
-        return below(beside(smaller, smaller), painter)
-    }
-}
-draw(upSplit(wave, 3))
+        let smaller = upSplit

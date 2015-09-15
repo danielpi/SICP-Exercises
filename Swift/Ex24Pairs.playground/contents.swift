@@ -16,7 +16,7 @@ func car2(z:Pair) -> Int {
     return z({ (p:Int, q:Int) -> Int in return p })
 }
 
-let a = cons2(2, 3)
+let a = cons2(2, y: 3)
 car2(a)
 
 func cdr2(z:Pair) -> Int {
@@ -24,5 +24,4 @@ func cdr2(z:Pair) -> Int {
 }
 cdr2(a)
 
-println("\(a)")
-
+print("\(a)")

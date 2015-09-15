@@ -11,15 +11,13 @@ func squareList(items: List<Int>) -> List<Int> {
     if items.isEmpty() {
         return []
     } else {
-        return cons(square(car(items)!), squareList(cdr(items)!))
+        return cons(square(car(items)!), right: squareList(cdr(items)!))
     }
 }
-println("\(squareList([1, 2, 3, 4]))")
+print("\(squareList([1, 2, 3, 4]))")
 
 
 func squareList2(items: List<Int>) -> List<Int> {
     return items.map(square)
 }
-println("\(squareList2([1, 2, 3, 4]))")
-
-
+print("\(squareList2([1, 2, 3, 4]))")

@@ -1,6 +1,6 @@
 import Foundation
 
-public struct QueenF: Printable {
+public struct QueenF: CustomStringConvertible {
     public let row: Int
     public let col: Int
     
@@ -25,7 +25,7 @@ public func isSafeF(a: QueenF, b: QueenF) -> Bool {
 //isSafe(Queen(2, 1), Queen(8, 7))
 
 public func isSafeForF(queen: QueenF) -> (QueenF) -> Bool {
-    return { q in return isSafeF(q, queen) }
+    return { q in return isSafeF(q, b: queen) }
 }
 
 public func isSafeF(queen: QueenF, solution: SolutionF) -> Bool {
@@ -41,7 +41,7 @@ public func addColOfQueensF(board: SolutionsF, col: Int) -> SolutionsF {
     } else {
         let a = possibleQueens.flatMap() { queen in
             board.map() { solution in
-                isSafeF(queen, solution) ? solution + [queen] : []
+                isSafeF(queen, solution: solution) ? solution + [queen] : []
             }
         }
         return a.filter() { !$0.isEmpty }

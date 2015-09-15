@@ -68,10 +68,10 @@ func parTwo(a: Interval, b: Interval) -> Interval {
 let r1 = Interval(center: 3.3, percent: 0.01)
 let r2 = Interval(center: 4.7, percent: 0.05)
 
-let pOne = parOne(r1, r2)
+let pOne = parOne(r1, b: r2)
 pOne.center
 pOne.percent
-let pTwo = parTwo(r1, r2)
+let pTwo = parTwo(r1, b: r2)
 pTwo.center
 pTwo.percent
 
@@ -82,25 +82,21 @@ func par(r1: Double, r2: Double) -> Double {
 }
 
 // First the centers
-let centers = par(r1.center, r2.center)
+let centers = par(r1.center, r2: r2.center)
 
 // Now with the lower limits
-let lowerLimits = par(r1.lower, r2.lower)
+let lowerLimits = par(r1.lower, r2: r2.lower)
 
 // Now with the upper limits
-let upperLimits  = par(r1.upper, r2.upper)
+let upperLimits  = par(r1.upper, r2: r2.upper)
 let handMade = Interval(lowerLimits, upperLimits)
 handMade.percent
 
 // What about with mixed lower and upper values
-let mixedOne = par(r1.lower, r2.upper)
-let mixedTwo = par(r1.upper, r2.lower)
+let mixedOne = par(r1.lower, r2: r2.upper)
+let mixedTwo = par(r1.upper, r2: r2.lower)
 
 handMade - pOne
 handMade - pTwo
 
-// pTwo is most similar to handMade so I would agree that par2 is the better implmenetation.
-
-
-
-
+// pTwo is most similar to handMade so I would agree that par2 is the b

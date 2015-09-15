@@ -11,12 +11,12 @@ class Box<T> {
 }
 
 extension Array {
-    var match: (head: T, tail: [T])? {
+    var match: (head: Element, tail: [T])? {
         return (count > 0) ? (self[0], Array(self[1..<count])) : nil
     }
 }
 
-enum TreeSet<T>: Printable {
+enum TreeSet<T>: CustomStringConvertible {
     case Empty
     case Tree(entry:Box<T>, left:Box<TreeSet<T>>, right: Box<TreeSet<T>>)
     
@@ -61,7 +61,7 @@ func makeTree<T>(entry: T, left:TreeSet<T>, right:TreeSet<T>) -> TreeSet<T> {
     return TreeSet.Tree(entry: Box(entry), left: Box(left), right: Box(right))
 }
 
-struct Record: Printable {
+struct Record: CustomStringConvertible {
     var key: Int
     var value: String
     
@@ -84,9 +84,9 @@ func lookup(key: Int, records: Records) -> Record? {
     case let .Tree(entry, _, _) where entry.unbox.key == key:
         return entry.unbox
     case let .Tree(entry, left, _) where entry.unbox.key > key:
-        return lookup(key, left.unbox)
+        return lookup(key, records: left.unbox)
     case let .Tree(entry, _, right) where entry.unbox.key < key:
-        return lookup(key, right.unbox)
+        return lookup(key, records: right.unbox)
     default:
         fatalError("lookup failed to handle \(records) properly")
     }
@@ -95,30 +95,21 @@ func lookup(key: Int, records: Records) -> Record? {
 func insert(record: Record, records: Records) -> Records {
     switch records {
     case .Empty:
-        return makeTree(record, .Empty, .Empty)
+        return makeTree(record, left: .Empty, right: .Empty)
     case let .Tree(entry, _, _) where entry.unbox.key == record.key:
         return records
     case let .Tree(entry, left, right) where entry.unbox.key > record.key:
-        return makeTree(entry.unbox, insert(record, left.unbox), right.unbox)
+        return makeTree(entry.unbox, left: insert(record, records: left.unbox), right: right.unbox)
     case let .Tree(entry, left, right) where entry.unbox.key < record.key:
-        return makeTree(entry.unbox, left.unbox, insert(record, right.unbox))
+        return makeTree(entry.unbox, left: left.unbox, right: insert(record, records: right.unbox))
     default:
         fatalError("insert failed")
     }
 }
 
-var myRecords = insert(Record(1,"100"), .Empty)
+var myRecords = insert(Record(1,"100"), records: .Empty)
 myRecords = insert(Record(5,"500"), myRecords)
 myRecords = insert(Record(2,"200"), myRecords)
 myRecords = insert(Record(7,"700"), myRecords)
 myRecords = insert(Record(3,"300"), myRecords)
-myRecords = insert(Record(9,"900"), myRecords)
-println("\(myRecords)")
-
-lookup(2, myRecords)
-lookup(6, myRecords)
-lookup(9, myRecords)
-
-
-
-
+myRecords = insert(Re

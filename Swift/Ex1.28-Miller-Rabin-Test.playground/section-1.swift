@@ -33,15 +33,15 @@ func findDivisor(n: Int, testDivisor: Int) -> Int {
     switch true {
     case square(testDivisor) > n:
         return n
-    case dividesWithNoRemainder(n, testDivisor):
+    case dividesWithNoRemainder(n, b: testDivisor):
         return testDivisor
     default:
-        return findDivisor(n, next(testDivisor))
+        return findDivisor(n, testDivisor: next(testDivisor))
     }
 }
 
 func smallestDivisor(n: Int) -> Int {
-    return findDivisor(n, 2)
+    return findDivisor(n, testDivisor: 2)
 }
 
 func isPrime(n:Int) -> Bool {
@@ -54,13 +54,13 @@ func expMod(base: Int, exp: Int, m: Int) -> Int {
     case exp == 0:
         return 1
     case isEven(exp):
-        if isNonTrivialSQRT(expMod(base, exp / 2, m), m) {
+        if isNonTrivialSQRT(expMod(base, exp: exp / 2, m: m), m: m) {
             return 0
         } else {
-            return square(expMod(base, exp / 2, m)) % m
+            return square(expMod(base, exp: exp / 2, m: m)) % m
         }
     default:
-        return (base * expMod(base, exp - 1, m)) % m
+        return (base * expMod(base, exp: exp - 1, m: m)) % m
     }
 }
 
@@ -77,7 +77,7 @@ func isNonTrivialSQRT(n: Int, m: Int) -> Bool {
 
 func millerRabinTest(n: Int) -> Bool {
     func tryIt(a: Int) -> Bool {
-        return expMod(a, n, n) == a
+        return expMod(a, exp: n, m: n) == a
     }
     let randomA:Int = Int(arc4random_uniform(UInt32(n - 1)) + 1)
     return tryIt(randomA)
@@ -88,7 +88,7 @@ func isFastPrime(n: Int, times: Int) -> Bool {
     case times == 0:
         return true
     case millerRabinTest(n):
-        return isFastPrime(n, times - 1)
+        return isFastPrime(n, times: times - 1)
     default:
         return false
     }
@@ -103,6 +103,6 @@ func isFastPrime(n: Int, times: Int) -> Bool {
 //isFastPrime(2465, 10)
 //isFastPrime(2821, 10)
 //isFastPrime(6601, 10)
-isFastPrime(6603, 10)
+isFastPrime(6603, times: 10)
 
 

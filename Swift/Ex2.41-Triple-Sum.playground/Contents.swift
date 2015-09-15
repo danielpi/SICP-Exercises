@@ -15,7 +15,7 @@ func tripleCombinations(n: Int) -> [Triple] {
         }
     }
 }
-println("\(tripleCombinations(4))")
+print("\(tripleCombinations(4))")
 
 // Now I need a function that can tell me if the sum of a triple is equal to s
 func tripleSum(triple: Triple) -> Int {
@@ -32,7 +32,7 @@ func tripleSumCombinations(n: Int, s: Int) -> [Triple] {
     return tripleCombinations(n).filter(isTripleSumEqualTo(s)) // This make further chaining easier
 }
 
-println("\(tripleSumCombinations(10, 14))")
+print("\(tripleSumCombinations(10, s: 14))")
 
 
 

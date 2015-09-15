@@ -26,15 +26,15 @@ func findDivisor(n: Int, testDivisor: Int) -> Int {
     switch true {
     case square(testDivisor) > n:
         return n
-    case dividesWithNoRemainder(n, testDivisor):
+    case dividesWithNoRemainder(n, b: testDivisor):
         return testDivisor
     default:
-        return findDivisor(n, next(testDivisor))
+        return findDivisor(n, testDivisor: next(testDivisor))
     }
 }
 
 func smallestDivisor(n: Int) -> Int {
-    return findDivisor(n, 2)
+    return findDivisor(n, testDivisor: 2)
 }
 
 func isPrime(n:Int) -> Bool {
@@ -47,9 +47,9 @@ func expMod(base: Int, exp: Int, m: Int) -> Int {
     case exp == 0:
         return 1
     case isEven(exp):
-        return square(expMod(base, exp / 2, m)) % m
+        return square(expMod(base, exp: exp / 2, m: m)) % m
     default:
-        return (base * expMod(base, exp - 1, m)) % m
+        return (base * expMod(base, exp: exp - 1, m: m)) % m
     }
 }
 
@@ -57,8 +57,8 @@ func carmichaelTestIter(n: Int, a: Int) -> Bool {
     switch true {
     case a == 0:
         return true
-    case expMod(a, n, n) == a:
-        return carmichaelTestIter(n, a - 1)
+    case expMod(a, exp: n, m: n) == a:
+        return carmichaelTestIter(n, a: a - 1)
     default:
         return false
     }
@@ -68,7 +68,7 @@ func isCarmichaelNumber(n: Int) -> Bool {
     if isPrime(n) {
         return false
     } else {
-        return carmichaelTestIter(n, n - 1)
+        return carmichaelTestIter(n, a: n - 1)
     }
 }
 

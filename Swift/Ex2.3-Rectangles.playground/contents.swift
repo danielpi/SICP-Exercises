@@ -38,7 +38,7 @@ func cdr<T>(innerCons: ConsPosition -> T) -> T {
 typealias Point = (ConsPosition -> Double)
 
 func makePoint(x: Double, y: Double) -> Point {
-    return cons(x, y)
+    return cons(x, b: y)
 }
 func xPoint(x: Point) -> Double {
     return car(x)
@@ -47,7 +47,7 @@ func yPoint(x: Point) -> Double {
     return cdr(x)
 }
 func printPoint(x: Point) {
-    println("(\(xPoint(x)),\(yPoint(x)))")
+    print("(\(xPoint(x)),\(yPoint(x)))")
 }
 
 
@@ -55,7 +55,7 @@ func printPoint(x: Point) {
 typealias Segment = (ConsPosition -> Point)
 
 func makeSegment(start: Point, end: Point) -> Segment {
-    return cons(start, end)
+    return cons(start, b: end)
 }
 func startSegment(x: Segment) -> Point {
     return car(x)
@@ -67,13 +67,13 @@ func midpointSegment(x: Segment) -> Point {
     func average(a: Double, b: Double) -> Double {
         return (a + b) / 2
     }
-    return makePoint(average(xPoint(startSegment(x)), xPoint(endSegment(x))), average(yPoint(startSegment(x)), yPoint(endSegment(x))))
+    return makePoint(average(xPoint(startSegment(x)), b: xPoint(endSegment(x))), y: average(yPoint(startSegment(x)), b: yPoint(endSegment(x))))
 }
 
 
 typealias Size = (ConsPosition -> Double)
 func makeSize(width: Double, height: Double) -> Size {
-    return cons(width, height)
+    return cons(width, b: height)
 }
 func width(x: Size) -> Double {
     return car(x)
@@ -84,7 +84,7 @@ func height(x: Size) -> Double {
 
 typealias Rect = (ConsPosition -> Point)
 func makeRect(origin: Point, size: Size) -> Rect {
-    return cons(origin, size)
+    return cons(origin, b: size)
 }
 func origin(x: Rect) -> Point {
     return car(x)
@@ -104,13 +104,13 @@ func area(rect: Rect) -> Double {
     return theWidth * theHeight
 }
 
-let rect1 = makeRect(makePoint(0, 0), makeSize(4, 6))
+let rect1 = makeRect(makePoint(0, y: 0), size: makeSize(4, height: 6))
 perimeter(rect1)
 area(rect1)
 
 typealias Rect2 = (ConsPosition -> Point)
 func makeRect2(origin: Point, diagonal: Point) -> Rect {
-    return cons(origin, diagonal)
+    return cons(origin, b: diagonal)
 }
 func origin2(x: Rect2) -> Point {
     return car(x)
@@ -119,7 +119,7 @@ func diagonal(x: Rect2) -> Point {
     return cdr(x)
 }
 func size2(x: Rect2) -> Size {
-    return makeSize(abs(xPoint(origin2(x)) - xPoint(diagonal(x))), abs(yPoint(origin2(x)) - yPoint(diagonal(x))))
+    return makeSize(abs(xPoint(origin2(x)) - xPoint(diagonal(x))), height: abs(yPoint(origin2(x)) - yPoint(diagonal(x))))
 }
 
 func perimeter2(rect: Rect2) -> Double {
@@ -133,8 +133,4 @@ func area2(rect: Rect2) -> Double {
     return theWidth * theHeight
 }
 
-let rect2 = makeRect2(makePoint(0, 0), makeSize(4, 6))
-perimeter2(rect2)
-area2(rect2)
-
-
+let rect2 = makeRect2(makePoint(0, y: 0),

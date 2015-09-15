@@ -14,7 +14,7 @@ func uniquePairs(n: Int) -> [(Int,Int)] {
 }
 
 let a = uniquePairs(6)
-println("\(a)")
+print("\(a)")
 
 func square(x: Int) -> Int {
     return x * x
@@ -28,15 +28,15 @@ func findDivisor(n: Int, testDivisor: Int) -> Int {
     switch true {
     case square(testDivisor) > n:
         return n
-    case dividesWithNoRemainder(n, testDivisor):
+    case dividesWithNoRemainder(n, b: testDivisor):
         return testDivisor
     default:
-        return findDivisor(n, testDivisor + 1)
+        return findDivisor(n, testDivisor: testDivisor + 1)
     }
 }
 
 func smallestDivisor(n: Int) -> Int {
-    return findDivisor(n, 2)
+    return findDivisor(n, testDivisor: 2)
 }
 
 func isPrime(n: Int) -> Bool {
@@ -58,9 +58,4 @@ func primeSumPairs(n: Int) -> [Triple] {
     return uniquePairs(n).filter(isPrimeSum).map(pairToTriple)
 }
 
-println("\(primeSumPairs(10))")
-
-isPrime(199)
-
-
-
+print("\(primeSumPairs

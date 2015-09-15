@@ -22,10 +22,10 @@ func isMatchedParity(x: Int, y: Int) -> Bool {
     }
 }
 
-isMatchedParity(1, 5)
-isMatchedParity(1, 4)
-isMatchedParity(2, 10)
-isMatchedParity(2, 9)
+isMatchedParity(1, y: 5)
+isMatchedParity(1, y: 4)
+isMatchedParity(2, y: 10)
+isMatchedParity(2, y: 9)
 
 func reverse<A>(list: List<A>) -> List<A> {
     var reverseIter: (List<A>, List<A>) -> List<A> = { _, _ in return [] }
@@ -33,7 +33,7 @@ func reverse<A>(list: List<A>) -> List<A> {
         if input.isEmpty() {
             return output
         } else {
-            return reverseIter(cdr(input)!, cons(car(input)!, output))
+            return reverseIter(cdr(input)!, cons(car(input)!, right: output))
         }
     }
     return reverseIter(list, [])
@@ -46,8 +46,8 @@ func sameParity(list: Int...) -> List<Int> {
             return output
         } else {
             var newOutput = output
-            if isMatchedParity(car(input)!, firstValue) {
-                newOutput = cons(car(input)!, newOutput)
+            if isMatchedParity(car(input)!, y: firstValue) {
+                newOutput = cons(car(input)!, right: newOutput)
             }
             return iter(cdr(input)!, newOutput, firstValue)
         }
@@ -60,5 +60,4 @@ func sameParity(list: Int...) -> List<Int> {
 }
 
 sameParity(1, 2, 3, 4, 5, 6, 7)
-sameParity(2, 3, 4, 5, 6, 7)
-
+s

@@ -20,7 +20,7 @@ enum Tree<T> {
         case let .Leaf(value):
             return " \(value.unbox)"
         case let .Node(values):
-            let strings = map(values) { $0.unbox.stringRepresentation }
+            let strings = values.map { $0.unbox.stringRepresentation }
             return "\(strings)"
         }
     }
@@ -29,13 +29,13 @@ enum Tree<T> {
         return Tree.Leaf(Box(value))
     }
     static func node(leaves: Tree<T>...) -> Tree<T> {
-        let boxed = map(leaves) { Box($0) }
+        let boxed = leaves.map { Box($0) }
         return Tree.Node(boxed)
     }
     static func list(values: T...) -> Tree<T> {
-        let boxedValues = map(values) { Box($0) }
-        let leaves = map(boxedValues) { Tree.Leaf($0) }
-        let boxed = map(leaves) { Box($0) }
+        let boxedValues = values.map { Box($0) }
+        let leaves = boxedValues.map { Tree.Leaf($0) }
+        let boxed = leaves.map { Box($0) }
         return Tree.Node(boxed)
     }
 }
@@ -49,7 +49,7 @@ func squareTree1(tree: Tree<Int>) -> Tree<Int> {
     case .Leaf(let value):
         return Tree.leaf(value.unbox * value.unbox)
     case .Node(let values):
-        return Tree.Node( map(values) { Box(squareTree1($0.unbox)) })
+        return Tree.Node( values.map { Box(squareTree1($0.unbox)) })
     }
 }
 let result = squareTree1(test)

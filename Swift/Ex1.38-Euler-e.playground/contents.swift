@@ -27,7 +27,7 @@ func eulerE() -> Double {
             return 1.0
         }
     }
-    return 2 + kFiniteContFrac(N, D, 100)
+    return 2 + kFiniteContFrac(N, D: D, k: 100)
 }
 eulerE()
 
@@ -43,12 +43,6 @@ func D(i:Int) -> Double {
 var a:[Int] = [1,2,3,4,5,6,7,8,9,10]
 let output = a.map{D($0)}
 output
-
-
-
-
-
-
 
 
 

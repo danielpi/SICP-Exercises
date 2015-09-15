@@ -14,10 +14,10 @@ func cons(left: Double, right: Double) -> Pair {
 
 typealias Vector = Pair
 func makeVect(x: Double, y: Double) -> Vector {
-    return cons(x,y)
+    return cons(x,right: y)
 }
-let a = makeVect(1.2, 6.5)
-let b = makeVect(4.4, 2.0)
+let a = makeVect(1.2, y: 6.5)
+let b = makeVect(4.4, y: 2.0)
 
 func xcorVect(vector: Vector) -> Double {
     return vector.left
@@ -29,20 +29,16 @@ func ycorVect(vector: Vector) -> Double {
 
 
 func addVect(lhs: Vector, rhs: Vector) -> Vector {
-    return makeVect(xcorVect(lhs) + xcorVect(rhs), ycorVect(lhs) + ycorVect(rhs))
+    return makeVect(xcorVect(lhs) + xcorVect(rhs), y: ycorVect(lhs) + ycorVect(rhs))
 }
 addVect(a, b)
 
 
 func subVect(lhs: Vector, rhs: Vector) -> Vector {
-    return makeVect(xcorVect(lhs) - xcorVect(rhs), ycorVect(lhs) - ycorVect(rhs))
+    return makeVect(xcorVect(lhs) - xcorVect(rhs), y: ycorVect(lhs) - ycorVect(rhs))
 }
 subVect(b, a)
 
 
 func scaleVect(scale: Double, vector: Vector) -> Vector {
-    return makeVect(scale * xcorVect(vector), scale * ycorVect(vector))
-}
-scaleVect(3, a)
-
-
+    return makeVect(scale * xcorVect(vector), y: scale * ycorVect(vector)

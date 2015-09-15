@@ -85,29 +85,29 @@ func angle1(z: RectangularForm) -> Double { return atan2(imagPart1(z), realPart1
 func makeFromRealImag1(x: Double, y: Double) -> RectangularForm { return (x, y) }
 func makeFromMagAng1(r: Double, a: Double) -> RectangularForm { return (r * cos(a), r * sin(a)) }
 
-let a = makeFromRealImag1(3, 4)
+let a = makeFromRealImag1(3, y: 4)
 realPart1(a)
 imagPart1(a)
 magnitude1(a)
 angle1(a)
 
-let b = makeFromMagAng1(1, 3.14 / 4)
+let b = makeFromMagAng1(1, a: 3.14 / 4)
 realPart1(b)
 imagPart1(b)
 magnitude1(b)
 angle1(b)
 
 func addComplex1(z1: RectangularForm, z2: RectangularForm) -> RectangularForm {
-    return makeFromRealImag1(realPart1(z1) + realPart1(z2), imagPart1(z1) + imagPart1(z2))
+    return makeFromRealImag1(realPart1(z1) + realPart1(z2), y: imagPart1(z1) + imagPart1(z2))
 }
 func subComplex1(z1: RectangularForm, z2: RectangularForm) -> RectangularForm {
-    return makeFromRealImag1(realPart1(z1) - realPart1(z2), imagPart1(z1) - imagPart1(z2))
+    return makeFromRealImag1(realPart1(z1) - realPart1(z2), y: imagPart1(z1) - imagPart1(z2))
 }
 func mulComplex1(z1: RectangularForm, z2: RectangularForm) -> RectangularForm {
-    return makeFromMagAng1(magnitude1(z1) * magnitude1(z2), angle1(z1) + angle1(z2))
+    return makeFromMagAng1(magnitude1(z1) * magnitude1(z2), a: angle1(z1) + angle1(z2))
 }
 func divComplex1(z1: RectangularForm, z2: RectangularForm) -> RectangularForm {
-    return makeFromMagAng1(magnitude1(z1) / magnitude1(z2), angle1(z1) - angle1(z2))
+    return makeFromMagAng1(magnitude1(z1) / magnitude1(z2), a: angle1(z1) - angle1(z2))
 }
 
 addComplex1(a, b)
@@ -144,8 +144,8 @@ func makeFromMagAng2(r: Double, A: Double) -> PolarForm {
     return PolarForm(r, A)
 }
 
-let polarA = makeFromRealImag2(6, 8)
-let polarB = makeFromMagAng2(2, 0.5)
+let polarA = makeFromRealImag2(6, y: 8)
+let polarB = makeFromMagAng2(2, A: 0.5)
 realPart2(polarA)
 imagPart2(polarA)
 magnitude2(polarB)
@@ -197,14 +197,14 @@ func angleRectangular(z: ComplexNumber) -> Double {
     return atan2(imagPartRectangular(z), realPartRectangular(z))
 }
 func makeFromRealImagRectangular(x: Double, y: Double) -> TaggedComplexNumber {
-    return attachTag(.Rectangular, (x, y))
+    return attachTag(.Rectangular, contents: (x, y))
 }
 func makeFromMagAngRectangular(r: Double, A: Double) -> TaggedComplexNumber {
-    return attachTag(.Rectangular, (r * cos(A), r * sin(A)))
+    return attachTag(.Rectangular, contents: (r * cos(A), r * sin(A)))
 }
 
-let rectangularDatumA = makeFromRealImagRectangular(7, 13)
-let rectangularDatumB = makeFromMagAngRectangular(10,-2)
+let rectangularDatumA = makeFromRealImagRectangular(7, y: 13)
+let rectangularDatumB = makeFromMagAngRectangular(10,A: -2)
 
 //: and here is Alyssa's revised polar representation:
 
@@ -220,14 +220,14 @@ func makeFromRealImagPolar(x: Double, y: Double) -> TaggedComplexNumber {
     let tag: ComplexNumberType = .Polar
     let r = pow(square(x) + square(y), 0.5)
     let A = atan2(y, x)
-    return attachTag(tag, (r, A))
+    return attachTag(tag, contents: (r, A))
 }
 func makeFromMagAngPolar(r: Double, A: Double) -> TaggedComplexNumber {
-    return attachTag(.Polar, (r, A))
+    return attachTag(.Polar, contents: (r, A))
 }
 
-let polarDatumA = makeFromRealImagPolar(4, 9)
-let polarDatumB = makeFromMagAngPolar(6, 0.8)
+let polarDatumA = makeFromRealImagPolar(4, y: 9)
+let polarDatumB = makeFromMagAngPolar(6, A: 0.8)
 
 //: Each generic selector is implemented as a procedure that checks the tag of its argument and calls the appropriate procedure for handling data of that type. For example, to obtain the real part of a complex number, real-part examines the tag to determine whether to use Ben's real-part-rectangular or Alyssa's real-part-polar. In either case, we use contents to extract the bare, untagged datum and send this to the rectangular or polar procedure as required.
 
@@ -269,20 +269,20 @@ func angle3(z: TaggedComplexNumber) -> Double {
 //: To implement the complex-number arithmetic operations, we can use the same procedures add-complex, sub-complex, mul-complex, and div-complex from Section 2.4.1, because the selectors they call are generic, and so will work with either representation. For example, the procedure add-complex is still
 
 func addComplex(z1: TaggedComplexNumber, z2: TaggedComplexNumber) -> TaggedComplexNumber {
-    return makeFromRealImag3(realPart3(z1) + realPart3(z2), imagPart3(z1) + imagPart3(z2))
+    return makeFromRealImag3(realPart3(z1) + realPart3(z2), y: imagPart3(z1) + imagPart3(z2))
 }
 
 //: Finally, we must choose whether to construct complex numbers using Ben's representation or Alyssa's representation. One reasonable choice is to construct rectangular numbers whenever we have real and imaginary parts and to construct polar numbers whenever we have magnitudes and angles:
 
 func makeFromRealImag3(x: Double, y: Double) -> TaggedComplexNumber {
-    return makeFromRealImagRectangular(x, y)
+    return makeFromRealImagRectangular(x, y: y)
 }
 func makeFromMagAng3(r: Double, A: Double) -> TaggedComplexNumber {
-    return makeFromMagAngPolar(r, A)
+    return makeFromMagAngPolar(r, A: A)
 }
 
-let AAA = makeFromRealImag3(3, 4)
-let BBB = makeFromMagAng3(5, 0.2)
+let AAA = makeFromRealImag3(3, y: 4)
+let BBB = makeFromMagAng3(5, A: 0.2)
 let CCC = addComplex(AAA, BBB)
 
 //:                    Programs that use complex numbers
@@ -377,7 +377,7 @@ func installRectangularPackage() {
     }
     
     func tag(x: ComplexNumber) -> TaggedComplexNumber {
-        return attachTag(.Rectangular, x)
+        return attachTag(.Rectangular, contents: x)
     }
     func makeFromRealImag(x: Double, y: Double) -> TaggedComplexNumber {
         return tag((x, y))
@@ -388,12 +388,12 @@ func installRectangularPackage() {
     
     // Interface to the rest of the system
     
-    put("realPart", .Rectangular, realPart)
-    put("imagPart", .Rectangular, imagPart)
-    put("magnitude", .Rectangular, magnitude)
-    put("angle", .Rectangular, angle)
-    put("makeFromRealImag", .Rectangular, makeFromRealImag)
-    put("makeFromMagAng", .Rectangular, makeFromMagAng)
+    put("realPart", type: .Rectangular, item: realPart)
+    put("imagPart", type: .Rectangular, item: imagPart)
+    put("magnitude", type: .Rectangular, item: magnitude)
+    put("angle", type: .Rectangular, item: angle)
+    put("makeFromRealImag", type: .Rectangular, item: makeFromRealImag)
+    put("makeFromMagAng", type: .Rectangular, item: makeFromMagAng)
 }
 
 //: Notice that the internal procedures here are the same procedures from Section 2.4.1 that Ben wrote when he was working in isolation. No changes are necessary in order to interface them to the rest of the system. Moreover, since these procedure definitions are internal to the installation procedure, Ben needn't worry about name conflicts with other procedures outside the rectangular package. To interface these to the rest of the system, Ben installs his real-part procedure under the operation name real-part and the type (rectangular), and similarly for the other selectors. The interface also defines the constructors to be used by the external system. These are identical to Ben's internally defined constructors, except that they attach the tag.
@@ -412,7 +412,7 @@ func installPolarPackage() {
     }
     
     func tag(x: ComplexNumber) -> TaggedComplexNumber {
-        return attachTag(.Polar, x)
+        return attachTag(.Polar, contents: x)
     }
     func makeFromMagAng(r: Double, A: Double) -> TaggedComplexNumber {
         return tag((r, A))
@@ -422,12 +422,12 @@ func installPolarPackage() {
     }
     
     // interface to the rest of the system
-    put("magnitude", .Polar, magnitude)
-    put("angle", .Polar, angle)
-    put("realPart", .Polar, realPart)
-    put("imagPart", .Polar, imagPart)
-    put("makeFromMagAng", .Polar, makeFromMagAng)
-    put("makeFromRealImag", .Polar, makeFromMagAng)
+    put("magnitude", type: .Polar, item: magnitude)
+    put("angle", type: .Polar, item: angle)
+    put("realPart", type: .Polar, item: realPart)
+    put("imagPart", type: .Polar, item: imagPart)
+    put("makeFromMagAng", type: .Polar, item: makeFromMagAng)
+    put("makeFromRealImag", type: .Polar, item: makeFromMagAng)
 }
 
 //: Even though Ben and Alyssa both still use their original procedures defined with the same names as each other's (e.g., realPart), these definitions are now internal to different procedures (see Section 1.1.8), so there is no name conflict.
@@ -436,7 +436,7 @@ func installPolarPackage() {
 
 func applyGeneric(op: String, arg: TaggedComplexNumber) -> Double {
     let type = typeTag(arg)
-    let proc: ComplexNumberSelector? = get(op, type)
+    let proc: ComplexNumberSelector? = get(op, type: type)
     if let p = proc {
         return p(contents(arg))
     } else {
@@ -453,10 +453,10 @@ func applyGeneric(op: String, arg: TaggedComplexNumber) -> Double {
 installRectangularPackage()
 installPolarPackage()
 
-func realPart(z: TaggedComplexNumber) -> Double { return applyGeneric("realPart", z) }
-func imagPart(z: TaggedComplexNumber) -> Double { return applyGeneric("imagPart", z) }
-func magnitude(z: TaggedComplexNumber) -> Double { return applyGeneric("magnitude", z) }
-func angle(z: TaggedComplexNumber) -> Double { return applyGeneric("angle", z) }
+func realPart(z: TaggedComplexNumber) -> Double { return applyGeneric("realPart", arg: z) }
+func imagPart(z: TaggedComplexNumber) -> Double { return applyGeneric("imagPart", arg: z) }
+func magnitude(z: TaggedComplexNumber) -> Double { return applyGeneric("magnitude", arg: z) }
+func angle(z: TaggedComplexNumber) -> Double { return applyGeneric("angle", arg: z) }
 
 //: Observe that these do not change at all if a new representation is added to the system.
 //:
@@ -465,7 +465,7 @@ func angle(z: TaggedComplexNumber) -> Double { return applyGeneric("angle", z) }
 func makeFromRealImag(x: Double, y: Double) -> TaggedComplexNumber {
     let op = "makeFromRealImag"
     let type: ComplexNumberType = .Rectangular
-    let proc: ComplexNumberConstructor? = get(op, type)
+    let proc: ComplexNumberConstructor? = get(op, type: type)
     if let p = proc {
         return p(x, y)
     } else {
@@ -478,7 +478,7 @@ func makeFromRealImag(x: Double, y: Double) -> TaggedComplexNumber {
 func makeFromMagAng(r: Double, A: Double) -> TaggedComplexNumber {
     let op = "makeFromMagAng"
     let type: ComplexNumberType = .Polar
-    let proc: ComplexNumberConstructor? = get(op, type)
+    let proc: ComplexNumberConstructor? = get(op, type: type)
     if let p = proc {
         return p(r, A)
     } else {
@@ -486,20 +486,4 @@ func makeFromMagAng(r: Double, A: Double) -> TaggedComplexNumber {
     }
 }
 
-let genericRectangular = makeFromRealImag(3,4)
-let genericPolar = makeFromMagAng(6, 0.3)
-
-realPart(genericRectangular)
-imagPart(genericRectangular)
-magnitude(genericRectangular)
-angle(genericRectangular)
-
-realPart(genericPolar)
-imagPart(genericPolar)
-magnitude(genericPolar)
-angle(genericPolar)
-
-
-//: ## Message Passing
-//: 
-
+let genericRectangular = makeFrom

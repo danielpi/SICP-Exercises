@@ -9,10 +9,10 @@ func isCloseEnough(a: Double, b: Double, tolerance: Double) -> Bool {
 
 func fixedPoint(f: (Double) -> Double, guess: Double) -> Double {
     let next = f(guess)
-    if isCloseEnough(guess, next, 0.00001) {
+    if isCloseEnough(guess, b: next, tolerance: 0.00001) {
         return next
     } else {
-        return fixedPoint(f, next)
+        return fixedPoint(f, guess: next)
     }
 }
 
@@ -26,7 +26,7 @@ func deriv(g: (Double) -> Double) -> (Double) -> Double {
 func linspace(start: Double, end: Double, steps: Int) -> [Double] {
     var array = [Double](count: steps, repeatedValue: 0.0)
     let stepSize = (end - start) / Double(steps - 1)
-    for (index, element) in enumerate(array) {
+    for (index, element) in array.enumerate() {
         array[index] = start + (stepSize * Double(index))
     }
     return array
@@ -37,7 +37,7 @@ func newtonTransform(g: (Double) -> Double) -> (Double) -> Double {
 }
 
 func newtonsMethod(g: (Double) -> Double, guess: Double) -> Double {
-    return fixedPoint(newtonTransform(g), guess)
+    return fixedPoint(newtonTransform(g), guess: guess)
 }
 
 
@@ -45,6 +45,4 @@ func cubic(a: Double, b: Double, c: Double) -> (Double) -> Double {
     return { (x: Double) -> Double in return pow(x, 3) + (a * pow(x, 2)) + (b * x) + c }
 }
 
-newtonsMethod(cubic(5, 2.5, -9), -10.0)
-
-
+newtonsMethod

@@ -10,9 +10,9 @@ func expMod(base: Int, exp: Int, m: Int) -> Int {
     case exp == 0:
         return 1
     case isEven(exp):
-        return ((expMod(base, exp / 2, m)) % m) * ((expMod(base, exp / 2, m)) % m)
+        return ((expMod(base, exp: exp / 2, m: m)) % m) * ((expMod(base, exp: exp / 2, m: m)) % m)
     default:
-        return (base * expMod(base, exp - 1, m)) % m
+        return (base * expMod(base, exp: exp - 1, m: m)) % m
     }
 }
 
@@ -21,9 +21,9 @@ func fastExpt(b: Int, n: Int) -> Int {
     case n == 0:
         return 1
     case isEven(n):
-        return square(fastExpt(b, n / 2))
+        return square(fastExpt(b, n: n / 2))
     default:
-        return b * fastExpt(b, n - 1)
+        return b * fastExpt(b, n:  n - 1)
     }
 }
 
@@ -50,7 +50,7 @@ return (base * expMod(base, exp - 1, m)) % m
 */
 func fermatTest(n: Int) -> Bool {
     func tryIt(a: Int) -> Bool {
-        return expMod(a, n, n) == a
+        return expMod(a, exp: n, m: n) == a
     }
     let randomA:Int = Int(arc4random_uniform(UInt32(n - 1)) + 1)
     return tryIt(randomA)
@@ -62,18 +62,18 @@ func isPrimeFast(n: Int, times: Int) -> Bool {
     case times == 0:
         return true
     case fermatTest(n):
-        return isPrimeFast(n, times - 1)
+        return isPrimeFast(n, times: times - 1)
     default:
         return false
     }
 }
 
 func timedPrimeTest(n: Int) {
-    startPrimeTest(n, NSDate())
+    startPrimeTest(n, startTime: NSDate())
 }
 func startPrimeTest(n: Int, startTime: NSDate) {
-    if isPrimeFast(n, 10) {
-        reportPrime(n, -1 * startTime.timeIntervalSinceNow)
+    if isPrimeFast(n, times: 10) {
+        reportPrime(n, elapsedTime: -1 * startTime.timeIntervalSinceNow)
     }
 }
 func reportPrime(n: Int, elapsedTime: Double) {

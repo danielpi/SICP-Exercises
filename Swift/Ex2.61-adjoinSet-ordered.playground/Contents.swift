@@ -4,7 +4,7 @@ import Cocoa
 //: Give an implementation of adjoinSet using the ordered representation. By analogy with isElementOfSet show how to take advantage of the ordering to produce a procedure that requires on the average about half as many steps as with the unordered representation.
 
 extension Array {
-    var match: (head: T, tail:[T])? {
+    var match: (head: Element, tail:[T])? {
         return (self.isEmpty) ? nil : (self[0], Array(self[1..<self.count]))
     }
 }
@@ -27,7 +27,6 @@ func adjoinSet<T: Comparable>(x: T, set: [T]) -> [T] {
     }
 }
 
-adjoinSet(4, [])
-adjoinSet(4, orderedSet)
-adjoinSet(5, orderedSet)
-
+adjoinSet(4, set: [])
+adjoinSet(4, set: orderedSet)
+adjoinSet(

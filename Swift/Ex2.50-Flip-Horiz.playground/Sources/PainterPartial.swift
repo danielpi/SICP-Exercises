@@ -91,7 +91,7 @@ func segmentsToText(segments: [Segment]) -> Painter {
         for segment in segments {
             let start = frameCoordMap(frame)(segment.startPoint)
             let end = frameCoordMap(frame)(segment.endPoint)
-            println("Draw Line from \(start.x),\(start.y) to \(end.x),\(end.y)")
+            print("Draw Line from \(start.x),\(start.y) to \(end.x),\(end.y)")
         }
     }
 }
@@ -145,8 +145,8 @@ public typealias Transformer = (Painter) -> Painter
 
 public func beside(left: Painter, right: Painter) -> Painter {
     let splitPoint = Point(x: 0.5, y: 0)
-    let paintLeft = transformPainter(left, Point(x: 0, y: 0), splitPoint, Point(x: 0, y: 1))
-    let paintRight = transformPainter(right, splitPoint, Point(x: 1, y: 0), Point(x: 0.5, y: 1))
+    let paintLeft = transformPainter(left, origin: Point(x: 0, y: 0), corner1: splitPoint, corner2: Point(x: 0, y: 1))
+    let paintRight = transformPainter(right, origin: splitPoint, corner1: Point(x: 1, y: 0), corner2: Point(x: 0.5, y: 1))
     return { frame in
         paintLeft(frame)
         paintRight(frame)
@@ -155,8 +155,8 @@ public func beside(left: Painter, right: Painter) -> Painter {
 
 public func below(top: Painter, bottom: Painter) -> Painter {
     let splitPoint = Point(x: 0.0, y: 0.5)
-    let paintTop = transformPainter(top, Point(x:0, y:0), Point(x: 1, y: 0), splitPoint)
-    let paintBot = transformPainter(bottom, splitPoint, Point(x: 1, y: 0.5), Point(x: 0, y: 1))
+    let paintTop = transformPainter(top, origin: Point(x:0, y:0), corner1: Point(x: 1, y: 0), corner2: splitPoint)
+    let paintBot = transformPainter(bottom, origin: splitPoint, corner1: Point(x: 1, y: 0.5), corner2: Point(x: 0, y: 1))
     return { frame in
         paintTop(frame)
         paintBot(frame)
@@ -164,7 +164,7 @@ public func below(top: Painter, bottom: Painter) -> Painter {
 }
 
 public func flipVert(painter: Painter) -> Painter {
-    let flipped = transformPainter(painter, Point(x: 0, y: 1), Point(x: 1, y: 1), Point(x: 0, y: 0))
+    let flipped = transformPainter(painter, origin: Point(x: 0, y: 1), corner1: Point(x: 1, y: 1), corner2: Point(x: 0, y: 0))
     return { frame in
         flipped(frame)
     }
@@ -174,8 +174,8 @@ public func flipVert(painter: Painter) -> Painter {
 // Visualisation
 public func draw(painter: Painter) -> NSImage {
     let squareSize: CGFloat = 500
-    var imgSize = NSMakeSize(squareSize, squareSize)
-    var img = NSImage(size: imgSize)
+    let imgSize = NSMakeSize(squareSize, squareSize)
+    let img = NSImage(size: imgSize)
     let aFrame = Frame(origin: Point(x: 0, y: 0), edge1: Vector(x: 0, y: 1), edge2: Vector(x: 1, y: 0), dc: img)
     painter(aFrame)
     return img

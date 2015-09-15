@@ -93,8 +93,8 @@ func installEngineeringPackage() {
         return record.salary
     }
     
-    put("getRecord", "engineering", getRecord)
-    put("getSalary", "engineering", getSalary)
+    put("getRecord", type: "engineering", item: getRecord)
+    put("getSalary", type: "engineering", item: getSalary)
 }
 installEngineeringPackage()
 
@@ -115,13 +115,13 @@ func installProductionPackage() {
         return record.salary
     }
     
-    put("getRecord", "production", getRecord)
-    put("getSalary", "production", getSalary)
+    put("getRecord", type: "production", item: getRecord)
+    put("getSalary", type: "production", item: getSalary)
 }
 installProductionPackage()
 
 func getRecord(name: String, file: TaggedFile) -> TaggedRecord? {
-    if let function: FileLookup = get("getRecord", file.0) {
+    if let function: FileLookup = get("getRecord", type: file.0) {
         return function(name, file.1)
     } else {
         return nil
@@ -129,7 +129,7 @@ func getRecord(name: String, file: TaggedFile) -> TaggedRecord? {
 }
 
 func getSalary(record: TaggedRecord) -> String? {
-    if let function: RecordLookup = get("getSalary", record.0) {
+    if let function: RecordLookup = get("getSalary", type: record.0) {
         return function(record.1)
     } else {
         return nil
@@ -137,8 +137,8 @@ func getSalary(record: TaggedRecord) -> String? {
 }
 
 
-let danielEngineering = getRecord("Daniel", taggedEngineering)
-let danielProduction = getRecord("Daniel", taggedProduction)
+let danielEngineering = getRecord("Daniel", file: taggedEngineering)
+let danielProduction = getRecord("Daniel", file: taggedProduction)
 
 if let d = danielEngineering {
     getSalary(d)

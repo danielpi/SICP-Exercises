@@ -13,10 +13,10 @@ import Cocoa
 
 
 func wave2(frame: Frame) {
-    beside(wave, flipVert(wave))(frame)
+    beside(wave, right: flipVert(wave))(frame)
 }
 func wave4(frame: Frame) {
-    below(wave2, wave2)(frame)
+    below(wave2, bottom: wave2)(frame)
 }
 
 
@@ -28,7 +28,7 @@ draw(wave4)
 // Once we can combine painters, we would like to be able to abstract typical patterns of combining painters. We will implement the painter operations as Scheme procedures. This means that we don't need a special abstraction mechanism in the picture language: Since the means of combination are ordinary Scheme procedures, we automatically have the capability to do anything with painter operations that we can do with procedures. For example, we can abstract the pattern in wave4 as
 
 func flippedPairs(painter: Painter) -> Painter {
-    let painter2 = beside(painter, flipVert(painter))
+    let painter2 = beside(painter, right: flipVert(painter))
     return below(painter2, painter2)
 }
 draw(flippedPairs(wave))
@@ -44,17 +44,17 @@ func rightSplit(painter: Painter, n: Int) -> Painter {
     if n == 0 {
         return painter
     } else {
-        let smaller = rightSplit(painter, n - 1)
+        let smaller = rightSplit(painter, n: n - 1)
         return beside(painter, below(smaller, smaller))
     }
 }
-draw(rightSplit(wave, 2))
+draw(rightSplit(wave, n: 2))
 
 func upSplit(painter: Painter, n: Int) -> Painter {
     if n == 0 {
         return painter
     } else {
-        let smaller = upSplit(painter, n - 1)
+        let smaller = upSplit(painter, n: n - 1)
         return below(beside(smaller, smaller), painter)
     }
 }
@@ -65,25 +65,25 @@ func cornerSplit(painter: Painter, n: Int) -> Painter {
     if n == 0 {
         return painter
     } else {
-        let up = upSplit(painter, n - 1)
-        let right = rightSplit(painter, n - 1)
+        let up = upSplit(painter, n: n - 1)
+        let right = rightSplit(painter, n: n - 1)
         let topLeft = beside(up, up)
         let bottomRight = below(right, right)
-        let corner = cornerSplit(painter, n - 1)
+        let corner = cornerSplit(painter, n: n - 1)
         
         return beside(below(topLeft, painter), below(corner, bottomRight))
     }
 }
-draw(cornerSplit(wave, 5))
+draw(cornerSplit(wave, n: 5))
 
 // By placing four copies of a cornerSplit appropriately, we obtain a pattern called square-Limit, whose application to wave and rogers is shown in Figure 2.9.
 
 func squareLimit(painter: Painter, n: Int) -> Painter {
-    let quarter = cornerSplit(painter, n)
+    let quarter = cornerSplit(painter, n: n)
     let half = beside(flipHoriz(quarter), quarter)
     return below(half, flipVert(half))
 }
-draw(squareLimit(wave, 4))
+draw(squareLimit(wave, n: 4))
 
 
 // Higher-order Operations
@@ -92,8 +92,8 @@ draw(squareLimit(wave, 4))
 
 func squareOfFour(tl: Transformer, tr: Transformer, bl: Transformer, br: Transformer) -> Transformer {
     return { painter in
-        let top = beside(tl(painter), tr(painter))
-        let bottom = beside(bl(painter), br(painter))
+        let top = beside(tl(painter), right: tr(painter))
+        let bottom = beside(bl(painter), right: br(painter))
         return below(bottom, top)
     }
 }
@@ -105,7 +105,7 @@ func identity(painter: Painter) -> Painter {
 // Then flippedPairs can be defined in terms of squareOfFour as follows:
 
 func flippedPairs2(painter: Painter) -> Painter {
-    let combine4 = squareOfFour(identity, flipVert, identity, flipVert)
+    let combine4 = squareOfFour(identity, tr: flipVert, bl: identity, br: flipVert)
     return combine4(painter)
 }
 draw(flippedPairs2(wave))
@@ -113,14 +113,14 @@ draw(flippedPairs2(wave))
 // and squareLimit can be expressed as
 
 func rotate180(painter: Painter) -> Painter {
-    return transformPainter(painter, Point(x: 1, y: 1), Point(x: 0, y: 1), Point(x: 1, y: 0))
+    return transformPainter(painter, origin: Point(x: 1, y: 1), corner1: Point(x: 0, y: 1), corner2: Point(x: 1, y: 0))
 }
 
 func squareLimit2(painter: Painter, n: Int) -> Painter {
-    let combine4 = squareOfFour(rotate180, flipVert, flipHoriz, identity)
+    let combine4 = squareOfFour(rotate180, tr: flipVert, bl: flipHoriz, br: identity)
     return combine4(cornerSplit(painter, n))
 }
-draw(squareLimit2(wave, 4))
+draw(squareLimit2(wave, n: 4))
 
 
 // Frames
@@ -159,7 +159,7 @@ frameCoordMap2(aFrame)(Vector(x: 0.5, y: 0.5))
 // The details of how primitive painters are implemented depend on the particular characteristics of the graphics system and the type of image to be drawn. For instance, suppose we have a procedure draw-line that draws a line on the screen between two specified points. Then we can create painters for line drawings, such as the wave painter in Figure 2.10, from lists of line segments as follows:
 
 func drawLine(start: Point, end: Point) {
-    println("Draw Line from \(start.x),\(start.y) to \(end.x),\(end.y)")
+    print("Draw Line from \(start.x),\(start.y) to \(end.x),\(end.y)")
 }
 
 func segmentsToPainter2(segments: [Segment]) -> Painter {
@@ -167,7 +167,7 @@ func segmentsToPainter2(segments: [Segment]) -> Painter {
         for segment in segments {
             let start = frameCoordMap2(frame)(segment.startPoint)
             let end = frameCoordMap2(frame)(segment.endPoint)
-            drawLine(start,end)
+            drawLine(start,end: end)
         }
     }
 }
@@ -195,21 +195,21 @@ public func transformPainter(painter: Painter, origin: Point, corner1: Point, co
 // Here's how to flip painter images vertically:
 
 func flipVert2(painter: Painter) -> Painter {
-    return transformPainter(painter, Point(x: 0, y: 1), Point(x: 1, y: 1), Point(x: 0, y: 0))
+    return transformPainter(painter, origin: Point(x: 0, y: 1), corner1: Point(x: 1, y: 1), corner2: Point(x: 0, y: 0))
 }
 draw(flipVert2(wave))
 
 // Other transformations rotate images counterclockwise by 90 degrees
 
 func rotate90(painter: Painter) -> Painter {
-    return transformPainter(painter, Point(x: 1, y: 0), Point(x: 1, y: 1), Point(x: 0, y: 0))
+    return transformPainter(painter, origin: Point(x: 1, y: 0), corner1: Point(x: 1, y: 1), corner2: Point(x: 0, y: 0))
 }
 draw(rotate90(wave))
 
 // or squash images towards the center of the frame:
 
 func squashInwards(painter: Painter) -> Painter {
-    return transformPainter(painter, Point(x: 0.35, y: 0.35), Point(x: 0.65, y: 0.35), Point(x: 0.35, y: 0.65))
+    return transformPainter(painter, origin: Point(x: 0.35, y: 0.35), corner1: Point(x: 0.65, y: 0.35), corner2: Point(x: 0.35, y: 0.65))
 }
 draw(squashInwards(wave))
 
@@ -228,11 +228,9 @@ func beside2(painter1: Painter, painter2: Painter) -> Painter {
 */
 
 func besidePainter(frame: Frame) {
-    beside(wave, wave)(frame)
+    beside(wave, right: wave)(frame)
 }
 draw(besidePainter)
 
 
-// Observe how the painter data abstraction, and in particular the represetation of painters as procedures, makes beside easy to implement. The beside procedure need not know anything about the details of the component painters other than that each painter will draw something in its designated frame.
-
-
+// Observe how the painter data abstraction, and in particular the represetation of painters as proc

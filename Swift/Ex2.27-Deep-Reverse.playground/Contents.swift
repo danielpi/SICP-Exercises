@@ -6,7 +6,7 @@ import Cocoa
 let x = [[1,2],[3,4]]
 
 extension Array {
-    var decompose : (head: T, tail: [T])? {
+    var decompose : (head: Element, tail: [T])? {
         return (count > 0) ? (self[0], Array(self[1..<count])) : nil
     }
 }
@@ -45,4 +45,4 @@ func deepReverse<A>(list: [[A]]) -> [[A]] {
     return reverseIter(list, [])
 }
 
-deepReverse(x)
+deepRever

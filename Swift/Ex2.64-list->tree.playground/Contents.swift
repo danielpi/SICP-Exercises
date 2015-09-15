@@ -11,7 +11,7 @@ func partialTree(elts: [Int], n: Int) -> TreeSetList {
         return (.Empty, elts)
     } else {
         let leftSize = (n - 1) / 2
-        let (leftTree, nonLeftElts) = partialTree(elts, leftSize)
+        let (leftTree, nonLeftElts) = partialTree(elts, n: leftSize)
         let rightSize = n - (leftSize + 1)
         let thisEntry = nonLeftElts[0]
         let (rightTree, remainingElts) = partialTree(Array(nonLeftElts[1..<nonLeftElts.count]), rightSize)
@@ -21,12 +21,12 @@ func partialTree(elts: [Int], n: Int) -> TreeSetList {
 }
 
 func listToTree(elements: [Int]) -> TreeSet<Int> {
-    let (tree, list) = partialTree(elements, elements.count)
+    let (tree, list) = partialTree(elements, n: elements.count)
     return tree
 }
 
 let blah = listToTree([1,3,5,7,9,11])
-print(blah)
+print(blah, terminator: "")
 treeToList(blah)
 
 
@@ -40,7 +40,4 @@ treeToList(blah)
 
 // If n is 0 then we are at a leaf and thus we need an empty tree. Otherwise we recursively grab half of the remaining values and make one branch of the tree with them and make another branch from the other half.
 
-// b. What is the order of growth in the number of steps required by listToTree to convert a list of n elements?
-
-// O(n)
-
+// b. What is the order of growth in the number of steps required by listToTree to convert a list of 

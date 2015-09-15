@@ -9,9 +9,9 @@ public func queens42(boardSize: Int) -> [[Queen]] {
         if k == 0 {
             return [emptyBoard]
         } else {
-            let a = flatMap(queenCols(k - 1), { restOfQueens in     // 8
-                map(enumerateInterval(1, boardSize), { newRow in    // 1965
-                    adjoinPosition(newRow, k, restOfQueens)         // 15720
+            let a = queenCols(k - 1).flatMap({ restOfQueens in     // 8
+                enumerateInterval(1, high: boardSize).map({ newRow in    // 1965
+                    adjoinPosition(newRow, file: k, board: restOfQueens)         // 15720
                 })
             })
             
@@ -35,9 +35,9 @@ public func queens43(boardSize: Int) -> [[Queen]] {
         if k == 0 {
             return [emptyBoard]
         } else {
-            let a = flatMap(enumerateInterval(1, boardSize), { newRow in  //
-                map(queenCols(k - 1), { restOfQueens in                   //
-                    adjoinPosition(newRow, k, restOfQueens)               //
+            let a = enumerateInterval(1, high: boardSize).flatMap({ newRow in  //
+                queenCols(k - 1).map({ restOfQueens in                   //
+                    adjoinPosition(newRow, file: k, board: restOfQueens)               //
                 })
             })
             
@@ -59,8 +59,4 @@ solutions43.count
 // For the original ordering with a board size of 3, we recurse three times and perform ~ 6 (would be 9 but we exclude illegal queen positions) steps per recursion -> 21 steps
 // For a board size of 4 we recurse 4 times and perform ~15 (4^4 = 256 less illegal steps) steps per recursion -> 64 steps
 
-// boardsize^boardsize * T which for 8 works out to 
-pow(8.0, 8.0)
-
-
-
+// boardsize^boardsize * T which for

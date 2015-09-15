@@ -62,8 +62,8 @@ public func frameCoordMap(frame: Frame) -> (Vector) -> Vector {
 
 public func draw(painter: Painter) -> NSImage {
     let squareSize: CGFloat = 500
-    var imgSize = NSMakeSize(squareSize, squareSize)
-    var img = NSImage(size: imgSize)
+    let imgSize = NSMakeSize(squareSize, squareSize)
+    let img = NSImage(size: imgSize)
     let aFrame = Frame(origin: Point(x: 0, y: 0), edge1: Vector(x: 0, y: 1), edge2: Vector(x: 1, y: 0), dc: img)
     painter(aFrame)
     return img

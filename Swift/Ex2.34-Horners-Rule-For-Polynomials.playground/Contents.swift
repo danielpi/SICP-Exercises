@@ -28,25 +28,20 @@ func accumulate(op: (Double, Double) -> Double, initial: Double, sequence: [Doub
     if sequence.isEmpty {
         return initial
     } else {
-        return op(car(sequence), accumulate(op, initial, cdr(sequence)))
+        return op(car(sequence), accumulate(op, initial: initial, sequence: cdr(sequence)))
     }
 }
 
 func hornerEval(x: Double, coefficientSequence: [Double]) -> Double {
-    return accumulate({ (thisCoeff, higherTerms) in return (higherTerms * x) + thisCoeff }, 0.0, coefficientSequence)
+    return accumulate({ (thisCoeff, higherTerms) in return (higherTerms * x) + thisCoeff }, initial: 0.0, sequence: coefficientSequence)
 }
 
 // For example to compute 1 + 3x + 5x^3 + x^5 at x = 2 you would evaluate
 
-hornerEval(2, [1,3,0,5,0,1])
+hornerEval(2, coefficientSequence: [1,3,0,5,0,1])
 
 func hornerEval2(x: Double, coefficientSequence: [Double]) -> Double {
-    return reduce(coefficientSequence, 0.0) { ($0 * x) + $1 }
+    return coefficientSequence.reduce(0.0) { ($0 * x) + $1 }
 }
-hornerEval2(2, [1,0,5,0,3,1])
-// Note that the coefficients needed to have their order reversed to work with reduce. 
-
-
-
-
-
+hornerEval2(2, coefficientSequence: [1,0,5,0,3,1])
+// Note that t

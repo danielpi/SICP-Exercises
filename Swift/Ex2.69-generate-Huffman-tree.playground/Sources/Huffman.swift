@@ -7,7 +7,7 @@ public class Box<T> {
     }
 }
 
-public enum Tree: Printable {
+public enum Tree: CustomStringConvertible {
     case Leaf(symbol: String, weight: Int)
     case Branch(left: Box<Tree>, right: Box<Tree>, symbols: [String], weight: Int)
     
@@ -105,7 +105,7 @@ func chooseBranch(bit: Int, branch: Tree) -> Tree {
 }
 
 extension Array {
-    var match: (head: T, tail: [T])? {
+    var match: (head: Element, tail: [T])? {
         return (count > 0) ? (self[0], Array(self[1..<count])) : nil
     }
 }
@@ -114,7 +114,7 @@ public func decode(bits: [Int], tree: Tree) -> [String] {
     var decode1: ([Int], Tree) -> [String] = { _, _ in return [] }
     decode1 = { bits1, currentBranch in
         if let (head, tail) = bits1.match {
-            let nextBranch = chooseBranch(bits1[0], currentBranch)
+            let nextBranch = chooseBranch(bits1[0], branch: currentBranch)
             switch nextBranch {
             case let .Leaf(symbol: s, weight: _):
                 return [s] + decode1(tail, tree)

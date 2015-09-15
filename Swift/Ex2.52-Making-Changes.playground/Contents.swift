@@ -27,36 +27,28 @@ func cornerSplit(painter: Painter, n: Int) -> Painter {
     if n == 0 {
         return painter
     } else {
-        let up = upSplit(painter, n - 1)
-        let right = rightSplit(painter, n - 1)
+        let up = upSplit(painter, n: n - 1)
+        let right = rightSplit(painter, n: n - 1)
         let topLeft = beside(up, wave)
         let bottomRight = below(right, wave)
-        let corner = cornerSplit(painter, n - 1)
+        let corner = cornerSplit(painter, n: n - 1)
         
         return beside(below(topLeft, painter), below(corner, bottomRight))
     }
 }
-draw(cornerSplit(wave, 3))
+draw(cornerSplit(wave, n: 3))
 
 // c. Modify the version of squareLimit that uses squareOfFour so as to assemble the corners in a different pattern. (For example you might make the big Mr. Rogers look outward from each corner of the square.)
 
 
 func squareOfFour(tl: Transformer, tr: Transformer, bl: Transformer, br: Transformer) -> Transformer {
     return { painter in
-        let top = beside(tl(painter), tr(painter))
-        let bottom = beside(bl(painter), br(painter))
+        let top = beside(tl(painter), right: tr(painter))
+        let bottom = beside(bl(painter), right: br(painter))
         return below(bottom, top)
     }
 }
 
 func squareLimit(painter: Painter, n: Int) -> Painter {
-    let combine4 = squareOfFour(rotate180, flipVert, flipHoriz, flipHoriz)
-    return combine4(cornerSplit(painter, n))
-}
-
-draw(squareLimit(wave, 4))
-
-
-
-
-
+    let combine4 = squareOfFour(rotate180, tr: flipVert, bl: flipHoriz, br: flipHoriz)
+    return combine4(cornerSplit(painter, n

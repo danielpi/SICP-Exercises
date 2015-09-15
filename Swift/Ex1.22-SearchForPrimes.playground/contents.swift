@@ -16,15 +16,15 @@ func findDivisor(n: Int, testDivisor: Int) -> Int {
     switch true {
     case square(testDivisor) > n:
         return n
-    case dividesWithNoRemainder(n, testDivisor):
+    case dividesWithNoRemainder(n, b: testDivisor):
         return testDivisor
     default:
-        return findDivisor(n, testDivisor + 1)
+        return findDivisor(n, testDivisor: testDivisor + 1)
     }
 }
 
 func smallestDivisor(n: Int) -> Int {
-    return findDivisor(n, 2)
+    return findDivisor(n, testDivisor: 2)
 }
 
 func isPrime(n:Int) -> Bool {
@@ -32,18 +32,18 @@ func isPrime(n:Int) -> Bool {
 }
 
 func timedPrimeTest(n: Int) {
-    startPrimeTest(n, NSDate())
+    startPrimeTest(n, startTime: NSDate())
 }
 func startPrimeTest(n: Int, startTime: NSDate) {
     if isPrime(n) {
-        reportPrime(n, -1 * startTime.timeIntervalSinceNow)
+        reportPrime(n, elapsedTime: -1 * startTime.timeIntervalSinceNow)
     }
 }
 func reportPrime(n: Int, elapsedTime: Double) {
-    print("\n")
-    print("\(n)")
-    print(" *** ")
-    print("\(elapsedTime)")
+    print("\n", terminator: "")
+    print("\(n)", terminator: "")
+    print(" *** ", terminator: "")
+    print("\(elapsedTime)", terminator: "")
 }
 // timedPrimeTest(7013)
 
@@ -52,12 +52,12 @@ func reportPrime(n: Int, elapsedTime: Double) {
 func searchForPrimes(a: Int, b: Int) {
     switch true {
     case a > b:
-        println("Complete")
+        print("Complete")
     case isEven(a):
-        searchForPrimes(a + 1, b)
+        searchForPrimes(a + 1, b: b)
     default:
         timedPrimeTest(a)
-        searchForPrimes(a + 2, b)
+        searchForPrimes(a + 2, b: b)
     }
 }
 
@@ -67,28 +67,28 @@ func searchForPrimes(a: Int, b: Int) {
 // - 100000
 // - 1000000
 
-searchForPrimes(1000, 1030)
+searchForPrimes(1000, b: 1030)
 // 1009 *** 0.23639303445816
 // 1013 *** 0.227622985839844
 // 1019 *** 0.216214001178741
 (0.23639303445816 + 0.227622985839844 + 0.216214001178741) / 3
 // Average time 0.00398
 
-searchForPrimes(10000, 10050)
+searchForPrimes(10000, b: 10050)
 // 10007 *** 0.727922022342682
 // 10009 *** 0.748418986797333
 // 10037 *** 0.735283017158508
 (0.727922022342682 + 0.748418986797333 + 0.735283017158508) / 3
 // Average time 0.012369
 
-searchForPrimes(100000, 100050)
+searchForPrimes(100000, b: 100050)
 // 100003 *** 2.24567699432373
 // 100019 *** 2.0843819975853
 // 100043 *** 2.03399205207825
 (2.24567699432373 + 2.0843819975853 + 2.03399205207825) / 3
 // Average time 0.03857
 
-searchForPrimes(1000000, 1000050)
+searchForPrimes(1000000, b: 1000050)
 // 1000003 *** 6.36476397514343
 // 1000033 *** 6.54135400056839
 // 1000037 *** 6.34981900453568
@@ -119,5 +119,4 @@ Times in Swift
 // How well do the data for 100,000 and 1,000,000 support the n prediction?
 // Pretty well, calculation seems to run better with a larger n
 
-// Is your result compatible with the notion that programs on your machine run in time proportional to the number of steps required for the computation?
-// Yep
+// Is your result compatibl

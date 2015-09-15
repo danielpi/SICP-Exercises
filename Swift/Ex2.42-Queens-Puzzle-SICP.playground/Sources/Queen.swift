@@ -44,7 +44,7 @@ public func enumerateInterval(low: Int, high: Int) -> [Int] {
 public let emptyBoard: [Queen] = []
 
 func placeQueen(rank: Int, file: Int) -> Queen {
-    return cons(rank, file)
+    return cons(rank, right: file)
 }
 func queenRank(queen: Queen) -> Int {
     return car(queen)
@@ -54,7 +54,7 @@ func queenFile(queen: Queen) -> Int {
 }
 
 public func adjoinPosition(rank: Int, file: Int, board: [Queen]) -> [Queen] {
-    return cons(placeQueen(rank, file), board)
+    return cons(placeQueen(rank, file: file), list: board)
 }
 
 func findFirst(pred: (Queen) -> Bool, items: [Queen]) -> Queen {
@@ -64,7 +64,7 @@ func findFirst(pred: (Queen) -> Bool, items: [Queen]) -> Queen {
     case pred(car(items)):
         return car(items)
     default:
-        return findFirst(pred, cdr(items))
+        return findFirst(pred, items: cdr(items))
     }
 }
 
@@ -72,11 +72,11 @@ public func isSafe(file: Int, board: [Queen]) -> Bool {
     func getQueenByFile(file: Int, board: [Queen]) -> Queen {
         return findFirst({ queen in
             queenFile(queen) == file
-            }, board)
+            }, items: board)
     }
     
-    let theQueen = getQueenByFile(file, board)
-    let otherQueens = filter(board) { q in
+    let theQueen = getQueenByFile(file, board: board)
+    let otherQueens = board.filter { q in
         !((queenRank(theQueen) == queenRank(q)) &&
             (queenFile(theQueen) == queenFile(q)))
     }
@@ -95,9 +95,9 @@ public func queensF(boardSize: Int) -> [[Queen]] {
             
             return [emptyBoard]
         } else {
-            let a = flatMap(queenCols(k - 1), { restOfQueens in
-                map(enumerateInterval(1, boardSize), { newRow in
-                    adjoinPosition(newRow, k, restOfQueens)
+            let a = queenCols(k - 1).flatMap({ restOfQueens in
+                enumerateInterval(1, high: boardSize).map({ newRow in
+                    adjoinPosition(newRow, file: k, board: restOfQueens)
                 })
             })
             

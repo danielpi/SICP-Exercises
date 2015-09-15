@@ -10,5 +10,5 @@ func compose<T>(f: (T) -> T, g: (T) -> T) -> (T) -> T {
     return { (x: T) -> T in return f(g(x)) }
 }
 
-compose(square, inc)(6)
-square(inc(6))
+compose(square, g: inc)(6)
+square(inc(6

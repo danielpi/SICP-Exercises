@@ -10,15 +10,15 @@ func isCloseEnough(a: Double, b: Double, tolerance: Double) -> Bool {
 
 func fixedPoint(f: (Double) -> Double, guess: Double) -> Double {
     let next = f(guess)
-    if isCloseEnough(guess, next, 0.00001) {
+    if isCloseEnough(guess, b: next, tolerance: 0.00001) {
         return next
     } else {
-        return fixedPoint(f, next)
+        return fixedPoint(f, guess: next)
     }
 }
 
 func solvXPowX(result: Double) -> Double {
-    return fixedPoint({ (x: Double) -> Double in return log(result) / log(x) }, 2.0)
+    return fixedPoint({ (x: Double) -> Double in return log(result) / log(x) }, guess: 2.0)
 }
 solvXPowX(1000.0)
 
@@ -27,8 +27,4 @@ func average(a: Double, b: Double) -> Double {
 }
 
 func dampedSolvXPowX(result: Double) -> Double {
-    return fixedPoint({ (x: Double) -> Double in return average(x, log(result)/log(x)) }, 2.0)
-}
-dampedSolvXPowX(1000.0)
-
-
+    return fixedPoint({ (x: Double) -> Double in return average(x, b: log(result)/log(x)) }, gu

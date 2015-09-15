@@ -12,7 +12,7 @@ func squareList(items: List<Int>) -> List<Int> {
         if things.isEmpty() {
             return answer
         } else {
-            return iter(cdr(things)!, cons(square(car(things)!), answer))
+            return iter(cdr(things)!, cons(square(car(things)!), right: answer))
         }
     }
     return iter(items, [])
@@ -40,4 +40,4 @@ func squareList2(items: List<Int>) -> List<Int> {
 
 // This doesn't work either. Explain.
 
-// This doesn't work in our case because cons is defined as taking a value and an array of values, not an array of values and a value.
+// This doesn't work in our case because cons is defined as taking a value and an array of values, not an array of values and a 

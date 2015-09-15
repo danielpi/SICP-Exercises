@@ -18,14 +18,14 @@ func expMod(base: Int, exp: Int, m: Int) -> Int {
     case exp == 0:
         return 1
     case isEven(exp):
-        return square(expMod(base, exp / 2, m)) % m
+        return square(expMod(base, exp: exp / 2, m: m)) % m
     default:
-        return (base * expMod(base, exp - 1, m)) % m
+        return (base * expMod(base, exp: exp - 1, m: m)) % m
     }
 }
 func fermatTest(n: Int) -> Bool {
     func tryIt(a: Int) -> Bool {
-        return expMod(a, n, n) == a
+        return expMod(a, exp: n, m: n) == a
     }
     let randomA:Int = Int(arc4random_uniform(UInt32(n - 1)) + 1)
     return tryIt(randomA)
@@ -37,18 +37,18 @@ func isPrimeFast(n: Int, times: Int) -> Bool {
     case times == 0:
         return true
     case fermatTest(n):
-        return isPrimeFast(n, times - 1)
+        return isPrimeFast(n, times: times - 1)
     default:
         return false
     }
 }
 
 func timedPrimeTest(n: Int) {
-    startPrimeTest(n, NSDate())
+    startPrimeTest(n, startTime: NSDate())
 }
 func startPrimeTest(n: Int, startTime: NSDate) {
-    if isPrimeFast(n, 10) {
-        reportPrime(n, -1 * startTime.timeIntervalSinceNow)
+    if isPrimeFast(n, times: 10) {
+        reportPrime(n, elapsedTime: -1 * startTime.timeIntervalSinceNow)
     }
 }
 func reportPrime(n: Int, elapsedTime: Double) {
@@ -63,12 +63,12 @@ func reportPrime(n: Int, elapsedTime: Double) {
 func searchForPrimes(a: Int, b: Int) {
     switch true {
     case a > b:
-        println("Complete")
+        print("Complete")
     case isEven(a):
-        searchForPrimes(a + 1, b)
+        searchForPrimes(a + 1, b: b)
     default:
         timedPrimeTest(a)
-        searchForPrimes(a + 2, b)
+        searchForPrimes(a + 2, b: b)
     }
 }
 
@@ -78,10 +78,10 @@ func searchForPrimes(a: Int, b: Int) {
 // - 100000
 // - 1000000
 
-searchForPrimes(1000, 1030)
-searchForPrimes(10000, 10050)
-searchForPrimes(100000, 100050)
-searchForPrimes(1000000, 1000050)
+searchForPrimes(1000, b: 1030)
+searchForPrimes(10000, b: 10050)
+searchForPrimes(100000, b: 100050)
+searchForPrimes(1000000, b: 1000050)
 
 // How much longer would you take it to find a prime near 1000000 than it is to find a prime near 1000?
 // Log(1000) = 3, Log(1000000) = 6 I would expect it to take twice as long

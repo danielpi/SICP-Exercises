@@ -33,12 +33,12 @@ func gcd(a: Int, b: Int) -> Int {
     if b == 0 {
         return abs(a)
     } else {
-        return gcd(b, a % b)
+        return gcd(b, b: a % b)
     }
 }
 
 func makeRat(n: Int, d:Int) -> Rational {
-    let g = gcd(n, d)
+    let g = gcd(n, b: d)
     if d < 0 {
         return cons(n/g, -d/g)
     } else {
@@ -54,31 +54,27 @@ func denom(x: Rational) -> Int {
 }
 
 func printRat(x: Rational) {
-    println("\(numer(x))/\(denom(x))")
+    print("\(numer(x))/\(denom(x))")
 }
 
 func addRat(x: Rational, y: Rational) -> Rational {
-    return makeRat((numer(x) * denom(y)) + (numer(y) * denom(x)), denom(x) * denom(y))
+    return makeRat((numer(x) * denom(y)) + (numer(y) * denom(x)), d: denom(x) * denom(y))
 }
 func subRat(x: Rational, y: Rational) -> Rational {
-    return makeRat((numer(x) * denom(y)) - (numer(y) * denom(x)), denom(x) * denom(y))
+    return makeRat((numer(x) * denom(y)) - (numer(y) * denom(x)), d: denom(x) * denom(y))
 }
 func mulRat(x: Rational, y: Rational) -> Rational {
-    return makeRat(numer(x) * numer(y), denom(x) * denom(y))
+    return makeRat(numer(x) * numer(y), d: denom(x) * denom(y))
 }
 func divRat(x: Rational, y: Rational) -> Rational {
-    return makeRat(numer(x) * denom(y), denom(x) * numer(y))
+    return makeRat(numer(x) * denom(y), d: denom(x) * numer(y))
 }
 func isEqualRat(x: Rational, y: Rational) -> Bool {
     return (numer(x) * denom(y)) == (numer(y) * denom(x))
 }
 
 
-printRat(makeRat(1, 2))
-printRat(makeRat(-1, 2))
-printRat(makeRat(1, -2))
-printRat(makeRat(-1, -2))
-
-
-
-
+printRat(makeRat(1, d: 2))
+printRat(makeRat(-1, d: 2))
+printRat(makeRat(1, d: -2))
+print

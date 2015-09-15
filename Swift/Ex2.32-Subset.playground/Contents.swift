@@ -31,13 +31,9 @@ func subsets(s: [Int]) -> [[Int]] {
         return [[]]
     } else {
         let rest = subsets(cdr(s))
-        return rest + map(rest) { cons(car(s), $0) }
+        return rest + rest.map { cons(car(s), list: $0) }
     }
 }
 
 subsets([1,2,3])
 subsets([1,2,3,4])
-
-
-
-

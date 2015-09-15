@@ -33,13 +33,13 @@ func foldr<A,B>(op: (A, B) -> B, initial: B, sequence: [A]) -> B {
     if sequence.isEmpty {
         return initial
     } else {
-        return op(car(sequence), foldr(op, initial, cdr(sequence)))
+        return op(car(sequence), foldr(op, initial: initial, sequence: cdr(sequence)))
     }
 }
 
 
-foldr(/, 64.0, [2,2,2])
-foldl(/, 1.0, [1,2,3])
+foldr(/, initial: 64.0, sequence: [2,2,2])
+foldl(/, initial: 1.0, sequence: [1,2,3])
 
 
 class Box<T>{
@@ -58,7 +58,7 @@ enum Tree<T> {
         case let .Leaf(value):
             return " \(value.unbox)"
         case let .Node(values):
-            let strings = map(values) { $0.unbox.stringRepresentation }
+            let strings = values.map { $0.unbox.stringRepresentation }
             return "\(strings)"
         }
     }
@@ -67,13 +67,13 @@ enum Tree<T> {
         return Tree.Leaf(Box(value))
     }
     static func node(leaves: Tree<T>...) -> Tree<T> {
-        let boxed = map(leaves) { Box($0) }
+        let boxed = leaves.map { Box($0) }
         return Tree.Node(boxed)
     }
     static func list(values: T...) -> Tree<T> {
-        let boxedValues = map(values) { Box($0) }
-        let leaves = map(boxedValues) { Tree.Leaf($0) }
-        let boxed = map(leaves) { Box($0) }
+        let boxedValues = values.map { Box($0) }
+        let leaves = boxedValues.map { Tree.Leaf($0) }
+        let boxed = leaves.map { Box($0) }
         return Tree.Node(boxed)
     }
     static func cons(left: T, right: Tree<T>) -> Tree<T> {
@@ -87,13 +87,13 @@ enum Tree<T> {
 }
 
 
-let a = foldr(Tree.cons, Tree.Node([]), [1,2,3])
+let a = foldr(Tree.cons, initial: Tree.Node([]), sequence: [1,2,3])
 a.stringRepresentation
 
-let b = foldl(Tree.cons, Tree.Node([]), [1,2,3])
+let b = foldl(Tree.cons, initial: Tree.Node([]), sequence: [1,2,3])
 b.stringRepresentation
 
 
 // Give a property that op should satisfy to guarantee that fold-right and fold-left will produce the same values for any sequence
 
-// op needs to obey the commutativity property. This means that the function is the same in one direction as it is in the other.
+// op needs to obey the commutativity p

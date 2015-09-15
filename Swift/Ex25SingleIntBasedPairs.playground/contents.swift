@@ -7,15 +7,15 @@ func ipow(base: Int, exp: Int) -> Int {
     if exp == 1 {
         return base
     } else {
-        return base * ipow(base, exp - 1)
+        return base * ipow(base, exp: exp - 1)
     }
 }
 
-let a = ipow(2, 3)
-println("\(a)")
+let a = ipow(2, exp: 3)
+print("\(a)")
 
 func cons(a: Int, b: Int) -> Int {
-    return ipow(2, a) * ipow(3, b)
+    return ipow(2, exp: a) * ipow(3, exp: b)
 }
 
 func car(z: Int) -> Int {
@@ -42,7 +42,5 @@ func cdr(z: Int) -> Int {
     return inner(z, 0)
 }
 
-let aPair = cons(3, 4)
-car(aPair)
-cdr(aPair)
-
+let aPair = cons(3, b: 4)
+ca

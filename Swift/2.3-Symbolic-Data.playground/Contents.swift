@@ -86,20 +86,16 @@ func memq<T: Equatable>(item: T, list: [T]) -> [T]? {
         case item == list[0]:
             return list
         default:
-            return memq(item, Array(list[1..<list.count]))
+            return memq(item, list: Array(list[1..<list.count]))
     }
 }
 
 // For example, the value of 
 
-memq("apple", ["pear","banana","prune"])
+memq("apple", list: ["pear","banana","prune"])
 
 // is nil, whereas the value of
 
-memq("apple", ["x", "apple sauce", "y", "apple", "pear"])
+memq("apple", list: ["x", "apple sauce", "y", "apple", "pear"])
 
-// is ["apple", "pear"]
-
-
-
-
+// is ["ap

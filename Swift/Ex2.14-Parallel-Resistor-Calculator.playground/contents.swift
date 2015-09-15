@@ -68,10 +68,10 @@ func parTwo(a: Interval, b: Interval) -> Interval {
 let r1 = Interval(center: 3.3, percent: 0.01)
 let r2 = Interval(center: 4.7, percent: 0.05)
 
-let pOne = parOne(r1, r2)
+let pOne = parOne(r1, b: r2)
 pOne.center
 pOne.percent
-let pTwo = parTwo(r1, r2)
+let pTwo = parTwo(r1, b: r2)
 pTwo.center
 pTwo.percent
 
@@ -105,9 +105,3 @@ A = mulDivide(A)    // As we perform more algebraic operations
 A = mulDivide(A)    // our spread increases
 A = mulDivide(A)    // Which is in line with the thought that our condifence in the answer
                     // is diminised.
-
-
-
-
-
-

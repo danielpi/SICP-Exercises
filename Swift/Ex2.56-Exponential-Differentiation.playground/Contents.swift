@@ -44,7 +44,7 @@ extension Expr: StringLiteralConvertible {
     }
 }
 
-extension Expr: Printable {
+extension Expr: CustomStringConvertible {
     var description: String {
         switch self {
         case .Sum(let a1, let a2):
@@ -62,16 +62,16 @@ extension Expr: Printable {
 }
 
 func + (lhs: Expr, rhs: Expr) -> Expr {
-    return makeSum(lhs, rhs)
+    return makeSum(lhs, a2: rhs)
 }
 
 func * (lhs: Expr, rhs: Expr) -> Expr {
-    return makeProduct(lhs, rhs)
+    return makeProduct(lhs, m2: rhs)
 }
 
 infix operator ** { associativity left precedence 160 }
 func ** (lhs: Expr, rhs: Expr) -> Expr {
-    return makeExponentiation(lhs, rhs)
+    return makeExponentiation(lhs, exponent: rhs)
 }
 
 
@@ -223,28 +223,22 @@ func deriv(exp: Expr, variable: Expr) -> Expr {
     case .Constant(_):
         return .Constant(0)
     case .Variable(_):
-        return isSameVariable(exp, variable) ? .Constant(1) : .Constant(0)
+        return isSameVariable(exp, v2: variable) ? .Constant(1) : .Constant(0)
     case .Sum(_, _):
-        return makeSum(deriv(addend(exp), variable), deriv(augend(exp), variable))
+        return makeSum(deriv(addend(exp), variable: variable), a2: deriv(augend(exp), variable: variable))
     case .Product(_, _):
-        return makeSum(makeProduct(multiplier(exp), deriv(multiplicand(exp), variable)), makeProduct(deriv(multiplier(exp), variable), multiplicand(exp)))
+        return makeSum(makeProduct(multiplier(exp), m2: deriv(multiplicand(exp), variable: variable)), a2: makeProduct(deriv(multiplier(exp), variable: variable), m2: multiplicand(exp)))
     case .Exponential(let b, let e):
         let base = b.unbox
         let exponent = e.unbox
         
         return makeProduct(makeProduct(exponent,
-            makeExponentiation(base,
-                makeSum(exponent, Expr.Constant(-1)))), deriv(base, variable))
+            m2: makeExponentiation(base,
+                exponent: makeSum(exponent, a2: Expr.Constant(-1)))), m2: deriv(base, variable: variable))
     default:
         fatalError("unknown expression type: DERIV")
     }
 }
 
-println(deriv("x" + 3, "x")) // 1
-println(deriv("x" * "y", "x")) // y
-println(deriv(("x" * "y") * ("x" + 3), "x")) //
-println(deriv(2 * ("x" ** 4) + (6 * "y" ** 2), "y"))
-
-
-
-
+print(deriv("x" + 3, variable: "x")) // 1
+print(der

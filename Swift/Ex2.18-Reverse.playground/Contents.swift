@@ -9,10 +9,10 @@ func reverse<A>(list: List<A>) -> List<A> {
         if input.isEmpty() {
             return output
         } else {
-            return reverseIter(cdr(input)!, cons(car(input)!, output))
+            return reverseIter(cdr(input)!, cons(car(input)!, right: output))
         }
     }
     return reverseIter(list, [])
 }
 
-reverse([1, 4, 9, 16, 25])
+Array([1, 4, 9, 16, 

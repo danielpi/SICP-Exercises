@@ -20,24 +20,21 @@ func repeatIter<T>(f: (T) -> T, g: (T) -> T, step: Int) -> (T) -> T {
     if (step == 1) {
         return g
     } else {
-        return repeatIter(f, compose(f, g), step - 1)
+        return repeatIter(f, g: compose(f, g: g), step: step - 1)
     }
 }
 
 func repeated<T>(f: (T) -> T , n: Int) -> (T) -> T {
-    return repeatIter(f, f, n)
+    return repeatIter(f, g: f, step: n)
 }
 
-repeated(smooth, 3)(sin)(0.5)
+repeated(smooth, n: 3)(sin)(0.5)
 
 
 func nFoldSmooth(f: (Double) -> Double, n: Int) -> (Double) -> Double {
-    return repeated(smooth, n)(f)
+    return repeated(smooth, n: n)(f)
 }
 
 sin(0.5)
 smooth(sin)(0.5)
-nFoldSmooth(sin, 1)(0.5)
-nFoldSmooth(sin, 2)(0.5)
-
-
+nFoldSmooth(sin, n: 1)(0.

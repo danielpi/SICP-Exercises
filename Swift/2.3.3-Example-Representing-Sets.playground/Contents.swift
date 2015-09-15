@@ -9,7 +9,7 @@ import Cocoa
 //: One way to represent a set is as a list of its elements in which no element appears more than once. The empty set is represented by the empty list. In this representation, element-of-set? is similar to the procedure memq of Section 2.3.1. It uses equal? instead of eq? so that the set elements need not be symbols:
 
 extension Array {
-    var match: (head: T, tail: [T])? {
+    var match: (head: Element, tail: [T])? {
         return (count > 0) ? (self[0], Array(self[1..<count])) : nil
     }
 }
@@ -27,19 +27,19 @@ func isElementOfSet1<T: Equatable>(x: T, set: [T]) -> Bool {
         return false
     }
 }
-isElementOfSet1(3, unorderedSet1)
-isElementOfSet1(7, unorderedSet1)
+isElementOfSet1(3, set: unorderedSet1)
+isElementOfSet1(7, set: unorderedSet1)
 
 //: Using this we can write adjoinSet. If the object to be adjoined is already in the set, we just return the set. Otherwise, we use + (cons) to add the object to the list that represents the set:
 
 func adjoinSet1<T: Equatable>(x: T, set: [T]) -> [T] {
-    if isElementOfSet1(x, set) {
+    if isElementOfSet1(x, set: set) {
         return set
     } else {
         return [x] + set
     }
 }
-let unorderedSet2 = adjoinSet1(8, unorderedSet1)
+let unorderedSet2 = adjoinSet1(8, set: unorderedSet1)
 
 //: For intersectionSet we can use a recursive strategy. If we know how to form the intersection of set2 and the tail of set1, we only need to decide whether to include the head of set1 in this. But this depends on whether the head of set1 is also in set2. Here is the resulting procedure:
 
@@ -78,8 +78,8 @@ func isElementOfSet2<T: Comparable>(x: T, set: [T]) -> Bool {
     }
 }
 let orderedSet1 = [2,5,7,8,9]
-isElementOfSet2(5, orderedSet1)
-isElementOfSet2(3, orderedSet1)
+isElementOfSet2(5, set: orderedSet1)
+isElementOfSet2(3, set: orderedSet1)
 
 //: How many steps does this save? In the worst case, the item we are looking for may be the largest one in the set, so the number of steps is the same as for the unordered representation. On the other hand, if we search for items of many different sizes we can expect that sometimes we will be able to stop searching at a point near the beginning of the list and that other times we will still need to examine most of the list. On the average we should expect to have to examine about half of the items in the set. Thus, the average number of steps required will be about n/2. This is still O(n) growth, but it does save us, on the average, a factor of 2 in number of steps over the previous implementation.
 //:
@@ -103,7 +103,7 @@ func intersectionSet2<T: Comparable>(set1: [T], set2: [T]) -> [T] {
     }
 }
 let orderedSet2 = [1,2,3,4,6,7,9]
-intersectionSet2(orderedSet1, orderedSet2)
+intersectionSet2(orderedSet1, set2: orderedSet2)
 
 //: To estimate the number of steps required by this process, observe that at each step we reduce the intersection problem to computing intersections of smaller sets - removing the first element from set1 or set2 or both. Thus, the number of steps required is at most the sum of the sizes of set1 and set2, rather than the product of the sizes as with the unordered representation. This is O(n) growth rather than O(n^2) - a considerable speedup, even for sets of moderate size.
 
@@ -128,7 +128,7 @@ class Box<T> {
     }
 }
 
-enum TreeSet<T>: Printable {
+enum TreeSet<T>: CustomStringConvertible {
     case Empty
     case Tree(entry:Box<T>, left:Box<TreeSet<T>>, right: Box<TreeSet<T>>)
     
@@ -173,11 +173,11 @@ func makeTree<T>(entry: T, left:TreeSet<T>, right:TreeSet<T>) -> TreeSet<T> {
     return TreeSet.Tree(entry: Box(entry), left: Box(left), right: Box(right))
 }
 
-let a = makeTree(5, .Empty, .Empty)
-println(a)
+let a = makeTree(5, left: .Empty, right: .Empty)
+print(a)
 entry(a)
-println(leftBranch(a))
-println(rightBranch(a))
+print(leftBranch(a))
+print(rightBranch(a))
 
 //: Now we can write the isElementOfSet procedure using the strategy described above:
 
@@ -188,9 +188,9 @@ func isElementOfSet3<T: Comparable>(x: T, set: TreeSet<T>) -> Bool {
     case let .Tree(entry, _, _) where entry.unbox == x:
         return true
     case let .Tree(entry, left, _) where entry.unbox < x:
-        return isElementOfSet3(x, left.unbox)
+        return isElementOfSet3(x, set: left.unbox)
     case let .Tree(entry, _, right) where entry.unbox > x:
-        return isElementOfSet3(x, right.unbox)
+        return isElementOfSet3(x, set: right.unbox)
     default:
         fatalError("isElementOfSet3 has an unhandled case when x:\(x) and set:\(set)")
     }
@@ -203,13 +203,13 @@ isElementOfSet3(6, a)
 func adjoinSet3<T: Comparable>(x: T, set: TreeSet<T>) -> TreeSet<T> {
     switch set {
     case .Empty:
-        return makeTree(x, .Empty, .Empty)
+        return makeTree(x, left: .Empty, right: .Empty)
     case let .Tree(entry, _, _) where entry.unbox == x:
         return set
     case let .Tree(entry, left, right) where entry.unbox > x:
-        return makeTree(entry.unbox, adjoinSet3(x, left.unbox), right.unbox)
+        return makeTree(entry.unbox, left: adjoinSet3(x, set: left.unbox), right: right.unbox)
     case let .Tree(entry, left, right) where entry.unbox < x:
-        return makeTree(entry.unbox, left.unbox, adjoinSet3(x, right.unbox))
+        return makeTree(entry.unbox, left: left.unbox, right: adjoinSet3(x, set: right.unbox))
     default:
         fatalError("adjoinSet3 didn't handle all cases when x:\(x) set:\(set)")
     }
@@ -218,14 +218,14 @@ let b = adjoinSet3(7, a)
 let c = adjoinSet3(3, b)
 let d = adjoinSet3(4, c)
 let e = adjoinSet3(5, d)
-println(e)
+print(e)
 
 //: The above claim that searching the tree can be performed in a logarithmic number of steps rests on the assumption that the tree is "balanced," i.e., that the left and right subtree of every tree have approximately the same number of elements, so that each subtree contains about half the elements of its parent. But how can we be certain that the trees we construct will be balanced? Even if we start with a balanced tree, adding elements with adjoinSet may produce an unbalanced result. Since the position of a newly adjoined element depends on how the element compares with the items already in the set, we can expect that if we add elements "randomly" the tree will tend to be balanced on the average. But this is not a guarantee. For example, if we start with an empty set and adjoin the numbers 1 through 7 in sequence we end up with the highly unbalanced tree shown in Figure 2.17. In this tree all the left subtrees are empty, so it has no advantage over a simple ordered list. One way to solve this problem is to define an operation that transforms an arbitrary tree into a balanced tree with the same elements. Then we can perform this transformation after every few adjoinSet operations to keep our set in balance. There are also other ways to solve this problem, most of which involve designing new data structures for which searching and insertion both can be done in O(log n) steps.
 
 let figure217 = NSImage(named: "figure2-17.png")
 
-let f = adjoinSet3(7, adjoinSet3(6, adjoinSet3(5, adjoinSet3(4, adjoinSet3(3, adjoinSet3(2, adjoinSet3(1, .Empty)))))))
-println(f)
+let f = adjoinSet3(7, set: adjoinSet3(6, set: adjoinSet3(5, set: adjoinSet3(4, set: adjoinSet3(3, set: adjoinSet3(2, set: adjoinSet3(1, set: .Empty)))))))
+print(f)
 
 //: **Figure 2.17** Unbalanced tree produced by adjoining 1 through 7 in sequence
 
@@ -261,9 +261,6 @@ func lookup(key: Int, records: [Record]) -> Record? {
 }
 
 let records = [Record(1,"a"),Record(3,"c"),Record(2,"b"),Record(4,"d")]
-lookup(5,records)
+lookup(5,records: records)
 
-//: Of course, there are better ways to represent large sets than as unordered lists. Information-retrieval systems in which records have to be "randomly accessed" are typically implemented by a tree-based method, such as the binary-tree representation discussed previously. In designing such a system the methodology of data abstraction can be a great help. The designer can create an initial implementation using a simple, straightforward representation such as unordered lists. This will be unsuitable for the eventual system, but it can be useful in providing a "quick and dirty" data base with which to test the rest of the system. Later on, the data representation can be modified to be more sophisticated. If the data base is accessed in terms of abstract selectors and constructors, this change in representation will not require any changes to the rest of the system.
-
-
-
+//: Of course, there are better ways to represent large sets than as unordered lists. Information-retrieval systems in which records have to be "randomly accessed" are typically implemented by a tree-based method, such as the binary-tree representation discussed previously. In designing such a system the methodology of data abstraction can be a great help. The designer can create an initial implementation using a simple, straightforward representation such as unordered lists. This will be unsuitable for the eventual system, but it can be useful in providing a "quick and dirty" data base with which to test the rest of the system. Later on, the data representation can be modified to be more sophisticated. If th

@@ -4,7 +4,7 @@ import Cocoa
 //: Implement the unionSet operation for the unordered-list representation of sets.
 
 extension Array {
-    var match: (head: T, tail: [T])? {
+    var match: (head: Element, tail: [T])? {
         return (count > 0) ? (self[0],Array(self[1..<count])) : nil
     }
 }
@@ -23,7 +23,7 @@ func isElementOfSet<T: Equatable>(x: T, set: [T]) -> Bool {
 
 
 func adjoinSet<T: Equatable>(x: T, set: [T]) -> [T] {
-    if isElementOfSet(x, set) {
+    if isElementOfSet(x, set: set) {
         return set
     } else {
         return [x] + set
@@ -58,8 +58,6 @@ func unionSet<T: Equatable>(set1: [T], set2: [T]) -> [T] {
 let set1 = [1,2,4,5]
 let set2 = [7,6,5,3,4]
 
-isElementOfSet(3, set1)
-adjoinSet(3, set1)
-intersectionSet(set1, set2)
-unionSet(set1, set2)
-
+isElementOfSet(3, set: set1)
+adjoinSet(3, set: set1)
+intersectionSet(set1, set2: s

@@ -5,7 +5,7 @@ import Cocoa
 // What if we change the expMod function to the following.
 
 func expMod(base: Int, exp: Int, m: Int) -> Int {
-    return fastExpt(base, exp) % m
+    return fastExpt(base, n: exp) % m
 }
 
 func fastExpt(b: Int, n: Int) -> Int {
@@ -13,9 +13,9 @@ func fastExpt(b: Int, n: Int) -> Int {
     case n == 0:
         return 1
     case isEven(n):
-        return square(fastExpt(b, n / 2))
+        return square(fastExpt(b, n: n / 2))
     default:
-        return b * fastExpt(b, n - 1)
+        return b * fastExpt(b, n: n - 1)
     }
 }
 
@@ -42,7 +42,7 @@ func expMod(base: Int, exp: Int, m: Int) -> Int {
 */
 func fermatTest(n: Int) -> Bool {
     func tryIt(a: Int) -> Bool {
-        return expMod(a, n, n) == a
+        return expMod(a, exp: n, m: n) == a
     }
     let randomA:Int = Int(arc4random_uniform(UInt32(n - 1)) + 1)
     return tryIt(randomA)
@@ -54,18 +54,18 @@ func isPrimeFast(n: Int, times: Int) -> Bool {
     case times == 0:
         return true
     case fermatTest(n):
-        return isPrimeFast(n, times - 1)
+        return isPrimeFast(n, times: times - 1)
     default:
         return false
     }
 }
 
 func timedPrimeTest(n: Int) {
-    startPrimeTest(n, NSDate())
+    startPrimeTest(n, startTime: NSDate())
 }
 func startPrimeTest(n: Int, startTime: NSDate) {
-    if isPrimeFast(n, 10) {
-        reportPrime(n, -1 * startTime.timeIntervalSinceNow)
+    if isPrimeFast(n, times: 10) {
+        reportPrime(n, elapsedTime: -1 * startTime.timeIntervalSinceNow)
     }
 }
 func reportPrime(n: Int, elapsedTime: Double) {
@@ -80,12 +80,12 @@ func reportPrime(n: Int, elapsedTime: Double) {
 func searchForPrimes(a: Int, b: Int) {
     switch true {
     case a > b:
-        println("Complete")
+        print("Complete")
     case isEven(a):
-        searchForPrimes(a + 1, b)
+        searchForPrimes(a + 1, b: b)
     default:
         timedPrimeTest(a)
-        searchForPrimes(a + 2, b)
+        searchForPrimes(a + 2, b: b)
     }
 }
 
@@ -95,7 +95,7 @@ func searchForPrimes(a: Int, b: Int) {
 // - 100000
 // - 1000000
 
-searchForPrimes(10, 15)
+searchForPrimes(10, b: 15)
 //searchForPrimes(10000, 10050)
 //searchForPrimes(100000, 100050)
 //searchForPrimes(1000000, 1000050)

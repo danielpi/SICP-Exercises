@@ -45,7 +45,7 @@ func goldenRation() -> Double {
         return 1.0
     }
     
-    return 1 / kFiniteContFrac( N, D, 100)
+    return 1 / kFiniteContFrac( N, D: D, k: 100)
 }
 goldenRation()
 
@@ -74,8 +74,6 @@ func goldenRationIter() -> Double {
         return 1.0
     }
     
-    return 1 / kFiniteContFracIter( N, D, 100)
+    return 1 / kFiniteContFracIter( N, D: D, k: 100)
 }
-goldenRationIter()
-
-
+goldenRat

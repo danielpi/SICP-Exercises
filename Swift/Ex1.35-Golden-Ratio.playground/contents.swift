@@ -9,17 +9,14 @@ func isCloseEnough(a: Double, b: Double, tolerance: Double) -> Bool {
 
 func fixedPoint(f: (Double) -> Double, guess: Double) -> Double {
     let next = f(guess)
-    if isCloseEnough(guess, next, 0.00001) {
+    if isCloseEnough(guess, b: next, tolerance: 0.00001) {
         return next
     } else {
-        return fixedPoint(f, next)
+        return fixedPoint(f, guess: next)
     }
 }
 
-let goldenRatio = fixedPoint({ (x:Double) -> Double in return 1 + (1/x)}, 1.0)
+let goldenRatio = fixedPoint({ (x:Double) -> Double in return 1 + (1/x)}, guess: 1.0)
 goldenRatio
 let algebraicGoldenRatio = (1.0 + pow(5.0, 0.5)) / 2.0
-goldenRatio - algebraicGoldenRatio
-
-
-
+goldenRati

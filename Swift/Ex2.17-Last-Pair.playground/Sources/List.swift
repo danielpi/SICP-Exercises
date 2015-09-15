@@ -86,7 +86,7 @@ public struct List<A> {
     public init(_ array:[A]) {
         self.init()
         for value in array {
-            self = cons(value, self)
+            self = cons(value, right: self)
         }
     }
     
@@ -112,9 +112,9 @@ public struct List<A> {
         switch self.match() {
         case .Nil:
             return error("Cannot extract an element from an empty list.")
-        case let .Cons(x, xs) where n == 0:
+        case let .Cons(x, _) where n == 0:
             return x
-        case let .Cons(x, xs):
+        case let .Cons(_, xs):
             return xs[n - 1]
         }
     }
@@ -416,7 +416,7 @@ public func ==<A : Equatable>(lhs : List<A>, rhs : List<A>) -> Bool {
 /// MARK: Collection Protocols
 
 extension List : ArrayLiteralConvertible {
-    typealias Element = A
+    public typealias Element = A
     
     public init(arrayLiteral s: Element...) {
         var xs : [A] = []
@@ -426,7 +426,7 @@ extension List : ArrayLiteralConvertible {
         }
         
         var l = List()
-        for x in xs.reverse() {
+        for x in Array(xs.reverse()) {
             l = List(x, l)
         }
         self = l
@@ -471,13 +471,13 @@ extension List : CollectionType {
 
 
 
-extension List : Printable {
+extension List : CustomStringConvertible {
     public func fmap<B>(f : (A -> B)) -> List<B> {
         return self.map(f)
     }
     
     public var description : String {
-        var x = ", ".join(self.fmap({ "\($0)" }))
+        let x = self.fmap({ "\($0)" }).joinWithSeparator(", ")
         return "[\(x)]"
     }
 }

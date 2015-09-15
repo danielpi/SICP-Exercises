@@ -28,9 +28,9 @@ func sqrt(x: Double) -> Double {
     }
     
     func improve(guess: Double) -> Double {
-        return average(guess, (x / guess))
+        return average(guess, y: (x / guess))
     }
-    let solver = iterativeImprovement(isGoodEnough, improve)
+    let solver = iterativeImprovement(isGoodEnough, improve: improve)
     return solver(x)
 }
 sqrt(2.0)
@@ -46,11 +46,8 @@ func fixedPoint(f: (Double) -> Double, guess: Double) -> Double {
     func improve(guess: Double) -> Double {
         return f(guess)
     }
-    let solver = iterativeImprovement(isGoodEnough, improve)
+    let solver = iterativeImprovement(isGoodEnough, improve: improve)
     return solver(guess)
 }
-fixedPoint(cos, 1.0)
-let aFixedPoint = fixedPoint({ (y:Double) -> Double in return sin(y) + cos(y) }, 1.0)
-aFixedPoint
-
-
+fixedPoint(cos, guess: 1.0)
+let aFixedPoint = fixedPoint({ (y:Double) -> Double in return sin(y) + c

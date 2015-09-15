@@ -89,15 +89,11 @@ let positive = Interval(1, 2)
 let spans = Interval(-0.2, 0.3)
 let negative = Interval(-3, -2)
 
-mulInterval(positive, positive)
-mulInterval(spans, positive)
-mulInterval(negative, positive)
-mulInterval(positive, spans)
-mulInterval(spans, spans)
-mulInterval(negative, spans)
-mulInterval(positive, negative)
-mulInterval(spans, negative)
-mulInterval(negative, negative)
-
-
-
+mulInterval(positive, rhs: positive)
+mulInterval(spans, rhs: positive)
+mulInterval(negative, rhs: positive)
+mulInterval(positive, rhs: spans)
+mulInterval(spans, rhs: spans)
+mulInterval(negative, rhs: spans)
+mulInterval(positive, rhs: negative)
+mulInterval(spans, rhs: negat

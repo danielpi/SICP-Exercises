@@ -38,7 +38,7 @@ func cdr<T>(innerCons: ConsPosition -> T) -> T {
 typealias Point = (ConsPosition -> Double)
 
 func makePoint(x: Double, y: Double) -> Point {
-    return cons(x, y)
+    return cons(x, b: y)
 }
 func xPoint(x: Point) -> Double {
     return car(x)
@@ -47,7 +47,7 @@ func yPoint(x: Point) -> Double {
     return cdr(x)
 }
 func printPoint(x: Point) {
-    println("(\(xPoint(x)),\(yPoint(x)))")
+    print("(\(xPoint(x)),\(yPoint(x)))")
 }
 
 
@@ -55,7 +55,7 @@ func printPoint(x: Point) {
 typealias Segment = (ConsPosition -> Point)
 
 func makeSegment(start: Point, end: Point) -> Segment {
-    return cons(start, end)
+    return cons(start, b: end)
 }
 func startSegment(x: Segment) -> Point {
     return car(x)
@@ -67,12 +67,12 @@ func midpointSegment(x: Segment) -> Point {
     func average(a: Double, b: Double) -> Double {
         return (a + b) / 2
     }
-    return makePoint(average(xPoint(startSegment(x)), xPoint(endSegment(x))), average(yPoint(startSegment(x)), yPoint(endSegment(x))))
+    return makePoint(average(xPoint(startSegment(x)), b: xPoint(endSegment(x))), y: average(yPoint(startSegment(x)), b: yPoint(endSegment(x))))
 }
 
 
-let origin = makePoint(0, 0)
-let end = makePoint(6, 9)
+let origin = makePoint(0, y: 0)
+let end = makePoint(6, y: 9)
 let aLine = makeSegment(origin, end)
 let mid = midpointSegment(aLine)
-printPoint(midpointSegment(aLine))
+printPoint(midpo

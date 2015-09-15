@@ -24,15 +24,11 @@ func repeatIter<T>(f: (T) -> T, g: (T) -> T, step: Int) -> (T) -> T {
     if (step == 1) {
         return g
     } else {
-        return repeatIter(f, compose(f, g), step - 1)
+        return repeatIter(f, g: compose(f, g: g), step: step - 1)
     }
 }
 
 func repeated<T>(f: (T) -> T , n: Int) -> (T) -> T {
-    return repeatIter(f, f, n)
+    return repeatIter(f, g: f, step: n)
 }
-repeated(square, 2)(5)
-repeated(inc, 9)(1)
-
-
-
+repeated(square, n: 2)(5)

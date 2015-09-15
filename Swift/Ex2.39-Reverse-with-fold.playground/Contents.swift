@@ -34,18 +34,16 @@ func foldr<A,B>(op: (A, B) -> B, initial: B, sequence: [A]) -> B {
     if sequence.isEmpty {
         return initial
     } else {
-        return op(car(sequence), foldr(op, initial, cdr(sequence)))
+        return op(car(sequence), foldr(op, initial: initial, sequence: cdr(sequence)))
     }
 }
 
 
 func reverse1(sequence: [Int]) -> [Int] {
-    return foldr({ (x, y) in y + [x] }, [], sequence)
+    return foldr({ (x, y) in y + [x] }, initial: [], sequence: sequence)
 }
 reverse1([1,2,3])
 
 
 func reverse2(sequence: [Int]) -> [Int] {
-    return foldl({ (x, y) in [y] + x }, [], sequence)
-}
-reverse2([1,2,3])
+    return foldl({ (x, y) in [y] + x

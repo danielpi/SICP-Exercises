@@ -14,7 +14,7 @@ import Cocoa
 // In this procedure rest-of-queens is a way to place k - 1 queens in the first k - 1 columns, and new-row is a proposed row in which to place the queen for the kth column. Complete the program by implementing the representation for sets of board positions, including the procedure adjoin-position, which adjoins a new row-column position to a set of positions, and empty-board, which represents an empty set of positions. You must also write the procedure safe?, which determines for a set of positions, whether the queen in the kth column is safe with respect to the others. (Note that we need only check whether the new queen is safe - the other queens are already guaranteed safe with respect to each other).
 
 
-struct Queen: Printable {
+struct Queen: CustomStringConvertible {
     let row: Int
     let col: Int
     
@@ -36,16 +36,16 @@ func isSafe(a: Queen, b: Queen) -> Bool {
         (a.col != b.col) &&
         (abs(a.row - b.row) != abs(a.col - b.col))
 }
-isSafe(Queen(2, 1), Queen(8, 7))
+isSafe(Queen(2, 1), b: Queen(8, 7))
 
 func isSafeFor(queen: Queen) -> (Queen) -> Bool {
-    return { q in return isSafe(q, queen) }
+    return { q in return isSafe(q, b: queen) }
 }
 
 func isSafe(queen: Queen, solution: Solution) -> Bool {
     return solution.map(isSafeFor(queen)).reduce(true) { $0 && $1 }
 }
-isSafe(Queen(2, 1), [Queen(3, 2), Queen(4, 6)])
+isSafe(Queen(2, 1), solution: [Queen(3, 2), Queen(4, 6)])
 
 
 
@@ -57,7 +57,7 @@ func addColOfQueens(board: Solutions, col: Int) -> Solutions {
     } else {
         let a = possibleQueens.flatMap() { queen in
             board.map() { solution in
-                isSafe(queen, solution) ? solution + [queen] : []
+                isSafe(queen, solution: solution) ? solution + [queen] : []
             }
         }
         return a.filter() { !$0.isEmpty }
@@ -66,10 +66,4 @@ func addColOfQueens(board: Solutions, col: Int) -> Solutions {
 
 
 func queens() -> SolutionsF {
-    return Array(1...8).reduce([]) { (initial, column) in addColOfQueensF(initial, column) }
-}
-
-let h = queens()
-println(h)
-h.count
-
+    return Array(1...8).reduce([]) { (initial, column) in addColOfQueensF(initial, col: colum

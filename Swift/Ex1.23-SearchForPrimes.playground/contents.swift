@@ -11,21 +11,21 @@ func dividesWithNoRemainder(a: Int, b: Int) -> Bool {
     return  a % b == 0
 }
 func isEven(x:Int) -> Bool {
-    return dividesWithNoRemainder(x, 2)
+    return dividesWithNoRemainder(x, b: 2)
 }
 func findDivisor(n: Int, testDivisor: Int) -> Int {
     switch true {
     case square(testDivisor) > n:
         return n
-    case dividesWithNoRemainder(n, testDivisor):
+    case dividesWithNoRemainder(n, b: testDivisor):
         return testDivisor
     default:
-        return findDivisor(n, next(testDivisor))
+        return findDivisor(n, testDivisor: next(testDivisor))
     }
 }
 
 func smallestDivisor(n: Int) -> Int {
-    return findDivisor(n, 2)
+    return findDivisor(n, testDivisor: 2)
 }
 
 func isPrime(n:Int) -> Bool {
@@ -33,29 +33,29 @@ func isPrime(n:Int) -> Bool {
 }
 
 func timedPrimeTest(n: Int) {
-    startPrimeTest(n, NSDate())
+    startPrimeTest(n, startTime: NSDate())
 }
 func startPrimeTest(n: Int, startTime: NSDate) {
     if isPrime(n) {
-        reportPrime(n, -1 * startTime.timeIntervalSinceNow)
+        reportPrime(n, elapsedTime: -1 * startTime.timeIntervalSinceNow)
     }
 }
 func reportPrime(n: Int, elapsedTime: Double) {
-    print("\n")
-    print("\(n)")
-    print(" *** ")
-    print("\(elapsedTime)")
+    print("\n", terminator: "")
+    print("\(n)", terminator: "")
+    print(" *** ", terminator: "")
+    print("\(elapsedTime)", terminator: "")
 }
 
 func searchForPrimes(a: Int, b: Int) {
     switch true {
     case a > b:
-        println("Complete")
+        print("Complete")
     case isEven(a):
-        searchForPrimes(a + 1, b)
+        searchForPrimes(a + 1, b: b)
     default:
         timedPrimeTest(a)
-        searchForPrimes(a + 2, b)
+        searchForPrimes(a + 2, b: b)
     }
 }
 
@@ -67,7 +67,7 @@ func next(n: Int) -> Int {
     }
 }
 
-searchForPrimes(1000, 1030)
+searchForPrimes(1000, b: 1030)
 //searchForPrimes(10000, 10050)
 //searchForPrimes(100000, 100050)
 //searchForPrimes(1000000, 1000050)
@@ -100,6 +100,4 @@ Exercise 1.23 ran in the following time
 1000039 *** 5.41905397176743
 
 Looks like they both ran in about the same amount of time for the lower primes. Its 2015-02-02 and Swift playground performance is a bit screwy
-For the higher primes we get a ration of about 1.4 rather than 2. Possibly this is due to the if statement in next() (and screwy Swift performance)
-*/
- 7.72472196817398 / 5.41905397176743
+For the higher primes we get a ration of about 1.4 rather tha

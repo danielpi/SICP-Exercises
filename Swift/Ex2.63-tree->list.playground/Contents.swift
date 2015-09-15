@@ -13,7 +13,7 @@ class Box<T> {
     }
 }
 
-enum TreeSet<T>: Printable {
+enum TreeSet<T>: CustomStringConvertible {
     case Empty
     case Tree(entry:Box<T>, left:Box<TreeSet<T>>, right: Box<TreeSet<T>>)
     
@@ -58,11 +58,11 @@ func makeTree<T>(entry: T, left:TreeSet<T>, right:TreeSet<T>) -> TreeSet<T> {
     return TreeSet.Tree(entry: Box(entry), left: Box(left), right: Box(right))
 }
 
-let a = makeTree(5, .Empty, .Empty)
-println(a)
+let a = makeTree(5, left: .Empty, right: .Empty)
+print(a)
 entry(a)
-println(leftBranch(a))
-println(rightBranch(a))
+print(leftBranch(a))
+print(rightBranch(a))
 
 
 func isElementOfSet3<T: Comparable>(x: T, set: TreeSet<T>) -> Bool {
@@ -72,9 +72,9 @@ func isElementOfSet3<T: Comparable>(x: T, set: TreeSet<T>) -> Bool {
     case let .Tree(entry, _, _) where entry.unbox == x:
         return true
     case let .Tree(entry, left, _) where entry.unbox < x:
-        return isElementOfSet3(x, left.unbox)
+        return isElementOfSet3(x, set: left.unbox)
     case let .Tree(entry, _, right) where entry.unbox > x:
-        return isElementOfSet3(x, right.unbox)
+        return isElementOfSet3(x, set: right.unbox)
     default:
         fatalError("isElementOfSet3 has an unhandled case when x:\(x) and set:\(set)")
     }
@@ -83,13 +83,13 @@ func isElementOfSet3<T: Comparable>(x: T, set: TreeSet<T>) -> Bool {
 func adjoinSet<T: Comparable>(x: T, set: TreeSet<T>) -> TreeSet<T> {
     switch set {
     case .Empty:
-        return makeTree(x, .Empty, .Empty)
+        return makeTree(x, left: .Empty, right: .Empty)
     case let .Tree(entry, _, _) where entry.unbox == x:
         return set
     case let .Tree(entry, left, right) where entry.unbox > x:
-        return makeTree(entry.unbox, adjoinSet(x, left.unbox), right.unbox)
+        return makeTree(entry.unbox, left: adjoinSet(x, set: left.unbox), right: right.unbox)
     case let .Tree(entry, left, right) where entry.unbox < x:
-        return makeTree(entry.unbox, left.unbox, adjoinSet(x, right.unbox))
+        return makeTree(entry.unbox, left: left.unbox, right: adjoinSet(x, set: right.unbox))
     default:
         fatalError("adjoinSet3 didn't handle all cases when x:\(x) set:\(set)")
     }
@@ -107,7 +107,7 @@ func treeToList1<T>(tree: TreeSet<T>) -> [T] {
     }
 }
 
-let f = adjoinSet(7, adjoinSet(6, adjoinSet(5, adjoinSet(4, adjoinSet(4, adjoinSet(2, adjoinSet(1, .Empty)))))))
+let f = adjoinSet(7, set: adjoinSet(6, set: adjoinSet(5, set: adjoinSet(4, set: adjoinSet(4, set: adjoinSet(2, set: adjoinSet(1, set: .Empty)))))))
 
 func treeToList2<T>(tree: TreeSet<T>) -> [T] {
     var copyToList: (TreeSet<T>, [T]) -> [T] = { _, _ in return [] }
@@ -122,40 +122,29 @@ func treeToList2<T>(tree: TreeSet<T>) -> [T] {
     return copyToList(tree, [])
 }
 
-let fig216a = adjoinSet(11, adjoinSet(9, adjoinSet(5, adjoinSet(1, adjoinSet(3, adjoinSet(7, .Empty))))))
-let fig216b = adjoinSet(11, adjoinSet(9, adjoinSet(5, adjoinSet(7, adjoinSet(1, adjoinSet(3, .Empty))))))
-let fig216c = adjoinSet(11, adjoinSet(7, adjoinSet(9, adjoinSet(1, adjoinSet(3, adjoinSet(5, .Empty))))))
+let fig216a = adjoinSet(11, set: adjoinSet(9, set: adjoinSet(5, set: adjoinSet(1, set: adjoinSet(3, set: adjoinSet(7, set: .Empty))))))
+let fig216b = adjoinSet(11, set: adjoinSet(9, set: adjoinSet(5, set: adjoinSet(7, set: adjoinSet(1, set: adjoinSet(3, set: .Empty))))))
+let fig216c = adjoinSet(11, set: adjoinSet(7, set: adjoinSet(9, set: adjoinSet(1, set: adjoinSet(3, set: adjoinSet(5, set: .Empty))))))
 
-println("fig216a:\(fig216a)")
-println("t->l1 a:\(treeToList1(fig216a))")
-println("t->l2 a:\(treeToList2(fig216a))")
-println("fig216b:\(fig216b)")
-println("t->l1 b:\(treeToList1(fig216b))")
-println("t->l2 b:\(treeToList2(fig216b))")
-println("fig216c:\(fig216c)")
-println("t->l1 c:\(treeToList1(fig216c))")
-println("t->l2 c:\(treeToList2(fig216c))")
+print("fig216a:\(fig216a)")
+print("t->l1 a:\(treeToList1(fig216a))")
+print("t->l2 a:\(treeToList2(fig216a))")
+print("fig216b:\(fig216b)")
+print("t->l1 b:\(treeToList1(fig216b))")
+print("t->l2 b:\(treeToList2(fig216b))")
+print("fig216c:\(fig216c)")
+print("t->l1 c:\(treeToList1(fig216c))")
+print("t->l2 c:\(treeToList2(fig216c))")
 
 // To look at the complexity I wanted to be able to use larger sets. So I wrote a couple of functions that allow me to make larger random sets easily.
 
 func adjoinRandom(set: TreeSet<Int>) -> TreeSet<Int> {
-    return adjoinSet(Int(arc4random_uniform(100)), set)
+    return adjoinSet(Int(arc4random_uniform(100)), set: set)
 }
 
 func adjoinRandomValues(n: Int, set: TreeSet<Int>) -> TreeSet<Int> {
     if n < 1 {
         return set
     } else {
-        return adjoinRandomValues(n - 1, adjoinRandom(set))
-    }
-}
-let g = adjoinRandomValues(100,f)
-print(g)
-
-println(treeToList1(g))
-println(treeToList2(g))
-
-
-// 1. Yes, both procedure produces the same lists.
-// 2. They both have O(n) complexity in Swift.
-
+        return adjoinRandomValues(n - 1, set: adjoinRandom(set))
+    

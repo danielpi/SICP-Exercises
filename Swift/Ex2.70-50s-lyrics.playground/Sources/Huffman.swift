@@ -7,7 +7,7 @@ public class Box<T> {
     }
 }
 
-public enum Tree: Printable {
+public enum Tree: CustomStringConvertible {
     case Leaf(symbol: String, weight: Int)
     case Branch(left: Box<Tree>, right: Box<Tree>, symbols: [String], weight: Int)
     
@@ -105,7 +105,7 @@ func chooseBranch(bit: Int, branch: Tree) -> Tree {
 }
 
 extension Array {
-    var match: (head: T, tail: [T])? {
+    var match: (head: Element, tail: [T])? {
         return (count > 0) ? (self[0], Array(self[1..<count])) : nil
     }
 }
@@ -114,7 +114,7 @@ public func decode(bits: [Int], tree: Tree) -> [String] {
     var decode1: ([Int], Tree) -> [String] = { _, _ in return [] }
     decode1 = { bits1, currentBranch in
         if let (head, tail) = bits1.match {
-            let nextBranch = chooseBranch(bits1[0], currentBranch)
+            let nextBranch = chooseBranch(bits1[0], branch: currentBranch)
             switch nextBranch {
             case let .Leaf(symbol: s, weight: _):
                 return [s] + decode1(tail, tree)
@@ -133,11 +133,11 @@ public func encodeSymbol(symbol: String, tree: Tree) -> [Int] {
     case let .Leaf(symbol: symbol, weight: w):
         return []
     case let .Branch(left: left, right: right, symbols: syms, weight: _):
-        if contains(syms, symbol) {
-            if contains(symbols(left.unbox), symbol) {
-                return [0] + encodeSymbol(symbol, left.unbox)
+        if syms.contains(symbol) {
+            if symbols(left.unbox).contains(symbol) {
+                return [0] + encodeSymbol(symbol, tree: left.unbox)
             } else {
-                return [1] + encodeSymbol(symbol, right.unbox)
+                return [1] + encodeSymbol(symbol, tree: right.unbox)
             }
         } else {
             fatalError("The symbol:(\(symbol)) is not contained in the tree:(\(tree))")
@@ -171,7 +171,7 @@ public typealias SymFreqPair = (String, Int)
 public func makeLeafSet(pairs: [SymFreqPair]) -> [Tree] {
     var result: [Tree] = []
     for pair in pairs {
-        result = adjoinSet(makeLeaf(pair.0, pair.1), result)
+        result = adjoinSet(makeLeaf(pair.0, weight: pair.1), set: result)
     }
     return result
 }
@@ -180,7 +180,7 @@ public func successiveMerge(leafSet: [Tree]) -> [Tree] {
     if leafSet.count <= 1 {
         return leafSet
     } else {
-        return successiveMerge(adjoinSet(makeCodeTree(leafSet[0], leafSet[1]), Array(leafSet[2..<leafSet.count])))
+        return successiveMerge(adjoinSet(makeCodeTree(leafSet[0], right: leafSet[1]), set: Array(leafSet[2..<leafSet.count])))
     }
 }
 

@@ -11,18 +11,18 @@ import Cocoa
 // is represented as the sequence ((1 2 3 4) (4 5 6 6) (6 7 8 9)). With this representation, we can use sequence operations to concisely express the basic matrix and vector operations. These operations (which are described in any book on matrix algebra) are the following:
 
 func dotProduct(v: [Int], w: [Int]) -> Int {
-    return reduce(map(zip(v,w), *), 0, +)
+    return map(zip(v,w), *).reduce(0, +)
 }
 let a = [1,2,3]
 let b = [5,6,7]
-dotProduct(a, b)
+dotProduct(a, w: b)
 
 func matrixXVector(m: [[Int]], v: [Int]) -> [Int] {
-    return map(m) { dotProduct($0, v) }
+    return m.map { dotProduct($0, w: v) }
 }
 
 let c = [[1,0,0],[0,1,0],[0,0,1]]
-matrixXVector(c, a)
+matrixXVector(c, v: a)
 
 
 func cons<A>(value: A, list: [A]) -> [A] {
@@ -37,8 +37,8 @@ func cdr<A>(list:[A]) -> [A] {
     return Array(list[1..<list.count])
 }
 
-cons(4, a)
-cons(a, c)
+cons(4, list: a)
+cons(a, list: c)
 
 
 func accumulate<A,B>(op: (A, [A]) -> [A], initial: [A], sequence: [A]) -> [A] {
@@ -49,7 +49,7 @@ func accumulate<A,B>(op: (A, [A]) -> [A], initial: [A], sequence: [A]) -> [A] {
     }
 }
 
-cons(car(c), c)
+cons(car(c), list: c)
 //let d: [Int] = accumulate(cons, 1, c)
 
 
@@ -63,11 +63,4 @@ func accumulateN(op: (Int, [Int]) -> [Int], initial: Int, sequence: [[Int]]) -> 
 }
 
 func transpose(m: [[Int]]) -> [[Int]] {
-    return accumulateN(cons, 0, m)
-}
-*/
-
-
-
-
-
+    return accumulat

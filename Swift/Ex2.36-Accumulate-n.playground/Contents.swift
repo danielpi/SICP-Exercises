@@ -19,7 +19,7 @@ func accumulate<A>(op: (A, A) -> A, initial: A, sequence: [A]) -> A {
     if sequence.isEmpty {
         return initial
     } else {
-        return op(car(sequence), accumulate(op, initial, cdr(sequence)))
+        return op(car(sequence), accumulate(op, initial: initial, sequence: cdr(sequence)))
     }
 }
 
@@ -27,10 +27,8 @@ func accumulateN(op: (Int, Int) -> Int, initial: Int, sequence: [[Int]]) -> [Int
     if car(sequence).isEmpty {
         return []
     } else {
-        return cons(accumulate(op, initial, map(sequence, car)), accumulateN(op, initial, map(sequence, cdr)))
+        return cons(accumulate(op, initial: initial, sequence: sequence.map(car)), list: accumulateN(op, initial: initial, sequence: sequence.map(cdr)))
     }
 }
 
-let s = [[1,2,3],[4,5,6],[7,8,9],[10,11,12]]
-accumulateN(+,0,s)
-
+let 

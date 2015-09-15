@@ -7,7 +7,7 @@ public class Box<T> {
     }
 }
 
-public enum TreeSet<T>: Printable {
+public enum TreeSet<T>: CustomStringConvertible {
     case Empty
     case Tree(entry:Box<T>, left:Box<TreeSet<T>>, right: Box<TreeSet<T>>)
     
@@ -59,9 +59,9 @@ public func isElementOfSet<T: Comparable>(x: T, set: TreeSet<T>) -> Bool {
     case let .Tree(entry, _, _) where entry.unbox == x:
         return true
     case let .Tree(entry, left, _) where entry.unbox < x:
-        return isElementOfSet(x, left.unbox)
+        return isElementOfSet(x, set: left.unbox)
     case let .Tree(entry, _, right) where entry.unbox > x:
-        return isElementOfSet(x, right.unbox)
+        return isElementOfSet(x, set: right.unbox)
     default:
         fatalError("isElementOfSet3 has an unhandled case when x:\(x) and set:\(set)")
     }
@@ -70,13 +70,13 @@ public func isElementOfSet<T: Comparable>(x: T, set: TreeSet<T>) -> Bool {
 public func adjoinSet<T: Comparable>(x: T, set: TreeSet<T>) -> TreeSet<T> {
     switch set {
     case .Empty:
-        return makeTree(x, .Empty, .Empty)
+        return makeTree(x, left: .Empty, right: .Empty)
     case let .Tree(entry, _, _) where entry.unbox == x:
         return set
     case let .Tree(entry, left, right) where entry.unbox > x:
-        return makeTree(entry.unbox, adjoinSet(x, left.unbox), right.unbox)
+        return makeTree(entry.unbox, left: adjoinSet(x, set: left.unbox), right: right.unbox)
     case let .Tree(entry, left, right) where entry.unbox < x:
-        return makeTree(entry.unbox, left.unbox, adjoinSet(x, right.unbox))
+        return makeTree(entry.unbox, left: left.unbox, right: adjoinSet(x, set: right.unbox))
     default:
         fatalError("adjoinSet3 didn't handle all cases when x:\(x) set:\(set)")
     }
@@ -92,14 +92,14 @@ public func treeToList<T>(tree: TreeSet<T>) -> [T] {
 }
 
 public func adjoinRandom(set: TreeSet<Int>) -> TreeSet<Int> {
-    return adjoinSet(Int(arc4random_uniform(100)), set)
+    return adjoinSet(Int(arc4random_uniform(100)), set: set)
 }
 
 public func adjoinRandomValues(n: Int, set: TreeSet<Int>) -> TreeSet<Int> {
     if n < 1 {
         return set
     } else {
-        return adjoinRandomValues(n - 1, adjoinRandom(set))
+        return adjoinRandomValues(n - 1, set: adjoinRandom(set))
     }
 }
 

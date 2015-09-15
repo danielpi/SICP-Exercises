@@ -49,12 +49,9 @@ func cc<T: MathematicsProtocol>(amount: T, coinValues: List<T>) -> T {
     case isNoMore(coinValues):
         return 0
     default:
-        return cc(amount, exceptFirstDenomination(coinValues)) + cc((amount - firstDenomination(coinValues)), coinValues)
+        return cc(amount, coinValues: exceptFirstDenomination(coinValues)) + cc((amount - firstDenomination(coinValues)), coinValues: coinValues)
     }
 }
 
 //cc(100, usCoins)
-cc(100, ausCoins)
-cc(12.0, ukCoins)
-
-
+cc(100, coinVa

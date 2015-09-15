@@ -56,15 +56,15 @@ func parTwo(a: EngineeringTolerance, b: EngineeringTolerance) -> EngineeringTole
 let r1 = EngineeringTolerance(3.3, 0.01)
 let r2 = EngineeringTolerance(4.7, 0.05)
 
-let a = parOne(r1, r2)
-let b = parTwo(r1, r2)
+let a = parOne(r1, b: r2)
+let b = parTwo(r1, b: r2)
 // 0.02652330018327665
 
 func series(r1: EngineeringTolerance, r2: EngineeringTolerance) -> EngineeringTolerance {
     return r1 + r2
 }
 
-let r3 = series(r1, r2)
+let r3 = series(r1, r2: r2)
 r3.upper
 r3.lower
 r1.upper + r2.upper
@@ -74,9 +74,4 @@ r1.lower + r2.lower
 8 - (r1.lower + r2.lower)
 
 
-// Looks like this would work, needs to be tested better though.
-
-
-
-
-
+// Looks like this would work, needs to be tested better tho

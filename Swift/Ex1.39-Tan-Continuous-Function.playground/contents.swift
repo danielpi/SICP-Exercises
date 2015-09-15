@@ -40,9 +40,8 @@ func tanCF(x: Double, k: Int) -> Double {
         return Double((i * 2) - 1)
     }
     
-    return -1 * kFiniteContFrac(N, D, k)
+    return -1 * kFiniteContFrac(N, D: D, k: k)
 }
 
-tanCF(1.0, 10)
-tan(1.0)
-
+tanCF(1.0, k: 10)
+t

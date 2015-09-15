@@ -12,7 +12,7 @@ class Box<T> {
 
 typealias TreeSetList = (TreeSet<Int>,[Int])
 
-enum TreeSet<T>: Printable {
+enum TreeSet<T>: CustomStringConvertible {
     case Empty
     case Tree(entry:Box<T>, left:Box<TreeSet<T>>, right: Box<TreeSet<T>>)
     
@@ -65,9 +65,9 @@ func isElementOfSet<T: Comparable>(x: T, set: TreeSet<T>) -> Bool {
     case let .Tree(entry, _, _) where entry.unbox == x:
         return true
     case let .Tree(entry, left, _) where entry.unbox < x:
-        return isElementOfSet(x, left.unbox)
+        return isElementOfSet(x, set: left.unbox)
     case let .Tree(entry, _, right) where entry.unbox > x:
-        return isElementOfSet(x, right.unbox)
+        return isElementOfSet(x, set: right.unbox)
     default:
         fatalError("isElementOfSet3 has an unhandled case when x:\(x) and set:\(set)")
     }
@@ -76,13 +76,13 @@ func isElementOfSet<T: Comparable>(x: T, set: TreeSet<T>) -> Bool {
 func adjoinSet<T: Comparable>(x: T, set: TreeSet<T>) -> TreeSet<T> {
     switch set {
     case .Empty:
-        return makeTree(x, .Empty, .Empty)
+        return makeTree(x, left: .Empty, right: .Empty)
     case let .Tree(entry, _, _) where entry.unbox == x:
         return set
     case let .Tree(entry, left, right) where entry.unbox > x:
-        return makeTree(entry.unbox, adjoinSet(x, left.unbox), right.unbox)
+        return makeTree(entry.unbox, left: adjoinSet(x, set: left.unbox), right: right.unbox)
     case let .Tree(entry, left, right) where entry.unbox < x:
-        return makeTree(entry.unbox, left.unbox, adjoinSet(x, right.unbox))
+        return makeTree(entry.unbox, left: left.unbox, right: adjoinSet(x, set: right.unbox))
     default:
         fatalError("adjoinSet3 didn't handle all cases when x:\(x) set:\(set)")
     }
@@ -98,14 +98,14 @@ func treeToList<T>(tree: TreeSet<T>) -> [T] {
 }
 
 func adjoinRandom(set: TreeSet<Int>) -> TreeSet<Int> {
-    return adjoinSet(Int(arc4random_uniform(100)), set)
+    return adjoinSet(Int(arc4random_uniform(100)), set: set)
 }
 
 func adjoinRandomValues(n: Int, set: TreeSet<Int>) -> TreeSet<Int> {
     if n < 1 {
         return set
     } else {
-        return adjoinRandomValues(n - 1, adjoinRandom(set))
+        return adjoinRandomValues(n - 1, set: adjoinRandom(set))
     }
 }
 
@@ -114,7 +114,7 @@ func partialTree(elts: [Int], n: Int) -> TreeSetList {
         return (.Empty, elts)
     } else {
         let leftSize = (n - 1) / 2
-        let (leftTree, nonLeftElts) = partialTree(elts, leftSize)
+        let (leftTree, nonLeftElts) = partialTree(elts, n: leftSize)
         let rightSize = n - (leftSize + 1)
         let thisEntry = nonLeftElts[0]
         let (rightTree, remainingElts) = partialTree(Array(nonLeftElts[1..<nonLeftElts.count]), rightSize)
@@ -124,12 +124,12 @@ func partialTree(elts: [Int], n: Int) -> TreeSetList {
 }
 
 func listToTree(elements: [Int]) -> TreeSet<Int> {
-    let (tree, list) = partialTree(elements, elements.count)
+    let (tree, list) = partialTree(elements, n: elements.count)
     return tree
 }
 
 extension Array {
-    var match: (head: T, tail: [T])? {
+    var match: (head: Element, tail: [T])? {
         return self.isEmpty ? nil : (self[0], Array(self[1..<self.count]))
     }
 }
@@ -159,21 +159,21 @@ func unionOrderedList<T: Comparable>(set1: [T], set2: [T]) -> [T] {
 }
 
 func unionSet(set1: TreeSet<Int>, set2: TreeSet<Int>) -> TreeSet<Int> {
-    return listToTree(unionOrderedList(treeToList(set1), treeToList(set2)))
+    return listToTree(unionOrderedList(treeToList(set1), set2: treeToList(set2)))
 }
 
-let g = adjoinRandomValues(100,.Empty)
+let g = adjoinRandomValues(100,set: .Empty)
 
-let fig216a = adjoinSet(11, adjoinSet(9, adjoinSet(5, adjoinSet(1, adjoinSet(3, adjoinSet(7, .Empty))))))
-let fig216b = adjoinSet(11, adjoinSet(9, adjoinSet(5, adjoinSet(7, adjoinSet(1, adjoinSet(3, .Empty))))))
-let fig216c = adjoinSet(11, adjoinSet(7, adjoinSet(9, adjoinSet(1, adjoinSet(3, adjoinSet(5, .Empty))))))
+let fig216a = adjoinSet(11, set: adjoinSet(9, set: adjoinSet(5, set: adjoinSet(1, set: adjoinSet(3, set: adjoinSet(7, set: .Empty))))))
+let fig216b = adjoinSet(11, set: adjoinSet(9, set: adjoinSet(5, set: adjoinSet(7, set: adjoinSet(1, set: adjoinSet(3, set: .Empty))))))
+let fig216c = adjoinSet(11, set: adjoinSet(7, set: adjoinSet(9, set: adjoinSet(1, set: adjoinSet(3, set: adjoinSet(5, set: .Empty))))))
 
-let random1 = adjoinRandomValues(10,.Empty)
-let random2 = adjoinRandomValues(10,.Empty)
-println(treeToList(random1))
-println(treeToList(random2))
+let random1 = adjoinRandomValues(10,set: .Empty)
+let random2 = adjoinRandomValues(10,set: .Empty)
+print(treeToList(random1))
+print(treeToList(random2))
 let union = unionSet(random1, random2)
-println(treeToList(union))
+print(treeToList(union))
 
 
 
@@ -196,12 +196,4 @@ func intersectionOrderedList<T: Comparable>(set1: [T], set2: [T]) -> [T] {
 }
 
 
-func intersectionSet(set1: TreeSet<Int>, set2: TreeSet<Int>) -> TreeSet<Int> {
-    return listToTree(intersectionOrderedList(treeToList(set1), treeToList(set2)))
-}
-
-let intersection = intersectionSet(random1, random2)
-println(treeToList(intersection))
-
-
-
+func intersectionSet(set1: TreeSet<Int>, set2: TreeSet<

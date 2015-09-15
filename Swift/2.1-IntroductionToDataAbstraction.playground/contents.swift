@@ -46,11 +46,11 @@ func cdr<T>(innerCons: ConsPosition -> T) -> T {
 
 // Above from https://gist.github.com/bcobb/70dac95ae10a39632e0b
 
-let x = cons(1, 2)
+let x = cons(1, b: 2)
 car(x)
 cdr(x)
 
-let y = cons(3, 4)
+let y = cons(3, b: 4)
 let z = cons(x, y)
 car(car(z))
 car(cdr(z))
@@ -72,7 +72,7 @@ car(cdr(z))
 typealias Rational = (ConsPosition -> Int)
 
 func makeRat1(n: Int, d:Int) -> Rational {
-    return cons(n,d)
+    return cons(n,b: d)
 }
 func numer(x: Rational) -> Int {
     return car(x)
@@ -82,28 +82,28 @@ func denom(x: Rational) -> Int {
 }
 
 func printRat(x: Rational) {
-    println("\(numer(x))/\(denom(x))")
+    print("\(numer(x))/\(denom(x))")
 }
 
 func addRat1(x: Rational, y: Rational) -> Rational {
-    return makeRat1((numer(x) * denom(y)) + (numer(y) * denom(x)), denom(x) * denom(y))
+    return makeRat1((numer(x) * denom(y)) + (numer(y) * denom(x)), d: denom(x) * denom(y))
 }
 func subRat1(x: Rational, y: Rational) -> Rational {
-    return makeRat1((numer(x) * denom(y)) - (numer(y) * denom(x)), denom(x) * denom(y))
+    return makeRat1((numer(x) * denom(y)) - (numer(y) * denom(x)), d: denom(x) * denom(y))
 }
 func mulRat1(x: Rational, y: Rational) -> Rational {
-    return makeRat1(numer(x) * numer(y), denom(x) * denom(y))
+    return makeRat1(numer(x) * numer(y), d: denom(x) * denom(y))
 }
 func divRat1(x: Rational, y: Rational) -> Rational {
-    return makeRat1(numer(x) * denom(y), denom(x) * numer(y))
+    return makeRat1(numer(x) * denom(y), d: denom(x) * numer(y))
 }
 func isEqualRat(x: Rational, y: Rational) -> Bool {
     return (numer(x) * denom(y)) == (numer(y) * denom(x))
 }
 
-let oneHalf = makeRat1(1, 2)
+let oneHalf = makeRat1(1, d: 2)
 printRat(oneHalf)
-let oneThird = makeRat1(1, 3)
+let oneThird = makeRat1(1, d: 3)
 printRat(addRat1(oneHalf, oneThird))
 printRat(mulRat1(oneHalf, oneThird))
 printRat(addRat1(oneThird, oneThird))
@@ -114,17 +114,17 @@ func gcd(a: Int, b: Int) -> Int {
     if b == 0 {
         return abs(a)
     } else {
-        return gcd(b, a % b)
+        return gcd(b, b: a % b)
     }
 }
 
 func makeRat2(n: Int, d:Int) -> Rational {
-    let g = gcd(n, d)
+    let g = gcd(n, b: d)
     return cons(n/g, d/g)
 }
 
 func addRat2(x: Rational, y: Rational) -> Rational {
-    return makeRat2((numer(x) * denom(y)) + (numer(y) * denom(x)), denom(x) * denom(y))
+    return makeRat2((numer(x) * denom(y)) + (numer(y) * denom(x)), d: denom(x) * denom(y))
 }
 
 printRat(addRat2(oneThird, oneThird))
@@ -140,14 +140,14 @@ printRat(addRat2(oneThird, oneThird))
 // For example an alternative way to address the problem of reducing rational numbers to lowest terms  is to perform the reduction whenever we access the parts of a rational number, rather than when we construct it. This leads to different constructor and selector procedures:
 
 func makeRat(n: Int, d: Int) -> Rational {
-    return cons(n, d)
+    return cons(n, b: d)
 }
 func numer2(x: Rational) -> Int {
-    let g = gcd(car(x), cdr(x))
+    let g = gcd(car(x), b: cdr(x))
     return car(x) / g
 }
 func denom2(x: Rational) -> Int {
-    let g = gcd(car(x), cdr(x))
+    let g = gcd(car(x), b: cdr(x))
     return cdr(x) / g
 }
 
@@ -306,16 +306,7 @@ func parTwo(a: Interval, b: Interval) -> Interval {
 let r1 = Interval(center: 3.3, percent: 0.01)
 let r2 = Interval(center: 4.7, percent: 0.05)
 
-let pOne = parOne(r1, r2)
+let pOne = parOne(r1, b: r2)
 pOne.center
 pOne.percent
-let pTwo = parTwo(r1, r2)
-pTwo.center
-pTwo.percent
-
-
-
-
-
-
-
+let pTwo = p
