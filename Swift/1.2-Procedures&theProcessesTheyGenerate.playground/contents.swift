@@ -1,6 +1,3 @@
-// Playground - noun: a place where people can play
-
-//import Darwin
 import Foundation // For NSDate
 
 

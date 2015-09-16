@@ -168,8 +168,8 @@ func square(x:Int) -> Int {
 }
 square(4)
 
-func f(x:Int, y:Int) -> Int {
-    func fHelper(a:Int, b:Int) -> Int {
+func f(x:Int, _ y:Int) -> Int {
+    func fHelper(a:Int, _ b:Int) -> Int {
         return (x * square(a)) + (y * b) + (a * b)
     }
     return fHelper((x * y) + 1, 1 - y)
@@ -178,7 +178,7 @@ f(3,4)
 
 // Or we could use a closure to accomplish this
 
-func f2(x: Int, y: Int) -> Int {
+func f2(x: Int, _ y: Int) -> Int {
     return { (a:Int, b:Int) -> Int in
         return (x * square(a)) + (y * b) + (a * b)
     }((x * y) + 1, 1 - y)
@@ -189,7 +189,7 @@ f2(3,4)
 
 // In Lisp there is a let construct that makes this all simpler. Is this the same as specifying local variables in Swift?
 
-func f3(x: Int, y: Int) -> Int {
+func f3(x: Int, _ y: Int) -> Int {
     let a = (x * y) + 1
     let b = 1 - y
     return (x * square(a)) + (y * b) + (a * b)
@@ -218,7 +218,7 @@ letDemo2(2)
 
 // Sometimes we can use internal definitions to get the same effect as with let. For example
 
-func f4(x: Int, y: Int) -> Int {
+func f4(x: Int, _ y: Int) -> Int {
     func a() -> Int { return 1 + (x * y) }
     func b() -> Int { return 1 - y }
     return (x * square(a())) + (y * b()) + (a() * b())
@@ -229,7 +229,7 @@ f4(3,4)
 
 // How would a Swift version look
 
-func f5(x: Int, y: Int) -> Int {
+func f5(x: Int, _ y: Int) -> Int {
     let a = 1 + (x * y)
     let b = 1 - y
     return (x * square(a)) + (y * b) + (a * b)
@@ -243,10 +243,10 @@ f5(3,4)
 
 // The half-interval method is a simple but powerful technique for finding roots of an equation.
 
-func average(a: Double, b: Double) -> Double {
+func average(a: Double, _ b: Double) -> Double {
     return (a + b) / 2
 }
-func isCloseEnough(a: Double, b: Double, tolerance: Double) -> Bool {
+func isCloseEnough(a: Double, _ b: Double, tol tolerance: Double) -> Bool {
     return abs(a - b) < tolerance
 }
 func isPositive(x: Double) -> Bool {
@@ -256,9 +256,9 @@ func isNegative(x: Double) -> Bool {
     return x < 0
 }
 
-func search(f:(Double) -> Double, negative: Double, positive: Double) -> Double {
+func search(f:(Double) -> Double, _ negative: Double, _ positive: Double) -> Double {
     let midpoint = average(negative, positive)
-    if isCloseEnough(negative, positive, 0.001) {
+    if isCloseEnough(negative, positive, tol: 0.001) {
         return midpoint
     } else {
         let testValue = f(midpoint)
@@ -276,7 +276,7 @@ func search(f:(Double) -> Double, negative: Double, positive: Double) -> Double 
 // Search is awkward to use directly because we can accidentally give it points at which f's values do not have the required sign. Instead we will use search via the following procedure.
 
 
-func halfIntervalMethod(f:(Double) -> Double, a: Double, b: Double) -> Double? {
+func halfIntervalMethod(f:(Double) -> Double, _ a: Double, _ b: Double) -> Double? {
     let aValue = f(a)
     let bValue = f(b)
     switch true {
@@ -298,9 +298,9 @@ root
 // Begin with an initial guess and applying f repeatedly until the value doesn't change very much.
 
 
-func fixedPoint(f: (Double) -> Double, guess: Double) -> Double {
+func fixedPoint(f: (Double) -> Double, _ guess: Double) -> Double {
     let next = f(guess)
-    if isCloseEnough(guess, next, 0.00001) {
+    if isCloseEnough(guess, next, tol: 0.00001) {
         return next
     } else {
         return fixedPoint(f, next)
@@ -395,13 +395,13 @@ let cubeDeriv = deriv(cube)
 func linspace(start: Double, end: Double, steps: Int) -> [Double] {
     var array = [Double](count: steps, repeatedValue: 0.0)
     let stepSize = (end - start) / Double(steps - 1)
-    for (index, element) in enumerate(array) {
+    for (index, _) in array.enumerate() {
         array[index] = start + (stepSize * Double(index))
     }
     return array
 }
 
-let x = linspace(-10, 10, 51)
+let x = linspace(-10, end: 10, steps: 51)
 
 for value in x {
     cube(value)
@@ -413,7 +413,7 @@ for value in x {
 func newtonTransform(g: (Double) -> Double) -> (Double) -> Double {
     return { (x: Double) -> Double in return x - (g(x) / deriv(g)(x)) }
 }
-func newtonsMethod(g: (Double) -> Double, guess: Double) -> Double {
+func newtonsMethod(g: (Double) -> Double, _ guess: Double) -> Double {
     return fixedPoint(newtonTransform(g), guess)
 }
 
@@ -440,8 +440,8 @@ sqrt3(64)
 // Since Newton's method was itself expressed as a fixed-point process, we actually saw two ways to compute square roots as fixed points. Each method begins with a function and finds a fixed point of some transformation of the function. We can express this general idea itself as a procedure
 
 func fixedPointOfTransform(g: (Double) -> Double,
-                   transform: ((Double) -> Double) -> (Double) -> Double,
-                       guess: Double) -> Double {
+                 _ transform: ((Double) -> Double) -> (Double) -> Double,
+                     _ guess: Double) -> Double {
     return fixedPoint(transform(g), guess)
 }
 

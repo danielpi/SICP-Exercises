@@ -2,12 +2,12 @@ import Cocoa
 
 //: ## 2.3.2 Example: Symbolic Differentiation
 //: As an illustration of symbol manipulation and a further illustration of data abstraction, consider the design of a procedure that performs symbolic differentiation of algebraic expressions. We would like the procedure to takeas arguments an algebraic expression and a variable and to returnthe derivative of the expression with respect to the variable. For example, if the arguments to the procedure are ax^2 + bx +c and x, the procedure should return 2ax + bx + c. Symbolic differentiation is of special historical significance in Lisp. It was one of the motivation examples behind the development of a computer language for symbol manipulation. Furthermore, it marked the beginning of the line of research that led to the development of powerful systems for symbolic mathematical work, which are currently being used by a growing number of applied mathematicians and physicists.
-
+//:
 //: In developing the symbolic-differentiation program, we will follow the same strategy of data abstraction that we followed in developing the rational-number system of Section 2.1.1. That is, we will first define a differentiation algorithm that operates on abstract objects such as "sums," "products," and "variables" without worrying about how these are to be represented. Only afterward will we address the representation problem.
-
+//:
 //: ### The differentiation program with abstract data
 //: In order to keep things simple, we will condsider a very simple symbolic-differentiation program that handles expressions that are built up using only the operations of addition and multiplication with two arguments. Differentiation of any such expression can be carried out by applying the following reduction rules:
-
+//:
 //:          dc
 //:          -- = 0, for c a constant or a variable different from x,
 //:          dx
@@ -24,9 +24,9 @@ import Cocoa
 //:       ----- = u-- + v--
 //:         dx     dx    dx
 //:
-
+//:
 //: Observe that the latter two rules are recursive in nature. That is, to obtain the derivative of a sum we first find the derivatives of the terms and add them. Each of the terms may in turn be an expression that needs to be decomposed. Decomposing into smaller and smaller pieces will eventually produce pieces that are either constants or variables, whose derivatives will be either 0 or 1.
-
+//:
 //: To embody these rules in a procedure we indulge in a little wishful thinking, as we did in designing the rational-number implementation. If we had a means for representing algebraic expressions, we should be able to tell whether an expression is a sum, a product, a constant, or a variable. We should be able to extract the parts of an expression. For a sum, for example we want to be able to extract the addend (first term) and the augend (second term). We should also be able to construct expressions from parts. Let us assume that we already have procedures to implement the following selectors, constructors, and predicates:
 
 //: TODO More stuff here but rushing through to code
@@ -68,7 +68,7 @@ extension Expr: StringLiteralConvertible {
     }
 }
 
-extension Expr: Printable {
+extension Expr: CustomStringConvertible {
     var description: String {
         switch self {
         case .Sum(let a1, let a2):
@@ -93,7 +93,7 @@ func * (lhs: Expr, rhs: Expr) -> Expr {
 
 
 // The variables are symbols. The are identified by the primitive predicate symbol?:
-func isVariable<T>(exp: Expr) -> Bool {
+func isVariable(exp: Expr) -> Bool {
     switch exp {
     case .Variable(_):
         return true
@@ -103,7 +103,7 @@ func isVariable<T>(exp: Expr) -> Bool {
 }
 
 // Two variables are the same if the symbols representing them are eq?
-func isSameVariable(v1: Expr, v2: Expr) -> Bool {
+func isSameVariable(v1: Expr, _ v2: Expr) -> Bool {
     switch (v1, v2) {
     case (.Variable(let val1), .Variable(let val2)):
         return val1 == val2
@@ -113,10 +113,10 @@ func isSameVariable(v1: Expr, v2: Expr) -> Bool {
 }
 
 // Sums and products are constructed as lists:
-func makeSum1(a1:Expr, a2: Expr) -> Expr {
+func makeSum1(a1:Expr, _ a2: Expr) -> Expr {
     return Expr.Sum(Box(a1), Box(a2))
 }
-func makeProduct1(m1: Expr, m2: Expr) -> Expr {
+func makeProduct1(m1: Expr, _ m2: Expr) -> Expr {
     return Expr.Product(Box(m1), Box(m2))
 }
 
@@ -133,7 +133,7 @@ func isSum(exp: Expr) -> Bool {
 // The addend is the second item of the sum list:
 func addend(s: Expr) -> Expr {
     switch s {
-    case .Sum(let a1, let a2):
+    case .Sum(let a1, _):
         return a1.unbox
     default:
         fatalError("Tried to get the addend from an expression that was not a sum")
@@ -143,7 +143,7 @@ func addend(s: Expr) -> Expr {
 // The augend is the third item of the sum list:
 func augend(s: Expr) -> Expr {
     switch s {
-    case .Sum(let a1, let a2):
+    case .Sum(_, let a2):
         return a2.unbox
     default:
         fatalError("Tried to get the augend from an expression that was not a sum")
@@ -182,7 +182,7 @@ func multiplicand(p: Expr) -> Expr {
 
 
 
-func deriv1(exp: Expr, variable: Expr) -> Expr {
+func deriv1(exp: Expr, _ variable: Expr) -> Expr {
     switch exp {
     case .Constant(_):
         return .Constant(0)
@@ -198,9 +198,9 @@ func deriv1(exp: Expr, variable: Expr) -> Expr {
 }
 
 
-println(deriv1("x" + 3, "x")) // 1
-println(deriv1("x" * "y", "x")) // y
-println(deriv1(("x" * "y") * ("x" + 3), "x")) //
+print(deriv1("x" + 3, "x")) // 1
+print(deriv1("x" * "y", "x")) // y
+print(deriv1(("x" * "y") * ("x" + 3), "x")) //
 
 
 //: The program produces answers that are correct; however, they are unsimplified. It is true that
@@ -210,10 +210,10 @@ println(deriv1(("x" * "y") * ("x" + 3), "x")) //
 //:       dx
 //:
 //: but we would like the program to know that x * 0 = 0, 1 * y = y, and 0 + y = y. The answer for the second example should have been simply y. As the third example shows, tis becomes a serious issue when the expressions are complex.
-
+//:
 //: Our difficulty is much like the one we encountered with the rational-number implementation: we haven't reduced answers to simplist form. To accomplish the rational-number reduction, we needed to change only the constructors and the selectors of the implementation. We can adopt a similar strategy here. We won't change deriv at all. Instead, we will change makeSum so that if both summands are numbers, makeSum will add them and return their sum. Also, if one of the summands is 0, then makeSum will return the other summand.
 
-func makeSum(a1: Expr, a2: Expr) -> Expr {
+func makeSum(a1: Expr, _ a2: Expr) -> Expr {
     switch (a1, a2) {
     case (.Constant(0), _):
         return a2
@@ -228,7 +228,7 @@ func makeSum(a1: Expr, a2: Expr) -> Expr {
 
 //: This uses swifts pattern matching.
 
-func makeProduct(m1: Expr, m2: Expr) -> Expr {
+func makeProduct(m1: Expr, _ m2: Expr) -> Expr {
     switch (m1, m2) {
     case (.Constant(0), _):
         return .Constant(0)
@@ -247,7 +247,7 @@ func makeProduct(m1: Expr, m2: Expr) -> Expr {
 
 //: Here is how this version works on our three examples:
 
-func deriv(exp: Expr, variable: Expr) -> Expr {
+func deriv(exp: Expr, _ variable: Expr) -> Expr {
     switch exp {
     case .Constant(_):
         return .Constant(0)
@@ -262,9 +262,9 @@ func deriv(exp: Expr, variable: Expr) -> Expr {
     }
 }
 
-println(deriv("x" + 3, "x")) // 1
-println(deriv("x" * "y", "x")) // y
-println(deriv(("x" * "y") * ("x" + 3), "x")) //
+print(deriv("x" + 3, "x")) // 1
+print(deriv("x" * "y", "x")) // y
+print(deriv(("x" * "y") * ("x" + 3), "x")) //
 
 //: Although this is quite an improvement, the third example shows that there is still a long way to go before we get a program that puts expressions into a form that we might agree is "simplest". The problem of algebraic simplification is complex because, among other reasons, a form that may be simplest for one purpose may not be for another.
 

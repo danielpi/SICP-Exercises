@@ -79,7 +79,7 @@ let a =
 
 //: One additional primitive used in manipulating symbols is eq?, which takes two symbols as arguments and tests whether they are the same. Using eq?, we can implement a useful procedure called memq. This takes two arguments, a symbol and a list. If the symbol is not contained in the list (i.e., is not eq? to any item in the list), then memq returns false. Otherwise, it returns the sublist of the list beginning with the first occurence of the symbol:
 
-func memq<T: Equatable>(item: T, list: [T]) -> [T]? {
+func memq<T: Equatable>(item: T, _ list: [T]) -> [T]? {
     switch true {
         case list.isEmpty:
             return nil

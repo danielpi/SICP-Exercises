@@ -12,7 +12,7 @@ struct Pair<A,B> {
     let right: B
 }
 
-func cons<A,B>(left: A, right: B) -> Pair<A,B> {
+func cons<A,B>(left: A, _ right: B) -> Pair<A,B> {
     return Pair(left: left, right: right)
 }
 func car<A,B>(pair: Pair<A,B>) -> A {
@@ -48,7 +48,7 @@ func list<T,U>(values: [T]) -> U {
 cons(1, cons(2, cons(3, cons(4, []))))
 
 // Lisp systems conventionally print lists by printing the sequence of elements, enclosed in parentheses. In Swift a list literal looks like this [1, 2, 3, 4] but that isn't implemented via cons. I've had trouble writing a list function in Swift (I couldn't seem to make the generics work) so I'm switching to using an array as the base of the my lists. Thus I need car and cdr re-written to accept arrays.
-func cons<A>(value: A, list: [A]) -> [A] {
+func cons<A>(value: A, _ list: [A]) -> [A] {
     var newList = list
     newList.insert(value, atIndex: 0)
     return newList
@@ -75,7 +75,7 @@ cdr(oneThroughFour)
 // - For n == 0, list-ref should return the car of the list.
 // - Otherwise, list-ref should return the (n-1)st item of the cdr of the list
 
-func listRef<A>(items:[A], n: Int) -> A {
+func listRef<A>(items:[A], _ n: Int) -> A {
     if n == 0 {
         return car(items)
     } else {
@@ -123,7 +123,7 @@ length2(odds)
 // - If list1 is the empty list, then the result is just list2
 // - Otherwise, append the cdr of list1 and list2, and cons the car of list1 onto the result
 
-func append<A>(list1: [A], list2: [A]) -> [A] {
+func append<A>(list1: [A], _ list2: [A]) -> [A] {
     if list1.isEmpty {
         return list2
     } else {
@@ -138,7 +138,7 @@ append(odds, squares)
 // Mapping over lists
 // One extremely useful operation is to apply some transformation to each element in a list and generate the list of results. For instance, the following procedure scales each number in a list by a given factor:
 
-func scaleList(items: [Double], factor: Double) -> [Double] {
+func scaleList(items: [Double], _ factor: Double) -> [Double] {
     if items.isEmpty {
         return []
     } else {
@@ -149,7 +149,7 @@ scaleList([1, 2, 3, 4, 5], 10)
 
 // We can abstract this general idea and capture it as a common pattern expressed as a higher-order procedure, just as in section 1.3. The higher-order procedure here is called map. Map takes as arguments a procedure of one argument and a list, and returns a list of the results produced by applying the procedure to each element in the list:
 
-func map<T, U>(proc:(T) -> U, items: [T]) -> [U] {
+func map<T, U>(proc:(T) -> U, _ items: [T]) -> [U] {
     if items.isEmpty {
         return []
     } else {
@@ -160,7 +160,7 @@ func map<T, U>(proc:(T) -> U, items: [T]) -> [U] {
 map(abs, [-10, 2.5, -11.6, 17])
 map({ x in x * x }, [1, 2, 3, 4])
 // Now we can give a new definition of scaleList in terms of map:
-func scaleList2(items: [Double], factor: Double) -> [Double] {
+func scaleList2(items: [Double], _ factor: Double) -> [Double] {
     return map({ x in x * factor }, items)
 }
 scaleList2([1, 2, 3, 4, 5], 10)
@@ -233,7 +233,7 @@ enum Tree<T> {
         case let .Leaf(value):
             return " \(value.unbox)"
         case let .Node(values):
-            let strings = map(values) { $0.unbox.stringRepresentation }
+            let strings = values.map { $0.unbox.stringRepresentation }
             return "\(strings)"
         }
     }
@@ -242,13 +242,13 @@ enum Tree<T> {
         return Tree.Leaf(Box(value))
     }
     static func node(leaves: Tree<T>...) -> Tree<T> {
-        let boxed = map(leaves) { Box($0) }
+        let boxed = leaves.map { Box($0) }
         return Tree.Node(boxed)
     }
     static func list(values: T...) -> Tree<T> {
-        let boxedValues = map(values) { Box($0) }
-        let leaves = map(boxedValues) { Tree.Leaf($0) }
-        let boxed = map(leaves) { Box($0) }
+        let boxedValues = values.map { Box($0) }
+        let leaves = boxedValues.map { Tree.Leaf($0) }
+        let boxed = leaves.map { Box($0) }
         return Tree.Node(boxed)
     }
     
@@ -262,7 +262,7 @@ a.stringRepresentation
 
 
 let b = Tree.node(Tree.leaf(1), Tree.node(Tree.leaf(2), Tree.list(3,4), Tree.leaf(5), Tree.list(6,7)))
-println("\(b.stringRepresentation)")
+print("\(b.stringRepresentation)")
 
 protocol Multipliable: Equatable {
     func *(lhs: Self, rhs: Self) -> Self
@@ -270,12 +270,12 @@ protocol Multipliable: Equatable {
 extension Int: Multipliable {}
 extension Double: Multipliable {}
 
-func scaleTree<T: Multipliable>(tree: Tree<T>, factor: T) -> Tree<T> {
+func scaleTree<T: Multipliable>(tree: Tree<T>, _ factor: T) -> Tree<T> {
     switch tree {
     case let .Leaf(value):
         return Tree.leaf(value.unbox * factor)
     case let .Node(values):
-        let newValues = map(values) { Box(scaleTree($0.unbox, factor)) }
+        let newValues = values.map { Box(scaleTree($0.unbox, factor)) }
         return Tree.Node(newValues)
     }
 }
@@ -307,7 +307,7 @@ func sumOddSquares(tree: Tree<Int>) -> Int {
     case .Leaf(let value):
         return isOdd(value.unbox) ? square(value.unbox) : 0
     case .Node(let values):
-        return reduce(values, 0) { $0 + sumOddSquares($1.unbox) }
+        return values.reduce(0) { $0 + sumOddSquares($1.unbox) }
     }
 }
 
@@ -365,11 +365,11 @@ evenFibs(fromFirstNFibs: 10)
 // Sequence Operations
 // The key to organising programs so as to more clearly reflect the signal-flow structure is to concentrate on the "signals" that flow from one stage in the process to the next. If we represent these signals as lists, then we can use list operations to implement the processing at each of the stages. For instance, we can implement the mapping stages of the signal-flow diagrams using the map procedure from section 2.2.1
 
-map([1,2,3,4,5], square)
+[1,2,3,4,5].map(square)
 
 //Filtering a sequence to select only those elements that satisfy a given predicate is accomplished by
 
-func filterDRP(predicate: (Int) -> Bool, sequence: [Int]) -> [Int] {
+func filterDRP(predicate: (Int) -> Bool, _ sequence: [Int]) -> [Int] {
     switch true {
     case sequence.isEmpty:
         return []
@@ -381,10 +381,10 @@ func filterDRP(predicate: (Int) -> Bool, sequence: [Int]) -> [Int] {
 }
 
 filterDRP(isOdd, [1,2,3,4,5])
-filter([1,2,3,4,5], isOdd)
+[1,2,3,4,5].filter(isOdd)
 
 // Accumulations can be implemented by
-func accumulate(op: (Int, Int) -> Int, initial: Int, sequence: [Int]) -> Int {
+func accumulate(op: (Int, Int) -> Int, _ initial: Int, _ sequence: [Int]) -> Int {
     if sequence.isEmpty {
         return initial
     } else {
@@ -396,12 +396,12 @@ accumulate(+, 0, [1,2,3,4,5])
 accumulate(*, 1, [1,2,3,4,5])
 // accumulate(cons, [], [1,2,3,4,5]) // Needs a generic version of accumulate.
 
-reduce([1,2,3,4,5], 0, +)
-reduce([1,2,3,4,5], 1, *)
+[1,2,3,4,5].reduce(0, combine: +)
+[1,2,3,4,5].reduce(1, combine: *)
 
 // All that remains to implement signal-flow diagrams is to enumerate the sequence of elements to be processed. For even-fibs, we need to generate the sequence of integers in a given range, which we can do as follows
 
-func enumerateInterval(low: Int, high:Int) -> [Int] {
+func enumerateInterval(low: Int, _ high:Int) -> [Int] {
     if low > high {
         return []
     } else  {
@@ -420,7 +420,7 @@ func enumerateTree(tree: Tree<Int>) -> [Int] {
     case .Leaf(let value):
         return [value.unbox]
     case .Node(let values):
-        return reduce(values, []) { $0 + enumerateTree($1.unbox) }
+        return values.reduce([]) { $0 + enumerateTree($1.unbox) }
     }
 }
 
@@ -430,19 +430,19 @@ enumerateTree(c)
 // Now we can reformulate sum-odd-squares and even-fibs as in the signal-flow diagrams. For sum-odd-squares, we enumerate the sequence of leaves of the tree, filter this to keep only the odd numbers in the sequence, square each element, and sum the results
 
 func sumOddSquares2(tree: Tree<Int>) -> Int {
-    return accumulate(+, 0, map(filterDRP(isOdd, enumerateTree(b)), square))
+    return accumulate(+, 0, filterDRP(isOdd, enumerateTree(b)).map(square))
 }
 sumOddSquares2(b)
 
 func sumOddSquares3(tree: Tree<Int>) -> Int {
-    return reduce(map(filter(enumerateTree(b), isOdd), square), 0, +)
+    return enumerateTree(b).filter(isOdd).map(square).reduce(0, combine: +)
 }
 sumOddSquares3(b)
 
 // For even-fibs, we enumerate the integers from 0 to n, generate the fibonacci number for each of these integers, filter the resulting sequence to keep only the even elements, and accumulate the results into a list
 
 func evenFibs2(n: Int) -> [Int] {
-    return reduce(filter(map(0...n, fib), isEven), []) { $0 + [$1] }
+    return Array(0...n).map(fib).filter(isEven).reduce([]) { $0 + [$1] }
 }
 evenFibs2(10)
 
@@ -450,13 +450,13 @@ evenFibs2(10)
 // Modular construction is a powerful strategy for controlling complexity in engineering design. In real signal-processing applications, for example, designers regularly build systems by cascading elements selected from standardized families of filters and transducers. Similarly, sequence operations provide a library of standard program elements that we can mix and match. For instance, we can reuse pieces from the sum-odd-squares and even-fibs procedures in a program that constructs a list of the squares of the first n + 1 Fibonaccy numbers:
 
 func listFibSquares(n: Int) -> [Int] {
-    return map(map(0...n, fib), square)
+    return Array(0...n).map(fib).map(square)
 }
 listFibSquares(10)
 
 // We can rearrange the pieces and use them in computing the product of the squares of the odd integers in a sequence:
 func productOfSquaresOfOddElements(sequence: [Int]) -> Int {
-    return reduce(map(filter(sequence, isOdd), square), 1, *)
+    return sequence.filter(isOdd).map(square).reduce(1, combine: *)
 }
 productOfSquaresOfOddElements(Array(1...5))
 
@@ -467,7 +467,8 @@ struct Employee {
 }
 
 func salaryOfHighestPaidProgrammer(records: [Employee]) -> Int {
-    return reduce(filter(records) { $0.job == "Programmer" }, 0) { max($0, $1.salary) }
+    let salariesOfHighestPaidProgrammers = records.filter{ $0.job == "Programmer" }
+    return salariesOfHighestPaidProgrammers.reduce(0) { max($0, $1.salary) }
 }
 
 let employees = [Employee(job: "Programmer", salary: 90000),Employee(job: "Programmer", salary: 70000), Employee(job: "Programmer", salary: 90010), Employee(job: "Gamer", salary: 900000)]
@@ -492,7 +493,7 @@ salaryOfHighestPaidProgrammer(employees)
 
 let n = 6
 let lists = map({ i in map({ j in return [i,j] }, enumerateInterval(1, i - 1)) }, enumerateInterval(1, n))
-println("\(lists)")
+print("\(lists)")
 
 //let flattened: [[Int]] = accumulate(append, [[1]], lists)
 
@@ -505,12 +506,12 @@ func flatMap(proc: (Int) -> Int, seq: [Int]) -> [Int] {
 
 // Now filter this sequence of pairs to find those whose sum is prime. The filter predicate is called for each element of the sequence; its argument is a pair and it must extract the integers from the pair. Thus, the predicate to apply to each element in the sequence is
 
-func dividesWithNoRemainder(a: Int, b: Int) -> Bool {
+func dividesWithNoRemainder(a: Int, _ b: Int) -> Bool {
     return  a % b == 0
 }
 dividesWithNoRemainder(10, 2)
 
-func findDivisor(n: Int, testDivisor: Int) -> Int {
+func findDivisor(n: Int, _ testDivisor: Int) -> Int {
     switch true {
     case square(testDivisor) > n:
         return n
@@ -542,12 +543,12 @@ func makePairSum(pair: [Int]) -> [Int] {
 // Combining all these steps yields the complete procdure
 
 func primeSumPairs(n: Int) -> [[Int]] {
-    let possibles = flatMap(enumerateInterval(1, n)) { i in
-        return map(enumerateInterval(1, i - 1)) { j in
+    let possibles = enumerateInterval(1, n).flatMap() { i in
+        return enumerateInterval(1, i - 1).map() { j in
             return [i,j]
         }
     }
-    return map(filter(possibles, isPrimeSum), makePairSum)
+    return possibles.filter(isPrimeSum).map(makePairSum)
 }
 
 primeSumPairs(6)
@@ -569,7 +570,7 @@ func primeSumPairs2(n: Int) -> [(Int,Int,Int)] {
     
     return possibles.filter(isPrimeSum).map(makePairSum)
 }
-println("\(primeSumPairs2(6))")
+print("\(primeSumPairs2(6))")
 
 // Maybe it would be better if I gave (Int,Int) a name like IntPair???
 // Or would it be best if the tuple components are named
@@ -580,7 +581,7 @@ let (left, right, sum) = makePairSum((2,3))
 // Nested mappings are also useful for sequences other than those that enumerate intervals. Suppose we wish to generate all the permutations of a set s; that is, all the ways of ordering the items in the set. 
 // Here is a plan for generating the permutations of S: For each item x in S, recursively generate the sequence of permutations of S - x, and adjoin x to the front of each one. This yields, for each x in S, the sequence of permutations of S that begin with x. Combining these sequences for all x gives all the permutations of S:
 
-func remove(item: Int, sequence: [Int]) -> [Int] {
+func remove(item: Int, _ sequence: [Int]) -> [Int] {
     return sequence.filter() { x in x != item }
 }
 
@@ -589,7 +590,7 @@ func permutations(s:[Int]) -> [[Int]] {
         return [[]]
     } else {
         return s.flatMap() { x in
-            map(permutations(remove(x,s))) { p in [x] + p }
+            permutations(remove(x,s)).map { p in [x] + p }
         }
     }
 }

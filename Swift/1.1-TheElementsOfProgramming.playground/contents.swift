@@ -1,8 +1,19 @@
-// Chapter 1 - Building Abstrations with Procedures
+//: # Chapter 1 - Building Abstrations with Procedures
+//:
+//: > The acts of the mind, wherein it exerts its power over simple ideas, are chiefly these three: 
+//: > 1. Combining several simple ideas into one compound one, and thus all complex ideas are made. 
+//: > 2. The second is bringing two ideas, whether simple or complex, together, and setting them by one another so as to take a view of them at once, without uniting them into one, by which it gets all its ideas of relations. 
+//: > 3. The third is separating them from all other ideas that accombany them in their real existence: this is called abstraction, and thus all its general ideas are made.
+//: >
+//: > John Locke, An Essay Concerning Human Understanding (1690)
+//:
+//: We are about to study the idea of a *computational process*. Computational processes are abstract beings that inhabit computers. As they evolve, processes manipulate other abstract things called *data*. The evolution of a process is directed by a pattern of rules called *program*. People create programs to direct processes. In effect, we conjure the spirits of the computer with our spells.
+//:
+//: 
 
 import Darwin
 
-// Exercise 1.1
+//: ## Exercise 1.1
 10
 5 + 3 + 4
 9 - 1
@@ -45,8 +56,9 @@ default:
 }
 
 
-// Exercise 1.2
-// let inOneGo = (5 + 4 + (2 - (3 - (6 + (4.0 / 5))))) / (3.0 * (6 - 2) * (2 - 7)) // Fails due to the calculation taking too long!!! That is pretty ordinary performance on Swift's part.
+//: ## Exercise 1.2
+//: 
+let inOneGo = (5 + 4 + (2 - (3 - (6 + (4.0 / 5))))) / (3.0 * (6 - 2) * (2 - 7))
 let numerator = (5 + 4 + (2 - (3 - (6 + (4.0 / 5)))))
 let denominator: Double = (3 * (6 - 2) * (2 - 7))
 let answer = numerator / denominator

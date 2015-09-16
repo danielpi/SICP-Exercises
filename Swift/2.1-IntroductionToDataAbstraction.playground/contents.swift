@@ -24,7 +24,7 @@ enum ConsPosition {
     case Left, Right
 }
 
-func cons<T>(a: T, b: T) -> (ConsPosition -> T) {
+func cons<T>(a: T, _ b: T) -> (ConsPosition -> T) {
     func innerCons(i: ConsPosition) -> T {
         if i == .Left {
             return a;
@@ -71,7 +71,7 @@ car(cdr(z))
 
 typealias Rational = (ConsPosition -> Int)
 
-func makeRat1(n: Int, d:Int) -> Rational {
+func makeRat1(n: Int, _ d:Int) -> Rational {
     return cons(n,d)
 }
 func numer(x: Rational) -> Int {
@@ -82,22 +82,22 @@ func denom(x: Rational) -> Int {
 }
 
 func printRat(x: Rational) {
-    println("\(numer(x))/\(denom(x))")
+    print("\(numer(x))/\(denom(x))")
 }
 
-func addRat1(x: Rational, y: Rational) -> Rational {
+func addRat1(x: Rational, _ y: Rational) -> Rational {
     return makeRat1((numer(x) * denom(y)) + (numer(y) * denom(x)), denom(x) * denom(y))
 }
-func subRat1(x: Rational, y: Rational) -> Rational {
+func subRat1(x: Rational, _ y: Rational) -> Rational {
     return makeRat1((numer(x) * denom(y)) - (numer(y) * denom(x)), denom(x) * denom(y))
 }
-func mulRat1(x: Rational, y: Rational) -> Rational {
+func mulRat1(x: Rational, _ y: Rational) -> Rational {
     return makeRat1(numer(x) * numer(y), denom(x) * denom(y))
 }
-func divRat1(x: Rational, y: Rational) -> Rational {
+func divRat1(x: Rational, _ y: Rational) -> Rational {
     return makeRat1(numer(x) * denom(y), denom(x) * numer(y))
 }
-func isEqualRat(x: Rational, y: Rational) -> Bool {
+func isEqualRat(x: Rational, _ y: Rational) -> Bool {
     return (numer(x) * denom(y)) == (numer(y) * denom(x))
 }
 
@@ -110,7 +110,7 @@ printRat(addRat1(oneThird, oneThird))
 
 // The final example shows that our rational-number implementation does not reduce numbers to lowest terms. We can remedy this by changing makeRat. 
 
-func gcd(a: Int, b: Int) -> Int {
+func gcd(a: Int, _ b: Int) -> Int {
     if b == 0 {
         return abs(a)
     } else {
@@ -118,12 +118,12 @@ func gcd(a: Int, b: Int) -> Int {
     }
 }
 
-func makeRat2(n: Int, d:Int) -> Rational {
+func makeRat2(n: Int, _ d:Int) -> Rational {
     let g = gcd(n, d)
     return cons(n/g, d/g)
 }
 
-func addRat2(x: Rational, y: Rational) -> Rational {
+func addRat2(x: Rational, _ y: Rational) -> Rational {
     return makeRat2((numer(x) * denom(y)) + (numer(y) * denom(x)), denom(x) * denom(y))
 }
 
@@ -294,11 +294,11 @@ extension Interval {
 
 // He has written the following two programs, each of which computes the parallel-resistors formula differently
 
-func parOne(a: Interval, b: Interval) -> Interval {
+func parOne(a: Interval, _ b: Interval) -> Interval {
     return (a * b) / (a + b)
 }
 
-func parTwo(a: Interval, b: Interval) -> Interval {
+func parTwo(a: Interval, _ b: Interval) -> Interval {
     let one = Interval(1, 1)
     return one / ((one / a) + (one / b))
 }
