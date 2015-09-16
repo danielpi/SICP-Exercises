@@ -183,7 +183,7 @@ public func rightSplit(painter: Painter, n: Int) -> Painter {
         return painter
     } else {
         let smaller = rightSplit(painter, n: n - 1)
-        return beside(painter, below(smaller, smaller))
+        return beside(painter, right: below(smaller, bottom: smaller))
     }
 }
 
@@ -193,7 +193,7 @@ public func upSplit(painter: Painter, n: Int) -> Painter {
         return painter
     } else {
         let smaller = upSplit(painter, n: n - 1)
-        return below(beside(smaller, smaller), painter)
+        return below(beside(smaller, right: smaller), bottom: painter)
     }
 }
 

@@ -20,15 +20,15 @@ func chooseBranch(bit: Int, branch: Tree) -> Tree {
 }
 
 extension Array {
-    var match: (head: Element, tail: [T])? {
+    var match: (head: Element, tail: [Element])? {
         return (count > 0) ? (self[0], Array(self[1..<count])) : nil
     }
 }
 
-func decode(bits: [Int], tree: Tree) -> [String] {
+public func decode(bits: [Int], tree: Tree) -> [String] {
     var decode1: ([Int], Tree) -> [String] = { _, _ in return [] }
     decode1 = { bits1, currentBranch in
-        if let (head, tail) = bits1.match {
+        if let (_, tail) = bits1.match {
             let nextBranch = chooseBranch(bits1[0], branch: currentBranch)
             switch nextBranch {
             case let .Leaf(symbol: s, weight: _):
@@ -40,4 +40,5 @@ func decode(bits: [Int], tree: Tree) -> [String] {
             return []
         }
     }
-   
+    return decode1(bits, tree)
+}

@@ -47,11 +47,11 @@ public func makeCodeTree(left: Tree, right: Tree) -> Tree {
     switch (left, right) {
     case let (.Leaf(symbol:s1, weight:w1), .Leaf(symbol:s2, weight:w2)):
         return Tree.Branch(left: Box(left), right: Box(right), symbols: [s1] + [s2], weight: w1 + w2)
-    case let (.Leaf(symbol:s1, weight:w1), .Branch(left: l2, right: r2, symbols:s2, weight:w2)):
+    case let (.Leaf(symbol:s1, weight:w1), .Branch(left: _, right: _, symbols:s2, weight:w2)):
         return Tree.Branch(left: Box(left), right: Box(right), symbols: [s1] + s2, weight: w1 + w2)
-    case let (.Branch(left: l1, right: r1, symbols:s1, weight:w1), .Leaf(symbol:s2, weight:w2)):
+    case let (.Branch(left: _, right: _, symbols:s1, weight:w1), .Leaf(symbol:s2, weight:w2)):
         return Tree.Branch(left: Box(left), right: Box(right), symbols: s1 + [s2], weight: w1 + w2)
-    case let (.Branch(left: l1, right: r1, symbols:s1, weight:w1), .Branch(left: l2, right: r2, symbols:s2, weight:w2)):
+    case let (.Branch(left: _, right: _, symbols:s1, weight:w1), .Branch(left: _, right: _, symbols:s2, weight:w2)):
         return Tree.Branch(left: Box(left), right: Box(right), symbols: s1 + s2, weight: w1 + w2)
         
     }
@@ -105,7 +105,7 @@ func chooseBranch(bit: Int, branch: Tree) -> Tree {
 }
 
 extension Array {
-    var match: (head: Element, tail: [T])? {
+    var match: (head: Element, tail: [Element])? {
         return (count > 0) ? (self[0], Array(self[1..<count])) : nil
     }
 }
@@ -113,7 +113,7 @@ extension Array {
 public func decode(bits: [Int], tree: Tree) -> [String] {
     var decode1: ([Int], Tree) -> [String] = { _, _ in return [] }
     decode1 = { bits1, currentBranch in
-        if let (head, tail) = bits1.match {
+        if let (_, tail) = bits1.match {
             let nextBranch = chooseBranch(bits1[0], branch: currentBranch)
             switch nextBranch {
             case let .Leaf(symbol: s, weight: _):
@@ -130,7 +130,7 @@ public func decode(bits: [Int], tree: Tree) -> [String] {
 
 public func encodeSymbol(symbol: String, tree: Tree) -> [Int] {
     switch tree {
-    case let .Leaf(symbol: symbol, weight: w):
+    case .Leaf(symbol: _, weight: _):
         return []
     case let .Branch(left: left, right: right, symbols: syms, weight: _):
         if syms.contains(symbol) {
@@ -147,7 +147,7 @@ public func encodeSymbol(symbol: String, tree: Tree) -> [Int] {
 
 public func encode(message:[String], tree:Tree) -> [Int] {
     if let (head, tail) = message.match {
-        return encodeSymbol(head, tree) + encode(tail, tree)
+        return encodeSymbol(head, tree: tree) + encode(tail, tree:tree)
     } else {
         return []
     }
@@ -159,7 +159,7 @@ public func adjoinSet(x: Tree, set: [Tree]) -> [Tree] {
         if weight(x) < weight(head) {
             return [x] + set
         } else {
-            return [head] + adjoinSet(x, tail)
+            return [head] + adjoinSet(x, set: tail)
         }
     } else {
         return [x]

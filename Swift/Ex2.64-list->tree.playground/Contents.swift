@@ -14,14 +14,14 @@ func partialTree(elts: [Int], n: Int) -> TreeSetList {
         let (leftTree, nonLeftElts) = partialTree(elts, n: leftSize)
         let rightSize = n - (leftSize + 1)
         let thisEntry = nonLeftElts[0]
-        let (rightTree, remainingElts) = partialTree(Array(nonLeftElts[1..<nonLeftElts.count]), rightSize)
+        let (rightTree, remainingElts) = partialTree(Array(nonLeftElts[1..<nonLeftElts.count]), n: rightSize)
         
-        return (makeTree(thisEntry, leftTree, rightTree), remainingElts)
+        return (makeTree(thisEntry, left: leftTree, right: rightTree), remainingElts)
     }
 }
 
 func listToTree(elements: [Int]) -> TreeSet<Int> {
-    let (tree, list) = partialTree(elements, n: elements.count)
+    let (tree, _) = partialTree(elements, n: elements.count)
     return tree
 }
 

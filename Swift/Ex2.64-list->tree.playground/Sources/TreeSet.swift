@@ -23,7 +23,7 @@ public enum TreeSet<T>: CustomStringConvertible {
 
 public func entry<T>(tree: TreeSet<T>) -> T {
     switch tree {
-    case let .Tree(entry, left, right):
+    case let .Tree(entry, _, _):
         return entry.unbox
     default:
         fatalError("Tried to read an entry from an empty tree")

@@ -54,4 +54,4 @@ func cc<T: MathematicsProtocol>(amount: T, coinValues: List<T>) -> T {
 }
 
 //cc(100, usCoins)
-cc(100, coinVa
+//cc(100, coinVa

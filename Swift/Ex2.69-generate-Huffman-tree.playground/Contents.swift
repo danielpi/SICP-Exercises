@@ -6,7 +6,7 @@ import Cocoa
 //: makeLeafSet is the procedure given in section 2.3.4 that transforms the list of pairs into an ordered set of leaves. successiveMerge is the procedure you must write, using makeCodeTree to successively merge the smallest-weight elements of the set until there is only one element left, which is the desired Huffman tree. (This procedure is slightly tricky, but not really complicated. If you find yourself designing a complex procedure, then you are almost certainly doing something wrong. You can take significant advantage of the fact that we are using an ordered set representation.)
 
 extension Array {
-    var match: (head: Element, tail: [T])? {
+    var match: (head: Element, tail: [Element])? {
         return (count > 0) ? (self[0], Array(self[1..<count])) : nil
     }
 }
@@ -39,4 +39,4 @@ let samplePairs: [SymFreqPair] = [("A",4),("B",2),("C",1),("D",1)]
 let sampleLeafSet = makeLeafSet(samplePairs)
 print("\(sampleLeafSet)")
 
-let 
+

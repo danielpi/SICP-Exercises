@@ -31,7 +31,7 @@ print("\(encodedLyrics) requires \(encodedLyrics.count) bits of information")
 
 print("Using a fixed-length code would require \(lyrics.count * 3) bits of information to encode the song")
 
-let decoded = decode(encodedLyrics, lyricTree)
+let decoded = decode(encodedLyrics, tree: lyricTree)
 
 print(decoded)
 

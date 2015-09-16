@@ -29,11 +29,11 @@ func cornerSplit(painter: Painter, n: Int) -> Painter {
     } else {
         let up = upSplit(painter, n: n - 1)
         let right = rightSplit(painter, n: n - 1)
-        let topLeft = beside(up, wave)
-        let bottomRight = below(right, wave)
+        let topLeft = beside(up, right: wave)
+        let bottomRight = below(right, bottom: wave)
         let corner = cornerSplit(painter, n: n - 1)
         
-        return beside(below(topLeft, painter), below(corner, bottomRight))
+        return beside(below(topLeft, bottom: painter), right: below(corner, bottom: bottomRight))
     }
 }
 draw(cornerSplit(wave, n: 3))
@@ -45,10 +45,10 @@ func squareOfFour(tl: Transformer, tr: Transformer, bl: Transformer, br: Transfo
     return { painter in
         let top = beside(tl(painter), right: tr(painter))
         let bottom = beside(bl(painter), right: br(painter))
-        return below(bottom, top)
+        return below(bottom, bottom: top)
     }
 }
 
-func squareLimit(painter: Painter, n: Int) -> Painter {
-    let combine4 = squareOfFour(rotate180, tr: flipVert, bl: flipHoriz, br: flipHoriz)
-    return combine4(cornerSplit(painter, n
+//func squareLimit(painter: Painter, n: Int) -> Painter {
+//    let combine4 = squareOfFour(rotate180, tr: flipVert, bl: flipHoriz, br: flipHoriz)
+//    return combine4(cornerSplit(painter, n

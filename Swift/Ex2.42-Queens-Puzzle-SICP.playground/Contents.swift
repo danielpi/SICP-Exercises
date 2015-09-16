@@ -26,7 +26,7 @@ public func queens(boardSize: Int) -> [[Queen]] {
                 })
             })
             
-            return a.filter() { positions in isSafe(k, positions) } // 15728
+            return a.filter() { positions in isSafe(k, board: positions) } // 15728
             //return a
         }
     }
@@ -34,4 +34,4 @@ public func queens(boardSize: Int) -> [[Queen]] {
 }
 
 let solutions = queens(8)
-solutions.
+//solutions.
