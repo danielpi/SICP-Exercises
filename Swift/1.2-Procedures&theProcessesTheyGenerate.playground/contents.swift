@@ -42,7 +42,7 @@ factorialRecursive(6)
 6
 */
 
-func factIter(product: Int, counter: Int, maxCount: Int) -> Int {
+func factIter(product: Int, _ counter: Int, _ maxCount: Int) -> Int {
     if (counter > maxCount) {
         return product
     } else {
@@ -81,7 +81,7 @@ func dec(value: Int) -> Int {
     return value - 1
 }
 
-func addition1(a: Int, b: Int) -> Int {
+func addition1(a: Int, _ b: Int) -> Int {
     if (a == 0) {
         return b
     } else {
@@ -103,7 +103,7 @@ inc(8)
 */
 
 
-func addition2(a: Int, b: Int) -> Int {
+func addition2(a: Int, _ b: Int) -> Int {
     if (a == 0) {
         return b
     } else  {
@@ -123,8 +123,8 @@ addition2(0, 9)
 
 
 // Exercise 1.10 - The following procedure computes a mathematical function called Ackermann's function.
-func A(x:Int, y:Int) -> Int {
-    println("x:\(x) y:\(y)")
+func A(x:Int, _ y:Int) -> Int {
+    print("x:\(x) y:\(y)")
     switch true {
     case y == 0:
         return 0
@@ -334,7 +334,7 @@ func fib1(n: Int) -> Int {
 // - the number of ways to change amount a - d using all n kinds of coins, where d is the denomination of the first kind of coin.
 
 func countChange(amount: Int) -> Int {
-    return cc(amount, 5)
+    return cc(amount, kindsOfCoins: 5)
 }
 func cc(amount: Int, kindsOfCoins: Int) -> Int {
     switch true {
@@ -343,7 +343,7 @@ func cc(amount: Int, kindsOfCoins: Int) -> Int {
     case (amount < 0) || (kindsOfCoins == 0):
         return 0
     default:
-        return cc(amount, kindsOfCoins - 1) + cc(amount - firstDenomination(kindsOfCoins), kindsOfCoins)
+        return cc(amount, kindsOfCoins: kindsOfCoins - 1) + cc(amount - firstDenomination(kindsOfCoins), kindsOfCoins: kindsOfCoins)
     }
 }
 func firstDenomination(kindsOfCoins: Int) -> Int {
@@ -384,7 +384,7 @@ function11(8)
 
 // Write a procedure that computes f by means of an iterative process
 
-func function11Iter(three: Int, two: Int, one: Int, count: Int, total: Int) -> Int {
+func function11Iter(three: Int, _ two: Int, _ one: Int, _ count: Int, _ total: Int) -> Int {
     if (count > total) {
         return one
     } else {
@@ -396,7 +396,7 @@ func function11v2(n: Int) -> Int {
     if (n < 3) {
         return n
     } else {
-        return function11Iter( 0, 1, 2, 3, n)
+        return function11Iter(0, 1, 2, 3, n)
     }
 }
 
@@ -418,7 +418,7 @@ function11v2(10)
 
 // In other words, compute an entry on the Pascal triangle given the row and column. Rows start from 1, counting from above; columns start from 1 too, counting from left to right.
 
-func pascalRecursive(row: Int, col: Int) -> Int {
+func pascalRecursive(row: Int, _ col: Int) -> Int {
     switch true {
     case col < 1 || row < 1 || col > row:
         return 0
@@ -520,7 +520,7 @@ sine(12.15)
 */
 
 // Which translates into the procedure
-func expt1(b: Int, n:Int) -> Int {
+func expt1(b: Int, _ n:Int) -> Int {
     if (n == 0) {
         return 1
     } else {
@@ -531,15 +531,14 @@ expt1(2, 10)
 
 // This is a linear recursive process, which requires O(n) steps and space. Just as with factorial we can formulate an equivilent linear iteration
 
-func exptIter(b:Int, count:Int, product: Int) -> Int {
+func exptIter(b:Int, _ count:Int, _ product: Int) -> Int {
     if (count == 0) {
         return product
     } else {
-        
         return exptIter(b, count - 1, b * product)
     }
 }
-func expt2(b: Int, n:Int) -> Int {
+func expt2(b: Int, _ n:Int) -> Int {
     return exptIter(b, n, 1)
 }
 expt2(2, 10)
@@ -562,7 +561,7 @@ expt2(2, 10)
     b^n = b*b^(n-1)     if n is odd
 */
 
-func fastExpt(b: Int, n: Int) -> Int {
+func fastExpt(b: Int, _ n: Int) -> Int {
     switch true {
     case n == 0:
         return 1
@@ -602,8 +601,8 @@ fastExpt(2, 10)
 
 // In general, the technique of defining an invariant quantity that remains unchanged from state to state is a powerful way to thing about the design of iterative algorithms.
 
-func fastExptIter(a: Int, b: Int, n: Int) -> Int {
-    println("\(a), \(b), \(n), \(a * fastExpt(b, n))")
+func fastExptIter(a: Int, _ b: Int, _ n: Int) -> Int {
+    print("\(a), \(b), \(n), \(a * fastExpt(b, n))")
     switch true {
     case n == 0:
         return a
@@ -613,7 +612,7 @@ func fastExptIter(a: Int, b: Int, n: Int) -> Int {
         return fastExptIter(a * b, b, n - 1)
     }
 }
-func fastExpt2(b: Int, n: Int) -> Int {
+func fastExpt2(b: Int, _ n: Int) -> Int {
     return fastExptIter(1, b, n)
 }
 fastExpt2(2, 20)
@@ -629,7 +628,7 @@ func halve(x: Int) -> Int {
     return x / 2
 }
 
-func fastMutliplyRecursive(a: Int, b: Int) -> Int {
+func fastMutliplyRecursive(a: Int, _ b: Int) -> Int {
     switch true {
     case b == 0:
         return 0
@@ -645,7 +644,7 @@ fastMutliplyRecursive(2, 4)
 // Exercise 1.18
 // Devise a procedure that generates an iterative process for multiplying two integers in terms of adding, doubling and halving that uses a logarithmic number of steps
 
-func fastMultiplyIter(a: Int, b: Int, c: Int) -> Int {
+func fastMultiplyIter(a: Int, _ b: Int, _ c: Int) -> Int {
     switch true {
     case b == 1:
         return a + c
@@ -655,7 +654,7 @@ func fastMultiplyIter(a: Int, b: Int, c: Int) -> Int {
         return fastMultiplyIter(a, b - 1, c + a)
     }
 }
-func fastMultiply(a: Int, b: Int) -> Int {
+func fastMultiply(a: Int, _ b: Int) -> Int {
     return fastMultiplyIter(a, b, 0)
 }
 //fastMultiply(2, 4)
@@ -701,7 +700,7 @@ fastMultiply(3, 1000000)
 */
 
 func fib3(n: Int) -> Int {
-    return fibIter3(1, 0, 0, 1, n)
+    return fibIter3(1, b: 0, p: 0, q: 1, count: n)
 }
 
 func fibIter3(a: Int, b: Int, p: Int, q: Int, count: Int) -> Int {
@@ -709,9 +708,9 @@ func fibIter3(a: Int, b: Int, p: Int, q: Int, count: Int) -> Int {
     case count == 0:
         return b
     case isEven(count):
-        return fibIter3(a, b, square(p) + square(q), (2 * p * q) + square(q), count / 2)
+        return fibIter3(a, b: b, p: square(p) + square(q), q: (2 * p * q) + square(q), count: count / 2)
     default:
-        return fibIter3((b * q) + (a * q) + (q * p), (b * p) + (a * q), p, q, count - 1)
+        return fibIter3((b * q) + (a * q) + (q * p), b: (b * p) + (a * q), p:p, q:q, count:count - 1)
     }
 }
 fib3(30)
@@ -733,7 +732,7 @@ fib3(30)
                = GCD(2, 0)
                = 2
 */
-func gcd(a: Int, b: Int) -> Int {
+func gcd(a: Int, _ b: Int) -> Int {
     if b == 0 {
         return a
     } else {
@@ -788,12 +787,12 @@ gcd(2, 4 % 2)
 // Searching for divisors
 // First up the straight forward method, testing n for divisibility by successive integers startng with 2.
 
-func dividesWithNoRemainder(a: Int, b: Int) -> Bool {
+func dividesWithNoRemainder(a: Int, _ b: Int) -> Bool {
     return  a % b == 0
 }
 dividesWithNoRemainder(10, 2)
 
-func findDivisor(n: Int, testDivisor: Int) -> Int {
+func findDivisor(n: Int, _ testDivisor: Int) -> Int {
     switch true {
     case square(testDivisor) > n:
         return n
@@ -826,19 +825,19 @@ isPrime(31123)
    - The more values you try the more confident you are that n is prime
 */
 
-func expMod(base: Int, exp: Int, m: Int) -> Int {
+func expMod(base base: Int, exp: Int, m: Int) -> Int {
     switch true {
     case exp == 0:
         return 1
     case isEven(exp):
-        return square(expMod(base, exp / 2, m)) % m
+        return square(expMod(base: base, exp: exp / 2, m: m)) % m
     default:
-        return (base * expMod(base, exp - 1, m)) % m
+        return (base * expMod(base: base, exp: exp - 1, m: m)) % m
     }
 }
 func fermatTest(n: Int) -> Bool {
     func tryIt(a: Int) -> Bool {
-        return expMod(a, n, n) == a
+        return expMod(base:a, exp:n, m:n) == a
     }
     let randomA:Int = Int(arc4random_uniform(UInt32(n - 1)) + 1)
     return tryIt(randomA)
@@ -850,13 +849,13 @@ func isPrimeFast(n: Int, times: Int) -> Bool {
     case times == 0:
         return true
     case fermatTest(n):
-        return isPrimeFast(n, times - 1)
+        return isPrimeFast(n, times: times - 1)
     default:
         return false
     }
 }
 
-isPrimeFast(31131, 10)
+isPrimeFast(31131, times: 10)
 
 
 // Exercise 1.21

@@ -31,7 +31,7 @@ func cube<T:MultipliableType>(x: T) -> T {
 // 1.3.1 Procedures as Arguments
 // Consider the following three procedures
 
-func sumIntegers(a: Int, b: Int) -> Int {
+func sumIntegers(a: Int, _ b: Int) -> Int {
     if a > b {
         return 0
     } else {
@@ -40,7 +40,7 @@ func sumIntegers(a: Int, b: Int) -> Int {
 }
 sumIntegers(1, 10)
 
-func sumCubes(a: Int, b: Int) -> Int {
+func sumCubes(a: Int, _ b: Int) -> Int {
     if a > b {
         return 0
     } else {
@@ -49,7 +49,7 @@ func sumCubes(a: Int, b: Int) -> Int {
 }
 sumCubes(1, 10)
 
-func piSum(a: Int, b: Int) -> Float {
+func piSum(a: Int, _ b: Int) -> Float {
     if a > b {
         return 0
     } else {
@@ -71,11 +71,11 @@ func <name>(a: Int, b: Int) -> ??? {
 
 // The pattern described above is very similar to the mathematical concept of summation. This allows mathematicians to deal with the concept of summation rather than simply a particular instance of summation.
 
-func sum<T:Comparable,U:AddableType>(term:(T) -> U, a:T, next:(T) -> T, b:T) -> U {
+func sum<T:Comparable,U:AddableType>(term term:(T) -> U, a:T, next:(T) -> T, b:T) -> U {
     if a > b {
         return 0
     } else {
-        return term(a) + sum(term, next(a), next, b)
+        return term(a) + sum(term: term, a: next(a), next: next, b: b)
     }
 }
 
@@ -87,40 +87,40 @@ func inc(n: Int) -> Int {
 func cubeDouble(x: Int) -> Double {
     return Double(x * x * x)
 }
-func sumCubes2(a: Int, b: Int) -> Double {
-    return sum(cubeDouble, a, inc, b)
+func sumCubes2(a: Int, _ b: Int) -> Double {
+    return sum(term: cubeDouble, a: a, next: inc, b: b)
 }
 sumCubes2(1, 10)
 
 func identity<T>(x:T) -> T {
     return x
 }
-func sumIntegers2(a: Int, b: Int) -> Int {
-    return sum(identity, a, inc, b)
+func sumIntegers2(a: Int, _ b: Int) -> Int {
+    return sum(term: identity, a: a, next: inc, b: b)
 }
 sumIntegers2(1, 10)
 
-func piSum2(a:Int, b:Int) -> Double {
+func piSum2(a:Int, _ b:Int) -> Double {
     func piTerm(x: Int) -> Double {
         return 1.0 / (Double(x) * (Double(x) + 2.0))
     }
     func piNext(x: Int) -> Int {
         return x + 4
     }
-    return sum(piTerm, a, piNext, b)
+    return sum(term: piTerm, a: a, next: piNext, b: b)
 }
 8 * piSum2(1, 1000)
 
 
 // Once we have sum() we can use it as a building block if formulating further concepts. For instance the definite integral of a function f between limits a and b can be approximated numerically. We can express this directly as a procedure using the following
 
-func integral(f:(Double) -> Double, a:Double, b:Double, dx:Double) -> Double {
+func integral(f f:(Double) -> Double, a:Double, b:Double, dx:Double) -> Double {
     func addDx(x:Double) -> Double {
         return x + dx
     }
-    return sum(f, a + (2 * dx), addDx, b) * dx
+    return sum(term: f, a: a + (2 * dx), next: addDx, b: b) * dx
 }
-integral(cube, 0, 1, 0.01)
+integral(f: cube, a: 0, b: 1, dx: 0.01)
 //integral(cube, 0, 1, 0.001)
 //integral(identity, 0, 1, 0.01)
 //integral(identity, 0, 1, 0.001)
@@ -130,22 +130,20 @@ integral(cube, 0, 1, 0.01)
 // 1.3.2 Constructing Procedures Using Lambda (Closures)
 // In piSum it is a bit awkward having to define piTerm and piNext just so that they can be used as arguments to our higher-order procedure. We can do this with closures
 
-func piSum3(a:Int, b:Int) -> Double {
-    return sum({ (x: Int) -> Double in
-        return 1.0 / (Double(x) * (Double(x) + 2.0)) },
-        a,
-        { (x: Int) -> Int in
-            return x + 4 },
-        b)
+func piSum3(a:Int, _ b:Int) -> Double {
+    return sum(term: { (x: Int) -> Double in return 1.0 / (Double(x) * (Double(x) + 2.0)) },
+                  a: a,
+               next: { (x: Int) -> Int in return x + 4 },
+                  b: b)
 }
 8 * piSum3(1, 1000)
 
 // Again using closures we can write integral without having to define auxilary procedure addDx
 
-func integral2(f:(Double) -> Double, a:Double, b:Double, dx:Double) -> Double {
-    return sum(f, a + (2 * dx), { (x:Double) -> Double in return x + dx }, b) * dx
+func integral2(f f:(Double) -> Double, a:Double, b:Double, dx:Double) -> Double {
+    return sum(term: f, a: a + (2 * dx), next: { (x:Double) -> Double in return x + dx }, b: b) * dx
 }
-integral2(cube, 0, 1, 0.01)
+integral2(f: cube, a: 0, b: 1, dx: 0.01)
 
 // Closures take the general form
 // { (<args>) -> <return> in <body> }

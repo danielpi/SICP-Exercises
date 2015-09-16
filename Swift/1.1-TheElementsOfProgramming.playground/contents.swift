@@ -56,11 +56,11 @@ let answer = numerator / denominator
 func square(x: Int) -> Int {
     return x * x
 }
-func sumOfSquares(x: Int, y: Int) -> Int {
+func sumOfSquares(x: Int, _ y: Int) -> Int {
     return square(x) + square(y)
 }
 
-func sumOfSquaresOfTwoLargest(a: Int, b: Int, c: Int) -> Int {
+func sumOfSquaresOfTwoLargest(a: Int, _ b: Int, _ c: Int) -> Int {
     switch true {
     case min(a, b, c) == a:
         return sumOfSquares(b, c)
@@ -69,7 +69,7 @@ func sumOfSquaresOfTwoLargest(a: Int, b: Int, c: Int) -> Int {
     case min(a, b, c) == c:
         return sumOfSquares(a, b)
     default:
-        println("Something went badly wrong with the sumOfSquaresOfTwoLargest() function")
+        print("Something went badly wrong with the sumOfSquaresOfTwoLargest() function")
         return 0
     }
 }
@@ -85,8 +85,8 @@ func aPlusABSb(a: Int, b: Int) -> Int {
         return a - b
     }
 }
-aPlusABSb(4, 5)
-aPlusABSb(4, -5)
+aPlusABSb(4, b: 5)
+aPlusABSb(4, b: -5)
 // Swift doesn't really have the same ability as lisp in this regard. In the function above two entire blocks of code which use different operators can be selected between but the operator of a particular procedure is not being set at runtime.
 
 
@@ -116,7 +116,7 @@ func square(x: Double) -> Double {
 // How does one compute square roots?
 // Guess a value, y, for the value of the square root of a number x. Find the quotient of x divided by the guess. Average the quotient and the guess. Continue till you have an accurate enough answer.
 
-func sqrtIter(guess: Double, x: Double) -> Double {
+func sqrtIter(guess: Double, _ x: Double) -> Double {
     if (goodEnough(guess, x)) {
         return guess
     } else {
@@ -124,13 +124,13 @@ func sqrtIter(guess: Double, x: Double) -> Double {
     }
 }
 
-func improve(guess: Double, x: Double) -> Double {
+func improve(guess: Double, _ x: Double) -> Double {
     return average(guess, (x / guess))
 }
-func average(x: Double, y: Double) -> Double {
+func average(x: Double, _ y: Double) -> Double {
     return ((x + y) / 2)
 }
-func goodEnough(guess: Double, x: Double) -> Bool {
+func goodEnough(guess: Double, _ x: Double) -> Bool {
     return abs((guess * guess) - x) < 0.001
 }
 func DRPsqrt(x: Double) -> Double {
@@ -145,20 +145,20 @@ square(sqrt(1000))
 
 // Exercise 1.6 - Alyssa P. Hacker doesn't see why if needs to be provided as a special form. " Why can't I just define it as an ordinary procedure in terms of cond?" she asks. Alyssa's friend Eva Lu Ator claims this can indeed be done, and she defines a new version of if:
 
-func newIf(predicate: Bool, thenClause: Double, elseClause: Double) -> Double {
+func newIf(predicate: Bool, Then: Double, Else: Double) -> Double {
     switch true {
     case predicate:
-        return thenClause
+        return Then
     default:
-        return elseClause
+        return Else
     }
 }
 
-newIf((2 == 3), 0, 5)
-newIf((1 == 1), 0, 5)
+newIf((2 == 3), Then: 0, Else: 5)
+newIf((1 == 1), Then: 0, Else: 5)
 
-func newSqrtIter(guess: Double, x: Double) -> Double {
-    return newIf(goodEnough(guess, x), guess, newSqrtIter(improve(guess, x), x))
+func newSqrtIter(guess: Double, _ x: Double) -> Double {
+    return newIf(goodEnough(guess, x), Then: guess, Else: newSqrtIter(improve(guess, x), x))
 }
 //newSqrtIter(1.0, 9)
 // The above causes an nfinit loop in the Swift interpreter.
@@ -175,7 +175,7 @@ DRPsqrt(1000000000000)
 //sqrt(10000000000000) // This line crashes XCode
 
 
-func sqrtIter2(prevGuess: Double, guess: Double, x: Double) -> Double {
+func sqrtIter2(prevGuess: Double, _ guess: Double, _ x: Double) -> Double {
     if (goodEnough2(prevGuess, guess)) {
         return guess
     } else {
@@ -183,7 +183,7 @@ func sqrtIter2(prevGuess: Double, guess: Double, x: Double) -> Double {
     }
 }
 
-func goodEnough2(prevGuess: Double, guess: Double) -> Bool {
+func goodEnough2(prevGuess: Double, _ guess: Double) -> Bool {
     return (abs(prevGuess - guess) / guess) < 0.001
 }
 func sqrt2(x: Double) -> Double {
@@ -200,7 +200,7 @@ sqrt2(10000000000000)
 //      3
 // Use this formula to implement a cube-root procedure analogous to the square-root procedure.
 
-func cbrtIter(guess: Double, x: Double) -> Double {
+func cbrtIter(guess: Double, _ x: Double) -> Double {
     if (goodEnoughCubeRoot(guess, x)) {
         return guess
     } else {
@@ -210,11 +210,11 @@ func cbrtIter(guess: Double, x: Double) -> Double {
 func cube(x: Double) -> Double {
     return x * x * x
 }
-func improveCubeRoot(guess: Double, x: Double) -> Double {
+func improveCubeRoot(guess: Double, _ x: Double) -> Double {
 
     return ((x / (guess * guess)) + (2 * guess)) / 3.0
 }
-func goodEnoughCubeRoot(guess: Double, x: Double) -> Bool {
+func goodEnoughCubeRoot(guess: Double, _ x: Double) -> Bool {
     return abs((guess * guess * guess) - x) < 0.0001
 }
 func DRPcbrt(x: Double) -> Double {
@@ -240,13 +240,13 @@ square3(4)
 // Internal definitions and block structure
 
 func DRPsqrt2(x: Double) -> Double {
-    func goodEnough(guess: Double, x: Double) -> Bool {
+    func goodEnough(guess: Double, _ x: Double) -> Bool {
         return abs((guess * guess) - x) < 0.001
     }
-    func average(x: Double, y: Double) -> Double {
+    func average(x: Double, _ y: Double) -> Double {
         return ((x + y) / 2)
     }
-    func improve(guess: Double, x: Double) -> Double {
+    func improve(guess: Double, _ x: Double) -> Double {
         return average(guess, (x / guess))
     }
     
