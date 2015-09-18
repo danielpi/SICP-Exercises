@@ -109,11 +109,11 @@ func makeCodeTree(left: Tree, right: Tree) -> Tree {
     switch (left, right) {
     case let (.Leaf(symbol:s1, weight:w1), .Leaf(symbol:s2, weight:w2)):
         return Tree.Branch(left: Box(left), right: Box(right), symbols: [s1] + [s2], weight: w1 + w2)
-    case let (.Leaf(symbol:s1, weight:w1), .Branch(left: l2, right: r2, symbols:s2, weight:w2)):
+    case let (.Leaf(symbol:s1, weight:w1), .Branch(left: _, right: _, symbols:s2, weight:w2)):
         return Tree.Branch(left: Box(left), right: Box(right), symbols: [s1] + s2, weight: w1 + w2)
-    case let (.Branch(left: l1, right: r1, symbols:s1, weight:w1), .Leaf(symbol:s2, weight:w2)):
+    case let (.Branch(left: _, right: _, symbols:s1, weight:w1), .Leaf(symbol:s2, weight:w2)):
         return Tree.Branch(left: Box(left), right: Box(right), symbols: s1 + [s2], weight: w1 + w2)
-    case let (.Branch(left: l1, right: r1, symbols:s1, weight:w1), .Branch(left: l2, right: r2, symbols:s2, weight:w2)):
+    case let (.Branch(left: _, right: _, symbols:s1, weight:w1), .Branch(left: _, right: _, symbols:s2, weight:w2)):
         return Tree.Branch(left: Box(left), right: Box(right), symbols: s1 + s2, weight: w1 + w2)
         
     }
@@ -162,7 +162,7 @@ func weight(tree: Tree) -> Int {
 //: ### The decoding procedure
 //: The following proceudre implements the decoding algorithm. It takes as arguments a list of zeros and ones, together with a Huffman tree.
 
-func chooseBranch(bit: Int, branch: Tree) -> Tree {
+func chooseBranch(bit: Int, _ branch: Tree) -> Tree {
     switch bit {
     case 0:
         return leftBranch(branch)
@@ -174,7 +174,7 @@ func chooseBranch(bit: Int, branch: Tree) -> Tree {
 }
 
 extension Array {
-    var match: (head: T, tail: [T])? {
+    var match: (head: Element, tail: [Element])? {
         return (count > 0) ? (self[0], Array(self[1..<count])) : nil
     }
 }
@@ -182,7 +182,7 @@ extension Array {
 func decode(bits: [Int], tree: Tree) -> [String] {
     var decode1: ([Int], Tree) -> [String] = { _, _ in return [] }
     decode1 = { bits1, currentBranch in
-        if let (head, tail) = bits1.match {
+        if let (_, tail) = bits1.match {
             let nextBranch = chooseBranch(bits1[0], currentBranch)
             switch nextBranch {
             case let .Leaf(symbol: s, weight: _):
@@ -204,7 +204,7 @@ func decode(bits: [Int], tree: Tree) -> [String] {
 //:
 //: We will represent a set of leaves and trees as a list of elements, arranged in increasing order of weight. The following adjoinSet procedure for constructing sets is similar to the one described in Exercise 2.61; however, items are compared by their weights, and the element being added to the set is never already in it.
 
-func adjoinSet(x: Tree, set: [Tree]) -> [Tree] {
+func adjoinSet(x: Tree, _ set: [Tree]) -> [Tree] {
     if let (head, tail) = set.match {
         if weight(x) < weight(head) {
             return [x] + set
@@ -222,12 +222,11 @@ typealias SymFreqPair = (String, Int)
 
 func makeLeafSet(pairs: [SymFreqPair]) -> [Tree] {
     if let (head,tail) = pairs.match {
-        return adjoinSet(makeLeaf(head.0, head.1), makeLeafSet(tail))
+        return adjoinSet(makeLeaf(head.0, weight: head.1), makeLeafSet(tail))
     } else {
         return []
     }
 }
-
 
 
 

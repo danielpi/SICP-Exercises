@@ -10,7 +10,7 @@ func isEven(n: Int) -> Bool {
 func square(x: Int) -> Int {
     return x * x
 }
-func dividesWithNoRemainder(a: Int, b: Int) -> Bool {
+func dividesWithNoRemainder(a: Int, _ b: Int) -> Bool {
     return  a % b == 0
 }
 
@@ -22,7 +22,7 @@ func next(n: Int) -> Int {
     }
 }
 
-func findDivisor(n: Int, testDivisor: Int) -> Int {
+func findDivisor(n: Int, _ testDivisor: Int) -> Int {
     switch true {
     case square(testDivisor) > n:
         return n
@@ -42,7 +42,7 @@ func isPrime(n:Int) -> Bool {
 }
 
 
-func expMod(base: Int, exp: Int, m: Int) -> Int {
+func expMod(base: Int, _ exp: Int, _ m: Int) -> Int {
     switch true {
     case exp == 0:
         return 1
@@ -53,7 +53,7 @@ func expMod(base: Int, exp: Int, m: Int) -> Int {
     }
 }
 
-func carmichaelTestIter(n: Int, a: Int) -> Bool {
+func carmichaelTestIter(n: Int, _ a: Int) -> Bool {
     switch true {
     case a == 0:
         return true

@@ -4,7 +4,7 @@ import Cocoa
 
 // What if we change the expMod function to the following.
 
-func expMod(base: Int, exp: Int, m: Int) -> Int {
+func expMod(base: Int, _ exp: Int, _ m: Int) -> Int {
     print(".")
     switch true {
     case exp == 0:
@@ -16,7 +16,7 @@ func expMod(base: Int, exp: Int, m: Int) -> Int {
     }
 }
 
-func fastExpt(b: Int, n: Int) -> Int {
+func fastExpt(b: Int, _ n: Int) -> Int {
     switch true {
     case n == 0:
         return 1
@@ -33,7 +33,7 @@ func isEven(n: Int) -> Bool {
 func square(x: Int) -> Int {
     return x * x
 }
-func dividesWithNoRemainder(a: Int, b: Int) -> Bool {
+func dividesWithNoRemainder(a: Int, _ b: Int) -> Bool {
     return  a % b == 0
 }
 /*
@@ -57,7 +57,7 @@ func fermatTest(n: Int) -> Bool {
 }
 fermatTest(8)
 
-func isPrimeFast(n: Int, times: Int) -> Bool {
+func isPrimeFast(n: Int, _ times: Int) -> Bool {
     switch true {
     case times == 0:
         return true
@@ -71,12 +71,12 @@ func isPrimeFast(n: Int, times: Int) -> Bool {
 func timedPrimeTest(n: Int) {
     startPrimeTest(n, NSDate())
 }
-func startPrimeTest(n: Int, startTime: NSDate) {
+func startPrimeTest(n: Int, _ startTime: NSDate) {
     if isPrimeFast(n, 10) {
         reportPrime(n, -1 * startTime.timeIntervalSinceNow)
     }
 }
-func reportPrime(n: Int, elapsedTime: Double) {
+func reportPrime(n: Int, _ elapsedTime: Double) {
     print("\n")
     print("\(n)")
     print(" *** ")

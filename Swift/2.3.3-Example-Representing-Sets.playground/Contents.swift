@@ -9,14 +9,14 @@ import Cocoa
 //: One way to represent a set is as a list of its elements in which no element appears more than once. The empty set is represented by the empty list. In this representation, element-of-set? is similar to the procedure memq of Section 2.3.1. It uses equal? instead of eq? so that the set elements need not be symbols:
 
 extension Array {
-    var match: (head: T, tail: [T])? {
+    var match: (head: Element, tail: [Element])? {
         return (count > 0) ? (self[0], Array(self[1..<count])) : nil
     }
 }
 
 let unorderedSet1 = [10,3,6,1]
 
-func isElementOfSet1<T: Equatable>(x: T, set: [T]) -> Bool {
+func isElementOfSet1<T: Equatable>(x: T, _ set: [T]) -> Bool {
     if let (head, tail) = set.match {
         if head == x {
             return true
@@ -32,7 +32,7 @@ isElementOfSet1(7, unorderedSet1)
 
 //: Using this we can write adjoinSet. If the object to be adjoined is already in the set, we just return the set. Otherwise, we use + (cons) to add the object to the list that represents the set:
 
-func adjoinSet1<T: Equatable>(x: T, set: [T]) -> [T] {
+func adjoinSet1<T: Equatable>(x: T, _ set: [T]) -> [T] {
     if isElementOfSet1(x, set) {
         return set
     } else {
@@ -43,7 +43,7 @@ let unorderedSet2 = adjoinSet1(8, unorderedSet1)
 
 //: For intersectionSet we can use a recursive strategy. If we know how to form the intersection of set2 and the tail of set1, we only need to decide whether to include the head of set1 in this. But this depends on whether the head of set1 is also in set2. Here is the resulting procedure:
 
-func intersectionSet1<T: Equatable>(set1: [T], set2: [T]) -> [T] {
+func intersectionSet1<T: Equatable>(set1: [T], _ set2: [T]) -> [T] {
     if let (head, tail) = set1.match {
         if isElementOfSet1(head, set2) {
             return [head] + intersectionSet1(tail, set2)
@@ -63,7 +63,7 @@ intersectionSet1(unorderedSet1, unorderedSet2)
 //:
 //: One advantage of ordering shows up in isElementOfSet: In checking for the presence of an item, we no longer have to scan the entire set. If we reach a set element that is larger than the item we are looking for, then we know that the item is not in the set:
 
-func isElementOfSet2<T: Comparable>(x: T, set: [T]) -> Bool {
+func isElementOfSet2<T: Comparable>(x: T, _ set: [T]) -> Bool {
     if let (head, tail) = set.match {
         switch head {
         case x:
@@ -85,7 +85,7 @@ isElementOfSet2(3, orderedSet1)
 //:
 //: We obtain a more impressive speedup with intersectionSet. In the unordered representation this operation required O(n^2) steps, because we performed a complete scan of set2 for each element of set1. But with the ordered representation, we can use a more clever method. Begin by comparing the initial elements, x1 and x2, of the two sets. If x1 equals x2, then that gives an element of the intersection, and the rest of the intersection is the intersection of the tails of the two sets. Suppose, however, that x1 is less than x2. Since x2 is the smallest element in set2, we can immedietely conclude that x1 cannot appear anywhere in set2 and hence is not in the intersection. Hence, the intersection is equal to the intersection of set2 with the tail of set1. Similarly, if x2 is less than x1, then the intersection is given by the intersection of set1 with the tail of set2. Here is the procedure:
 
-func intersectionSet2<T: Comparable>(set1: [T], set2: [T]) -> [T] {
+func intersectionSet2<T: Comparable>(set1: [T], _ set2: [T]) -> [T] {
     if let (x1, tail1) = set1.match,
         (x2, tail2) = set2.match {
             switch true {
@@ -128,7 +128,7 @@ class Box<T> {
     }
 }
 
-enum TreeSet<T>: Printable {
+enum TreeSet<T>: CustomStringConvertible {
     case Empty
     case Tree(entry:Box<T>, left:Box<TreeSet<T>>, right: Box<TreeSet<T>>)
     
@@ -144,7 +144,7 @@ enum TreeSet<T>: Printable {
 
 func entry<T>(tree: TreeSet<T>) -> T {
     switch tree {
-    case let .Tree(entry, left, right):
+    case let .Tree(entry, _, right):
         return entry.unbox
     default:
         fatalError("Tried to read an entry from an empty tree")
@@ -169,19 +169,19 @@ func rightBranch<T>(tree: TreeSet<T>) -> TreeSet<T> {
     }
 }
 
-func makeTree<T>(entry: T, left:TreeSet<T>, right:TreeSet<T>) -> TreeSet<T> {
+func makeTree<T>(entry: T, _ left:TreeSet<T>, _ right:TreeSet<T>) -> TreeSet<T> {
     return TreeSet.Tree(entry: Box(entry), left: Box(left), right: Box(right))
 }
 
 let a = makeTree(5, .Empty, .Empty)
-println(a)
+print(a)
 entry(a)
-println(leftBranch(a))
-println(rightBranch(a))
+print(leftBranch(a))
+print(rightBranch(a))
 
 //: Now we can write the isElementOfSet procedure using the strategy described above:
 
-func isElementOfSet3<T: Comparable>(x: T, set: TreeSet<T>) -> Bool {
+func isElementOfSet3<T: Comparable>(x: T, _ set: TreeSet<T>) -> Bool {
     switch set {
     case .Empty:
         return false
@@ -200,7 +200,7 @@ isElementOfSet3(6, a)
 
 //: Adjoining an item to a set is implemented similarly and also requires O(log n) steps. To adjoin an item x, we compare x with the node entry to determine whether x should be added to the right or to the left branch, and having adjoined x to the appropriate branch we piece this newly constructed branch together with the original entry and the other branch. If x is equal to the entry, we just return the node. If we are asked to adjoin x to an empty tree, we generate a tree that has x as the entry and empty right and left branches. Here is the procedure:
 
-func adjoinSet3<T: Comparable>(x: T, set: TreeSet<T>) -> TreeSet<T> {
+func adjoinSet3<T: Comparable>(x: T, _ set: TreeSet<T>) -> TreeSet<T> {
     switch set {
     case .Empty:
         return makeTree(x, .Empty, .Empty)
@@ -218,14 +218,14 @@ let b = adjoinSet3(7, a)
 let c = adjoinSet3(3, b)
 let d = adjoinSet3(4, c)
 let e = adjoinSet3(5, d)
-println(e)
+print(e)
 
 //: The above claim that searching the tree can be performed in a logarithmic number of steps rests on the assumption that the tree is "balanced," i.e., that the left and right subtree of every tree have approximately the same number of elements, so that each subtree contains about half the elements of its parent. But how can we be certain that the trees we construct will be balanced? Even if we start with a balanced tree, adding elements with adjoinSet may produce an unbalanced result. Since the position of a newly adjoined element depends on how the element compares with the items already in the set, we can expect that if we add elements "randomly" the tree will tend to be balanced on the average. But this is not a guarantee. For example, if we start with an empty set and adjoin the numbers 1 through 7 in sequence we end up with the highly unbalanced tree shown in Figure 2.17. In this tree all the left subtrees are empty, so it has no advantage over a simple ordered list. One way to solve this problem is to define an operation that transforms an arbitrary tree into a balanced tree with the same elements. Then we can perform this transformation after every few adjoinSet operations to keep our set in balance. There are also other ways to solve this problem, most of which involve designing new data structures for which searching and insertion both can be done in O(log n) steps.
 
 let figure217 = NSImage(named: "figure2-17.png")
 
 let f = adjoinSet3(7, adjoinSet3(6, adjoinSet3(5, adjoinSet3(4, adjoinSet3(3, adjoinSet3(2, adjoinSet3(1, .Empty)))))))
-println(f)
+print(f)
 
 //: **Figure 2.17** Unbalanced tree produced by adjoining 1 through 7 in sequence
 
@@ -248,7 +248,7 @@ struct Record {
     }
 }
 
-func lookup(key: Int, records: [Record]) -> Record? {
+func lookup(key: Int, _ records: [Record]) -> Record? {
     if let (head, tail) = records.match {
         if key == head.key {
             return head

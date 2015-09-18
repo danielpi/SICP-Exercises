@@ -45,7 +45,7 @@ func isEven(n: Int) -> Bool {
 }
 
 
-func sumIter<T:Comparable,U:AddableType>(term:(T) -> U, a:T, next:(T) -> T, b:T, result:U) -> U {
+func sumIter<T:Comparable,U:AddableType>(term:(T) -> U, _ a:T, _ next:(T) -> T, _ b:T, _ result:U) -> U {
     if a > b {
         return result
     } else {
@@ -53,16 +53,16 @@ func sumIter<T:Comparable,U:AddableType>(term:(T) -> U, a:T, next:(T) -> T, b:T,
     }
 }
 
-func sum<T:Comparable,U:AddableType>(term:(T) -> U, a:T, next:(T) -> T, b:T) -> U {
+func sum<T:Comparable,U:AddableType>(term:(T) -> U, _ a:T, _ next:(T) -> T, _ b:T) -> U {
     return sumIter(term, a, next, b, 0)
 }
 
 
-func integral(f:(Double) -> Double, a:Double, b:Double, n:Int) -> Double {
-    func h(a: Double, b: Double, n: Int) -> Double {
+func integral(f f:(Double) -> Double, a:Double, b:Double, n:Int) -> Double {
+    func h(a: Double, _ b: Double, _ n: Int) -> Double {
         return (b - a) / Double(n)
     }
-    func yk(f:(Double) -> Double, a: Double, b: Double, n:Int, k:Int) -> Double {
+    func yk(f:(Double) -> Double, _ a: Double, _ b: Double, _ n:Int, _ k:Int) -> Double {
         let x = a + (Double(k) * h(a,b,n))
         return f(x)
     }
@@ -78,7 +78,7 @@ func integral(f:(Double) -> Double, a:Double, b:Double, n:Int) -> Double {
     }
     return (h(a,b,n) / 3.0) * sum(simpsonsTerm, 0, inc, n)
 }
-integral(cube, 0, 1, 100)
+integral(f:cube, a:0, b:1, n:100)
 //integral(cube, 0, 1, 1000)
-integral(identity, 0, 1, 100)
+integral(f:identity, a:0, b:1, n:100)
 //integral(identity, 0, 3.2345, 1000)

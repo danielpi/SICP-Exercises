@@ -7,12 +7,12 @@ func isEven(n: Int) -> Bool {
 func square(x: Int) -> Int {
     return x * x
 }
-func dividesWithNoRemainder(a: Int, b: Int) -> Bool {
+func dividesWithNoRemainder(a: Int, _ b: Int) -> Bool {
     return  a % b == 0
 }
 // dividesWithNoRemainder(10, 2)
 
-func findDivisor(n: Int, testDivisor: Int) -> Int {
+func findDivisor(n: Int, _ testDivisor: Int) -> Int {
     switch true {
     case square(testDivisor) > n:
         return n
@@ -34,12 +34,12 @@ func isPrime(n:Int) -> Bool {
 func timedPrimeTest(n: Int) {
     startPrimeTest(n, NSDate())
 }
-func startPrimeTest(n: Int, startTime: NSDate) {
+func startPrimeTest(n: Int, _ startTime: NSDate) {
     if isPrime(n) {
         reportPrime(n, -1 * startTime.timeIntervalSinceNow)
     }
 }
-func reportPrime(n: Int, elapsedTime: Double) {
+func reportPrime(n: Int, _ elapsedTime: Double) {
     print("\n")
     print("\(n)")
     print(" *** ")
@@ -49,10 +49,10 @@ func reportPrime(n: Int, elapsedTime: Double) {
 
 // Using this procedure write a searchForPrimes that checks the primality of consecutive odd integers in a specified range. Use your procedure to find the three smallest primes larger than 1000, larger than 10000, larger than 100000, larger than 1000000.
 
-func searchForPrimes(a: Int, b: Int) {
+func searchForPrimes(a: Int, _ b: Int) {
     switch true {
     case a > b:
-        println("Complete")
+        print("Complete")
     case isEven(a):
         searchForPrimes(a + 1, b)
     default:

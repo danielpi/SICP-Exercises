@@ -4,11 +4,11 @@ import Cocoa
 
 // What if we change the expMod function to the following.
 
-func expMod(base: Int, exp: Int, m: Int) -> Int {
+func expMod(base: Int, _ exp: Int, _ m: Int) -> Int {
     return fastExpt(base, exp) % m
 }
 
-func fastExpt(b: Int, n: Int) -> Int {
+func fastExpt(b: Int, _ n: Int) -> Int {
     switch true {
     case n == 0:
         return 1
@@ -25,7 +25,7 @@ func isEven(n: Int) -> Bool {
 func square(x: Int) -> Int {
     return x * x
 }
-func dividesWithNoRemainder(a: Int, b: Int) -> Bool {
+func dividesWithNoRemainder(a: Int, _ b: Int) -> Bool {
     return  a % b == 0
 }
 /*
@@ -49,7 +49,7 @@ func fermatTest(n: Int) -> Bool {
 }
 fermatTest(8)
 
-func isPrimeFast(n: Int, times: Int) -> Bool {
+func isPrimeFast(n: Int, _ times: Int) -> Bool {
     switch true {
     case times == 0:
         return true
@@ -63,12 +63,12 @@ func isPrimeFast(n: Int, times: Int) -> Bool {
 func timedPrimeTest(n: Int) {
     startPrimeTest(n, NSDate())
 }
-func startPrimeTest(n: Int, startTime: NSDate) {
+func startPrimeTest(n: Int, _ startTime: NSDate) {
     if isPrimeFast(n, 10) {
         reportPrime(n, -1 * startTime.timeIntervalSinceNow)
     }
 }
-func reportPrime(n: Int, elapsedTime: Double) {
+func reportPrime(n: Int, _ elapsedTime: Double) {
     print("\n")
     print("\(n)")
     print(" *** ")
@@ -77,10 +77,10 @@ func reportPrime(n: Int, elapsedTime: Double) {
 
 // Using this procedure write a searchForPrimes that checks the primality of consecutive odd integers in a specified range. Use your procedure to find the three smallest primes larger than 1000, larger than 10000, larger than 100000, larger than 1000000.
 
-func searchForPrimes(a: Int, b: Int) {
+func searchForPrimes(a: Int, _ b: Int) {
     switch true {
     case a > b:
-        println("Complete")
+        print("Complete")
     case isEven(a):
         searchForPrimes(a + 1, b)
     default:

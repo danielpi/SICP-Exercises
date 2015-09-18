@@ -82,8 +82,8 @@ func realPart1(z: RectangularForm) -> Double { return z.0 }
 func imagPart1(z: RectangularForm) -> Double { return z.1 }
 func magnitude1(z: RectangularForm) -> Double { return sqrt(square(realPart1(z)) + square(imagPart1(z))) }
 func angle1(z: RectangularForm) -> Double { return atan2(imagPart1(z), realPart1(z)) }
-func makeFromRealImag1(x: Double, y: Double) -> RectangularForm { return (x, y) }
-func makeFromMagAng1(r: Double, a: Double) -> RectangularForm { return (r * cos(a), r * sin(a)) }
+func makeFromRealImag1(x: Double, _ y: Double) -> RectangularForm { return (x, y) }
+func makeFromMagAng1(r: Double, _ a: Double) -> RectangularForm { return (r * cos(a), r * sin(a)) }
 
 let a = makeFromRealImag1(3, 4)
 realPart1(a)
@@ -97,16 +97,16 @@ imagPart1(b)
 magnitude1(b)
 angle1(b)
 
-func addComplex1(z1: RectangularForm, z2: RectangularForm) -> RectangularForm {
+func addComplex1(z1: RectangularForm, _ z2: RectangularForm) -> RectangularForm {
     return makeFromRealImag1(realPart1(z1) + realPart1(z2), imagPart1(z1) + imagPart1(z2))
 }
-func subComplex1(z1: RectangularForm, z2: RectangularForm) -> RectangularForm {
+func subComplex1(z1: RectangularForm, _ z2: RectangularForm) -> RectangularForm {
     return makeFromRealImag1(realPart1(z1) - realPart1(z2), imagPart1(z1) - imagPart1(z2))
 }
-func mulComplex1(z1: RectangularForm, z2: RectangularForm) -> RectangularForm {
+func mulComplex1(z1: RectangularForm, _ z2: RectangularForm) -> RectangularForm {
     return makeFromMagAng1(magnitude1(z1) * magnitude1(z2), angle1(z1) + angle1(z2))
 }
-func divComplex1(z1: RectangularForm, z2: RectangularForm) -> RectangularForm {
+func divComplex1(z1: RectangularForm, _ z2: RectangularForm) -> RectangularForm {
     return makeFromMagAng1(magnitude1(z1) / magnitude1(z2), angle1(z1) - angle1(z2))
 }
 
@@ -137,10 +137,10 @@ func imagPart2(z: PolarForm) -> Double {
 }
 func magnitude2(z: PolarForm) -> Double { return z.0 }
 func angle2(z: PolarForm) -> Double { return z.1 }
-func makeFromRealImag2(x: Double, y: Double) -> PolarForm {
+func makeFromRealImag2(x: Double, _ y: Double) -> PolarForm {
     return PolarForm(sqrt(square(x) + square(y)), atan2(y, x))
 }
-func makeFromMagAng2(r: Double, A: Double) -> PolarForm {
+func makeFromMagAng2(r: Double, _ A: Double) -> PolarForm {
     return PolarForm(r, A)
 }
 
@@ -167,7 +167,7 @@ enum ComplexNumberType { case Rectangular, Polar }
 typealias ComplexNumber = (Double, Double)
 typealias TaggedComplexNumber = (ComplexNumberType, ComplexNumber)
 
-func attachTag(typeTag: ComplexNumberType, contents: ComplexNumber) -> TaggedComplexNumber {
+func attachTag(typeTag: ComplexNumberType, _ contents: ComplexNumber) -> TaggedComplexNumber {
     return (typeTag, (contents.0, contents.1))
 }
 func typeTag(datum: TaggedComplexNumber) -> ComplexNumberType {
@@ -196,10 +196,10 @@ func magnitudeRectangular(z: ComplexNumber) -> Double {
 func angleRectangular(z: ComplexNumber) -> Double {
     return atan2(imagPartRectangular(z), realPartRectangular(z))
 }
-func makeFromRealImagRectangular(x: Double, y: Double) -> TaggedComplexNumber {
+func makeFromRealImagRectangular(x: Double, _ y: Double) -> TaggedComplexNumber {
     return attachTag(.Rectangular, (x, y))
 }
-func makeFromMagAngRectangular(r: Double, A: Double) -> TaggedComplexNumber {
+func makeFromMagAngRectangular(r: Double, _ A: Double) -> TaggedComplexNumber {
     return attachTag(.Rectangular, (r * cos(A), r * sin(A)))
 }
 
@@ -216,13 +216,13 @@ func imagPartPolar(z: ComplexNumber) -> Double {
 }
 func magnitudePolar(z: ComplexNumber) -> Double { return z.0 }
 func anglePolar(z: ComplexNumber) -> Double { return z.1 }
-func makeFromRealImagPolar(x: Double, y: Double) -> TaggedComplexNumber {
+func makeFromRealImagPolar(x: Double, _ y: Double) -> TaggedComplexNumber {
     let tag: ComplexNumberType = .Polar
     let r = pow(square(x) + square(y), 0.5)
     let A = atan2(y, x)
     return attachTag(tag, (r, A))
 }
-func makeFromMagAngPolar(r: Double, A: Double) -> TaggedComplexNumber {
+func makeFromMagAngPolar(r: Double, _ A: Double) -> TaggedComplexNumber {
     return attachTag(.Polar, (r, A))
 }
 
@@ -268,16 +268,16 @@ func angle3(z: TaggedComplexNumber) -> Double {
 
 //: To implement the complex-number arithmetic operations, we can use the same procedures add-complex, sub-complex, mul-complex, and div-complex from Section 2.4.1, because the selectors they call are generic, and so will work with either representation. For example, the procedure add-complex is still
 
-func addComplex(z1: TaggedComplexNumber, z2: TaggedComplexNumber) -> TaggedComplexNumber {
+func addComplex(z1: TaggedComplexNumber, _ z2: TaggedComplexNumber) -> TaggedComplexNumber {
     return makeFromRealImag3(realPart3(z1) + realPart3(z2), imagPart3(z1) + imagPart3(z2))
 }
 
 //: Finally, we must choose whether to construct complex numbers using Ben's representation or Alyssa's representation. One reasonable choice is to construct rectangular numbers whenever we have real and imaginary parts and to construct polar numbers whenever we have magnitudes and angles:
 
-func makeFromRealImag3(x: Double, y: Double) -> TaggedComplexNumber {
+func makeFromRealImag3(x: Double, _ y: Double) -> TaggedComplexNumber {
     return makeFromRealImagRectangular(x, y)
 }
-func makeFromMagAng3(r: Double, A: Double) -> TaggedComplexNumber {
+func makeFromMagAng3(r: Double, _ A: Double) -> TaggedComplexNumber {
     return makeFromMagAngPolar(r, A)
 }
 
@@ -342,25 +342,25 @@ typealias ComplexNumberConstructor = (Double, Double) -> TaggedComplexNumber
 var globalSelectorTable = [ComplexNumberType: [String: ComplexNumberSelector]]()
 var globalConstructorTable = [ComplexNumberType: [String: ComplexNumberConstructor]]()
 
-func put(op: String, type: ComplexNumberType, item: ComplexNumberSelector) {
-    if let typeColumn = globalSelectorTable[type] {
+func put(op: String, _ type: ComplexNumberType, _ item: ComplexNumberSelector) {
+    if let _ = globalSelectorTable[type] {
         globalSelectorTable[type]![op] = item
     } else {
         globalSelectorTable[type] = [op: item]
     }
 }
-func put(op: String, type: ComplexNumberType, item: ComplexNumberConstructor) {
-    if let typeColumn = globalConstructorTable[type] {
+func put(op: String, _ type: ComplexNumberType, _ item: ComplexNumberConstructor) {
+    if let _ = globalConstructorTable[type] {
         globalConstructorTable[type]![op] = item
     } else {
         globalConstructorTable[type] = [op: item]
     }
 }
 
-func get(op: String, type: ComplexNumberType) -> ComplexNumberSelector? {
+func get(op: String, _ type: ComplexNumberType) -> ComplexNumberSelector? {
     return globalSelectorTable[type]?[op]
 }
-func get(op: String, type: ComplexNumberType) -> ComplexNumberConstructor? {
+func get(op: String, _ type: ComplexNumberType) -> ComplexNumberConstructor? {
     return globalConstructorTable[type]?[op]
 }
 
@@ -434,7 +434,7 @@ func installPolarPackage() {
 //:
 //: The complex-arithmetic selectors access the table by means of a general "operation" procedure called applyGeneric, which applies a generic operation to some arguments. applyGeneric looks in the table under the name of the operation and the types of the arguments and applies the resulting procedure if one is present:
 
-func applyGeneric(op: String, arg: TaggedComplexNumber) -> Double {
+func applyGeneric(op: String, _ arg: TaggedComplexNumber) -> Double {
     let type = typeTag(arg)
     let proc: ComplexNumberSelector? = get(op, type)
     if let p = proc {
@@ -462,7 +462,7 @@ func angle(z: TaggedComplexNumber) -> Double { return applyGeneric("angle", z) }
 //:
 //: We can also extract from the table the constructors to be used by the programs external to the packages in making complex numbers from real and imaginary parts and from magnitudes and angles. As in Section 2.4.2, we construct rectangular numbers whenever we have magnitudes and angles:
 
-func makeFromRealImag(x: Double, y: Double) -> TaggedComplexNumber {
+func makeFromRealImag(x: Double, _ y: Double) -> TaggedComplexNumber {
     let op = "makeFromRealImag"
     let type: ComplexNumberType = .Rectangular
     let proc: ComplexNumberConstructor? = get(op, type)
@@ -475,7 +475,7 @@ func makeFromRealImag(x: Double, y: Double) -> TaggedComplexNumber {
 
 // I found this section of the book quite confusing first time through. The applyGeneric function appeared to imply to me that it could be used for all functions, when it is really only used for the selectors. The constructors are handled as a seperate special cases (which could have been done for the selectors as well).
 
-func makeFromMagAng(r: Double, A: Double) -> TaggedComplexNumber {
+func makeFromMagAng(r: Double, _ A: Double) -> TaggedComplexNumber {
     let op = "makeFromMagAng"
     let type: ComplexNumberType = .Polar
     let proc: ComplexNumberConstructor? = get(op, type)
