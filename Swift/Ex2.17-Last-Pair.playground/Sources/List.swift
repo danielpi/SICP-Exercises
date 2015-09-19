@@ -16,13 +16,13 @@ public func undefined<A>() -> A {
 }
 
 /// Flip a function's arguments
-public func flip<A, B, C>(f: ((A, B) -> C), b: B, a: A) -> C {
+public func flip<A, B, C>(f: ((A, B) -> C), _ b: B, _ a: A) -> C {
     return f(a, b)
 }
 
 /// Flip a function's arguments and return a function that takes
 /// the arguments in flipped order.
-public func flip<A, B, C>(f: (A, B) -> C)(b: B, a: A) -> C {
+public func flip<A, B, C>(f: (A, B) -> C)(b: B, _ a: A) -> C {
     return f(a, b)
 }
 
@@ -91,7 +91,7 @@ public struct List<A> {
     }
     
     /// Appends an element onto the front of a list.
-    public static func cons(head : A, tail : List<A>) -> List<A> {
+    public static func cons(head : A, _ tail : List<A>) -> List<A> {
         return List(head, tail)
     }
     

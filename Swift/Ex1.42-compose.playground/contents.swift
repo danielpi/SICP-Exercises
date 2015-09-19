@@ -6,7 +6,7 @@ import Cocoa
 func square(x: Double) -> Double { return x * x }
 func inc(x: Double) -> Double { return x + 1 }
 
-func compose<T>(f: (T) -> T, g: (T) -> T) -> (T) -> T {
+func compose<T>(f: (T) -> T, _ g: (T) -> T) -> (T) -> T {
     return { (x: T) -> T in return f(g(x)) }
 }
 

@@ -56,11 +56,11 @@ func /(lhs: Interval, rhs: Interval) -> Interval {
 }
 
 
-func parOne(a: Interval, b: Interval) -> Interval {
+func parOne(a: Interval, _ b: Interval) -> Interval {
     return (a * b) / (a + b)
 }
 
-func parTwo(a: Interval, b: Interval) -> Interval {
+func parTwo(a: Interval, _ b: Interval) -> Interval {
     let one = Interval(1, 1)
     return one / ((one / a) + (one / b))
 }

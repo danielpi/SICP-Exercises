@@ -12,7 +12,7 @@ enum ConsPosition {
     case Left, Right
 }
 
-func cons<T>(a: T, b: T) -> (ConsPosition -> T) {
+func cons<T>(a: T, _ b: T) -> (ConsPosition -> T) {
     func innerCons(i: ConsPosition) -> T {
         if i == .Left {
             return a;
@@ -37,7 +37,7 @@ func cdr<T>(innerCons: ConsPosition -> T) -> T {
 
 typealias Point = (ConsPosition -> Double)
 
-func makePoint(x: Double, y: Double) -> Point {
+func makePoint(x: Double, _ y: Double) -> Point {
     return cons(x, y)
 }
 func xPoint(x: Point) -> Double {
@@ -47,14 +47,14 @@ func yPoint(x: Point) -> Double {
     return cdr(x)
 }
 func printPoint(x: Point) {
-    println("(\(xPoint(x)),\(yPoint(x)))")
+    print("(\(xPoint(x)),\(yPoint(x)))")
 }
 
 
 
 typealias Segment = (ConsPosition -> Point)
 
-func makeSegment(start: Point, end: Point) -> Segment {
+func makeSegment(start: Point, _ end: Point) -> Segment {
     return cons(start, end)
 }
 func startSegment(x: Segment) -> Point {
@@ -64,7 +64,7 @@ func endSegment(x: Segment) -> Point {
     return cdr(x)
 }
 func midpointSegment(x: Segment) -> Point {
-    func average(a: Double, b: Double) -> Double {
+    func average(a: Double, _ b: Double) -> Double {
         return (a + b) / 2
     }
     return makePoint(average(xPoint(startSegment(x)), xPoint(endSegment(x))), average(yPoint(startSegment(x)), yPoint(endSegment(x))))
@@ -72,7 +72,7 @@ func midpointSegment(x: Segment) -> Point {
 
 
 typealias Size = (ConsPosition -> Double)
-func makeSize(width: Double, height: Double) -> Size {
+func makeSize(width: Double, _ height: Double) -> Size {
     return cons(width, height)
 }
 func width(x: Size) -> Double {
@@ -83,7 +83,7 @@ func height(x: Size) -> Double {
 }
 
 typealias Rect = (ConsPosition -> Point)
-func makeRect(origin: Point, size: Size) -> Rect {
+func makeRect(origin: Point, _ size: Size) -> Rect {
     return cons(origin, size)
 }
 func origin(x: Rect) -> Point {
@@ -109,7 +109,7 @@ perimeter(rect1)
 area(rect1)
 
 typealias Rect2 = (ConsPosition -> Point)
-func makeRect2(origin: Point, diagonal: Point) -> Rect {
+func makeRect2(origin: Point, _ diagonal: Point) -> Rect {
     return cons(origin, diagonal)
 }
 func origin2(x: Rect2) -> Point {

@@ -7,7 +7,7 @@ enum ConsPosition {
     case Left, Right
 }
 
-func cons<T>(a: T, b: T) -> (ConsPosition -> T) {
+func cons<T>(a: T, _ b: T) -> (ConsPosition -> T) {
     func innerCons(i: ConsPosition) -> T {
         if i == .Left {
             return a;
@@ -29,7 +29,7 @@ func cdr<T>(innerCons: ConsPosition -> T) -> T {
 
 typealias Rational = (ConsPosition -> Int)
 
-func gcd(a: Int, b: Int) -> Int {
+func gcd(a: Int, _ b: Int) -> Int {
     if b == 0 {
         return abs(a)
     } else {
@@ -37,7 +37,7 @@ func gcd(a: Int, b: Int) -> Int {
     }
 }
 
-func makeRat(n: Int, d:Int) -> Rational {
+func makeRat(n: Int, _ d:Int) -> Rational {
     let g = gcd(n, d)
     if d < 0 {
         return cons(n/g, -d/g)
@@ -54,22 +54,22 @@ func denom(x: Rational) -> Int {
 }
 
 func printRat(x: Rational) {
-    println("\(numer(x))/\(denom(x))")
+    print("\(numer(x))/\(denom(x))")
 }
 
-func addRat(x: Rational, y: Rational) -> Rational {
+func addRat(x: Rational, _ y: Rational) -> Rational {
     return makeRat((numer(x) * denom(y)) + (numer(y) * denom(x)), denom(x) * denom(y))
 }
-func subRat(x: Rational, y: Rational) -> Rational {
+func subRat(x: Rational, _ y: Rational) -> Rational {
     return makeRat((numer(x) * denom(y)) - (numer(y) * denom(x)), denom(x) * denom(y))
 }
-func mulRat(x: Rational, y: Rational) -> Rational {
+func mulRat(x: Rational, _ y: Rational) -> Rational {
     return makeRat(numer(x) * numer(y), denom(x) * denom(y))
 }
-func divRat(x: Rational, y: Rational) -> Rational {
+func divRat(x: Rational, _ y: Rational) -> Rational {
     return makeRat(numer(x) * denom(y), denom(x) * numer(y))
 }
-func isEqualRat(x: Rational, y: Rational) -> Bool {
+func isEqualRat(x: Rational, _ y: Rational) -> Bool {
     return (numer(x) * denom(y)) == (numer(y) * denom(x))
 }
 

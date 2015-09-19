@@ -16,11 +16,11 @@ import Cocoa
 func inc(x: Double) -> Double { return x + 1 }
 func square(x: Double) -> Double { return x * x }
 
-func compose<T>(f: (T) -> T, g: (T) -> T) -> (T) -> T {
+func compose<T>(f: (T) -> T, _ g: (T) -> T) -> (T) -> T {
     return { (x: T) -> T in return f(g(x)) }
 }
 
-func repeatIter<T>(f: (T) -> T, g: (T) -> T, step: Int) -> (T) -> T {
+func repeatIter<T>(f: (T) -> T, _ g: (T) -> T, _ step: Int) -> (T) -> T {
     if (step == 1) {
         return g
     } else {
@@ -28,7 +28,7 @@ func repeatIter<T>(f: (T) -> T, g: (T) -> T, step: Int) -> (T) -> T {
     }
 }
 
-func repeated<T>(f: (T) -> T , n: Int) -> (T) -> T {
+func repeated<T>(f: (T) -> T , _ n: Int) -> (T) -> T {
     return repeatIter(f, f, n)
 }
 repeated(square, 2)(5)

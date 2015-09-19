@@ -5,7 +5,7 @@ import Cocoa
 
 // Write a procedure iterativeImprovement that takes two procedures as arguments: a method for telling whether a guess is good enough and a method for improving a guess. IterativeImprovement should return as its value a procedure that takes a guess as argument and keeps improving the guess until it is good enough. 
 
-func iterativeImprovement(isGoodEnough: (Double) -> Bool, improve: (Double) -> Double) -> (Double) -> Double {
+func iterativeImprovement(isGoodEnough: (Double) -> Bool, _ improve: (Double) -> Double) -> (Double) -> Double {
     var iter: (Double) -> Double = { _ in return 0.0 }
     iter = { (guess: Double) -> Double in
         if isGoodEnough(guess) {
@@ -20,7 +20,7 @@ func iterativeImprovement(isGoodEnough: (Double) -> Bool, improve: (Double) -> D
 // Rewrite the sqrt procedure from section 1.1.7 
 
 func sqrt(x: Double) -> Double {
-    func average(x: Double, y: Double) -> Double {
+    func average(x: Double, _ y: Double) -> Double {
         return (x + y) / 2.0
     }
     func isGoodEnough(guess: Double) -> Bool {
@@ -39,7 +39,7 @@ sqrt(64.0)
 
 // Rewrite the fixedPoint procedure of section 1.3.3 in terms of iterativeImprovement.
 
-func fixedPoint(f: (Double) -> Double, guess: Double) -> Double {
+func fixedPoint(f: (Double) -> Double, _ guess: Double) -> Double {
     func isGoodEnough(guess: Double) -> Bool {
         return abs(guess - f(guess)) < 0.00001
     }

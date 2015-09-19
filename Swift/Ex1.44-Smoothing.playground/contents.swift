@@ -12,11 +12,11 @@ func smooth(f: (Double) -> Double) -> (Double) -> Double {
 
 // It is sometimes valuable to repeatedly smooth a function (that is, smooth the smoothed function) to obtain the n-fold smoothed function. Show how to generate the n-fold smoothed function of any given function using smooth and repeated from exersize 1.43
 
-func compose<T>(f: (T) -> T, g: (T) -> T) -> (T) -> T {
+func compose<T>(f: (T) -> T, _ g: (T) -> T) -> (T) -> T {
     return { (x: T) -> T in return f(g(x)) }
 }
 
-func repeatIter<T>(f: (T) -> T, g: (T) -> T, step: Int) -> (T) -> T {
+func repeatIter<T>(f: (T) -> T, _ g: (T) -> T, _ step: Int) -> (T) -> T {
     if (step == 1) {
         return g
     } else {
@@ -24,14 +24,14 @@ func repeatIter<T>(f: (T) -> T, g: (T) -> T, step: Int) -> (T) -> T {
     }
 }
 
-func repeated<T>(f: (T) -> T , n: Int) -> (T) -> T {
+func repeated<T>(f: (T) -> T , _ n: Int) -> (T) -> T {
     return repeatIter(f, f, n)
 }
 
 repeated(smooth, 3)(sin)(0.5)
 
 
-func nFoldSmooth(f: (Double) -> Double, n: Int) -> (Double) -> Double {
+func nFoldSmooth(f: (Double) -> Double, _ n: Int) -> (Double) -> Double {
     return repeated(smooth, n)(f)
 }
 

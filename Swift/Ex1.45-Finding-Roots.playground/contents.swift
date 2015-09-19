@@ -7,14 +7,14 @@ import Cocoa
 
 // Use this to implement a simple procedure for computing nth roots using fixed-point, averageDamp and the repeated procedure of exercise 1.43.
 
-func average(a: Double, b: Double) -> Double {
+func average(a: Double, _ b: Double) -> Double {
     return (a + b) / 2
 }
-func isCloseEnough(a: Double, b: Double, tolerance: Double) -> Bool {
+func isCloseEnough(a: Double, _ b: Double, _ tolerance: Double) -> Bool {
     return abs(a - b) < tolerance
 }
 
-func fixedPoint(f: (Double) -> Double, guess: Double) -> Double {
+func fixedPoint(f: (Double) -> Double, _ guess: Double) -> Double {
     let next = f(guess)
     if isCloseEnough(guess, next, 0.00001) {
         return next
@@ -27,11 +27,11 @@ func averageDamp(f: (Double) -> Double) -> (Double) -> Double {
     return { (x: Double) -> Double in return average(x, f(x)) }
 }
 
-func compose<T>(f: (T) -> T, g: (T) -> T) -> (T) -> T {
+func compose<T>(f: (T) -> T, _ g: (T) -> T) -> (T) -> T {
     return { (x: T) -> T in return f(g(x)) }
 }
 
-func repeatIter<T>(f: (T) -> T, g: (T) -> T, step: Int) -> (T) -> T {
+func repeatIter<T>(f: (T) -> T, _ g: (T) -> T, _ step: Int) -> (T) -> T {
     if (step == 1) {
         return g
     } else {
@@ -39,12 +39,12 @@ func repeatIter<T>(f: (T) -> T, g: (T) -> T, step: Int) -> (T) -> T {
     }
 }
 
-func repeated<T>(f: (T) -> T , n: Int) -> (T) -> T {
+func repeated<T>(f: (T) -> T , _ n: Int) -> (T) -> T {
     return repeatIter(f, f, n)
 }
 
 
-func nthRoot(x: Double, n: Int) -> Double {
+func nthRoot(x: Double, _ n: Int) -> Double {
     let dampings = floor(log(Double(n)) / log(2))
     let damper = repeated(averageDamp, Int(dampings))
     return fixedPoint(damper({ (y: Double) -> Double in return x / pow(y, Double(n - 1)) }), 1.0)

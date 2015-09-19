@@ -3,7 +3,7 @@ import Cocoa
 // Exercise 1.33
 // You can obtain an even more general version of accumulate by introducing the notion of a filter on the terms to be combined. That is, combine only those terms derived from values in the range that satisfy a specified condition. The resulting filteredAccumulate() abstraction takes the same arguments as accumulate, together with an addiional predicate of one argument that specifies the filter.
 
-func filteredAccumulate(predicate:(Int) -> Bool, combiner: (Double, Double) -> Double, nullValue: Double, term:(Int) -> Double, a: Int, next:(Int) -> Int, b: Int) -> Double {
+func filteredAccumulate(predicate:(Int) -> Bool, _ combiner: (Double, Double) -> Double, _ nullValue: Double, _ term:(Int) -> Double, _ a: Int, _ next:(Int) -> Int, _ b: Int) -> Double {
     switch true {
     case a > b:
         return nullValue
@@ -22,7 +22,7 @@ func isEven(n: Int) -> Bool {
 func square(x: Int) -> Int {
     return x * x
 }
-func dividesWithNoRemainder(a: Int, b: Int) -> Bool {
+func dividesWithNoRemainder(a: Int, _ b: Int) -> Bool {
     return  a % b == 0
 }
 func next(n: Int) -> Int {
@@ -32,7 +32,7 @@ func next(n: Int) -> Int {
         return n + 2
     }
 }
-func findDivisor(n: Int, testDivisor: Int) -> Int {
+func findDivisor(n: Int, _ testDivisor: Int) -> Int {
     switch true {
     case square(testDivisor) > n:
         return n
@@ -58,7 +58,7 @@ func isPrime(n:Int) -> Bool {
     }
 }
 
-func sumOfSquaresOfPrimes(a: Int, b: Int) -> Double {
+func sumOfSquaresOfPrimes(a: Int, _ b: Int) -> Double {
     
     func squareDouble(n:Int) -> Double { return Double(n * n) }
     return filteredAccumulate(isPrime, +, 0.0, squareDouble, a, inc, b)
@@ -69,7 +69,7 @@ sumOfSquaresOfPrimes(1, 10)
 
 // b) Write the product of all the positive integers less than n that are relatively prime to n(i.e., all positive integers i < n such that GCD(i,n) = 1)
 
-func gcd(a: Int, b: Int) -> Int {
+func gcd(a: Int, _ b: Int) -> Int {
     if b == 0 {
         return a
     } else {

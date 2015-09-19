@@ -12,7 +12,7 @@ enum ConsPosition {
     case Left, Right
 }
 
-func cons<T>(a: T, b: T) -> (ConsPosition -> T) {
+func cons<T>(a: T, _ b: T) -> (ConsPosition -> T) {
     func innerCons(i: ConsPosition) -> T {
         if i == .Left {
             return a;
@@ -37,7 +37,7 @@ func cdr<T>(innerCons: ConsPosition -> T) -> T {
 
 typealias Point = (ConsPosition -> Double)
 
-func makePoint(x: Double, y: Double) -> Point {
+func makePoint(x: Double, _ y: Double) -> Point {
     return cons(x, y)
 }
 func xPoint(x: Point) -> Double {
@@ -47,14 +47,14 @@ func yPoint(x: Point) -> Double {
     return cdr(x)
 }
 func printPoint(x: Point) {
-    println("(\(xPoint(x)),\(yPoint(x)))")
+    print("(\(xPoint(x)),\(yPoint(x)))")
 }
 
 
 
 typealias Segment = (ConsPosition -> Point)
 
-func makeSegment(start: Point, end: Point) -> Segment {
+func makeSegment(start: Point, _ end: Point) -> Segment {
     return cons(start, end)
 }
 func startSegment(x: Segment) -> Point {
@@ -64,7 +64,7 @@ func endSegment(x: Segment) -> Point {
     return cdr(x)
 }
 func midpointSegment(x: Segment) -> Point {
-    func average(a: Double, b: Double) -> Double {
+    func average(a: Double, _ b: Double) -> Double {
         return (a + b) / 2
     }
     return makePoint(average(xPoint(startSegment(x)), xPoint(endSegment(x))), average(yPoint(startSegment(x)), yPoint(endSegment(x))))

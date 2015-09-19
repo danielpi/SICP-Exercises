@@ -43,14 +43,14 @@ func isNegative(x: Double) -> Bool {
     return x < 0
 }
 
-func /(lhs: Interval, rhs: Interval) -> Interval {
+func / (lhs: Interval, rhs: Interval) -> Interval {
     if (isNegative(lhs.lower) && isPositive(lhs.upper) || isNegative(rhs.lower) && isPositive(rhs.upper)) {
         assertionFailure("Can't handle Intervals that span zero")
     }
     return lhs * Interval(1 / rhs.upper, 1 / rhs.lower)
 }
 
-let a = Interval(-0.2, 0.3)
+let a = Interval(0.2, 0.3)
 let b = Interval(1, 2)
 
 b / a

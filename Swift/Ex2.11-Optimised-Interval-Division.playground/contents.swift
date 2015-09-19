@@ -59,7 +59,7 @@ func isNegative(x: Interval) -> Bool {
     return isNegative(x.lower) && isNegative(x.upper)
 }
 
-func mulInterval(lhs: Interval, rhs: Interval) -> Interval {
+func mulInterval(lhs: Interval, _ rhs: Interval) -> Interval {
     switch true {
     case isPositive(lhs) && isPositive(rhs):
         return Interval(lhs.lower * rhs.lower, lhs.upper * rhs.upper)
