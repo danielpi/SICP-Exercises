@@ -35,7 +35,7 @@ func isEven(n: Int) -> Bool {
 }
 
 
-func product<T:Comparable,U:MultipliableType>(term:(T) -> U, a:T, next:(T) -> T, b:T) -> U {
+func product<T:Comparable,U:MultipliableType>(term:(T) -> U, _ a:T, _ next:(T) -> T, _ b:T) -> U {
     if a > b {
         return 1
     } else {
