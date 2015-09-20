@@ -40,7 +40,7 @@ func isNoMore<T>(coinValues: List<T>) -> Bool {
     return coinValues.isEmpty()
 }
 
-func cc<T: MathematicsProtocol>(amount: T, coinValues: List<T>) -> T {
+func cc<T: MathematicsProtocol>(amount: T, _ coinValues: List<T>) -> T {
     switch true {
     case amount == 0:
         return 1

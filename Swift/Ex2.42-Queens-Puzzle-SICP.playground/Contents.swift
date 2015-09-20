@@ -20,8 +20,8 @@ public func queens(boardSize: Int) -> [[Queen]] {
             
             return [emptyBoard]
         } else {
-            let a = flatMap(queenCols(k - 1), { restOfQueens in     // 8
-                map(enumerateInterval(1, boardSize), { newRow in    // 1965
+            let a = queenCols(k - 1).flatMap({ restOfQueens in     // 8
+                enumerateInterval(1, boardSize).map({ newRow in    // 1965
                     adjoinPosition(newRow, k, restOfQueens)         // 15720
                 })
             })

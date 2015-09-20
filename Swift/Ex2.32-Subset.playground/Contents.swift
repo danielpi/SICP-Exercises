@@ -13,7 +13,7 @@ import Cocoa
 */
 
 
-func cons<A>(value: A, list: [A]) -> [A] {
+func cons<A>(value: A, _ list: [A]) -> [A] {
     var newList = list
     newList.insert(value, atIndex: 0)
     return newList

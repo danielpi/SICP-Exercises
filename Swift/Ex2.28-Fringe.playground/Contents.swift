@@ -8,20 +8,20 @@ let xx = [[[1,2],[3,4]],[[1,2],[3,4]]]
 
 
 func fringe(input: [[Int]]) -> [Int] {
-    return flatMap(input) { $0 }
+    return input.flatMap{ $0 }
 }
 fringe(x)
 
 
 func fringe(input: [[[Int]]]) -> [Int] {
-    return flatMap(flatMap(input, { $0 }), { $0 })
+    return input.flatMap{ $0 }.flatMap{ $0 }
 }
 fringe(xx)
 
 // Again I don't see how to create a generic version of the finge function. 
 
 func fringely<A>(input: [[A]]) -> [A] {
-    return flatMap(input) { $0 }
+    return input.flatMap{ $0 }
 }
 
 fringely(x)

@@ -31,7 +31,7 @@ func squareList2(items: List<Int>) -> List<Int> {
         if things.isEmpty() {
             return answer
         } else {
-            return iter(cdr(things)!, cons(answer, square(car(things)!)))
+            return iter(cdr(things)!, cons(square(car(things)!), answer))
         }
     }
     return iter(items, [])

@@ -10,7 +10,7 @@ public struct Pair<A,B> {
     }
 }
 
-public func cons<A,B>(left: A, right: B) -> Pair<A,B> {
+public func cons<A,B>(left: A, _ right: B) -> Pair<A,B> {
     return Pair(left: left, right: right)
 }
 public func car<A,B>(pair: Pair<A,B>) -> A {
@@ -20,7 +20,7 @@ public func cdr<A,B>(pair: Pair<A,B>) -> B {
     return pair.right
 }
 
-public func cons<A>(value: A, list: [A]) -> [A] {
+public func cons<A>(value: A, _ list: [A]) -> [A] {
     var newList = list
     newList.insert(value, atIndex: 0)
     return newList
@@ -36,14 +36,14 @@ public func cdr<A>(list:[A]) -> [A] {
 public typealias Queen = Pair<Int,Int>
 
 
-public func enumerateInterval(low: Int, high: Int) -> [Int] {
+public func enumerateInterval(low: Int, _ high: Int) -> [Int] {
     return Array(low...high)
 }
 
 
 public let emptyBoard: [Queen] = []
 
-func placeQueen(rank: Int, file: Int) -> Queen {
+func placeQueen(rank: Int, _ file: Int) -> Queen {
     return cons(rank, file)
 }
 func queenRank(queen: Queen) -> Int {
@@ -53,11 +53,11 @@ func queenFile(queen: Queen) -> Int {
     return cdr(queen)
 }
 
-public func adjoinPosition(rank: Int, file: Int, board: [Queen]) -> [Queen] {
+public func adjoinPosition(rank: Int, _ file: Int, _ board: [Queen]) -> [Queen] {
     return cons(placeQueen(rank, file), board)
 }
 
-func findFirst(pred: (Queen) -> Bool, items: [Queen]) -> Queen {
+func findFirst(pred: (Queen) -> Bool, _ items: [Queen]) -> Queen {
     switch true {
     case items.isEmpty:
         return Queen(left: 0, right: 0)
@@ -68,15 +68,15 @@ func findFirst(pred: (Queen) -> Bool, items: [Queen]) -> Queen {
     }
 }
 
-public func isSafe(file: Int, board: [Queen]) -> Bool {
-    func getQueenByFile(file: Int, board: [Queen]) -> Queen {
+public func isSafe(file: Int, _ board: [Queen]) -> Bool {
+    func getQueenByFile(file: Int, _ board: [Queen]) -> Queen {
         return findFirst({ queen in
             queenFile(queen) == file
             }, board)
     }
     
     let theQueen = getQueenByFile(file, board)
-    let otherQueens = filter(board) { q in
+    let otherQueens = board.filter { q in
         !((queenRank(theQueen) == queenRank(q)) &&
             (queenFile(theQueen) == queenFile(q)))
     }
@@ -95,8 +95,8 @@ public func queensF(boardSize: Int) -> [[Queen]] {
             
             return [emptyBoard]
         } else {
-            let a = flatMap(queenCols(k - 1), { restOfQueens in
-                map(enumerateInterval(1, boardSize), { newRow in
+            let a = queenCols(k - 1).flatMap({ restOfQueens in
+                enumerateInterval(1, boardSize).map({ newRow in
                     adjoinPosition(newRow, k, restOfQueens)
                 })
             })

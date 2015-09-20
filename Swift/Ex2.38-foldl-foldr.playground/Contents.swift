@@ -3,7 +3,7 @@ import Cocoa
 // Exercise 2.38
 // The accumulate procedure is also known as fold-right, because it combines the first element of the sequence with the result of combining all the elements to the right. There is also a fold-left, which is similar to fold-right, except that it combines elements working in the opposite direction:
 
-func cons<A>(value: A, list: [A]) -> [A] {
+func cons<A>(value: A, _ list: [A]) -> [A] {
     var newList = list
     newList.insert(value, atIndex: 0)
     return newList
@@ -16,7 +16,7 @@ func cdr<A>(list:[A]) -> [A] {
 }
 
 
-func foldl<A,B>(op: (B, A) -> B, initial: B, sequence:[A]) -> B {
+func foldl<A,B>(op: (B, A) -> B, initial: B, seq sequence:[A]) -> B {
     var iter: (B, [A]) -> B = { (a,_) in return a }
     
     iter = { (result, rest) in
@@ -29,17 +29,17 @@ func foldl<A,B>(op: (B, A) -> B, initial: B, sequence:[A]) -> B {
     return iter(initial, sequence)
 }
 
-func foldr<A,B>(op: (A, B) -> B, initial: B, sequence: [A]) -> B {
+func foldr<A,B>(op: (A, B) -> B, initial: B, seq sequence: [A]) -> B {
     if sequence.isEmpty {
         return initial
     } else {
-        return op(car(sequence), foldr(op, initial, cdr(sequence)))
+        return op(car(sequence), foldr(op, initial:initial, seq:cdr(sequence)))
     }
 }
 
 
-foldr(/, 64.0, [2,2,2])
-foldl(/, 1.0, [1,2,3])
+foldr(/, initial:64.0, seq:[2,2,2])
+foldl(/, initial:1.0, seq:[1,2,3])
 
 
 class Box<T>{
@@ -58,7 +58,7 @@ enum Tree<T> {
         case let .Leaf(value):
             return " \(value.unbox)"
         case let .Node(values):
-            let strings = map(values) { $0.unbox.stringRepresentation }
+            let strings = values.map { $0.unbox.stringRepresentation }
             return "\(strings)"
         }
     }
@@ -67,30 +67,30 @@ enum Tree<T> {
         return Tree.Leaf(Box(value))
     }
     static func node(leaves: Tree<T>...) -> Tree<T> {
-        let boxed = map(leaves) { Box($0) }
+        let boxed = leaves.map { Box($0) }
         return Tree.Node(boxed)
     }
     static func list(values: T...) -> Tree<T> {
-        let boxedValues = map(values) { Box($0) }
-        let leaves = map(boxedValues) { Tree.Leaf($0) }
-        let boxed = map(leaves) { Box($0) }
+        let boxedValues = values.map { Box($0) }
+        let leaves = boxedValues.map { Tree.Leaf($0) }
+        let boxed = leaves.map { Box($0) }
         return Tree.Node(boxed)
     }
-    static func cons(left: T, right: Tree<T>) -> Tree<T> {
+    static func cons(left: T, _ right: Tree<T>) -> Tree<T> {
         let l = Tree.leaf(left)
         return Tree.node(l, right)
     }
-    static func cons(left: Tree<T>, right: T) -> Tree<T> {
+    static func cons(left: Tree<T>, _ right: T) -> Tree<T> {
         let r = Tree.leaf(right)
         return Tree.node(left, r)
     }
 }
 
 
-let a = foldr(Tree.cons, Tree.Node([]), [1,2,3])
+let a = foldr(Tree.cons, initial:Tree.Node([]), seq:[1,2,3])
 a.stringRepresentation
 
-let b = foldl(Tree.cons, Tree.Node([]), [1,2,3])
+let b = foldl(Tree.cons, initial:Tree.Node([]), seq:[1,2,3])
 b.stringRepresentation
 
 

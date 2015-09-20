@@ -1,6 +1,6 @@
 import Foundation
 
-public struct QueenF: Printable {
+public struct QueenF: CustomStringConvertible {
     public let row: Int
     public let col: Int
     
@@ -17,7 +17,7 @@ public struct QueenF: Printable {
 public typealias SolutionF = [QueenF]
 public typealias SolutionsF = [SolutionF]
 
-public func isSafeF(a: QueenF, b: QueenF) -> Bool {
+public func isSafeF(a: QueenF, _ b: QueenF) -> Bool {
     return (a.row != b.row) &&
         (a.col != b.col) &&
         (abs(a.row - b.row) != abs(a.col - b.col))
@@ -28,7 +28,7 @@ public func isSafeForF(queen: QueenF) -> (QueenF) -> Bool {
     return { q in return isSafeF(q, queen) }
 }
 
-public func isSafeF(queen: QueenF, solution: SolutionF) -> Bool {
+public func isSafeF(queen: QueenF, _ solution: SolutionF) -> Bool {
     return solution.map(isSafeForF(queen)).reduce(true) { $0 && $1 }
 }
 //isSafe(Queen(2, 1), [Queen(3, 2), Queen(4, 6)])

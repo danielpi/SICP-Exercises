@@ -91,7 +91,7 @@ public struct List<A> {
     }
     
     /// Appends an element onto the front of a list.
-    public static func cons(head : A, tail : List<A>) -> List<A> {
+    public static func cons(head : A, _ tail : List<A>) -> List<A> {
         return List(head, tail)
     }
     
@@ -112,9 +112,9 @@ public struct List<A> {
         switch self.match() {
         case .Nil:
             return error("Cannot extract an element from an empty list.")
-        case let .Cons(x, xs) where n == 0:
+        case let .Cons(x, _) where n == 0:
             return x
-        case let .Cons(x, xs):
+        case let .Cons(_, xs):
             return xs[n - 1]
         }
     }
@@ -123,7 +123,7 @@ public struct List<A> {
     public static func replicate(n : UInt, value : A) -> List<A> {
         var l = List<A>()
         for _ in 0..<n {
-            l = List.cons(value, tail: l)
+            l = List.cons(value, l)
         }
         return l
     }
@@ -195,7 +195,7 @@ public struct List<A> {
         case .Nil:
             return rhs
         case let .Cons(x, xs):
-            return List.cons(x, tail: xs.append(rhs))
+            return List.cons(x, xs.append(rhs))
         }
     }
     
@@ -246,7 +246,7 @@ public struct List<A> {
         case .Nil:
             return List<B>(initial)
         case let .Cons(x, xs):
-            return List<B>.cons(initial, tail: xs.scanl(f, initial: f(initial)(x)))
+            return List<B>.cons(initial, xs.scanl(f, initial: f(initial)(x)))
         }
     }
     
@@ -262,7 +262,7 @@ public struct List<A> {
         case .Nil:
             return List<B>(initial)
         case let .Cons(x, xs):
-            return List<B>.cons(initial, tail: xs.scanl(f, initial: f(initial, x)))
+            return List<B>.cons(initial, xs.scanl(f, initial: f(initial, x)))
         }
     }
     
@@ -296,7 +296,7 @@ public struct List<A> {
         case .Nil:
             return []
         case let .Cons(x, xs):
-            return List.cons(x, tail: xs.take(n - 1))
+            return List.cons(x, xs.take(n - 1))
         }
     }
     
@@ -309,7 +309,7 @@ public struct List<A> {
         switch self.match() {
         case .Nil:
             return []
-        case let .Cons(x, xs):
+        case let .Cons(_, xs):
             return xs.drop(n - 1)
         }
     }
@@ -326,7 +326,7 @@ public struct List<A> {
             return []
         case .Cons(let x, let xs):
             if p(x) {
-                return List.cons(x, tail: xs.takeWhile(p))
+                return List.cons(x, xs.takeWhile(p))
             }
             return []
         }
@@ -386,7 +386,7 @@ public struct List<A> {
     }
 }
 
-public func cons<A>(left:A, right:List<A>) -> List<A> {
+public func cons<A>(left:A, _ right:List<A>) -> List<A> {
     return List(left, right)
 }
 
@@ -416,7 +416,7 @@ public func ==<A : Equatable>(lhs : List<A>, rhs : List<A>) -> Bool {
 /// MARK: Collection Protocols
 
 extension List : ArrayLiteralConvertible {
-    typealias Element = A
+    public typealias Element = A
     
     public init(arrayLiteral s: Element...) {
         var xs : [A] = []
@@ -471,13 +471,13 @@ extension List : CollectionType {
 
 
 
-extension List : Printable {
+extension List : CustomStringConvertible {
     public func fmap<B>(f : (A -> B)) -> List<B> {
         return self.map(f)
     }
     
     public var description : String {
-        var x = ", ".join(self.fmap({ "\($0)" }))
+        let x = self.fmap({ "\($0)" }).joinWithSeparator(", ")
         return "[\(x)]"
     }
 }

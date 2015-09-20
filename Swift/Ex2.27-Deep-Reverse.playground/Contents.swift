@@ -6,7 +6,7 @@ import Cocoa
 let x = [[1,2],[3,4]]
 
 extension Array {
-    var decompose : (head: T, tail: [T])? {
+    var decompose : (head: Element, tail: [Element])? {
         return (count > 0) ? (self[0], Array(self[1..<count])) : nil
     }
 }

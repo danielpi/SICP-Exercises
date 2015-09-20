@@ -14,7 +14,7 @@ func isOdd(x: Int) -> Bool {
     return !isEven(x)
 }
 
-func isMatchedParity(x: Int, y: Int) -> Bool {
+func isMatchedParity(x: Int, _ y: Int) -> Bool {
     if isEven(x) {
         return isEven(y)
     } else {
