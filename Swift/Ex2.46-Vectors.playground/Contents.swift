@@ -8,12 +8,12 @@ struct Pair {
     let right: Double
 }
 
-func cons(left: Double, right: Double) -> Pair {
+func cons(left: Double, _ right: Double) -> Pair {
     return Pair(left: left, right: right)
 }
 
 typealias Vector = Pair
-func makeVect(x: Double, y: Double) -> Vector {
+func makeVect(x: Double, _ y: Double) -> Vector {
     return cons(x,y)
 }
 let a = makeVect(1.2, 6.5)
@@ -28,19 +28,19 @@ func ycorVect(vector: Vector) -> Double {
 }
 
 
-func addVect(lhs: Vector, rhs: Vector) -> Vector {
+func addVect(lhs: Vector, _ rhs: Vector) -> Vector {
     return makeVect(xcorVect(lhs) + xcorVect(rhs), ycorVect(lhs) + ycorVect(rhs))
 }
 addVect(a, b)
 
 
-func subVect(lhs: Vector, rhs: Vector) -> Vector {
+func subVect(lhs: Vector, _ rhs: Vector) -> Vector {
     return makeVect(xcorVect(lhs) - xcorVect(rhs), ycorVect(lhs) - ycorVect(rhs))
 }
 subVect(b, a)
 
 
-func scaleVect(scale: Double, vector: Vector) -> Vector {
+func scaleVect(scale: Double, _ vector: Vector) -> Vector {
     return makeVect(scale * xcorVect(vector), scale * ycorVect(vector))
 }
 scaleVect(3, a)
