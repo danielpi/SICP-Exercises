@@ -5,7 +5,7 @@ import Cocoa
 
 let nFivePairs = [("A",1),("B",2),("C",4),("D",8),("E",16)]
 let nFiveTree = generateHuffmanTree(nFivePairs)
-println(nFiveTree)
+print(nFiveTree)
 
 // {a b c d e} 31
 //   /       \
@@ -21,8 +21,7 @@ println(nFiveTree)
 
 let nTenPairs = nFivePairs + [("F",32),("G",64),("H",128),("I",256),("J",512)]
 let nTenTree = generateHuffmanTree(nTenPairs)
-println()
-println(nTenTree)
+print(nTenTree)
 
 //: In such a tree (for general n) how many bits are required to encode the most frequent symbol?
 //:

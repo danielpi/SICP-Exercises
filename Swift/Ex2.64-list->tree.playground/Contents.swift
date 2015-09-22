@@ -6,7 +6,7 @@ import Cocoa
 
 typealias TreeSetList = (TreeSet<Int>,[Int])
 
-func partialTree(elts: [Int], n: Int) -> TreeSetList {
+func partialTree(elts: [Int], _ n: Int) -> TreeSetList {
     if n == 0 {
         return (.Empty, elts)
     } else {
@@ -21,7 +21,7 @@ func partialTree(elts: [Int], n: Int) -> TreeSetList {
 }
 
 func listToTree(elements: [Int]) -> TreeSet<Int> {
-    let (tree, list) = partialTree(elements, elements.count)
+    let (tree, _) = partialTree(elements, elements.count)
     return tree
 }
 

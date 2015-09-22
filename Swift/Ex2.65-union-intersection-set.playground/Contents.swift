@@ -12,7 +12,7 @@ class Box<T> {
 
 typealias TreeSetList = (TreeSet<Int>,[Int])
 
-enum TreeSet<T>: Printable {
+enum TreeSet<T>: CustomStringConvertible {
     case Empty
     case Tree(entry:Box<T>, left:Box<TreeSet<T>>, right: Box<TreeSet<T>>)
     
@@ -28,7 +28,7 @@ enum TreeSet<T>: Printable {
 
 func entry<T>(tree: TreeSet<T>) -> T {
     switch tree {
-    case let .Tree(entry, left, right):
+    case let .Tree(entry, _, _):
         return entry.unbox
     default:
         fatalError("Tried to read an entry from an empty tree")
@@ -53,12 +53,12 @@ func rightBranch<T>(tree: TreeSet<T>) -> TreeSet<T> {
     }
 }
 
-func makeTree<T>(entry: T, left:TreeSet<T>, right:TreeSet<T>) -> TreeSet<T> {
+func makeTree<T>(entry: T, _ left:TreeSet<T>, _ right:TreeSet<T>) -> TreeSet<T> {
     return TreeSet.Tree(entry: Box(entry), left: Box(left), right: Box(right))
 }
 
 
-func isElementOfSet<T: Comparable>(x: T, set: TreeSet<T>) -> Bool {
+func isElementOfSet<T: Comparable>(x: T, _ set: TreeSet<T>) -> Bool {
     switch set {
     case .Empty:
         return false
@@ -73,7 +73,7 @@ func isElementOfSet<T: Comparable>(x: T, set: TreeSet<T>) -> Bool {
     }
 }
 
-func adjoinSet<T: Comparable>(x: T, set: TreeSet<T>) -> TreeSet<T> {
+func adjoinSet<T: Comparable>(x: T, _ set: TreeSet<T>) -> TreeSet<T> {
     switch set {
     case .Empty:
         return makeTree(x, .Empty, .Empty)
@@ -101,7 +101,7 @@ func adjoinRandom(set: TreeSet<Int>) -> TreeSet<Int> {
     return adjoinSet(Int(arc4random_uniform(100)), set)
 }
 
-func adjoinRandomValues(n: Int, set: TreeSet<Int>) -> TreeSet<Int> {
+func adjoinRandomValues(n: Int, _ set: TreeSet<Int>) -> TreeSet<Int> {
     if n < 1 {
         return set
     } else {
@@ -109,7 +109,7 @@ func adjoinRandomValues(n: Int, set: TreeSet<Int>) -> TreeSet<Int> {
     }
 }
 
-func partialTree(elts: [Int], n: Int) -> TreeSetList {
+func partialTree(elts: [Int], _ n: Int) -> TreeSetList {
     if n == 0 {
         return (.Empty, elts)
     } else {
@@ -124,17 +124,17 @@ func partialTree(elts: [Int], n: Int) -> TreeSetList {
 }
 
 func listToTree(elements: [Int]) -> TreeSet<Int> {
-    let (tree, list) = partialTree(elements, elements.count)
+    let (tree, _) = partialTree(elements, elements.count)
     return tree
 }
 
 extension Array {
-    var match: (head: T, tail: [T])? {
+    var match: (head: Element, tail: [Element])? {
         return self.isEmpty ? nil : (self[0], Array(self[1..<self.count]))
     }
 }
 
-func unionOrderedList<T: Comparable>(set1: [T], set2: [T]) -> [T] {
+func unionOrderedList<T: Comparable>(set1: [T], _ set2: [T]) -> [T] {
     switch (set1.match, set2.match) {
     case (.None, .None):
         return []
@@ -158,7 +158,7 @@ func unionOrderedList<T: Comparable>(set1: [T], set2: [T]) -> [T] {
     }
 }
 
-func unionSet(set1: TreeSet<Int>, set2: TreeSet<Int>) -> TreeSet<Int> {
+func unionSet(set1: TreeSet<Int>, _ set2: TreeSet<Int>) -> TreeSet<Int> {
     return listToTree(unionOrderedList(treeToList(set1), treeToList(set2)))
 }
 
@@ -170,14 +170,14 @@ let fig216c = adjoinSet(11, adjoinSet(7, adjoinSet(9, adjoinSet(1, adjoinSet(3, 
 
 let random1 = adjoinRandomValues(10,.Empty)
 let random2 = adjoinRandomValues(10,.Empty)
-println(treeToList(random1))
-println(treeToList(random2))
+print(treeToList(random1))
+print(treeToList(random2))
 let union = unionSet(random1, random2)
-println(treeToList(union))
+print(treeToList(union))
 
 
 
-func intersectionOrderedList<T: Comparable>(set1: [T], set2: [T]) -> [T] {
+func intersectionOrderedList<T: Comparable>(set1: [T], _ set2: [T]) -> [T] {
     if let (x1, tail1) = set1.match,
         (x2, tail2) = set2.match {
             switch true {
@@ -196,12 +196,12 @@ func intersectionOrderedList<T: Comparable>(set1: [T], set2: [T]) -> [T] {
 }
 
 
-func intersectionSet(set1: TreeSet<Int>, set2: TreeSet<Int>) -> TreeSet<Int> {
+func intersectionSet(set1: TreeSet<Int>, _ set2: TreeSet<Int>) -> TreeSet<Int> {
     return listToTree(intersectionOrderedList(treeToList(set1), treeToList(set2)))
 }
 
 let intersection = intersectionSet(random1, random2)
-println(treeToList(intersection))
+print(treeToList(intersection))
 
 
 

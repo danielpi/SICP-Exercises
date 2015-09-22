@@ -45,7 +45,7 @@ typealias Function = (name: String) -> String
 var globalSelectorTable = [String: [String: Function]]()
 
 func put(op: String, type: String, item: Function) {
-    if let typeColumn = globalSelectorTable[type] {
+    if let _ = globalSelectorTable[type] {
         globalSelectorTable[type]![op] = item
     } else {
         globalSelectorTable[type] = [op: item]

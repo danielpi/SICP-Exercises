@@ -12,7 +12,7 @@ public enum Tree {
     case Branch(left: Box<Tree>, right: Box<Tree>, symbols: [String], weight: Int)
 }
 
-public func makeLeaf(symbol: String, weight: Int) -> Tree {
+public func makeLeaf(symbol: String, _ weight: Int) -> Tree {
     return Tree.Leaf(symbol: symbol, weight: weight)
 }
 
@@ -34,15 +34,15 @@ func symbol(x: Tree) -> String {
     }
 }
 
-public func makeCodeTree(left: Tree, right: Tree) -> Tree {
+public func makeCodeTree(left: Tree, _ right: Tree) -> Tree {
     switch (left, right) {
     case let (.Leaf(symbol:s1, weight:w1), .Leaf(symbol:s2, weight:w2)):
         return Tree.Branch(left: Box(left), right: Box(right), symbols: [s1] + [s2], weight: w1 + w2)
-    case let (.Leaf(symbol:s1, weight:w1), .Branch(left: l2, right: r2, symbols:s2, weight:w2)):
+    case let (.Leaf(symbol:s1, weight:w1), .Branch(left: _, right: _, symbols:s2, weight:w2)):
         return Tree.Branch(left: Box(left), right: Box(right), symbols: [s1] + s2, weight: w1 + w2)
-    case let (.Branch(left: l1, right: r1, symbols:s1, weight:w1), .Leaf(symbol:s2, weight:w2)):
+    case let (.Branch(left: _, right: _, symbols:s1, weight:w1), .Leaf(symbol:s2, weight:w2)):
         return Tree.Branch(left: Box(left), right: Box(right), symbols: s1 + [s2], weight: w1 + w2)
-    case let (.Branch(left: l1, right: r1, symbols:s1, weight:w1), .Branch(left: l2, right: r2, symbols:s2, weight:w2)):
+    case let (.Branch(left: _, right: _, symbols:s1, weight:w1), .Branch(left: _, right: _, symbols:s2, weight:w2)):
         return Tree.Branch(left: Box(left), right: Box(right), symbols: s1 + s2, weight: w1 + w2)
         
     }

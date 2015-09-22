@@ -37,7 +37,7 @@ extension Expr: StringLiteralConvertible {
     }
 }
 
-extension Expr: Printable {
+extension Expr: CustomStringConvertible {
     var description: String {
         switch self {
         case .Sum(let a1, let a2):
@@ -97,7 +97,7 @@ func * (lhs: Expr, rhs: Expr) -> Expr {
     return makeProduct(lhs, rhs)
 }
 
-func isVariable<T>(exp: Expr) -> Bool {
+func isVariable(exp: Expr) -> Bool {
     switch exp {
     case .Variable(_):
         return true
@@ -106,7 +106,7 @@ func isVariable<T>(exp: Expr) -> Bool {
     }
 }
 
-func isSameVariable(v1: Expr, v2: Expr) -> Bool {
+func isSameVariable(v1: Expr, _ v2: Expr) -> Bool {
     switch (v1, v2) {
     case (.Variable(let val1), .Variable(let val2)):
         return val1 == val2
@@ -115,10 +115,10 @@ func isSameVariable(v1: Expr, v2: Expr) -> Bool {
     }
 }
 
-func makeSum1(a1:Expr, a2: Expr) -> Expr {
+func makeSum1(a1:Expr, _ a2: Expr) -> Expr {
     return Expr.Sum(Box(a1), Box(a2))
 }
-func makeProduct1(m1: Expr, m2: Expr) -> Expr {
+func makeProduct1(m1: Expr, _ m2: Expr) -> Expr {
     return Expr.Product(Box(m1), Box(m2))
 }
 
@@ -133,7 +133,7 @@ func isSum(exp: Expr) -> Bool {
 
 func addend(s: Expr) -> Expr {
     switch s {
-    case .Sum(let a1, let a2):
+    case .Sum(let a1, _):
         return a1.unbox
     default:
         fatalError("Tried to get the addend from an expression that was not a sum")
@@ -142,7 +142,7 @@ func addend(s: Expr) -> Expr {
 
 func augend(s: Expr) -> Expr {
     switch s {
-    case .Sum(let a1, let a2):
+    case .Sum(_, let a2):
         return a2.unbox
     default:
         fatalError("Tried to get the augend from an expression that was not a sum")
@@ -173,7 +173,7 @@ func multiplicand(p: Expr) -> Expr {
         fatalError("Tried to get the multiplicand from an expression that was not a product")
     }
 }
-func makeSum(a1: Expr, a2: Expr) -> Expr {
+func makeSum(a1: Expr, _ a2: Expr) -> Expr {
     switch (a1, a2) {
     case (.Constant(0), _):
         return a2
@@ -185,7 +185,7 @@ func makeSum(a1: Expr, a2: Expr) -> Expr {
         return Expr.Sum(Box(a1), Box(a2))
     }
 }
-func makeProduct(m1: Expr, m2: Expr) -> Expr {
+func makeProduct(m1: Expr, _ m2: Expr) -> Expr {
     switch (m1, m2) {
     case (.Constant(0), _):
         return .Constant(0)
@@ -202,7 +202,7 @@ func makeProduct(m1: Expr, m2: Expr) -> Expr {
     }
 }
 
-func deriv(exp: Expr, variable: Expr) -> Expr {
+func deriv(exp: Expr, _ variable: Expr) -> Expr {
     switch exp {
     case .Constant(_):
         return .Constant(0)
@@ -217,9 +217,9 @@ func deriv(exp: Expr, variable: Expr) -> Expr {
     }
 }
 
-println(deriv("x" + 3, "x"))                    // 1
-println(deriv("x" * "y", "x"))                  // y
-println(deriv(("x" * "y") * ("x" + 3), "x"))    // ((x * y) + (y * (x + 3)))
+print(deriv("x" + 3, "x"))                    // 1
+print(deriv("x" * "y", "x"))                  // y
+print(deriv(("x" * "y") * ("x" + 3), "x"))    // ((x * y) + (y * (x + 3)))
 
 
 //: We can regard this program as performing a dispatch on the type of the expression to be differentiated. In this situation the "type tag" of the datum is the algebraic operator symbol (such as +) and the operation being performed is deriv. We can transform this program into data-directed style by rewriting the basic derivative procedure as
@@ -229,8 +229,8 @@ typealias DerivativeFunction = (exp: Expr, variable: Expr) -> Expr
 
 var globalSelectorTable = [String: [String: DerivativeFunction]]()
 
-func put(op: String, type: String, item: DerivativeFunction) {
-    if let typeColumn = globalSelectorTable[type] {
+func put(op: String, _ type: String, _ item: DerivativeFunction) {
+    if let _ = globalSelectorTable[type] {
         globalSelectorTable[type]![op] = item
     } else {
         globalSelectorTable[type] = [op: item]
@@ -238,7 +238,7 @@ func put(op: String, type: String, item: DerivativeFunction) {
 }
 
 
-func get(op: String, type: String) -> DerivativeFunction? {
+func get(op: String, _ type: String) -> DerivativeFunction? {
     return globalSelectorTable[type]?[op]
 }
 
@@ -256,7 +256,7 @@ func operatorAsString(exp: Expr) -> String {
     }
 }
 
-func deriv2(exp: Expr, variable: Expr) -> Expr {
+func deriv2(exp: Expr, _ variable: Expr) -> Expr {
     switch exp {
     case .Constant(_):
         return .Constant(0)
@@ -277,7 +277,7 @@ func deriv2(exp: Expr, variable: Expr) -> Expr {
 
 func installDerivativeSumPackage() {
     // Internal Procedures
-    func makeSum(a1: Expr, a2: Expr) -> Expr {
+    func makeSum(a1: Expr, _ a2: Expr) -> Expr {
         switch (a1, a2) {
         case (.Constant(0), _):
             return a2
@@ -302,7 +302,7 @@ installDerivativeSumPackage()
 globalSelectorTable
 
 func installDerivativeProductPackage() {
-    func makeProduct(m1: Expr, m2: Expr) -> Expr {
+    func makeProduct(m1: Expr, _ m2: Expr) -> Expr {
         switch (m1, m2) {
         case (.Constant(0), _):
             return .Constant(0)
@@ -319,7 +319,7 @@ func installDerivativeProductPackage() {
         }
     }
     
-    func derivProduct(exp: Expr, variable: Expr) -> Expr {
+    func derivProduct(exp: Expr, _ variable: Expr) -> Expr {
         return makeSum(makeProduct(multiplier(exp), deriv2(multiplicand(exp), variable)), makeProduct(deriv2(multiplier(exp), variable), multiplicand(exp)))
     }
     
@@ -330,11 +330,11 @@ installDerivativeProductPackage()
 globalSelectorTable
 
 
-println(deriv2("x", "x"))                       // 1
-println(deriv2(4, "x"))                         // 0
-println(deriv2("x" + 3, "x"))                   // 1
-println(deriv2("x" * "y", "x"))                 // y
-println(deriv2(("x" * "y") * ("x" + 3), "x"))   // ((x * y) + (y * (x + 3)))
+print(deriv2("x", "x"))                       // 1
+print(deriv2(4, "x"))                         // 0
+print(deriv2("x" + 3, "x"))                   // 1
+print(deriv2("x" * "y", "x"))                 // y
+print(deriv2(("x" * "y") * ("x" + 3), "x"))   // ((x * y) + (y * (x + 3)))
 
 //: - Choose any additional differentiation rule that you like, such as the one for exponents (Exercise 2.56), and install it in this data-directed system.
 
@@ -357,7 +357,7 @@ func installDerivativeExponentPackage() {
         }
     }
     
-    func makeSum(a1: Expr, a2: Expr) -> Expr {
+    func makeSum(a1: Expr, _ a2: Expr) -> Expr {
         switch (a1, a2) {
         case (.Constant(0), _):
             return a2
@@ -370,7 +370,7 @@ func installDerivativeExponentPackage() {
         }
     }
     
-    func makeProduct(m1: Expr, m2: Expr) -> Expr {
+    func makeProduct(m1: Expr, _ m2: Expr) -> Expr {
         switch (m1, m2) {
         case (.Constant(0), _):
             return .Constant(0)
@@ -387,7 +387,7 @@ func installDerivativeExponentPackage() {
         }
     }
     
-    func makeExponentiation(base: Expr, exponent:Expr) -> Expr {
+    func makeExponentiation(base: Expr, _ exponent:Expr) -> Expr {
         switch (base, exponent) {
         case (_, .Constant(0)):
             return .Constant(1)
@@ -421,16 +421,16 @@ func ** (lhs: Expr, rhs: Expr) -> Expr {
     return makeExponentiation!(exp: lhs, variable: rhs)
 }
 
-println(globalSelectorTable)
+print(globalSelectorTable)
 
-println(deriv2("x" ** 4, "x"))
+print(deriv2("x" ** 4, "x"))
 
-println(deriv2("x", "x"))                       // 1
-println(deriv2(4, "x"))                         // 0
-println(deriv2("x" + 3, "x"))                   // 1
-println(deriv2("x" * "y", "x"))                 // y
-println(deriv2(("x" * "y") * ("x" + 3), "x"))   // ((x * y) + (y * (x + 3)))
-println(deriv2(2 * ("x" ** 4) + (6 * "y" ** 2), "y"))
+print(deriv2("x", "x"))                       // 1
+print(deriv2(4, "x"))                         // 0
+print(deriv2("x" + 3, "x"))                   // 1
+print(deriv2("x" * "y", "x"))                 // y
+print(deriv2(("x" * "y") * ("x" + 3), "x"))   // ((x * y) + (y * (x + 3)))
+print(deriv2(2 * ("x" ** 4) + (6 * "y" ** 2), "y"))
 
 //: - In this simple algebraic manipulator the type of an expression is the algebraic operator that binds it together. Suppose, however, we indexed the procedures in the opposite way, so that the dispatch line in deriv looked like ((get (operator exp) 'deriv) (operands exp) var) What corresponding changes to the derivative system are required?
 

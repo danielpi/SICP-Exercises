@@ -4,12 +4,12 @@ import Cocoa
 //: Give a O(n) implementation of unionSet for sets represented as ordered lists.
 
 extension Array {
-    var match: (head: T, tail: [T])? {
+    var match: (head: Element, tail: [Element])? {
         return self.isEmpty ? nil : (self[0], Array(self[1..<self.count]))
     }
 }
 
-func unionSet<T: Comparable>(set1: [T], set2: [T]) -> [T] {
+func unionSet<T: Comparable>(set1: [T], _ set2: [T]) -> [T] {
     switch (set1.match, set2.match) {
     case (.None, .None):
         return []

@@ -4,7 +4,7 @@ import Cocoa
 //: The encode procedure takes as arguments a message and a tree and produces the list of bits that gives the encoded message.
 
 extension Array {
-    var match: (head: T, tail: [T])? {
+    var match: (head: Element, tail: [Element])? {
         return (count > 0) ? (self[0], Array(self[1..<count])) : nil
     }
 }
@@ -13,13 +13,13 @@ extension Array {
 
 
 
-func encodeSymbol(symbol: String, tree: Tree) -> [Int] {
+func encodeSymbol(symbol: String, _ tree: Tree) -> [Int] {
     switch tree {
-    case let .Leaf(symbol: symbol, weight: w):
+    case .Leaf(symbol: _, weight: _):
         return []
     case let .Branch(left: left, right: right, symbols: syms, weight: _):
-        if contains(syms, symbol) {
-            if contains(symbols(left.unbox), symbol) {
+        if syms.contains(symbol) {
+            if symbols(left.unbox).contains(symbol) {
                 return [0] + encodeSymbol(symbol, left.unbox)
             } else {
                 return [1] + encodeSymbol(symbol, right.unbox)
@@ -30,7 +30,7 @@ func encodeSymbol(symbol: String, tree: Tree) -> [Int] {
     }
 }
 
-func encode(message:[String], tree:Tree) -> [Int] {
+func encode(message:[String], _ tree:Tree) -> [Int] {
     if let (head, tail) = message.match {
         return encodeSymbol(head, tree) + encode(tail, tree)
     } else {

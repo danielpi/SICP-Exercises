@@ -43,7 +43,7 @@ extension Expr: StringLiteralConvertible {
     }
 }
 
-extension Expr: Printable {
+extension Expr: CustomStringConvertible {
     var description: String {
         switch self {
         case .Sum(let a1, let a2):
@@ -74,7 +74,7 @@ func ** (lhs: Expr, rhs: Expr) -> Expr {
 }
 
 
-func isVariable<T>(exp: Expr) -> Bool {
+func isVariable(exp: Expr) -> Bool {
     switch exp {
     case .Variable(_):
         return true
@@ -83,7 +83,7 @@ func isVariable<T>(exp: Expr) -> Bool {
     }
 }
 
-func isSameVariable(v1: Expr, v2: Expr) -> Bool {
+func isSameVariable(v1: Expr, _ v2: Expr) -> Bool {
     switch (v1, v2) {
     case (.Variable(let val1), .Variable(let val2)):
         return val1 == val2
@@ -92,7 +92,7 @@ func isSameVariable(v1: Expr, v2: Expr) -> Bool {
     }
 }
 
-func makeSum(a1: Expr, a2: Expr) -> Expr {
+func makeSum(a1: Expr, _ a2: Expr) -> Expr {
     switch (a1, a2) {
     case (.Constant(0), _):
         return a2
@@ -116,7 +116,7 @@ func isSum(exp: Expr) -> Bool {
 
 func addend(s: Expr) -> Expr {
     switch s {
-    case .Sum(let a1, let a2):
+    case .Sum(let a1, _):
         return a1.unbox
     default:
         fatalError("Tried to get the addend from an expression that was not a sum")
@@ -125,14 +125,14 @@ func addend(s: Expr) -> Expr {
 
 func augend(s: Expr) -> Expr {
     switch s {
-    case .Sum(let a1, let a2):
+    case .Sum(_, let a2):
         return a2.unbox
     default:
         fatalError("Tried to get the augend from an expression that was not a sum")
     }
 }
 
-func makeProduct(m1: Expr, m2: Expr) -> Expr {
+func makeProduct(m1: Expr, _ m2: Expr) -> Expr {
     switch (m1, m2) {
     case (.Constant(0), _):
         return .Constant(0)
@@ -176,7 +176,7 @@ func multiplicand(p: Expr) -> Expr {
     }
 }
 
-func makeExponentiation(base: Expr, exponent:Expr) -> Expr {
+func makeExponentiation(base: Expr, _ exponent:Expr) -> Expr {
     switch (base, exponent) {
     case (_, .Constant(0)):
         return .Constant(1)
@@ -217,7 +217,7 @@ func exponent(exp: Expr) -> Expr {
 }
 
 
-func deriv(exp: Expr, variable: Expr) -> Expr {
+func deriv(exp: Expr, _ variable: Expr) -> Expr {
     switch exp {
     case .Constant(_):
         return .Constant(0)
@@ -234,15 +234,13 @@ func deriv(exp: Expr, variable: Expr) -> Expr {
         return makeProduct(makeProduct(exponent,
             makeExponentiation(base,
                 makeSum(exponent, Expr.Constant(-1)))), deriv(base, variable))
-    default:
-        fatalError("unknown expression type: DERIV")
     }
 }
 
-println(deriv("x" + 3, "x")) // 1
-println(deriv("x" * "y", "x")) // y
-println(deriv(("x" * "y") * ("x" + 3), "x")) //
-println(deriv(2 * ("x" ** 4) + (6 * "y" ** 2), "y"))
-println(deriv("x" + (3 * ("x" + ("y" + 2))), "x"))
-println(deriv("x" + 3 * ("x" + "y" + 2), "x"))
+print(deriv("x" + 3, "x")) // 1
+print(deriv("x" * "y", "x")) // y
+print(deriv(("x" * "y") * ("x" + 3), "x")) //
+print(deriv(2 * ("x" ** 4) + (6 * "y" ** 2), "y"))
+print(deriv("x" + (3 * ("x" + ("y" + 2))), "x"))
+print(deriv("x" + 3 * ("x" + "y" + 2), "x"))
 

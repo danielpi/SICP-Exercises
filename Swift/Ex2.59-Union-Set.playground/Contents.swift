@@ -4,12 +4,12 @@ import Cocoa
 //: Implement the unionSet operation for the unordered-list representation of sets.
 
 extension Array {
-    var match: (head: T, tail: [T])? {
+    var match: (head: Element, tail: [Element])? {
         return (count > 0) ? (self[0],Array(self[1..<count])) : nil
     }
 }
 
-func isElementOfSet<T: Equatable>(x: T, set: [T]) -> Bool {
+func isElementOfSet<T: Equatable>(x: T, _ set: [T]) -> Bool {
     if let (head, tail) = set.match {
         if head == x {
             return true
@@ -22,7 +22,7 @@ func isElementOfSet<T: Equatable>(x: T, set: [T]) -> Bool {
 }
 
 
-func adjoinSet<T: Equatable>(x: T, set: [T]) -> [T] {
+func adjoinSet<T: Equatable>(x: T, _ set: [T]) -> [T] {
     if isElementOfSet(x, set) {
         return set
     } else {
@@ -31,7 +31,7 @@ func adjoinSet<T: Equatable>(x: T, set: [T]) -> [T] {
 }
 
 
-func intersectionSet<T: Equatable>(set1: [T], set2: [T]) -> [T] {
+func intersectionSet<T: Equatable>(set1: [T], _ set2: [T]) -> [T] {
     if let (head, tail) = set1.match {
         if isElementOfSet(head, set2) {
             return [head] + intersectionSet(tail, set2)
@@ -43,7 +43,7 @@ func intersectionSet<T: Equatable>(set1: [T], set2: [T]) -> [T] {
     }
 }
 
-func unionSet<T: Equatable>(set1: [T], set2: [T]) -> [T] {
+func unionSet<T: Equatable>(set1: [T], _ set2: [T]) -> [T] {
     if let (head, tail) = set1.match {
         if isElementOfSet(head, set2) {
             return unionSet(tail, set2)

@@ -45,7 +45,7 @@ extension Expr: StringLiteralConvertible {
     }
 }
 
-extension Expr: Printable {
+extension Expr: CustomStringConvertible {
     var description: String {
         switch self {
         case .Sum(let a1, let a2):
@@ -128,7 +128,7 @@ func == (lhs: Expr, rhs: Expr) -> Bool {
 }
 
 
-func deriv(exp: Expr, variable: Expr) -> Expr {
+func deriv(exp: Expr, _ variable: Expr) -> Expr {
     switch exp {
     case .Constant(_):
         return .Constant(0)
@@ -146,15 +146,13 @@ func deriv(exp: Expr, variable: Expr) -> Expr {
         let base = lhs.unbox
         let exponent = rhs.unbox
         return exponent * base ** (exponent - 1) * deriv(base, variable)
-    default:
-        fatalError("unknown expression type: DERIV")
     }
 }
 
-println(deriv("x" + 3, "x")) // 1
-println(deriv("x" * "y", "x")) // y
-println(deriv(("x" * "y") * ("x" + 3), "x")) //
-println(deriv(2 * ("x" ** 4) + (6 * "y" ** 2), "y"))
-println(deriv("x" + (3 * ("x" + ("y" + 2))), "x"))
-println(deriv("x" + 3 * ("x" + "y" + 2), "x"))
+print(deriv("x" + 3, "x")) // 1
+print(deriv("x" * "y", "x")) // y
+print(deriv(("x" * "y") * ("x" + 3), "x")) //
+print(deriv(2 * ("x" ** 4) + (6 * "y" ** 2), "y"))
+print(deriv("x" + (3 * ("x" + ("y" + 2))), "x"))
+print(deriv("x" + 3 * ("x" + "y" + 2), "x"))
 

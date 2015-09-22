@@ -7,7 +7,7 @@ public class Box<T> {
     }
 }
 
-public enum TreeSet<T>: Printable {
+public enum TreeSet<T>: CustomStringConvertible {
     case Empty
     case Tree(entry:Box<T>, left:Box<TreeSet<T>>, right: Box<TreeSet<T>>)
     
@@ -23,7 +23,7 @@ public enum TreeSet<T>: Printable {
 
 public func entry<T>(tree: TreeSet<T>) -> T {
     switch tree {
-    case let .Tree(entry, left, right):
+    case let .Tree(entry, _, _):
         return entry.unbox
     default:
         fatalError("Tried to read an entry from an empty tree")
@@ -48,11 +48,11 @@ public func rightBranch<T>(tree: TreeSet<T>) -> TreeSet<T> {
     }
 }
 
-public func makeTree<T>(entry: T, left:TreeSet<T>, right:TreeSet<T>) -> TreeSet<T> {
+public func makeTree<T>(entry: T, _ left:TreeSet<T>, _ right:TreeSet<T>) -> TreeSet<T> {
     return TreeSet.Tree(entry: Box(entry), left: Box(left), right: Box(right))
 }
 
-public func isElementOfSet<T: Comparable>(x: T, set: TreeSet<T>) -> Bool {
+public func isElementOfSet<T: Comparable>(x: T, _ set: TreeSet<T>) -> Bool {
     switch set {
     case .Empty:
         return false
@@ -67,7 +67,7 @@ public func isElementOfSet<T: Comparable>(x: T, set: TreeSet<T>) -> Bool {
     }
 }
 
-public func adjoinSet<T: Comparable>(x: T, set: TreeSet<T>) -> TreeSet<T> {
+public func adjoinSet<T: Comparable>(x: T, _ set: TreeSet<T>) -> TreeSet<T> {
     switch set {
     case .Empty:
         return makeTree(x, .Empty, .Empty)
@@ -95,7 +95,7 @@ public func adjoinRandom(set: TreeSet<Int>) -> TreeSet<Int> {
     return adjoinSet(Int(arc4random_uniform(100)), set)
 }
 
-public func adjoinRandomValues(n: Int, set: TreeSet<Int>) -> TreeSet<Int> {
+public func adjoinRandomValues(n: Int, _ set: TreeSet<Int>) -> TreeSet<Int> {
     if n < 1 {
         return set
     } else {

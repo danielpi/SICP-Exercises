@@ -11,12 +11,12 @@ class Box<T> {
 }
 
 extension Array {
-    var match: (head: T, tail: [T])? {
+    var match: (head: Element, tail: [Element])? {
         return (count > 0) ? (self[0], Array(self[1..<count])) : nil
     }
 }
 
-enum TreeSet<T>: Printable {
+enum TreeSet<T>: CustomStringConvertible {
     case Empty
     case Tree(entry:Box<T>, left:Box<TreeSet<T>>, right: Box<TreeSet<T>>)
     
@@ -32,7 +32,7 @@ enum TreeSet<T>: Printable {
 
 func entry<T>(tree: TreeSet<T>) -> T {
     switch tree {
-    case let .Tree(entry, left, right):
+    case let .Tree(entry, _, _):
         return entry.unbox
     default:
         fatalError("Tried to read an entry from an empty tree")
@@ -57,11 +57,11 @@ func rightBranch<T>(tree: TreeSet<T>) -> TreeSet<T> {
     }
 }
 
-func makeTree<T>(entry: T, left:TreeSet<T>, right:TreeSet<T>) -> TreeSet<T> {
+func makeTree<T>(entry: T, _ left:TreeSet<T>, _ right:TreeSet<T>) -> TreeSet<T> {
     return TreeSet.Tree(entry: Box(entry), left: Box(left), right: Box(right))
 }
 
-struct Record: Printable {
+struct Record: CustomStringConvertible {
     var key: Int
     var value: String
     
@@ -77,7 +77,7 @@ struct Record: Printable {
 
 typealias Records = TreeSet<Record>
 
-func lookup(key: Int, records: Records) -> Record? {
+func lookup(key: Int, _ records: Records) -> Record? {
     switch records {
     case .Empty:
         return nil
@@ -92,7 +92,7 @@ func lookup(key: Int, records: Records) -> Record? {
     }
 }
 
-func insert(record: Record, records: Records) -> Records {
+func insert(record: Record, _ records: Records) -> Records {
     switch records {
     case .Empty:
         return makeTree(record, .Empty, .Empty)
@@ -113,7 +113,7 @@ myRecords = insert(Record(2,"200"), myRecords)
 myRecords = insert(Record(7,"700"), myRecords)
 myRecords = insert(Record(3,"300"), myRecords)
 myRecords = insert(Record(9,"900"), myRecords)
-println("\(myRecords)")
+print("\(myRecords)")
 
 lookup(2, myRecords)
 lookup(6, myRecords)
