@@ -52,6 +52,7 @@
 		E6541A371B1C277E00CDDF56 /* Ex2.33-Sequence-Puzzles.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.33-Sequence-Puzzles.playground"; sourceTree = "<group>"; };
 		E6541A381B1C2D1B00CDDF56 /* Ex2.34-Horners-Rule-For-Polynomials.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.34-Horners-Rule-For-Polynomials.playground"; sourceTree = "<group>"; };
 		E6556FC31B54E56400D70B6B /* Ex2.66-Tree-Lookup.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.66-Tree-Lookup.playground"; sourceTree = "<group>"; };
+		E657F8B81BB411A700A437E9 /* Ex2.76-ComparisonOfGenericApproaches.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.76-ComparisonOfGenericApproaches.playground"; sourceTree = "<group>"; };
 		E661D6F71AD75C6A00C010A0 /* Ex2.20-Variadic-Parameters.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.20-Variadic-Parameters.playground"; sourceTree = "<group>"; };
 		E66236C21ABFADA700F5E780 /* Ex25SingleIntBasedPairs.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Ex25SingleIntBasedPairs.playground; sourceTree = "<group>"; };
 		E6633D511AD0A57900FCC4CE /* Ex2.12-Center-Percent-Interval.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.12-Center-Percent-Interval.playground"; sourceTree = "<group>"; };
@@ -259,6 +260,7 @@
 				E692F1231B987923005B6BAE /* Ex2.73-Data-directed-Deriv.playground */,
 				E6CD52FE1B9C61C4000B8A62 /* Ex2.74-Insatiable-Enterprises.playground */,
 				E6DE0F361BB2B5F800B3F56E /* Ex2.75-Message-Passing-Magnitude-Angle.playground */,
+				E657F8B81BB411A700A437E9 /* Ex2.76-ComparisonOfGenericApproaches.playground */,
 			);
 			name = "2.4 Multiple Representations for Abstract Data";
 			sourceTree = "<group>";
