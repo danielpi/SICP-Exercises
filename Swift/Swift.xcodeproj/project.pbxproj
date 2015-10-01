@@ -68,6 +68,7 @@
 		E68AE0D11AA919D100BD09DD /* Ex1.43-repeated.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.43-repeated.playground"; sourceTree = "<group>"; };
 		E68AE0D21AA9439200BD09DD /* Ex1.44-Smoothing.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.44-Smoothing.playground"; sourceTree = "<group>"; };
 		E68AE0D31AA95B2F00BD09DD /* Ex1.45-Finding-Roots.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.45-Finding-Roots.playground"; sourceTree = "<group>"; };
+		E68DE92B1BBD4EEB00D93C0B /* 2.5-SystemsWithGenericOperations.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "2.5-SystemsWithGenericOperations.playground"; sourceTree = "<group>"; };
 		E68E2C6A1AC031A300CED4BA /* Ex24Pairs.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Ex24Pairs.playground; sourceTree = "<group>"; };
 		E6908FE51B39899000D2D02B /* Ex2.50-Flip-Horiz.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.50-Flip-Horiz.playground"; sourceTree = "<group>"; };
 		E6908FE61B398C1900D2D02B /* Ex2.51-Below.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.51-Below.playground"; sourceTree = "<group>"; };
@@ -261,6 +262,7 @@
 				E6CD52FE1B9C61C4000B8A62 /* Ex2.74-Insatiable-Enterprises.playground */,
 				E6DE0F361BB2B5F800B3F56E /* Ex2.75-Message-Passing-Magnitude-Angle.playground */,
 				E657F8B81BB411A700A437E9 /* Ex2.76-ComparisonOfGenericApproaches.playground */,
+				E68DE92B1BBD4EEB00D93C0B /* 2.5-SystemsWithGenericOperations.playground */,
 			);
 			name = "2.4 Multiple Representations for Abstract Data";
 			sourceTree = "<group>";
