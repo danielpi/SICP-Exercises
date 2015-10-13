@@ -59,10 +59,10 @@
 
 ; The generic arithmetic procedures are defined as follows:
 
-;(define (add x y) (apply-generic 'add x y))
-;(define (sub x y) (apply-generic 'sub x y))
-;(define (mul x y) (apply-generic 'mul x y))
-;(define (div x y) (apply-generic 'div x y))
+(define (add x y) (apply-generic 'add x y))
+(define (sub x y) (apply-generic 'sub x y))
+(define (mul x y) (apply-generic 'mul x y))
+(define (div x y) (apply-generic 'div x y))
 
 ; We begin by installing a package for handling ordinary numbers, that is,
 ; the primitive numbers of our language. We will tag these with the symbol
