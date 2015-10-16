@@ -43,10 +43,14 @@ func div(x: Double, y: Double) -> Double { return applyGeneric("div")(x,y) }
 
 //: We begin by installing a package for handling *ordinary* numbers, that is, the primitive numbers of our language. We will tag these with the symbol *scheme-number*. The arithmetic operations in this package are the primitive arithmetic procedures (so there is no need to define extra procedures to handle the untagged numbers). Since these operations each take two arguments, they are installed in the table keyed by the list (scheme-number scheme-number):
 
-typealias Tagged = (String, Double)
+//typealias Tagged = (String, Double)
+struct Tagged<V> {
+    let key: String
+    let value: V
+}
 
-func attachTag(tag: String, value: Double) -> Tagged {
-    return (tag, value)
+func attachTag<V>(tag: String, value: V) -> Tagged<V> {
+    return Tagged(key: tag, value: value)
 }
 
 typealias Function = (Double, Double) -> Tagged
@@ -110,6 +114,83 @@ makeSchemeNumber(9.4)
 
 //: Now that the framework of the generic arithmetic system is in place, we can readily include new kinds of numbers. Here is a package that performs rational arithmetic. Notice that, as a benefit of additivity, we can use without modification the rational-number code from Section 2.1.1 as the internal procedures in the package:
 
+func installRationalPackage() {
+    // Internal Procedures from Ex 2.1.1
+    enum ConsPosition {
+        case Left, Right
+    }
+    
+    func cons<T>(a: T, _ b: T) -> (ConsPosition -> T) {
+        func innerCons(i: ConsPosition) -> T {
+            if i == .Left {
+                return a;
+            } else {
+                return b;
+            }
+        }
+        
+        return innerCons;
+    }
+    
+    func car<T>(innerCons: ConsPosition -> T) -> T {
+        return innerCons(.Left);
+    }
+    
+    func cdr<T>(innerCons: ConsPosition -> T) -> T {
+        return innerCons(.Right);
+    }
+    
+    typealias Rational = (ConsPosition -> Int)
+    
+    func gcd(a: Int, _ b: Int) -> Int {
+        if b == 0 {
+            return abs(a)
+        } else {
+            return gcd(b, a % b)
+        }
+    }
+    
+    func makeRat(n: Int, _ d:Int) -> Rational {
+        let g = gcd(n, d)
+        if d < 0 {
+            return cons(n/g, -d/g)
+        } else {
+            return cons(n/g, d/g)
+        }
+    }
+    
+    func numer(x: Rational) -> Int {
+        return car(x)
+    }
+    func denom(x: Rational) -> Int {
+        return cdr(x)
+    }
+    
+    func printRat(x: Rational) {
+        print("\(numer(x))/\(denom(x))")
+    }
+    
+    func addRat(x: Rational, _ y: Rational) -> Rational {
+        return makeRat((numer(x) * denom(y)) + (numer(y) * denom(x)), denom(x) * denom(y))
+    }
+    func subRat(x: Rational, _ y: Rational) -> Rational {
+        return makeRat((numer(x) * denom(y)) - (numer(y) * denom(x)), denom(x) * denom(y))
+    }
+    func mulRat(x: Rational, _ y: Rational) -> Rational {
+        return makeRat(numer(x) * numer(y), denom(x) * denom(y))
+    }
+    func divRat(x: Rational, _ y: Rational) -> Rational {
+        return makeRat(numer(x) * denom(y), denom(x) * numer(y))
+    }
+    func isEqualRat(x: Rational, _ y: Rational) -> Bool {
+        return (numer(x) * denom(y)) == (numer(y) * denom(x))
+    }
+    
+    // Interface to rest of the system
+    func tag(x: Rational) -> Tagged { return attachTag("rational-number", value: x) }
+    
+    put("add", TypeKey(lhs: "rational-number", rhs: "rational-number"), { x, y in return tag(addRat(x,y)) } )
+}
 
 
 
