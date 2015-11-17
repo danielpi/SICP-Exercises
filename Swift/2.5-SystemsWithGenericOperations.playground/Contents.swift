@@ -28,6 +28,7 @@ import Cocoa
 //:
 //:  Figure 2.23: Generic arithmetic system
 //:
+//:
 //: ## 2.5.1 Generic Arithmetic Operations
 //:
 //: The task of designing generic arithmetic operations is analogous to that of designing the generic complex-number operations. We would like, for instance, to have a generic addition procedure *add* that acts like ordinary primitive addition + on ordinary numbers, like add-rat on rational numbers, and like add-complex on complex numbers. We can implement add, and the other generic arithmetic operations, by following the same strategy we used in Section 2.4.3 to implement the generic selectors for complex numbers. We will attach a type tag to each kind of number and cause the generic procedure to dispatch to an appropriate package according to the data type of its arguments. 
@@ -53,8 +54,8 @@ func attachTag<V>(tag: String, value: V) -> Tagged<V> {
     return Tagged(key: tag, value: value)
 }
 
-typealias Function = (Double, Double) -> Tagged
-typealias Constructor = (Double) -> Tagged
+typealias Function = (Double, Double) -> Tagged<Double>
+typealias Constructor = (Double) -> Tagged<Double>
 
 struct TypeKey: Equatable, Hashable {
     let lhs: String
@@ -95,7 +96,7 @@ func get(op: String, _ type: String) -> Constructor? {
 }
 
 func installSwiftNumberPackage() {
-    func tag(x: Double) -> Tagged { return attachTag("swift-number", value: x) }
+    func tag(x: Double) -> Tagged<Double> { return attachTag("swift-number", value: x) }
     put("add", TypeKey(lhs: "swift-number", rhs: "swift-number"), { x, y in tag(x + y) })
     put("sub", TypeKey(lhs: "swift-number", rhs: "swift-number"), { x, y in tag(x - y) })
     put("mul", TypeKey(lhs: "swift-number", rhs: "swift-number"), { x, y in tag(x * y) })
@@ -105,7 +106,7 @@ func installSwiftNumberPackage() {
 
 //: Users of the Scheme-number package will create (tagged) ordinary numbers by means of the procedure:
 
-func makeSchemeNumber(n: Double) -> Tagged {
+func makeSchemeNumber(n: Double) -> Tagged<Double> {
     return get("make", "swift-number")!(n)
 }
 
@@ -187,7 +188,7 @@ func installRationalPackage() {
     }
     
     // Interface to rest of the system
-    func tag(x: Rational) -> Tagged { return attachTag("rational-number", value: x) }
+    func tag(x: Rational) -> Tagged<Rational> { return attachTag("rational-number", value: x) }
     
     put("add", TypeKey(lhs: "rational-number", rhs: "rational-number"), { x, y in return tag(addRat(x,y)) } )
 }
