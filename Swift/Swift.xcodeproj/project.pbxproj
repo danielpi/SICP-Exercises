@@ -18,7 +18,6 @@
 		E607D2601B58C496006FB709 /* Ex2.70-50s-lyrics.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.70-50s-lyrics.playground"; sourceTree = "<group>"; };
 		E60A1B3C1B217305008E914D /* Ex2.42-Queens-Puzzle.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.42-Queens-Puzzle.playground"; sourceTree = "<group>"; };
 		E60A86D31A839C2200ACBA3C /* Ex1.26-expMod-Modified.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.26-expMod-Modified.playground"; sourceTree = "<group>"; };
-		E60FC5191AC0EAE2007A7197 /* Ex26ChurchNumerals.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Ex26ChurchNumerals.playground; sourceTree = "<group>"; };
 		E6153A081ADA8EEB0031FA24 /* Ex2.21-Square-List.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.21-Square-List.playground"; sourceTree = "<group>"; };
 		E6153A091ADAA0050031FA24 /* Ex2.22-Iterative-Square-List.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.22-Iterative-Square-List.playground"; sourceTree = "<group>"; };
 		E61601471ADB50C70081BF21 /* Ex2.23-For-Each.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.23-For-Each.playground"; sourceTree = "<group>"; };
@@ -54,7 +53,6 @@
 		E6556FC31B54E56400D70B6B /* Ex2.66-Tree-Lookup.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.66-Tree-Lookup.playground"; sourceTree = "<group>"; };
 		E657F8B81BB411A700A437E9 /* Ex2.76-ComparisonOfGenericApproaches.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.76-ComparisonOfGenericApproaches.playground"; sourceTree = "<group>"; };
 		E661D6F71AD75C6A00C010A0 /* Ex2.20-Variadic-Parameters.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.20-Variadic-Parameters.playground"; sourceTree = "<group>"; };
-		E66236C21ABFADA700F5E780 /* Ex25SingleIntBasedPairs.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Ex25SingleIntBasedPairs.playground; sourceTree = "<group>"; };
 		E6633D511AD0A57900FCC4CE /* Ex2.12-Center-Percent-Interval.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.12-Center-Percent-Interval.playground"; sourceTree = "<group>"; };
 		E6680EDB1B1996E500A93CFC /* Ex2.31-Abstract-Square-Tree.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.31-Abstract-Square-Tree.playground"; sourceTree = "<group>"; };
 		E66A58E31A6DF2ED00557760 /* 1.2-Procedures&theProcessesTheyGenerate.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "1.2-Procedures&theProcessesTheyGenerate.playground"; sourceTree = "<group>"; };
@@ -69,7 +67,6 @@
 		E68AE0D21AA9439200BD09DD /* Ex1.44-Smoothing.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.44-Smoothing.playground"; sourceTree = "<group>"; };
 		E68AE0D31AA95B2F00BD09DD /* Ex1.45-Finding-Roots.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex1.45-Finding-Roots.playground"; sourceTree = "<group>"; };
 		E68DE92B1BBD4EEB00D93C0B /* 2.5-SystemsWithGenericOperations.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "2.5-SystemsWithGenericOperations.playground"; sourceTree = "<group>"; };
-		E68E2C6A1AC031A300CED4BA /* Ex24Pairs.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Ex24Pairs.playground; sourceTree = "<group>"; };
 		E6908FE51B39899000D2D02B /* Ex2.50-Flip-Horiz.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.50-Flip-Horiz.playground"; sourceTree = "<group>"; };
 		E6908FE61B398C1900D2D02B /* Ex2.51-Below.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.51-Below.playground"; sourceTree = "<group>"; };
 		E6908FE71B39918400D2D02B /* Ex2.52-Making-Changes.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "Ex2.52-Making-Changes.playground"; sourceTree = "<group>"; };
@@ -130,9 +127,6 @@
 				E68028C11AABFB560046720A /* Ex2.1-MakeRational.playground */,
 				E6D5BA341AADB384007C9B20 /* Ex2.2-LinesAndPoints.playground */,
 				E616A2161AAF108E00BCE97E /* Ex2.3-Rectangles.playground */,
-				E68E2C6A1AC031A300CED4BA /* Ex24Pairs.playground */,
-				E66236C21ABFADA700F5E780 /* Ex25SingleIntBasedPairs.playground */,
-				E60FC5191AC0EAE2007A7197 /* Ex26ChurchNumerals.playground */,
 				E67937D81ACBCF88002447DE /* Ex2.7-Make-Interval.playground */,
 				E67937D91ACBD015002447DE /* Ex2.8-Interval-Subtraction.playground */,
 				E69824641ACBD40400D18A6C /* Ex2.9-Interval-Width.playground */,

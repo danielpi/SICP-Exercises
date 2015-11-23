@@ -190,10 +190,17 @@ func installRationalPackage() {
     // Interface to rest of the system
     func tag(x: Rational) -> Tagged<Rational> { return attachTag("rational-number", value: x) }
     
-    put("add", TypeKey(lhs: "rational-number", rhs: "rational-number"), { x, y in return tag(addRat(x,y)) } )
+    //put("add", TypeKey(lhs: "rational-number", rhs: "rational-number"), { x, y in return tag(addRat(x,y)) } )
 }
 
+// TODO: Figure out how best to get the put function to work in Swift
 
+//: We can install a similar package to handle complex numbers, using the tag complex. In creating the package, we extract from the table the operations make-from-real-imag and make-from-mag-ang that were defined by the rectangular and polar packages. Additivity permits us to use, as the internal operations, the same add-complex, sub-complex, mul-complex, and div-complex procedures from Section 2.4.1.
+
+func installComplexPackage() {
+    // Imported procedures from rectangular and polar packages
+    
+}
 
 
 
