@@ -1,7 +1,7 @@
 import Cocoa
 //: # Systems with Generic Operations
 //:
-//: In the previous section, we saw how to design systems in which data objects can be represented in more than one way. The key idea is to link the code that specifies the data operations to the several representations by means of generic interface procedures. Now we will see how to use this same idea not only to define operations that are generic over different representations but also to define operations that are generic over different kinds of arguments. We have already seen several different packages of arithmetic operationsL
+//: In the previous section, we saw how to design systems in which data objects can be represented in more than one way. The key idea is to link the code that specifies the data operations to the several representations by means of generic interface procedures. Now we will see how to use this same idea not only to define operations that are generic over different representations but also to define operations that are generic over different kinds of arguments. We have already seen several different packages of arithmetic operations
 //: - the primitive arithmetic (+, -, *, /) built into our language
 //: - the rational-number arithmetic (add-rat, sub-rat, mul-rat, div-rat) of Section 2.1.1
 //: - and the complex-number arithmetic that we implemented in Section 2.4.3.
@@ -16,10 +16,10 @@ import Cocoa
 //:     --------------------------| add sub mul div |----------------------
 //:                               +-----------------+
 //:                             Generic arithmetic package
-//:       +-----------------+   +-------------------------+   +-----+
-//:     __| add-rat sub-rat |___| add-complex sub-complex |___| + - |______
-//:       | mul-rat div-rat | | | mul-complex div-complex | | | * / |
-//:       +-----------------+ | +-------------------------+ | +-----+
+//:       +-----------------+   +-------------------------+      +-----+
+//:     __| add-rat sub-rat |___| add-complex sub-complex |______| + - |___
+//:       | mul-rat div-rat | | | mul-complex div-complex | |    | * / |
+//:       +-----------------+ | +-------------------------+ |    +-----+
 //:                           |     Complex arithmetic      |
 //:            Rational       |-----------------------------|   Ordinary
 //:           arithmetic      |   Rectangular |    Polar    |  arithmetic
@@ -69,9 +69,9 @@ func == (lhs: TypeKey, rhs: TypeKey) -> Bool {
     return lhs.lhs == rhs.lhs && rhs.rhs == lhs.rhs
 }
 
-var globalSelectorTable = [TypeKey: [String: Function]]()
+var globalSelectorTable = [TypeKey: [String: Any]]()
 
-func put(op: String, _ type: TypeKey, _ item: Function) {
+func put(op: String, _ type: TypeKey, _ item: Any) {
     if let _ = globalSelectorTable[type] {
         globalSelectorTable[type]![op] = item
     } else {
@@ -79,7 +79,7 @@ func put(op: String, _ type: TypeKey, _ item: Function) {
     }
 }
 
-func get(op: String, _ type: TypeKey) -> Function? {
+func get(op: String, _ type: TypeKey) -> Any? {
     return globalSelectorTable[type]?[op]
 }
 
@@ -111,7 +111,19 @@ func makeSchemeNumber(n: Double) -> Tagged<Double> {
 }
 
 installSwiftNumberPackage()
-makeSchemeNumber(9.4)
+let a = makeSchemeNumber(9.4)
+let b = makeSchemeNumber(12.8)
+
+func +<T> (lhs: Tagged<T>, rhs: Tagged<T>) -> Tagged<T> {
+    if let add = get("add", TypeKey(lhs: lhs.key, rhs: rhs.key)) as? (T, T) -> Tagged<T> {
+        return add(lhs.value, rhs.value)
+    } else {
+        fatalError("Addition is not installed for types: \(TypeKey(lhs: lhs.key, rhs: rhs.key)))")
+    }
+}
+
+(a + b).value
+
 
 //: Now that the framework of the generic arithmetic system is in place, we can readily include new kinds of numbers. Here is a package that performs rational arithmetic. Notice that, as a benefit of additivity, we can use without modification the rational-number code from Section 2.1.1 as the internal procedures in the package:
 
