@@ -111,11 +111,17 @@ let b = makeSchemeNumber(12.8)
 
 //: Now that the framework of the generic arithmetic system is in place, we can readily include new kinds of numbers. Here is a package that performs rational arithmetic. Notice that, as a benefit of additivity, we can use without modification the rational-number code from Section 2.1.1 as the internal procedures in the package:
 
+// This doesn't work at the moment, but I am getting bogged down.
+
+enum ConsPosition {
+    case Left, Right
+}
+
+typealias Rational = (ConsPosition -> Int)
+
 func installRationalPackage() {
     // Internal Procedures from Ex 2.1.1
-    enum ConsPosition {
-        case Left, Right
-    }
+    
     
     func cons<T>(a: T, _ b: T) -> (ConsPosition -> T) {
         func innerCons(i: ConsPosition) -> T {
@@ -137,7 +143,7 @@ func installRationalPackage() {
         return innerCons(.Right);
     }
     
-    typealias Rational = (ConsPosition -> Int)
+    
     
     func gcd(a: Int, _ b: Int) -> Int {
         if b == 0 {
@@ -192,11 +198,7 @@ func installRationalPackage() {
     put("div", TypeKey(lhs: "rational-number", rhs: "rational-number"), { x, y in return tag(divRat(x,y)) } )
     put("make", TypeKey(lhs: "rational-number", rhs: "rational-number"), { x, y in return tag(makeRat(x,y)) } )
 }
-enum ConsPosition {
-    case Left, Right
-}
 
-typealias Rational = (ConsPosition -> Int)
 
 func makeRationalNumber(n: Double, d: Double) -> Tagged<Rational> {
     if let make = get("make", TypeKey(lhs: "swift-number", rhs: "swift-number")) as? (Double, Double) -> Tagged<Rational> {
@@ -207,7 +209,7 @@ func makeRationalNumber(n: Double, d: Double) -> Tagged<Rational> {
 }
 
 installRationalPackage()
-let c = makeRationalNumber(3, d: 5)
+// let c = makeRationalNumber(3, d: 4)
 
 //: We can install a similar package to handle complex numbers, using the tag complex. In creating the package, we extract from the table the operations make-from-real-imag and make-from-mag-ang that were defined by the rectangular and polar packages. Additivity permits us to use, as the internal operations, the same add-complex, sub-complex, mul-complex, and div-complex procedures from Section 2.4.1.
 
@@ -228,3 +230,9 @@ func +<T> (lhs: Tagged<T>, rhs: Tagged<T>) -> Tagged<T> {
 
 (a + b).value
 
+
+//: ## 2.5.2 Combining Data of Different Types
+//:
+//: We have seen how to define a unified arithmetic system that encompasses ordinary numbers, complex numbers, rational numbers, and any other type of number we might decide to invent, but we have ignorde, an important issue. The operations we have defined so far treat the different data types as being competely independent. Thus, there are separate packages for adding, say, two ordinary numbers, or two complex numbers. What we have not yet considered is the fact that it is meaningful to define operations that cross the type boundaries, such as the addition of a complex number to an ordinary number. We have gone to great pains to introduce barriers between parts of our programs so that they can be developed and understood separately. We would like to introduce the cross-type operations in some carefully controlled way, so that we can support them without seriously violating our module boundaries.
+//:
+//: One way to handle cross-type operations is to design a different procedure for each possible combination of types for which the operation is valid. For example. We could extend the complex-number package so that it provides a procedure for adding complex numbers to ordinary numbers and installs this in the table using the tag(complex scheme-number):
