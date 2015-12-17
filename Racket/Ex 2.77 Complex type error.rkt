@@ -247,3 +247,5 @@
 ; (sqrt (+ (square (real-part x)) (square (imag-part x))))
 
 ; So apply generic is called twice.
+
+; First dispatch is magnitude of complex. Second dispatch is magnitude of rectangular.
