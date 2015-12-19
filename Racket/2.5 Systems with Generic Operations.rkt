@@ -370,4 +370,79 @@
 
 
 ; Coercion
-; 
+; In the general situation of completely unrelated operations acting on completely
+; unrelated types, implementing explicit cross-type operations, cumbersome though
+; it may be, is the best that one can hope for. Fortunately, we can usually do better
+; by taking advantage of additional structure that may be latent in our type system.
+; Often the different data types are not completely independent, and there may be ways
+; by which objects of one type may be viewed as being of another type. This process
+; is called coersion. For example, if we are asked to arithmetically combine an
+; ordinary number with a complex number, we can view the ordinary number as a complex
+; number whose imaginary part is zero. This transforms the problem to that of combining
+; two complex numbers, which can be handled in the ordinary way by the complex-arithmetic
+; package.
+
+; In general, we can implement this idea by designing coersion procedures that transoform
+; an object of one type into an equivalent object of another type. Here is a typical
+; coersion procedure, which transforms a given ordinary number to a complex number with
+; that real part and zero imaginary part:
+
+(define (scheme-number->complex n)
+  (make-complex-from-real-imag (contents n) 0))
+
+(scheme-number->complex (make-scheme-number 5))
+
+; We install these coercion procedures in a special coercion table, indexed under the
+; names of the two types:
+
+(define (put-coercion t1 t2 func)
+  (+ 1 1))
+(define (get-coercion t1 t2)
+  (lambda (a b) (+ 1 1)))
+
+(put-coercion 'scheme-number
+              'complex
+              scheme-number->complex)
+
+; (We assume that there are put-coercion and get-coercion procedures available for
+; manipulating this table.) Generally some of the slots in the table will be empty,
+; because it is not generally possible to coerce an arbitrary data object of each type
+; to all other types. For example, there is no way to coerce an arbitrary complex number
+; to an ordinary number, so there will be no general complex->scheme-number procedure
+; included in the table.
+
+; Once the coercion table has been set up, we can handle coercion in a uniform manner
+; by modifying the apply-generic procedure of Section 2.4.3. When asked to apply an
+; operation, we first check whether the operation is defined for the arguments' types,
+; just as before. If so, we diespatch to the procedure found in the operation-and-type
+; table. Otherwise, we try coercion. For simplicity, we consider only the case where
+; there are two arguments. We check the coercion table to see if objects of the first
+; type can be coerced ot the second type. If so, we coerce the first argument and try
+; the operation again. If objects of the first type cannot in general be coerced to the
+; second type, we try the coercion the other way around to see if there is a way to
+; coerce the second argument to the type of the first argument. Finally, if there is
+; no known way to coerce either type to the other type, we give up. Here is the
+; procedure:
+
+(define (apply-generic2 op . args)
+  (let ((type-tags (map type-tag args)))
+    (let ((proc (get op type-tags)))
+      (if proc
+          (apply proc (map contents args))
+          (if (= (length args) 2)
+              (let ((type1 (car type-tags))
+                    (type2 (cadr type-tags))
+                    (a1 (car args))
+                    (a2 (cadr args)))
+                (let ((t1->t2 (get-coercion type1 type2))
+                      (t2->t1 (get-coercion type2 type1)))
+                  (cond (t1->t2
+                         (apply-generic op (t1->t2 a1) a2))
+                        (t2->t1
+                         (apply-generic op a1 (t1->t2 a2)))
+                        (else (error "No method for these types"
+                                     (list op type-tags))))))
+              (error "No method for these types" (list op type-tags)))))))
+
+; This coercion scheme has many advantages over the method of defining explicit
+; cross-type operations as outlined above.
