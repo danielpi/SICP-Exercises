@@ -327,4 +327,47 @@
 
 
 ; 2.5.2 Combining Data of Different Types
+; We have seen how to define a unified arithmetic system that encompasses ordinary
+; numbers, complex numbers, rational numbers, and any other type of number we
+; might decide to invent, but we have ignored an important issue. The operations
+; we have defined so far treat the different data types as being completely
+; independent. Thus, there are separate packages for adding, say, two ordinary
+; numbers, or two complex numbers. What we have not yet considered is the fact that
+; it is meaningful to define operations that cross the type boundaries, such as the
+; addition of a complex number to an ordinary number. We have gone to great pains
+; to introduce barriers between parts of our programs so that they can be developed
+; and understood separately. We would like to introduce the cross-type operations
+; in some carefully controlled way, so that we can support them without seriously
+; violating our module boundaries.
+
+; One way to handle cross-type operations is to design a different procedure for
+; each possible combination of types for which the operation is valid. For example,
+; we could extend the complex-number package so that it provides a procedure for
+; adding complex numbers to ordinary numbers and installs this in the table using
+; the tag (complex scheme-number):
+
+;; To be included in the complex package
+;(define (add-complex-to-schemnum z x)
+;  (make-from-real-imag (+ (real-part z) x) (imag-part z)))
+;(put 'add '(complex scheme-number)
+;     (lambda (z x) (tag (add-complex-to-schemenum z x))))
+
+; This technique works, but it is combersome. With such a system, the cost of
+; introducing a new type is not just the construction of the package of procedures
+; for that type but also the construction and installation of the procedures that
+; implement the cross-type operations. This can easily be much more code than is needed
+; to define the operations on the type itself. The method also undermines our ability
+; to combine separate packages additively, or at least to limit the extent to which
+; the implementors of the individual packages need to take account of other
+; packages. For instance, in the example above, it seems reasonable that handling
+; mixed operations on complex numbers and ordinary numbers should be the responsibility
+; of the complex-number package. Combining rational numbers and complex numnbers,
+; however, might be done by the complex package, the rational package, or by some
+; third package that uses operations extracted from these two packages. Formulation
+; coherent policies on the divisioin of responsibility among packages can be an
+; overwhelming task in designing systems with many packages and many cross-type
+; operations
+
+
+; Coercion
 ; 
