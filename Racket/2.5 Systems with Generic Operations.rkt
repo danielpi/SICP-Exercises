@@ -445,4 +445,21 @@
               (error "No method for these types" (list op type-tags)))))))
 
 ; This coercion scheme has many advantages over the method of defining explicit
-; cross-type operations as outlined above.
+; cross-type operations as outlined above. Although we still need to write coercion
+; procedures to relate the types (possibly n^2 proceduresfor a system with n types)
+; we need to write only one procedure for each pair of types rather than a different
+; procedure for each collection of types and each generic operation. What we are
+; counting on here is the fact that the appropriate transformation between types
+; depends only on the types themselves, not on the operation to be applied.
+
+; On the other hand, there may be applications for which our coercion scheme is not
+; general enough. Even when neither of the objects to be combined can be converted
+; to the type of the other it may still be possible to perform the operation by
+; converting both objects to a third type. In order to deal with such complexity and
+; still preserve modularity in our programs, it is usually necessary to build
+; systems that take advantage of still further structure in the relations among
+; types, as we discuss next.
+
+
+; Hierarchies of types
+; 
