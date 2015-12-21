@@ -462,4 +462,65 @@
 
 
 ; Hierarchies of types
+; The coercion scheme presented above relied on the existence of natural relations
+; between pairs of types. Often there is more "global" structure in how the different
+; types relate to each other. For instance, suppose we are building a generic
+; arithmetic system to handle integers, rational numbers, real numbers, and complex
+; numbers. In such a system, it is quite natural to regard an integer as a special
+; kind of rational number, which is in turn a special kind of real number, which is
+; in turn a special kind of complex number. What we actually have is a so-called
+; hierarchy of types, in which, for example, integers are a subtype of rational
+; numbers (i.e., any operation that can be applied to a rational number can
+; automatically be applied to an integer). Conversely, we say that rational numbers
+; form a supertype of integers. The particular hierarchy we have here is of a very
+; simple kind, in which each type has at most one supertype and at most one subtype.
+; Such a structure, called a tower, is illustrated in Figure 2.25.
+
+;                complex
+;                   ^
+;                   |
+;                 real
+;                   ^
+;                   |
+;                rational
+;                   ^
+;                   |
+;                integer
+;
+; Figure 2.25: A tower of types
+
+; If we have a tower structure, then we can greatly simplify the problem of adding
+; a new type to the hierarchy, for we need only specify how the new type is embedded
+; in the next supertype above it and how it is the supertype of the type below it. For
+; example. if we want to add an integer to a complex number, we need not explicitly
+; define a special coercion procedure integer->complex. Instead, we define how an integer
+; can be transformed into a real number, and how a real number is transformed into a
+; complex number. We then allow the system to transform the integer into a complex
+; number through these steps and then add the two complex numbers.
+
+; We can redesign our apply-generic procedure in the following way: For each type, we
+; need to supply a raise procedure, which  "raises" objects of that type one level in
+; the tower. (Exercise 2.83 and Exercise 2.84 concern the details of implementing such
+; a strategy.)
+
+; Another advantage of a tower is that we can easily implement the notion that every
+; type "inherits" all operations defined on a supertype. For instance, if we do not
+; supply a special procedure for finding the real part of an integer, we should
+; nevertheless expect that real-part will be defined for integers by virtue of the fact
+; that integers are a subtype of complex numbers. In a tower, we can arrange for this
+; to happen in a unidform way by modifying apply-generic. If the required operation is
+; not directly defined for the type of the object given, we raise the object to its
+; supertype and try again. We thus crawl up the tower, transforming our argument as
+; we go, until we either find a level at which the desired operation can be performed
+; or hit the top (in which case we give up).
+
+; Yet another advantage of a tower over a more general hierachy is that it gives us a
+; simple way to "lower" a data object to the simplest representation. For example, if we
+; add 2 + 3i to 4 - 3i, it would be nice to obtain the answer as the integer 6 rather
+; than as the complex number 6 + 0i.Exercise 2.85 discusses a way to implement such a
+; lowering operation (The trick is that we need a general way to distinguish those objects
+; that can be lowered, such as 6 + 0i, from those that cannot, such as 6 + 2i.)
+
+
+; Inadaquacies of hierarchies
 ; 
