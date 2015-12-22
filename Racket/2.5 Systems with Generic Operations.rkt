@@ -523,4 +523,44 @@
 
 
 ; Inadaquacies of hierarchies
-; 
+; If the data types in our system can be naturally arranged in a tower, this greatly
+; simplifies the problems of dealing with generic operations on different types, as we
+; have seen. Unfortunately, this is usually not the case. Figure 2.26 illustrates a
+; more complex arrangement of mixed types, this one showing relations among different
+; types of geometric figures. We see that, in general, a type may have more than one
+; subtype.Triangles and quadrilaterals, for instance, are both subtypes of polygons.
+; In addition, a type may have more than one supertype. For example, an isosceles right
+; angle triangle may be regarded either as an isosceles triangle or as a right angle
+; triangle. This multiple-supertypes issue is particularly thorny, since it means that
+; there is no unique way to "raise" a type in the hierarchy. Finding the "correct"
+; supertype in which to apply an operation to an object may involve considerable
+; searching through the entire type network on the part of a procedure such as
+; apply-generic. Since there generally are multiple subtypes for a type, there is a
+; similar problem in coercing a value "down" the type hierarchy. Dealing with large
+; numbers of interrelated types while still preserving modularity in the design of
+; large systems is very difficult, and is an area of much current research.
+
+;                         polygon
+;                          /  \
+;                         /    \
+;                        /      \
+;                       /        \
+;                      /          \
+;                     /            \
+;                    /              \
+;                   /           quadrilateral
+;                  /             /       \
+;                 /             /         \
+;          triangle       trapezoid        \
+;           /    \              \           \
+;          /      \              \           \
+;      isosceles  right      parallelogram   kite
+;      triangle   triangle      /      \    /
+;       /     \      |     rectangle  rhombus
+;      /       \     |            \   /
+; equilateral   \  isosceles       \ /
+;   triangle    right triangle    square
+;
+; Figure 2.26: Relations among types of geometric figures
+
+
