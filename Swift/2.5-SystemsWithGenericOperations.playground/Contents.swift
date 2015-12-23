@@ -45,26 +45,31 @@ func div(x: Double, y: Double) -> Double { return applyGeneric("div")(x,y) }
 //: We begin by installing a package for handling *ordinary* numbers, that is, the primitive numbers of our language. We will tag these with the symbol *scheme-number*. The arithmetic operations in this package are the primitive arithmetic procedures (so there is no need to define extra procedures to handle the untagged numbers). Since these operations each take two arguments, they are installed in the table keyed by the list (scheme-number scheme-number):
 
 //typealias Tagged = (String, Double)
-enum Type {
+enum NumberType {
     case number, complex, rational, polar, rectangular
 }
 
-struct Tagged<V> {
-    let key: String
+struct Tagged<V>: CustomStringConvertible {
+    let type: NumberType
     let value: V
+    
+    var description: String {
+        return "\(type):\(value)"
+    }
 }
 
-func attachTag<V>(tag: String, value: V) -> Tagged<V> {
-    return Tagged(key: tag, value: value)
+func attachTag<V>(tag: NumberType, value: V) -> Tagged<V> {
+    return Tagged(type: tag, value: value)
 }
 
 
+// http://stackoverflow.com/questions/24021950/how-do-i-put-different-types-in-a-dictionary-in-the-swift-language
 
 struct TypeKey: Equatable, Hashable {
-    let types: [String]
+    let types: [NumberType]
     
     var hashValue: Int {
-        return types.reduce("", combine: +).hashValue
+        return types.reduce(0) { $0 ^ $1.hashValue }
     }
 }
 func == (lhs: TypeKey, rhs: TypeKey) -> Bool {
@@ -99,18 +104,18 @@ func get(op: String, _ type: TypeKey) -> Any? {
 
 
 func installSwiftNumberPackage() {
-    func tag(x: Double) -> Tagged<Double> { return attachTag("swift-number", value: x) }
-    put("add", TypeKey(types: ["swift-number", "swift-number"]), { x, y in tag(x + y) })
-    put("sub", TypeKey(types: ["swift-number", "swift-number"]), { x, y in tag(x - y) })
-    put("mul", TypeKey(types: ["swift-number", "swift-number"]), { x, y in tag(x * y) })
-    put("div", TypeKey(types: ["swift-number", "swift-number"]), { x, y in tag(x / y) })
-    put("make", TypeKey(types: ["swift-number", "swift-number"]), { x in tag(x) })
+    func tag(x: Double) -> Tagged<Double> { return attachTag(.number, value: x) }
+    put("add", TypeKey(types: [.number, .number]), { x, y in tag(x + y) })
+    put("sub", TypeKey(types: [.number, .number]), { x, y in tag(x - y) })
+    put("mul", TypeKey(types: [.number, .number]), { x, y in tag(x * y) })
+    put("div", TypeKey(types: [.number, .number]), { x, y in tag(x / y) })
+    put("make", TypeKey(types: [.number, .number]), { x in tag(x) })
 }
 
 //: Users of the Scheme-number package will create (tagged) ordinary numbers by means of the procedure:
 
 func makeSchemeNumber(n: Double) -> Tagged<Double> {
-    if let make = get("make", TypeKey(types: ["swift-number", "swift-number"])) as? (Double) -> Tagged<Double> {
+    if let make = get("make", TypeKey(types: [.number, .number])) as? (Double) -> Tagged<Double> {
         return make(n)
     } else {
         fatalError("makeSchemeNumber hasn't been implemented")
@@ -122,44 +127,21 @@ let a = makeSchemeNumber(9.4)
 let b = makeSchemeNumber(12.8)
 
 
-
-
 //: Now that the framework of the generic arithmetic system is in place, we can readily include new kinds of numbers. Here is a package that performs rational arithmetic. Notice that, as a benefit of additivity, we can use without modification the rational-number code from Section 2.1.1 as the internal procedures in the package:
 
 // This doesn't work at the moment, but I am getting bogged down.
 
-enum ConsPosition {
-    case Left, Right
+struct Pair: CustomStringConvertible {
+    let car: Any
+    let cdr: Any
+    
+    var description: String {
+        return "(\(car), \(cdr))"
+    }
 }
-
-typealias Rational = (ConsPosition -> Int)
 
 func installRationalPackage() {
     // Internal Procedures from Ex 2.1.1
-    
-    
-    func cons<T>(a: T, _ b: T) -> (ConsPosition -> T) {
-        func innerCons(i: ConsPosition) -> T {
-            if i == .Left {
-                return a;
-            } else {
-                return b;
-            }
-        }
-        
-        return innerCons;
-    }
-    
-    func car<T>(innerCons: ConsPosition -> T) -> T {
-        return innerCons(.Left);
-    }
-    
-    func cdr<T>(innerCons: ConsPosition -> T) -> T {
-        return innerCons(.Right);
-    }
-    
-    
-    
     func gcd(a: Int, _ b: Int) -> Int {
         if b == 0 {
             return abs(a)
@@ -168,55 +150,55 @@ func installRationalPackage() {
         }
     }
     
-    func makeRat(n: Int, _ d:Int) -> Rational {
+    func makeRat(n: Int, _ d:Int) -> Pair {
         let g = gcd(n, d)
         if d < 0 {
-            return cons(n/g, -d/g)
+            return Pair(car: n/g, cdr: -d/g)
         } else {
-            return cons(n/g, d/g)
+            return Pair(car: n/g, cdr: d/g)
         }
     }
     
-    func numer(x: Rational) -> Int {
-        return car(x)
+    func numer(x: Pair) -> Int {
+        return x.car as! Int
     }
-    func denom(x: Rational) -> Int {
-        return cdr(x)
+    func denom(x: Pair) -> Int {
+        return x.cdr as! Int
     }
     
-    func printRat(x: Rational) {
+    func printRat(x: Pair) {
         print("\(numer(x))/\(denom(x))")
     }
     
-    func addRat(x: Rational, _ y: Rational) -> Rational {
+    func addRat(x: Pair, _ y: Pair) -> Pair {
         return makeRat((numer(x) * denom(y)) + (numer(y) * denom(x)), denom(x) * denom(y))
     }
-    func subRat(x: Rational, _ y: Rational) -> Rational {
+    func subRat(x: Pair, _ y: Pair) -> Pair {
         return makeRat((numer(x) * denom(y)) - (numer(y) * denom(x)), denom(x) * denom(y))
     }
-    func mulRat(x: Rational, _ y: Rational) -> Rational {
+    func mulRat(x: Pair, _ y: Pair) -> Pair {
         return makeRat(numer(x) * numer(y), denom(x) * denom(y))
     }
-    func divRat(x: Rational, _ y: Rational) -> Rational {
+    func divRat(x: Pair, _ y: Pair) -> Pair {
         return makeRat(numer(x) * denom(y), denom(x) * numer(y))
     }
-    func isEqualRat(x: Rational, _ y: Rational) -> Bool {
+    func isEqualRat(x: Pair, _ y: Pair) -> Bool {
         return (numer(x) * denom(y)) == (numer(y) * denom(x))
     }
     
     // Interface to rest of the system
-    func tag(x: Rational) -> Tagged<Rational> { return attachTag("rational-number", value: x) }
+    func tag(x: Pair) -> Tagged<Pair> { return attachTag(.rational, value: x) }
     
-    put("add", TypeKey(types: ["rational-number", "rational-number"]), { x, y in return tag(addRat(x,y)) } )
-    put("sub", TypeKey(types: ["rational-number", "rational-number"]), { x, y in return tag(subRat(x,y)) } )
-    put("mul", TypeKey(types: ["rational-number", "rational-number"]), { x, y in return tag(mulRat(x,y)) } )
-    put("div", TypeKey(types: ["rational-number", "rational-number"]), { x, y in return tag(divRat(x,y)) } )
-    put("make", TypeKey(types: ["rational-number", "rational-number"]), { x, y in return tag(makeRat(x,y)) } )
+    put("add", TypeKey(types: [.rational, .rational]), { x, y in return tag(addRat(x,y)) } )
+    put("sub", TypeKey(types: [.rational, .rational]), { x, y in return tag(subRat(x,y)) } )
+    put("mul", TypeKey(types: [.rational, .rational]), { x, y in return tag(mulRat(x,y)) } )
+    put("div", TypeKey(types: [.rational, .rational]), { x, y in return tag(divRat(x,y)) } )
+    put("make", TypeKey(types: [.rational, .rational]), { x, y in return tag(makeRat(x,y)) } )
 }
 
 
-func makeRationalNumber(n: Double, d: Double) -> Tagged<Rational> {
-    if let make = get("make", TypeKey(types: ["rational-number", "rational-number"])) as? (Double, Double) -> Tagged<Rational> {
+func makeRationalNumber(n: Int, d: Int) -> Tagged<Pair> {
+    if let make = get("make", TypeKey(types: [.rational, .rational])) as? (Int, Int) -> Tagged<Pair> {
         return make(n, d)
     } else {
         fatalError("makeSchemeNumber hasn't been implemented")
@@ -224,7 +206,9 @@ func makeRationalNumber(n: Double, d: Double) -> Tagged<Rational> {
 }
 
 installRationalPackage()
-// let c = makeRationalNumber(3, d: 4)
+let c = makeRationalNumber(3, d: 4)
+let d = makeRationalNumber(2, d: 5)
+
 
 //: We can install a similar package to handle complex numbers, using the tag complex. In creating the package, we extract from the table the operations make-from-real-imag and make-from-mag-ang that were defined by the rectangular and polar packages. Additivity permits us to use, as the internal operations, the same add-complex, sub-complex, mul-complex, and div-complex procedures from Section 2.4.1.
 
@@ -236,10 +220,10 @@ func installComplexPackage() {
 
 
 func +<T> (lhs: Tagged<T>, rhs: Tagged<T>) -> Tagged<T> {
-    if let add = get("add", TypeKey(types: [lhs.key, rhs.key])) as? (T, T) -> Tagged<T> {
+    if let add = get("add", TypeKey(types: [lhs.type, rhs.type])) as? (T, T) -> Tagged<T> {
         return add(lhs.value, rhs.value)
     } else {
-        fatalError("Addition is not installed for types: \(TypeKey(types: [lhs.key, rhs.key])))")
+        fatalError("Addition is not installed for types: \(TypeKey(types: [lhs.type, rhs.type])))")
     }
 }
 
