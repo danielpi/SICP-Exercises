@@ -45,6 +45,10 @@ func div(x: Double, y: Double) -> Double { return applyGeneric("div")(x,y) }
 //: We begin by installing a package for handling *ordinary* numbers, that is, the primitive numbers of our language. We will tag these with the symbol *scheme-number*. The arithmetic operations in this package are the primitive arithmetic procedures (so there is no need to define extra procedures to handle the untagged numbers). Since these operations each take two arguments, they are installed in the table keyed by the list (scheme-number scheme-number):
 
 //typealias Tagged = (String, Double)
+enum Type {
+    case number, complex, rational, polar, rectangular
+}
+
 struct Tagged<V> {
     let key: String
     let value: V
@@ -54,18 +58,29 @@ func attachTag<V>(tag: String, value: V) -> Tagged<V> {
     return Tagged(key: tag, value: value)
 }
 
+
+
 struct TypeKey: Equatable, Hashable {
-    let lhs: String
-    let rhs: String
+    let types: [String]
     
     var hashValue: Int {
-        return (lhs + rhs).hashValue
+        return types.reduce("", combine: +).hashValue
     }
 }
 func == (lhs: TypeKey, rhs: TypeKey) -> Bool {
-    return lhs.lhs == rhs.lhs && rhs.rhs == lhs.rhs
+    var result = true
+    
+    if lhs.types.count == rhs.types.count {
+        let zipped = zip(lhs.types, rhs.types)
+        
+        for (l, r) in zipped {
+            result = result && (l == r)
+        }
+    } else {
+        result = false
+    }
+    return result
 }
-
 
 var globalSelectorTable = [TypeKey: [String: Any]]()
 
@@ -85,17 +100,17 @@ func get(op: String, _ type: TypeKey) -> Any? {
 
 func installSwiftNumberPackage() {
     func tag(x: Double) -> Tagged<Double> { return attachTag("swift-number", value: x) }
-    put("add", TypeKey(lhs: "swift-number", rhs: "swift-number"), { x, y in tag(x + y) })
-    put("sub", TypeKey(lhs: "swift-number", rhs: "swift-number"), { x, y in tag(x - y) })
-    put("mul", TypeKey(lhs: "swift-number", rhs: "swift-number"), { x, y in tag(x * y) })
-    put("div", TypeKey(lhs: "swift-number", rhs: "swift-number"), { x, y in tag(x / y) })
-    put("make", TypeKey(lhs: "swift-number", rhs: "swift-number"), { x in tag(x) })
+    put("add", TypeKey(types: ["swift-number", "swift-number"]), { x, y in tag(x + y) })
+    put("sub", TypeKey(types: ["swift-number", "swift-number"]), { x, y in tag(x - y) })
+    put("mul", TypeKey(types: ["swift-number", "swift-number"]), { x, y in tag(x * y) })
+    put("div", TypeKey(types: ["swift-number", "swift-number"]), { x, y in tag(x / y) })
+    put("make", TypeKey(types: ["swift-number", "swift-number"]), { x in tag(x) })
 }
 
 //: Users of the Scheme-number package will create (tagged) ordinary numbers by means of the procedure:
 
 func makeSchemeNumber(n: Double) -> Tagged<Double> {
-    if let make = get("make", TypeKey(lhs: "swift-number", rhs: "swift-number")) as? (Double) -> Tagged<Double> {
+    if let make = get("make", TypeKey(types: ["swift-number", "swift-number"])) as? (Double) -> Tagged<Double> {
         return make(n)
     } else {
         fatalError("makeSchemeNumber hasn't been implemented")
@@ -192,16 +207,16 @@ func installRationalPackage() {
     // Interface to rest of the system
     func tag(x: Rational) -> Tagged<Rational> { return attachTag("rational-number", value: x) }
     
-    put("add", TypeKey(lhs: "rational-number", rhs: "rational-number"), { x, y in return tag(addRat(x,y)) } )
-    put("sub", TypeKey(lhs: "rational-number", rhs: "rational-number"), { x, y in return tag(subRat(x,y)) } )
-    put("mul", TypeKey(lhs: "rational-number", rhs: "rational-number"), { x, y in return tag(mulRat(x,y)) } )
-    put("div", TypeKey(lhs: "rational-number", rhs: "rational-number"), { x, y in return tag(divRat(x,y)) } )
-    put("make", TypeKey(lhs: "rational-number", rhs: "rational-number"), { x, y in return tag(makeRat(x,y)) } )
+    put("add", TypeKey(types: ["rational-number", "rational-number"]), { x, y in return tag(addRat(x,y)) } )
+    put("sub", TypeKey(types: ["rational-number", "rational-number"]), { x, y in return tag(subRat(x,y)) } )
+    put("mul", TypeKey(types: ["rational-number", "rational-number"]), { x, y in return tag(mulRat(x,y)) } )
+    put("div", TypeKey(types: ["rational-number", "rational-number"]), { x, y in return tag(divRat(x,y)) } )
+    put("make", TypeKey(types: ["rational-number", "rational-number"]), { x, y in return tag(makeRat(x,y)) } )
 }
 
 
 func makeRationalNumber(n: Double, d: Double) -> Tagged<Rational> {
-    if let make = get("make", TypeKey(lhs: "swift-number", rhs: "swift-number")) as? (Double, Double) -> Tagged<Rational> {
+    if let make = get("make", TypeKey(types: ["rational-number", "rational-number"])) as? (Double, Double) -> Tagged<Rational> {
         return make(n, d)
     } else {
         fatalError("makeSchemeNumber hasn't been implemented")
@@ -221,10 +236,10 @@ func installComplexPackage() {
 
 
 func +<T> (lhs: Tagged<T>, rhs: Tagged<T>) -> Tagged<T> {
-    if let add = get("add", TypeKey(lhs: lhs.key, rhs: rhs.key)) as? (T, T) -> Tagged<T> {
+    if let add = get("add", TypeKey(types: [lhs.key, rhs.key])) as? (T, T) -> Tagged<T> {
         return add(lhs.value, rhs.value)
     } else {
-        fatalError("Addition is not installed for types: \(TypeKey(lhs: lhs.key, rhs: rhs.key)))")
+        fatalError("Addition is not installed for types: \(TypeKey(types: [lhs.key, rhs.key])))")
     }
 }
 
