@@ -212,6 +212,71 @@ let d = makeRationalNumber(2, d: 5)
 
 //: We can install a similar package to handle complex numbers, using the tag complex. In creating the package, we extract from the table the operations make-from-real-imag and make-from-mag-ang that were defined by the rectangular and polar packages. Additivity permits us to use, as the internal operations, the same add-complex, sub-complex, mul-complex, and div-complex procedures from Section 2.4.1.
 
+func square(x:Double) -> Double { return x * x }
+
+func installRectangularPackage() {
+    // Internal Procedures
+    func realPart(z: Pair) -> Double { return z.car as! Double }
+    func imagPart(z: Pair) -> Double { return z.cdr as! Double }
+    func magnitude(z: Pair) -> Double {
+        return pow(square(realPart(z)) + square(imagPart(z)), 0.5)
+    }
+    func angle(z: Pair) -> Double {
+        return atan2(imagPart(z), realPart(z))
+    }
+    
+    func tag(x: Pair) -> Tagged<Pair> {
+        return attachTag(.rectangular, value: x)
+    }
+    func makeFromRealImag(x: Double, y: Double) -> Tagged<Pair> {
+        return tag(Pair(car: x, cdr: y))
+    }
+    func makeFromMagAng(r: Double, A: Double) -> Tagged<Pair> {
+        return tag(Pair(car:r * cos(A), cdr:r * sin(A)))
+    }
+    
+    // Interface to the rest of the system
+    
+    put("realPart", TypeKey(types:[.rectangular]), realPart)
+    put("imagPart", TypeKey(types:[.rectangular]), imagPart)
+    put("magnitude", TypeKey(types:[.rectangular]), magnitude)
+    put("angle", TypeKey(types:[.rectangular]), angle)
+    put("makeFromRealImag", TypeKey(types:[.rectangular]), makeFromRealImag)
+    put("makeFromMagAng", TypeKey(types:[.rectangular]), makeFromMagAng)
+}
+installRectangularPackage()
+
+func installPolarPackage() {
+    // Internal Procedures
+    func magnitude(z: Pair) -> Double { return z.car as! Double }
+    func angle(z: Pair) -> Double { return z.cdr as! Double }
+    func realPart(z: Pair) -> Double {
+        return magnitude(z) * cos(angle(z))
+    }
+    func imagPart(z: Pair) -> Double {
+        return magnitude(z) * sin(angle(z))
+    }
+    
+    func tag(x: Pair) -> Tagged<Pair> {
+        return attachTag(.polar, value: x)
+    }
+    func makeFromMagAng(r: Double, A: Double) -> Tagged<Pair> {
+        return tag(Pair(car: r, cdr: A))
+    }
+    func makeFromRealImag(x: Double, y: Double) -> Tagged<Pair> {
+        return tag(Pair(car: pow(square(x) + square(y), 0.5), cdr:atan2(y, x)))
+    }
+    
+    // interface to the rest of the system
+    put("magnitude", TypeKey(types: [.polar]), magnitude)
+    put("angle", TypeKey(types: [.polar]), angle)
+    put("realPart", TypeKey(types: [.polar]), realPart)
+    put("imagPart", TypeKey(types: [.polar]), imagPart)
+    put("makeFromMagAng", TypeKey(types: [.polar]), makeFromMagAng)
+    put("makeFromRealImag", TypeKey(types: [.polar]), makeFromMagAng)
+}
+installPolarPackage()
+
 func installComplexPackage() {
     // Imported procedures from rectangular and polar packages
     
