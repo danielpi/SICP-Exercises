@@ -279,10 +279,87 @@ installPolarPackage()
 
 func installComplexPackage() {
     // Imported procedures from rectangular and polar packages
+    func makeFromRealImag(x: Double, y: Double) -> Tagged<Pair> {
+        if let make = get("makeFromRealImag", TypeKey(types: [.rectangular])) as? (Double, Double) -> Tagged<Pair> {
+            return make(x, y)
+        } else {
+            fatalError("Failed to make from Real Imag")
+        }
+    }
     
+    func makeFromMagAng(r: Double, A: Double) -> Tagged<Pair> {
+        if let make = get("makeFromMagAng", TypeKey(types: [.polar])) as? (Double, Double) -> Tagged<Pair> {
+            return make(r, A)
+        } else {
+            fatalError("Failed to make from Mag Ang")
+        }
+    }
+    func magnitude(z: Pair) -> Double { return z.car as! Double }
+    func angle(z: Pair) -> Double { return z.cdr as! Double }
+    func realPart(z: Pair) -> Double {
+        return magnitude(z) * cos(angle(z))
+    }
+    func imagPart(z: Pair) -> Double {
+        return magnitude(z) * sin(angle(z))
+    }
+    
+    // Internal Procedures
+    func addComplex(z1: Pair, z2: Pair) -> Tagged<Pair> {
+        return makeFromRealImag(realPart(z1) + realPart(z2), y: imagPart(z1) + imagPart(z2))
+    }
+    
+    func subComplex(z1: Pair, z2: Pair) -> Tagged<Pair> {
+        return makeFromRealImag(realPart(z1) - realPart(z2), y: imagPart(z1) - imagPart(z2))
+    }
+    
+    func mulComplex(z1: Pair, z2:Pair) -> Tagged<Pair> {
+        return makeFromMagAng(magnitude(z1) * magnitude(z2), A: angle(z1) + angle(z2))
+    }
+    
+    func divComplex(z1: Pair, z2: Pair) -> Tagged<Pair> {
+        return makeFromMagAng(magnitude(z1) / magnitude(z2), A: angle(z1) - angle(z2))
+    }
+    
+    // Interface to rest of the system
+    func tag(z: Pair) -> Tagged<Pair> {
+        return attachTag(.complex, value: z)
+    }
+    
+    put("add", TypeKey(types: [.complex,.complex]), addComplex)
+    put("sub", TypeKey(types: [.complex,.complex]), subComplex)
+    put("mul", TypeKey(types: [.complex,.complex]), mulComplex)
+    put("div", TypeKey(types: [.complex,.complex]), divComplex)
+    put("makeFromRealImag", TypeKey(types: [.complex,.complex]), makeFromRealImag)
+    put("makeFromMagAng", TypeKey(types: [.complex,.complex]), makeFromMagAng)
+}
+installComplexPackage()
+
+//: Programs outside the complex-number package can construct complex numbers either from real and imaginary parts or from magnitudes and angles. Notice how the underlying procedures, originally defined in the rectangular and polar packages, are exported to the complex package, and exported from there to the outside world.
+
+func makeComplexFromRealImag(x: Double, y: Double) -> Tagged<Pair> {
+    if let make = get("makeFromRealImag", TypeKey(types: [.complex])) as? (Double, Double) -> Tagged<Pair> {
+        return make(x, y)
+    } else {
+        fatalError("Failed to make a complex number")
+    }
 }
 
+func makeComplexFromMagAng(r: Double, A: Double) -> Tagged<Pair> {
+    if let make = get("makeFromMagAng", TypeKey(types: [.complex])) as? (Double, Double) -> Tagged<Pair> {
+        return make(r, A)
+    } else {
+        fatalError("Failed to make a complex number from mag ang")
+    }
+}
 
+//: What we have here is a two-level tag system. A typical complex number, such as 3 + 4i in rectangular form, would be represented as shown in Figure 2.24.
+//:
+//: Complex, Rectangular, 3, 4
+//: Figure 2.24 Representation of 3 + 4i in rectangular form.
+//:
+//: The outer tag (complex) is used to direct the number to the complex pachage. Once within the complex package, the next tag (rectangular) is used to direct the number to the rectangular package. In a large and complicated system there might be many levels, each interfaced with the next by means of generic operations. As a data object is passed "downward," the outer tag that is used to direct it to the appopriate package is stripped off (by applying contents) and the next level of tag (if any) becomes visible to be used for further dispatching.
+//:
+//: In the above packages, we used add-rat, add-complex, and the other arithmetic procedures exactly as originally written. Once these definitions are internal to different installation procedures, however, they no longer need names that are distinct from each other: we could simply name them add, sub, mul, and div in both packages.
 
 func +<T> (lhs: Tagged<T>, rhs: Tagged<T>) -> Tagged<T> {
     if let add = get("add", TypeKey(types: [lhs.type, rhs.type])) as? (T, T) -> Tagged<T> {
