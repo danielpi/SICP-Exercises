@@ -1,7 +1,7 @@
 import Foundation
 
 //: ## Exercise 2.77
-//: Louis Reasoner tries to evaluate the expression (magnitude z) where z is the object shown in Figure 2.24. To his surprise, instead of the answer 5 he gets an error message from apply-generic, saying there is no method for the operation magnitude on the types (complex). He shows this interaction to Alyssa P. Hacker, who says "The problem is that the complex-number selectors were never defined for complex numbers, just for polar and rectangular numbers. All you have to do to make this work is add the following to the complex package:"
+//: Louis Reasoner tries to evaluate the expression (magnitude z) where z is the object shown in Figure 2.24. To his surprise, instead of the answer 5 he gets an error message from apply-generic, saying there is no method for the operation magnitude on the types (complex).
 
 enum NumberType {
     case number, complex, rational, polar, rectangular
@@ -23,6 +23,7 @@ func attachTag<V>(tag: NumberType, value: V) -> Tagged<V> {
 struct TypeKey: Equatable, Hashable {
     let types: [NumberType]
     
+    // FIXME: this is a terrible hashing algorithm
     var hashValue: Int {
         return types.reduce(0) { $0 ^ $1.hashValue }
     }
@@ -56,7 +57,45 @@ func get(op: String, _ type: TypeKey) -> Any? {
     return globalSelectorTable[type]?[op]
 }
 
+func applyGeneric(op: String, _ args: Tagged<Pair> ...) -> Tagged<Pair> {
+    let typeTags = TypeKey(types: args.map { $0.type })
+    switch typeTags.types.count {
+    case 1:
+        let proc = get(op, typeTags) as! (Tagged<Pair>) -> Tagged<Pair>
+        return proc(args[0])
+    case 2:
+        let proc = get(op, typeTags) as! (Tagged<Pair>, Tagged<Pair>) -> Tagged<Pair>
+        return proc(args[0], args[1])
+    default:
+        fatalError("There is no selector named \(op) for data of type \(typeTags) registered with \(globalSelectorTable)")
+    }
+}
 
+func add(x: Tagged<Pair>, y: Tagged<Pair>) -> Tagged<Pair> {
+    return applyGeneric("add", x, y)
+}
+func sub(x: Tagged<Pair>, y: Tagged<Pair>) -> Tagged<Pair> {
+    return applyGeneric("sub", x, y)
+}
+func mul(x: Tagged<Pair>, y: Tagged<Pair>) -> Tagged<Pair> {
+    return applyGeneric("mul", x, y)
+}
+func div(x: Tagged<Pair>, y: Tagged<Pair>) -> Tagged<Pair> {
+    return applyGeneric("div", x, y)
+}
+
+func realPart(z: Tagged<Pair>) -> Tagged<Pair> {
+    return applyGeneric("realPart", z)
+}
+func imagPart(z: Tagged<Pair>) -> Tagged<Pair> {
+    return applyGeneric("imagPart", z)
+}
+func magnitude(z: Tagged<Pair>) -> Tagged<Pair> {
+    return applyGeneric("magnitude", z)
+}
+func angle(z: Tagged<Pair>) -> Tagged<Pair> {
+    return applyGeneric("angle", z)
+}
 
 func installSwiftNumberPackage() {
     func tag(x: Double) -> Tagged<Double> { return attachTag(.number, value: x) }
@@ -266,8 +305,14 @@ func installComplexPackage() {
     put("sub", TypeKey(types: [.complex,.complex]), subComplex)
     put("mul", TypeKey(types: [.complex,.complex]), mulComplex)
     put("div", TypeKey(types: [.complex,.complex]), divComplex)
-    put("makeFromRealImag", TypeKey(types: [.complex,.complex]), makeFromRealImag)
-    put("makeFromMagAng", TypeKey(types: [.complex,.complex]), makeFromMagAng)
+    put("makeFromRealImag", TypeKey(types: [.complex]), makeFromRealImag)
+    put("makeFromMagAng", TypeKey(types: [.complex]), makeFromMagAng)
+    
+    // Added by Alyssa P. Hacker
+    put("realPart", TypeKey(types: [.complex]), realPart)
+    put("imagPart", TypeKey(types: [.complex]), imagPart)
+    put("magnitude", TypeKey(types: [.complex]), magnitude)
+    put("angle", TypeKey(types: [.complex]), angle)
 }
 installComplexPackage()
 
@@ -286,5 +331,19 @@ func makeComplexFromMagAng(r: Double, A: Double) -> Tagged<Pair> {
         fatalError("Failed to make a complex number from mag ang")
     }
 }
+
+
+let z = makeComplexFromRealImag(3, y: 4)
+globalSelectorTable
+
+//realPart(z) // Gives an error
+
+
+//: He shows this interaction to Alyssa P. Hacker, who says "The problem is that the complex-number selectors were never defined for complex numbers, just for polar and rectangular numbers. All you have to do to make this work is add the following to the complex package:"
+
+
+
+
+
 
 

@@ -58,6 +58,16 @@ struct Tagged<V>: CustomStringConvertible {
     }
 }
 
+struct Pair: CustomStringConvertible {
+    let car: Any
+    let cdr: Any
+    
+    var description: String {
+        return "(\(car), \(cdr))"
+    }
+}
+
+
 func attachTag<V>(tag: NumberType, value: V) -> Tagged<V> {
     return Tagged(type: tag, value: value)
 }
@@ -101,7 +111,32 @@ func get(op: String, _ type: TypeKey) -> Any? {
     return globalSelectorTable[type]?[op]
 }
 
+func applyGeneric(op: String, _ args: Tagged<Pair> ...) -> Any {
+    let typeTags = TypeKey(types: args.map { $0.type })
+    
+    if let proc = get(op, typeTags) {
+        return proc
+    } else {
+        fatalError("There is no selector named \(op) for data of type \(typeTags) registered with \(globalSelectorTable)")
+    }
+}
 
+func add(x: Tagged<Pair>, y: Tagged<Pair>) -> Tagged<Pair> {
+    let proc = applyGeneric("add") as! (Tagged<Pair>, Tagged<Pair>) -> Tagged<Pair>
+    return proc(x,y)
+}
+func sub(x: Tagged<Pair>, y: Tagged<Pair>) -> Tagged<Pair> {
+    let proc = applyGeneric("sub") as! (Tagged<Pair>, Tagged<Pair>) -> Tagged<Pair>
+    return proc(x,y)
+}
+func mul(x: Tagged<Pair>, y: Tagged<Pair>) -> Tagged<Pair> {
+    let proc = applyGeneric("mul") as! (Tagged<Pair>, Tagged<Pair>) -> Tagged<Pair>
+    return proc(x,y)
+}
+func div(x: Tagged<Pair>, y: Tagged<Pair>) -> Tagged<Pair> {
+    let proc = applyGeneric("div") as! (Tagged<Pair>, Tagged<Pair>) -> Tagged<Pair>
+    return proc(x,y)
+}
 
 func installSwiftNumberPackage() {
     func tag(x: Double) -> Tagged<Double> { return attachTag(.number, value: x) }
@@ -130,15 +165,6 @@ let b = makeSchemeNumber(12.8)
 //: Now that the framework of the generic arithmetic system is in place, we can readily include new kinds of numbers. Here is a package that performs rational arithmetic. Notice that, as a benefit of additivity, we can use without modification the rational-number code from Section 2.1.1 as the internal procedures in the package:
 
 // This doesn't work at the moment, but I am getting bogged down.
-
-struct Pair: CustomStringConvertible {
-    let car: Any
-    let cdr: Any
-    
-    var description: String {
-        return "(\(car), \(cdr))"
-    }
-}
 
 func installRationalPackage() {
     // Internal Procedures from Ex 2.1.1
