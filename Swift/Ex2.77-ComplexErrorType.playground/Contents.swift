@@ -84,17 +84,34 @@ func div(x: Tagged<Pair>, y: Tagged<Pair>) -> Tagged<Pair> {
     return applyGeneric("div", x, y)
 }
 
-func realPart(z: Tagged<Pair>) -> Tagged<Pair> {
-    return applyGeneric("realPart", z)
+func realPart(z: Tagged<Pair>) -> Double {
+    // return applyGeneric("realPart", z) // Can't use applyGeneric beacuse these functions should return proper Swift types.
+    if let proc = get("realPart", TypeKey(types: [z.type])) as? (Pair) -> Double {
+        return proc(z.value)
+    } else {
+        fatalError("realPart Failed")
+    }
 }
-func imagPart(z: Tagged<Pair>) -> Tagged<Pair> {
-    return applyGeneric("imagPart", z)
+func imagPart(z: Tagged<Pair>) -> Double {
+    if let proc = get("imagPart", TypeKey(types: [z.type])) as? (Pair) -> Double {
+        return proc(z.value)
+    } else {
+        fatalError("imagPart Failed")
+    }
 }
-func magnitude(z: Tagged<Pair>) -> Tagged<Pair> {
-    return applyGeneric("magnitude", z)
+func magnitude(z: Tagged<Pair>) -> Double {
+    if let proc = get("magnitude", TypeKey(types: [z.type])) as? (Pair) -> Double {
+        return proc(z.value)
+    } else {
+        fatalError("magnitude Failed")
+    }
 }
-func angle(z: Tagged<Pair>) -> Tagged<Pair> {
-    return applyGeneric("angle", z)
+func angle(z: Tagged<Pair>) -> Double {
+    if let proc = get("angle", TypeKey(types: [z.type])) as? (Pair) -> Double {
+        return proc(z.value)
+    } else {
+        fatalError("angle Failed")
+    }
 }
 
 func installSwiftNumberPackage() {
@@ -336,12 +353,14 @@ func makeComplexFromMagAng(r: Double, A: Double) -> Tagged<Pair> {
 let z = makeComplexFromRealImag(3, y: 4)
 globalSelectorTable
 
-//realPart(z) // Gives an error
+magnitude(z) // Gives an error
 
 
 //: He shows this interaction to Alyssa P. Hacker, who says "The problem is that the complex-number selectors were never defined for complex numbers, just for polar and rectangular numbers. All you have to do to make this work is add the following to the complex package:"
 
+//: Describe in detail why this works. As an example, trace through all the procedures called in evaluating the expression (magnitude z) where z is the object shown in Figure 2.24. In particular, how many times is apply-generic invoked? What procedure is dispatched to in each case?
 
+// Tired!
 
 
 
