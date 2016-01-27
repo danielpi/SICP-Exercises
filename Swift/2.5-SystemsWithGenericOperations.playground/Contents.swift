@@ -451,4 +451,32 @@ func schemeNumberToComplex(n: Tagged<Double>) -> Tagged<Pair> {
 //:
 //: If we have a tower structure, then we can greatly simplify the problem of adding a new type to the hierarchy, for we need only specify how the new type is embedded in the next supertyle above in and how it is the supertype of the type below it. For example, if we want to add an integer to a complex number, we need not explicitly define a special coercion procedure integer ->complex. Insteda, we define how an integer can be transformed into a rational number, how a rational number is transformed into a real number, and how a real number is transformed into a complex number. We then allow the system to transform the integer into a complex number through these steps and then add the two complex numbers.
 //:
-//: We can redesign our apply-generic procedure in the f
+//: We can redesign our apply-generic procedure in the following way: For each type, we need to supply a *raise* procedure, which "raises" objects of that type one level in the tower. Then when the system is required to operate on objects of different types it can successively raise the lower types until all the objects are at the same level in the tower. (Exercise 2.83 and Exercise 2.84 concern the details of implementing such a strategy.)
+//;
+//: Another advantage of a tower is that we can easily implement the notion that every type "inherits" all operations defined on a supertype. For instance, if we do not supply a special procedure for finding the real part of an integer, we should nevertheless expect that real-part will be defined for integers by virtue of the fact that integers are a subtype of complex numbers. In a tower, we can arrange for this to happen in a uniform way by modifying apply-generic. If the required operation is not directly defined for the type of the object given, we raise the object to its supertype and try again. We thus crawl up the tower, transforming our arguments as we go, until we either find a level at which the desired operation can be performed or hit the top (in which case we give up)
+//:
+//: Yet another advantage of a tower over a more general hierarchy is that it gives us a simple way to "lower" a data object to the simplest representation. For example, if we add 2 + 3i to 4 - 3i, it would be nice to obtain the answer as the integer 6 rather than as the complex number 6 + 0i. Exercise 2.85 discusses a way to implement such a lowering operation. (The trick is that we need a general way to distinguish those objects that can be lowered, such as 6 + 0i, from those that cannot, such as 6 + 2i.)
+//:
+//: ## Inadequacies of hierarchies
+//: If the data types in our system can be naturally arranged in a tower, this greatly simplifies the problems of dealing with generic operations on different types, as we have seen. Unfortunately, this is usually not the case. Figure 2.26 illustrates a more complex arrangement of mixed types, 
+//:
+//:                         polygon
+//:                        /       \
+//:                       /         \
+//:                      /           \
+//:                     /             \
+//:                    /               \
+//:                   /               quadrilateral
+//:                  /                 /       \
+//:                 /                 /         \
+//:              triangle       trapezoid        \
+//:               /    \              \           \
+//:              /      \              \           \
+//:          isosceles  right      parallelogram   kite
+//:          triangle   triangle      /      \    /
+//:           /     \      |     rectangle  rhombus
+//:          /       \     |            \   /
+//:     equilateral   \  isosceles       \ /
+//:       triangle    right triangle    square
+//:
+//: Figure 2.26: Relations among types of geometric figures

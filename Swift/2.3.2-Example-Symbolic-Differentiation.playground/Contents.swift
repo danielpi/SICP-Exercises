@@ -1,7 +1,16 @@
+
 import Cocoa
 
 //: ## 2.3.2 Example: Symbolic Differentiation
-//: As an illustration of symbol manipulation and a further illustration of data abstraction, consider the design of a procedure that performs symbolic differentiation of algebraic expressions. We would like the procedure to takeas arguments an algebraic expression and a variable and to returnthe derivative of the expression with respect to the variable. For example, if the arguments to the procedure are ax^2 + bx +c and x, the procedure should return 2ax + bx + c. Symbolic differentiation is of special historical significance in Lisp. It was one of the motivation examples behind the development of a computer language for symbol manipulation. Furthermore, it marked the beginning of the line of research that led to the development of powerful systems for symbolic mathematical work, which are currently being used by a growing number of applied mathematicians and physicists.
+//: As an illustration of symbol manipulation and a further illustration of data abstraction, consider the design of a procedure that performs symbolic differentiation of algebraic expressions. We would like the procedure to take as arguments an algebraic expression and a variable and to return the derivative of the expression with respect to the variable. For example, if the arguments to the procedure are 
+//:
+//:     ax^2 + bx +c and x
+//: 
+//: the procedure should return 
+//:
+//:     2ax + bx + c
+//: 
+//: Symbolic differentiation is of special historical significance in Lisp. It was one of the motivation examples behind the development of a computer language for symbol manipulation. Furthermore, it marked the beginning of the line of research that led to the development of powerful systems for symbolic mathematical work, which are currently being used by a growing number of applied mathematicians and physicists.
 //:
 //: In developing the symbolic-differentiation program, we will follow the same strategy of data abstraction that we followed in developing the rational-number system of Section 2.1.1. That is, we will first define a differentiation algorithm that operates on abstract objects such as "sums," "products," and "variables" without worrying about how these are to be represented. Only afterward will we address the representation problem.
 //:
@@ -9,7 +18,7 @@ import Cocoa
 //: In order to keep things simple, we will condsider a very simple symbolic-differentiation program that handles expressions that are built up using only the operations of addition and multiplication with two arguments. Differentiation of any such expression can be carried out by applying the following reduction rules:
 //:
 //:          dc
-//:          -- = 0, for c a constant or a variable different from x,
+//:          -- = 0, for c, a constant or a variable different from x,
 //:          dx
 //:    
 //:          dx
