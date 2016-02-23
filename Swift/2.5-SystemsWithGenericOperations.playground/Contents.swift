@@ -480,3 +480,7 @@ func schemeNumberToComplex(n: Tagged<Double>) -> Tagged<Pair> {
 //:       triangle    right triangle    square
 //:
 //: Figure 2.26: Relations among types of geometric figures
+//:
+//: this one showing relations among different types of geometric figures. We see that, in general, a type may have more than one subtype. Triangles and quadrilaterals, for instance, are both subtypes of polygons. In addition, a type may have more than one supertype. For example, an isosceles right triangle may be regarded either as an isosceles triangle or as a right triangle. This multiple-supertypes issue is particularly thorny, since it means that there is no unique way to "raise" a type in the hierarchy. Finding the "correct" supertype in which to apply an operation to an object may involve considerable searching through the entire type network on the part of a procedure such as apply-generic. Since there generally are multiple subtypes for a type, there is a similar problem in coercing a value "down" the type hierarchy. Dealing with large numbers of interrelated types while stil preserving modularity in the design of large systems is very difficule, and is an area of much current research.
+
+
