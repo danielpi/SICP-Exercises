@@ -152,14 +152,6 @@
        (lambda (r a) (tag (make-from-mag-ang r a))))
   'done)
 
-(define (apply-generic-old op . args)
-  (let ((type-tags (map type-tag args)))
-    (let ((proc (get op type-tags)))
-      (if proc
-          (apply proc (map contents args))
-          (error "No method for these types: APPLY-GENERIC"
-                 (list op type-tags))))))
-
 (define (real-part z) (apply-generic 'real-part z))
 (define (imag-part z) (apply-generic 'imag-part z))
 (define (magnitude z) (apply-generic 'magnitude z))
@@ -248,7 +240,7 @@
 (put-coercion 'complex 'complex complex->complex)
 
 
-(define (apply-generic op . args)
+(define (apply-generic-old op . args)
   (let ((type-tags (map type-tag args)))
     (let ((proc (get op type-tags)))
       (if proc
@@ -268,6 +260,36 @@
                                      (list op type-tags))))))
               (error "No method for these types" (list op type-tags)))))))
 
+(define (coerce-list-to-type lst type)
+    (if (null? lst)
+        '()
+        (let ((t1->t2 (get-coercion (type-tag (car lst)) type)))
+          (if t1->t2
+              (cons (t1->t2 (car lst)) (coerce-list-to-type (cdr lst) type))
+              (cons (car lst) (coerce-list-to-type (cdr lst) type))))))
+
+(define (apply-generic op . args)
+  (define (apply-coerced lst)
+    (if (null? lst)
+        (error "No method for given arguments")
+        (let ((coerced-list (coerce-list-to-type args (type-tag (car lst)))))
+          (let ((proc (get op (map type-tag coerced-list))))
+            (if proc
+                (apply proc (map contents coerced-list))
+                (apply-coerced (cdr lst)))))))
+  
+  (let ((type-tags (map type-tag args)))
+    (let ((proc (get op type-tags)))
+      (if proc
+          (apply proc (map contents args))
+          (apply-coerced args)))))
+
+(type-tag (make-complex-from-real-imag 2 3))
+(cons (make-scheme-number 2) (make-scheme-number 3))
+(get-coercion (type-tag (car (cons (make-scheme-number 2) (make-scheme-number 3)))) (type-tag (make-complex-from-real-imag 2 3)))
+;(coerce-list-to-type (cons (make-scheme-number 2) (make-scheme-number 3)) (type-tag (make-complex-from-real-imag 2 3)))
+;(define (add x y z) (apply-generic 'add x y z))
+    
 (add (make-scheme-number 2)
      (make-scheme-number 3))
 (add (make-complex-from-real-imag 2 3)
