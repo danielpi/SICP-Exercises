@@ -49,6 +49,8 @@
   (define (tag x) (attach-tag 'scheme-number x))
   (put 'add '(scheme-number scheme-number)
        (lambda (x y) (tag (+ x y))))
+  (put 'add '(scheme-number scheme-number scheme-number)
+       (lambda (x y z) (tag (+ x y z))))
   (put 'sub '(scheme-number scheme-number)
        (lambda (x y) (tag (- x y))))
   (put 'mul '(scheme-number scheme-number)
@@ -190,6 +192,8 @@
   (define (tag z) (attach-tag 'complex z))
   (put 'add '(complex complex)
        (lambda (z1 z2) (tag (add-complex z1 z2))))
+  (put 'add '(complex complex complex)
+       (lambda (z1 z2 z3) (tag (add-complex z1 (add-complex z2 z3)))))
   (put 'sub '(complex complex)
        (lambda (z1 z2) (tag (sub-complex z1 z2))))
   (put 'mul '(complex complex)
@@ -260,6 +264,8 @@
                                      (list op type-tags))))))
               (error "No method for these types" (list op type-tags)))))))
 
+; This creates a list of items that have been coerced to the specified type.
+; If it can't coerce a type then it will leave it as is
 (define (coerce-list-to-type lst type)
     (if (null? lst)
         '()
@@ -275,25 +281,36 @@
         (let ((coerced-list (coerce-list-to-type args (type-tag (car lst)))))
           (let ((proc (get op (map type-tag coerced-list))))
             (if proc
-                (apply proc (map contents coerced-list))
-                (apply-coerced (cdr lst)))))))
-  
+                (apply proc (map contents coerced-list)) ; coercion worked run the op
+                (apply-coerced (cdr lst))))))) ; try again with a different coercion
+  ; Looks like this would only work for functions with two arguments?? Wrong
+  ; (cdr lst) grabs all but the first element but (coerce-list-to-type args captures
+  ; the original list of arguments and works on it each time. Then (car lst) grabs
+  ; the new type to try. Clever (tricky to follow) {a good example of the scope tricks
+  ; that functions in functions can pull off}.
+
+  ; Try the original data. If not tray again after coercing the types to a single type.
   (let ((type-tags (map type-tag args)))
     (let ((proc (get op type-tags)))
       (if proc
           (apply proc (map contents args))
           (apply-coerced args)))))
 
-(type-tag (make-complex-from-real-imag 2 3))
-(cons (make-scheme-number 2) (make-scheme-number 3))
-(get-coercion (type-tag (car (cons (make-scheme-number 2) (make-scheme-number 3)))) (type-tag (make-complex-from-real-imag 2 3)))
-;(coerce-list-to-type (cons (make-scheme-number 2) (make-scheme-number 3)) (type-tag (make-complex-from-real-imag 2 3)))
-;(define (add x y z) (apply-generic 'add x y z))
-    
-(add (make-scheme-number 2)
-     (make-scheme-number 3))
-(add (make-complex-from-real-imag 2 3)
-     (make-complex-from-real-imag 4 5))
-(add (make-scheme-number 2)
-     (make-complex-from-real-imag 2 3))
 
+(define x (make-scheme-number 2))
+(define y (make-scheme-number 4))
+(define z (make-complex-from-real-imag 2 3))
+(apply-generic 'add x y z)
+
+(cddr (list 1 2 3))
+
+; Give an example of a situation where this strategy is not sufficiently
+; general.
+
+; This approach will test if there is a function available for the mix of types first
+; provided and then for each data type in the original set after all arguments have been
+; coerced to that type. This means that any other set of mixed types is not checked. Also
+; this procedure only tries to coerce to the data types that are present in the original
+; set of arguments. It might be possible to coerce all data to a datatype that is not
+; included in the original set and there may be a function for that type. This is not
+; tested for.
