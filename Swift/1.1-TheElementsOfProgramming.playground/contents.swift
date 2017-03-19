@@ -65,14 +65,14 @@ let answer = numerator / denominator
 
 
 // Exercise 1.3 - Define a procedure that takes three numbers as arguments and returns the sum of the squares of the two larger numbers.
-func square(x: Int) -> Int {
+func square(_ x: Int) -> Int {
     return x * x
 }
-func sumOfSquares(x: Int, _ y: Int) -> Int {
+func sumOfSquares(_ x: Int, _ y: Int) -> Int {
     return square(x) + square(y)
 }
 
-func sumOfSquaresOfTwoLargest(a: Int, _ b: Int, _ c: Int) -> Int {
+func sumOfSquaresOfTwoLargest(_ a: Int, _ b: Int, _ c: Int) -> Int {
     switch true {
     case min(a, b, c) == a:
         return sumOfSquares(b, c)
@@ -97,8 +97,8 @@ func aPlusABSb(a: Int, b: Int) -> Int {
         return a - b
     }
 }
-aPlusABSb(4, b: 5)
-aPlusABSb(4, b: -5)
+aPlusABSb(a: 4, b: 5)
+aPlusABSb(a: 4, b: -5)
 // Swift doesn't really have the same ability as lisp in this regard. In the function above two entire blocks of code which use different operators can be selected between but the operator of a particular procedure is not being set at runtime.
 
 
@@ -118,7 +118,7 @@ func test(x:Int, y: () -> ()) -> Int {
 I don't think this one makes much sense in Swift. I can't see how we can have a function that returns a closure or number for a start and also the test doesn't really dig into how swift works (as best I can understand.
 */
 
-func square(x: Double) -> Double {
+func square(_ x: Double) -> Double {
     return x * x
 }
 
@@ -128,7 +128,7 @@ func square(x: Double) -> Double {
 // How does one compute square roots?
 // Guess a value, y, for the value of the square root of a number x. Find the quotient of x divided by the guess. Average the quotient and the guess. Continue till you have an accurate enough answer.
 
-func sqrtIter(guess: Double, _ x: Double) -> Double {
+func sqrtIter(_ guess: Double, _ x: Double) -> Double {
     if (goodEnough(guess, x)) {
         return guess
     } else {
@@ -136,16 +136,16 @@ func sqrtIter(guess: Double, _ x: Double) -> Double {
     }
 }
 
-func improve(guess: Double, _ x: Double) -> Double {
+func improve(_ guess: Double, _ x: Double) -> Double {
     return average(guess, (x / guess))
 }
-func average(x: Double, _ y: Double) -> Double {
+func average(_ x: Double, _ y: Double) -> Double {
     return ((x + y) / 2)
 }
-func goodEnough(guess: Double, _ x: Double) -> Bool {
+func goodEnough(_ guess: Double, _ x: Double) -> Bool {
     return abs((guess * guess) - x) < 0.001
 }
-func DRPsqrt(x: Double) -> Double {
+func DRPsqrt(_ x: Double) -> Double {
     return sqrtIter(1.0, x)
 }
 
@@ -157,7 +157,7 @@ square(sqrt(1000))
 
 // Exercise 1.6 - Alyssa P. Hacker doesn't see why if needs to be provided as a special form. " Why can't I just define it as an ordinary procedure in terms of cond?" she asks. Alyssa's friend Eva Lu Ator claims this can indeed be done, and she defines a new version of if:
 
-func newIf(predicate: Bool, Then: Double, Else: Double) -> Double {
+func newIf(_ predicate: Bool, Then: Double, Else: Double) -> Double {
     switch true {
     case predicate:
         return Then
@@ -169,7 +169,7 @@ func newIf(predicate: Bool, Then: Double, Else: Double) -> Double {
 newIf((2 == 3), Then: 0, Else: 5)
 newIf((1 == 1), Then: 0, Else: 5)
 
-func newSqrtIter(guess: Double, _ x: Double) -> Double {
+func newSqrtIter(_ guess: Double, _ x: Double) -> Double {
     return newIf(goodEnough(guess, x), Then: guess, Else: newSqrtIter(improve(guess, x), x))
 }
 //newSqrtIter(1.0, 9)
@@ -187,7 +187,7 @@ DRPsqrt(1000000000000)
 //sqrt(10000000000000) // This line crashes XCode
 
 
-func sqrtIter2(prevGuess: Double, _ guess: Double, _ x: Double) -> Double {
+func sqrtIter2(_ prevGuess: Double, _ guess: Double, _ x: Double) -> Double {
     if (goodEnough2(prevGuess, guess)) {
         return guess
     } else {
@@ -195,10 +195,10 @@ func sqrtIter2(prevGuess: Double, _ guess: Double, _ x: Double) -> Double {
     }
 }
 
-func goodEnough2(prevGuess: Double, _ guess: Double) -> Bool {
+func goodEnough2(_ prevGuess: Double, _ guess: Double) -> Bool {
     return (abs(prevGuess - guess) / guess) < 0.001
 }
-func sqrt2(x: Double) -> Double {
+func sqrt2(_ x: Double) -> Double {
     return sqrtIter2(0.0, 1.0, x)
 }
 sqrt2(9)
@@ -212,24 +212,24 @@ sqrt2(10000000000000)
 //      3
 // Use this formula to implement a cube-root procedure analogous to the square-root procedure.
 
-func cbrtIter(guess: Double, _ x: Double) -> Double {
+func cbrtIter(_ guess: Double, _ x: Double) -> Double {
     if (goodEnoughCubeRoot(guess, x)) {
         return guess
     } else {
         return cbrtIter(improveCubeRoot(guess, x), x)
     }
 }
-func cube(x: Double) -> Double {
+func cube(_ x: Double) -> Double {
     return x * x * x
 }
-func improveCubeRoot(guess: Double, _ x: Double) -> Double {
+func improveCubeRoot(_ guess: Double, _ x: Double) -> Double {
 
     return ((x / (guess * guess)) + (2 * guess)) / 3.0
 }
-func goodEnoughCubeRoot(guess: Double, _ x: Double) -> Bool {
+func goodEnoughCubeRoot(_ guess: Double, _ x: Double) -> Bool {
     return abs((guess * guess * guess) - x) < 0.0001
 }
-func DRPcbrt(x: Double) -> Double {
+func DRPcbrt(_ x: Double) -> Double {
     return cbrtIter(1.0, x)
 }
 
@@ -239,10 +239,10 @@ DRPcbrt(100000)
 
 
 // 1.1.8 Procedures as Black-Box Abstractions
-func DRPdouble(x: Double) -> Double {
+func DRPdouble(_ x: Double) -> Double {
     return x + x
 }
-func square3(x: Double) -> Double {
+func square3(_ x: Double) -> Double {
     return exp(DRPdouble(log(x)))
 }
 
@@ -251,14 +251,14 @@ square3(4)
 
 // Internal definitions and block structure
 
-func DRPsqrt2(x: Double) -> Double {
-    func goodEnough(guess: Double, _ x: Double) -> Bool {
+func DRPsqrt2(_ x: Double) -> Double {
+    func goodEnough(_ guess: Double, _ x: Double) -> Bool {
         return abs((guess * guess) - x) < 0.001
     }
-    func average(x: Double, _ y: Double) -> Double {
+    func average(_ x: Double, _ y: Double) -> Double {
         return ((x + y) / 2)
     }
-    func improve(guess: Double, _ x: Double) -> Double {
+    func improve(_ guess: Double, _ x: Double) -> Double {
         return average(guess, (x / guess))
     }
     

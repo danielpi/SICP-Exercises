@@ -17,10 +17,10 @@ func fact(n: Int) -> Int {
     if n == 1 {
         return 1
     } else {
-        return n * fact(n - 1)
+        return n * fact(n: n - 1)
     }
 }
-fact(4)
+fact(n: 4)
 
 //: In order to manipulate symbols we need a new element in our language: the ability to *quote* a data object. Suppose we want to construct the list (a b). We can't accomplish this with (list a b), because this expression constructs a list of the *values* of a and b rather than the symbols themselves. This issue is well known in the context of natural languages, where words and sentences may be regarded either as semantic entities or as character strings (syntactic entities). The common practice in natrual languages is to use quotation marks to indicate that a word or a sentence is to be treated literally as a string of characters. For instance, the first letter of "John" is clearly "J". If we tell somebody "say your name aloud," we expect to hear that person's name. However, if we tell somebody "say 'your name' aloud," we expect to hear the words "your name." Note that we are forced to nest quotation marks. to describe what somebody else might say.
 
@@ -86,17 +86,17 @@ func memq<T: Equatable>(item: T, _ list: [T]) -> [T]? {
         case item == list[0]:
             return list
         default:
-            return memq(item, Array(list[1..<list.count]))
+            return memq(item: item, Array(list[1..<list.count]))
     }
 }
 
 // For example, the value of 
 
-memq("apple", ["pear","banana","prune"])
+memq(item: "apple", ["pear","banana","prune"])
 
 // is nil, whereas the value of
 
-memq("apple", ["x", "apple sauce", "y", "apple", "pear"])
+memq(item: "apple", ["x", "apple sauce", "y", "apple", "pear"])
 
 // is ["apple", "pear"]
 

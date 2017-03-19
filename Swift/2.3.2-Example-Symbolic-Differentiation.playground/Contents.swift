@@ -102,7 +102,7 @@ func * (lhs: Expr, rhs: Expr) -> Expr {
 
 
 // The variables are symbols. The are identified by the primitive predicate symbol?:
-func isVariable(exp: Expr) -> Bool {
+func isVariable(_ exp: Expr) -> Bool {
     switch exp {
     case .Variable(_):
         return true
@@ -112,7 +112,7 @@ func isVariable(exp: Expr) -> Bool {
 }
 
 // Two variables are the same if the symbols representing them are eq?
-func isSameVariable(v1: Expr, _ v2: Expr) -> Bool {
+func isSameVariable(_ v1: Expr, _ v2: Expr) -> Bool {
     switch (v1, v2) {
     case (.Variable(let val1), .Variable(let val2)):
         return val1 == val2
@@ -122,15 +122,15 @@ func isSameVariable(v1: Expr, _ v2: Expr) -> Bool {
 }
 
 // Sums and products are constructed as lists:
-func makeSum1(a1:Expr, _ a2: Expr) -> Expr {
+func makeSum1(_ a1:Expr, _ a2: Expr) -> Expr {
     return Expr.Sum(Box(a1), Box(a2))
 }
-func makeProduct1(m1: Expr, _ m2: Expr) -> Expr {
+func makeProduct1(_ m1: Expr, _ m2: Expr) -> Expr {
     return Expr.Product(Box(m1), Box(m2))
 }
 
 // A sum is a list whose first element is the symbol + (Not here its not. A Sum is a case of our expr enum)
-func isSum(exp: Expr) -> Bool {
+func isSum(_ exp: Expr) -> Bool {
     switch exp {
     case .Sum(_, _):
         return true
@@ -140,7 +140,7 @@ func isSum(exp: Expr) -> Bool {
 }
 
 // The addend is the second item of the sum list:
-func addend(s: Expr) -> Expr {
+func addend(_ s: Expr) -> Expr {
     switch s {
     case .Sum(let a1, _):
         return a1.unbox
@@ -150,7 +150,7 @@ func addend(s: Expr) -> Expr {
 }
 
 // The augend is the third item of the sum list:
-func augend(s: Expr) -> Expr {
+func augend(_ s: Expr) -> Expr {
     switch s {
     case .Sum(_, let a2):
         return a2.unbox
@@ -160,7 +160,7 @@ func augend(s: Expr) -> Expr {
 }
 
 // A product is a list whose first element is the symbol *:
-func isProduct(x: Expr) -> Bool {
+func isProduct(_ x: Expr) -> Bool {
     switch x {
     case .Product(_, _):
         return true
@@ -170,7 +170,7 @@ func isProduct(x: Expr) -> Bool {
 }
 
 // The multiplier is the second item of the product list:
-func multiplier(p: Expr) -> Expr {
+func multiplier(_ p: Expr) -> Expr {
     switch p {
     case .Product(let m1, _):
         return m1.unbox
@@ -180,7 +180,7 @@ func multiplier(p: Expr) -> Expr {
 }
 
 // The multiplican is the third item of the product list:
-func multiplicand(p: Expr) -> Expr {
+func multiplicand(_ p: Expr) -> Expr {
     switch p {
     case .Product(_, let m2):
         return m2.unbox
@@ -191,7 +191,7 @@ func multiplicand(p: Expr) -> Expr {
 
 
 
-func deriv1(exp: Expr, _ variable: Expr) -> Expr {
+func deriv1(_ exp: Expr, _ variable: Expr) -> Expr {
     switch exp {
     case .Constant(_):
         return .Constant(0)
@@ -222,7 +222,7 @@ print(deriv1(("x" * "y") * ("x" + 3), "x")) //
 //:
 //: Our difficulty is much like the one we encountered with the rational-number implementation: we haven't reduced answers to simplist form. To accomplish the rational-number reduction, we needed to change only the constructors and the selectors of the implementation. We can adopt a similar strategy here. We won't change deriv at all. Instead, we will change makeSum so that if both summands are numbers, makeSum will add them and return their sum. Also, if one of the summands is 0, then makeSum will return the other summand.
 
-func makeSum(a1: Expr, _ a2: Expr) -> Expr {
+func makeSum(_ a1: Expr, _ a2: Expr) -> Expr {
     switch (a1, a2) {
     case (.Constant(0), _):
         return a2
@@ -237,7 +237,7 @@ func makeSum(a1: Expr, _ a2: Expr) -> Expr {
 
 //: This uses swifts pattern matching.
 
-func makeProduct(m1: Expr, _ m2: Expr) -> Expr {
+func makeProduct(_ m1: Expr, _ m2: Expr) -> Expr {
     switch (m1, m2) {
     case (.Constant(0), _):
         return .Constant(0)
@@ -256,7 +256,7 @@ func makeProduct(m1: Expr, _ m2: Expr) -> Expr {
 
 //: Here is how this version works on our three examples:
 
-func deriv(exp: Expr, _ variable: Expr) -> Expr {
+func deriv(_ exp: Expr, _ variable: Expr) -> Expr {
     switch exp {
     case .Constant(_):
         return .Constant(0)
