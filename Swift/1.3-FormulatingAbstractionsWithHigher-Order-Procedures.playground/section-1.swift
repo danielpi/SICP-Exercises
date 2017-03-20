@@ -1,14 +1,14 @@
 import Cocoa
 
 protocol MultipliableType {
-    func *(lhs: Self, rhs: Self) -> Self
+    static func * (lhs: Self, rhs: Self) -> Self
 }
 extension Double : MultipliableType {}
 extension Float  : MultipliableType {}
 extension Int    : MultipliableType {}
 
-protocol AddableType: IntegerLiteralConvertible {
-    func +(lhs: Self, rhs: Self) -> Self
+protocol AddableType: ExpressibleByIntegerLiteral {
+    static func + (lhs: Self, rhs: Self) -> Self
 }
 extension Double : AddableType {}
 extension Float  : AddableType {}
@@ -20,7 +20,7 @@ extension Int    : AddableType {}
 
 // Procedures are abstractions that describe compound operations on numbers independent of the particular numbers. For instance.
 
-func cube<T:MultipliableType>(x: T) -> T {
+func cube<T:MultipliableType>(_ x: T) -> T {
     return x * x * x
 }
 
@@ -31,7 +31,7 @@ func cube<T:MultipliableType>(x: T) -> T {
 // 1.3.1 Procedures as Arguments
 // Consider the following three procedures
 
-func sumIntegers(a: Int, _ b: Int) -> Int {
+func sumIntegers(_ a: Int, _ b: Int) -> Int {
     if a > b {
         return 0
     } else {
@@ -40,7 +40,7 @@ func sumIntegers(a: Int, _ b: Int) -> Int {
 }
 sumIntegers(1, 10)
 
-func sumCubes(a: Int, _ b: Int) -> Int {
+func sumCubes(_ a: Int, _ b: Int) -> Int {
     if a > b {
         return 0
     } else {
@@ -49,7 +49,7 @@ func sumCubes(a: Int, _ b: Int) -> Int {
 }
 sumCubes(1, 10)
 
-func piSum(a: Int, _ b: Int) -> Float {
+func piSum(_ a: Int, _ b: Int) -> Float {
     if a > b {
         return 0
     } else {
@@ -71,7 +71,7 @@ func <name>(a: Int, b: Int) -> ??? {
 
 // The pattern described above is very similar to the mathematical concept of summation. This allows mathematicians to deal with the concept of summation rather than simply a particular instance of summation.
 
-func sum<T:Comparable,U:AddableType>(term term:(T) -> U, a:T, next:(T) -> T, b:T) -> U {
+func sum<T:Comparable,U:AddableType>(term:(T) -> U, a:T, next:(T) -> T, b:T) -> U {
     if a > b {
         return 0
     } else {
@@ -81,30 +81,30 @@ func sum<T:Comparable,U:AddableType>(term term:(T) -> U, a:T, next:(T) -> T, b:T
 
 // We can recreate the procedures from above using our sum() function.
 
-func inc(n: Int) -> Int {
+func inc(_ n: Int) -> Int {
     return n + 1
 }
-func cubeDouble(x: Int) -> Double {
+func cubeDouble(_ x: Int) -> Double {
     return Double(x * x * x)
 }
-func sumCubes2(a: Int, _ b: Int) -> Double {
+func sumCubes2(_ a: Int, _ b: Int) -> Double {
     return sum(term: cubeDouble, a: a, next: inc, b: b)
 }
 sumCubes2(1, 10)
 
-func identity<T>(x:T) -> T {
+func identity<T>(_ x:T) -> T {
     return x
 }
-func sumIntegers2(a: Int, _ b: Int) -> Int {
+func sumIntegers2(_ a: Int, _ b: Int) -> Int {
     return sum(term: identity, a: a, next: inc, b: b)
 }
 sumIntegers2(1, 10)
 
-func piSum2(a:Int, _ b:Int) -> Double {
-    func piTerm(x: Int) -> Double {
+func piSum2(_ a:Int, _ b:Int) -> Double {
+    func piTerm(_ x: Int) -> Double {
         return 1.0 / (Double(x) * (Double(x) + 2.0))
     }
-    func piNext(x: Int) -> Int {
+    func piNext(_ x: Int) -> Int {
         return x + 4
     }
     return sum(term: piTerm, a: a, next: piNext, b: b)
@@ -114,7 +114,7 @@ func piSum2(a:Int, _ b:Int) -> Double {
 
 // Once we have sum() we can use it as a building block if formulating further concepts. For instance the definite integral of a function f between limits a and b can be approximated numerically. We can express this directly as a procedure using the following
 
-func integral(f f:(Double) -> Double, a:Double, b:Double, dx:Double) -> Double {
+func integral(f:(Double) -> Double, a:Double, b:Double, dx:Double) -> Double {
     func addDx(x:Double) -> Double {
         return x + dx
     }
@@ -130,7 +130,7 @@ integral(f: cube, a: 0, b: 1, dx: 0.01)
 // 1.3.2 Constructing Procedures Using Lambda (Closures)
 // In piSum it is a bit awkward having to define piTerm and piNext just so that they can be used as arguments to our higher-order procedure. We can do this with closures
 
-func piSum3(a:Int, _ b:Int) -> Double {
+func piSum3(_ a:Int, _ b:Int) -> Double {
     return sum(term: { (x: Int) -> Double in return 1.0 / (Double(x) * (Double(x) + 2.0)) },
                   a: a,
                next: { (x: Int) -> Int in return x + 4 },
@@ -140,7 +140,7 @@ func piSum3(a:Int, _ b:Int) -> Double {
 
 // Again using closures we can write integral without having to define auxilary procedure addDx
 
-func integral2(f f:(Double) -> Double, a:Double, b:Double, dx:Double) -> Double {
+func integral2(f:(Double) -> Double, a:Double, b:Double, dx:Double) -> Double {
     return sum(term: f, a: a + (2 * dx), next: { (x:Double) -> Double in return x + dx }, b: b) * dx
 }
 integral2(f: cube, a: 0, b: 1, dx: 0.01)
@@ -150,7 +150,7 @@ integral2(f: cube, a: 0, b: 1, dx: 0.01)
 
 // The resulting procedure is just as much a procedure as one that is created using func. The only difference is that it has not been associated with any name. In fact
 
-func plus4(x: Int) -> Int {
+func plus4(_ x: Int) -> Int {
     return x + 4
 }
 plus4(4)
@@ -163,13 +163,13 @@ plus5(5)
 // Using let to create local variables
 // I'm not sure if there is an equivilent in Swift for this sort of thing. I'll implement the examples as best I can
 
-func square(x:Int) -> Int {
+func square(_ x:Int) -> Int {
     return x * x
 }
 square(4)
 
-func f(x:Int, _ y:Int) -> Int {
-    func fHelper(a:Int, _ b:Int) -> Int {
+func f(_ x:Int, _ y:Int) -> Int {
+    func fHelper(_ a:Int, _ b:Int) -> Int {
         return (x * square(a)) + (y * b) + (a * b)
     }
     return fHelper((x * y) + 1, 1 - y)
@@ -178,7 +178,7 @@ f(3,4)
 
 // Or we could use a closure to accomplish this
 
-func f2(x: Int, _ y: Int) -> Int {
+func f2(_ x: Int, _ y: Int) -> Int {
     return { (a:Int, b:Int) -> Int in
         return (x * square(a)) + (y * b) + (a * b)
     }((x * y) + 1, 1 - y)
@@ -189,7 +189,7 @@ f2(3,4)
 
 // In Lisp there is a let construct that makes this all simpler. Is this the same as specifying local variables in Swift?
 
-func f3(x: Int, _ y: Int) -> Int {
+func f3(_ x: Int, _ y: Int) -> Int {
     let a = (x * y) + 1
     let b = 1 - y
     return (x * square(a)) + (y * b) + (a * b)
@@ -200,7 +200,7 @@ f3(3,4)
 
 // Let allows one to bind variables as locally as possible to where they are to be used. For example if the value of x is 5, the value of the expression
 
-func letDemo(x: Int) -> Int {
+func letDemo(_ x: Int) -> Int {
     return { (x:Int) -> Int in return (x * 10) + x }(3) + x
 }
 letDemo(5)
@@ -209,7 +209,7 @@ letDemo(5)
 
 // The variables values are computed outside the let. This matters when the expressions that provide the values for the local variables depend upon variables having the same names as the local variables themselves. For example, if the value of x is 2, the expression
 
-func letDemo2(x: Int) -> Int {
+func letDemo2(_ x: Int) -> Int {
     return { (z: Int, y: (Int) -> Int) -> Int in return z * y(x) }(3, { (x: Int) -> Int in return x + 2 } )
 }
 letDemo2(2)
@@ -218,7 +218,7 @@ letDemo2(2)
 
 // Sometimes we can use internal definitions to get the same effect as with let. For example
 
-func f4(x: Int, _ y: Int) -> Int {
+func f4(_ x: Int, _ y: Int) -> Int {
     func a() -> Int { return 1 + (x * y) }
     func b() -> Int { return 1 - y }
     return (x * square(a())) + (y * b()) + (a() * b())
@@ -229,7 +229,7 @@ f4(3,4)
 
 // How would a Swift version look
 
-func f5(x: Int, _ y: Int) -> Int {
+func f5(_ x: Int, _ y: Int) -> Int {
     let a = 1 + (x * y)
     let b = 1 - y
     return (x * square(a)) + (y * b) + (a * b)
@@ -243,20 +243,20 @@ f5(3,4)
 
 // The half-interval method is a simple but powerful technique for finding roots of an equation.
 
-func average(a: Double, _ b: Double) -> Double {
+func average(_ a: Double, _ b: Double) -> Double {
     return (a + b) / 2
 }
-func isCloseEnough(a: Double, _ b: Double, tol tolerance: Double) -> Bool {
+func isCloseEnough(_ a: Double, _ b: Double, tol tolerance: Double) -> Bool {
     return abs(a - b) < tolerance
 }
-func isPositive(x: Double) -> Bool {
+func isPositive(_ x: Double) -> Bool {
     return x > 0
 }
-func isNegative(x: Double) -> Bool {
+func isNegative(_ x: Double) -> Bool {
     return x < 0
 }
 
-func search(f:(Double) -> Double, _ negative: Double, _ positive: Double) -> Double {
+func search(_ f:(Double) -> Double, _ negative: Double, _ positive: Double) -> Double {
     let midpoint = average(negative, positive)
     if isCloseEnough(negative, positive, tol: 0.001) {
         return midpoint
@@ -276,7 +276,7 @@ func search(f:(Double) -> Double, _ negative: Double, _ positive: Double) -> Dou
 // Search is awkward to use directly because we can accidentally give it points at which f's values do not have the required sign. Instead we will use search via the following procedure.
 
 
-func halfIntervalMethod(f:(Double) -> Double, _ a: Double, _ b: Double) -> Double? {
+func halfIntervalMethod(_ f:(Double) -> Double, _ a: Double, _ b: Double) -> Double? {
     let aValue = f(a)
     let bValue = f(b)
     switch true {
@@ -298,7 +298,7 @@ root
 // Begin with an initial guess and applying f repeatedly until the value doesn't change very much.
 
 
-func fixedPoint(f: (Double) -> Double, _ guess: Double) -> Double {
+func fixedPoint(_ f: (Double) -> Double, _ guess: Double) -> Double {
     let next = f(guess)
     if isCloseEnough(guess, next, tol: 0.00001) {
         return next
@@ -312,14 +312,14 @@ aFixedPoint
 
 // The fixed point process is similar to square-root computation.
 
-func sqrtInfiniteLoop(x: Double) -> Double {
+func sqrtInfiniteLoop(_ x: Double) -> Double {
     return fixedPoint({ (y:Double) -> Double in x / y }, 1.0)
 }
 //sqrtInfiniteLoop(16.0)
 
 // The fixed point search above does not converge. The next guesses oscillate around the correct value. 
 
-func sqrt(x: Double) -> Double {
+func sqrt(_ x: Double) -> Double {
     return fixedPoint({ (y: Double) -> Double in average(y, x/y) }, 1.0)
 }
 sqrt(2.0)
@@ -331,11 +331,11 @@ sqrt(2.0)
 
 // We can illustrate this idea by looking again at the fixed-point example described at the end of section 1.3.3. We formulated a new version of the square-root procedure as a fixed-point search, starting with the observation thatsqrt(x) is a fixed-point of the function y -> x/y. Then we used average dampingto make the approximations converge. Average damping is a useful general technique in itself. Namely, given a function f, we consider the function whose value at x is equal to the average of x and f(x).
 
-func averageDamp(f: (Double) -> Double) -> (Double) -> Double {
+func averageDamp(_ f: @escaping (Double) -> Double) -> (Double) -> Double {
     return { (x: Double) -> Double in return average(x, f(x)) }
 }
 
-func squareDouble(x: Double) -> Double {
+func squareDouble(_ x: Double) -> Double {
     return x * x
 }
 
@@ -343,7 +343,7 @@ averageDamp(squareDouble)(10)
 
 // Using averageDamp we can reformulate the square-root procedure as follows
 
-func sqrt2(x: Double) -> Double {
+func sqrt2(_ x: Double) -> Double {
     return fixedPoint(averageDamp({ (y: Double) -> Double in return x / y }), 1.0)
 }
 
@@ -351,7 +351,7 @@ sqrt2(64)
 
 // Notice how this formulation makes explicit the three ideas in the method: fixed-point search, average damping and the function y -> x/y. It is instructive to compare this formulation of the square-root method with the original version given in section 1.1.7. Bear in mind that these procedures express the same process, and notice how much clearer the idea becomes when we express the process in terms of these abstractions. In general there are many ways to formulate a process as a procedure. Experienced programmers kmow how to choose procedureal formulations that are particularly perspicuous, and where useful elements of the process are exposed as separate entities that can be reused in other applications. As a simple example of reuse, notice that the cube root of x is a fixed point of the function y -> x/y^2, so we can immediately generalise our square-root procedure to one that extracts cube roots.
 
-func cubeRoot(x: Double) -> Double {
+func cubeRoot(_ x: Double) -> Double {
     return fixedPoint(averageDamp({ (y: Double) -> Double in return x / (y * y) }), 1.0)
 }
 
@@ -376,7 +376,7 @@ cubeRoot(27)
 
 // Thus we can express the idea of derivative as the procedure
 
-func deriv(g: (Double) -> Double) -> (Double) -> Double {
+func deriv(_ g: @escaping (Double) -> Double) -> (Double) -> Double {
     return { (x: Double) -> Double in
                 let dx = 0.00001
                 return (g(x + dx) - g(x)) / dx
@@ -385,7 +385,7 @@ func deriv(g: (Double) -> Double) -> (Double) -> Double {
 
 // Like averageDamp, deriv is a procedure that takes a procedure as argument and returns a procedure as value. For example to approximate the derivative of x -> x^3 at 5 (whose exact value is 75) we can evaluate
 
-func cube(x: Double) -> Double { return x * x * x }
+func cube(_ x: Double) -> Double { return x * x * x }
 deriv(cube)(5)
 
 let cubeDeriv = deriv(cube)
@@ -393,15 +393,15 @@ let cubeDeriv = deriv(cube)
 // Create an array of doubles. Have a start value and an end value and a linear growing value for each value in between
 
 func linspace(start: Double, end: Double, steps: Int) -> [Double] {
-    var array = [Double](count: steps, repeatedValue: 0.0)
+    var array = [Double](repeating: 0.0, count: steps)
     let stepSize = (end - start) / Double(steps - 1)
-    for (index, _) in array.enumerate() {
+    for (index, _) in array.enumerated() {
         array[index] = start + (stepSize * Double(index))
     }
     return array
 }
 
-let x = linspace(-10, end: 10, steps: 51)
+let x = linspace(start: -10, end: 10, steps: 51)
 
 for value in x {
     cube(value)
@@ -410,10 +410,10 @@ for value in x {
 
 // With the aid of deriv we can express Newton's method as a fixed point process:
 
-func newtonTransform(g: (Double) -> Double) -> (Double) -> Double {
+func newtonTransform(_ g: @escaping (Double) -> Double) -> (Double) -> Double {
     return { (x: Double) -> Double in return x - (g(x) / deriv(g)(x)) }
 }
-func newtonsMethod(g: (Double) -> Double, _ guess: Double) -> Double {
+func newtonsMethod(_ g: @escaping (Double) -> Double, _ guess: Double) -> Double {
     return fixedPoint(newtonTransform(g), guess)
 }
 
@@ -427,7 +427,7 @@ sqrt(x) = ?
 
 // This provides yet another form of the square root procedure
 
-func sqrt3(x: Double) -> Double {
+func sqrt3(_ x: Double) -> Double {
     return newtonsMethod({ (y: Double) -> Double in return (y * y) - x }, 1.0)
 }
 sqrt3(64)
@@ -439,9 +439,9 @@ sqrt3(64)
 //    2. Using Newton's method
 // Since Newton's method was itself expressed as a fixed-point process, we actually saw two ways to compute square roots as fixed points. Each method begins with a function and finds a fixed point of some transformation of the function. We can express this general idea itself as a procedure
 
-func fixedPointOfTransform(g: (Double) -> Double,
-                 _ transform: ((Double) -> Double) -> (Double) -> Double,
-                     _ guess: Double) -> Double {
+func fixedPointOfTransform(_ g: @escaping (Double) -> Double,
+                     transform: (@escaping (Double) -> Double) -> (Double) -> Double,
+                         guess: Double) -> Double {
     return fixedPoint(transform(g), guess)
 }
 
@@ -449,15 +449,15 @@ func fixedPointOfTransform(g: (Double) -> Double,
 
 // Using this abstraction we can recast the first square root computation as an instance of this general method.
 
-func sqrt4(x: Double) -> Double {
-    return fixedPointOfTransform({ (y:Double) -> Double in return x / y }, averageDamp, 1.0)
+func sqrt4(_ x: Double) -> Double {
+    return fixedPointOfTransform({ (y:Double) -> Double in return x / y }, transform: averageDamp, guess: 1.0)
 }
 sqrt4(2)
 
 // Similary we can express the second square-root computation from this section as
 
-func sqrt5(x: Double) -> Double {
-    return fixedPointOfTransform({ (y:Double) -> Double in return (y * y) - x }, newtonTransform, 1.0)
+func sqrt5(_ x: Double) -> Double {
+    return fixedPointOfTransform({ (y:Double) -> Double in return (y * y) - x }, transform: newtonTransform, guess: 1.0)
 }
 sqrt5(2)
 
