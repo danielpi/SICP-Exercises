@@ -24,7 +24,7 @@ enum ConsPosition {
     case Left, Right
 }
 
-func cons<T>(a: T, _ b: T) -> (ConsPosition -> T) {
+func cons<T>(_ a: T, _ b: T) -> ((ConsPosition) -> T) {
     func innerCons(i: ConsPosition) -> T {
         if i == .Left {
             return a;
@@ -36,11 +36,11 @@ func cons<T>(a: T, _ b: T) -> (ConsPosition -> T) {
     return innerCons;
 }
 
-func car<T>(innerCons: ConsPosition -> T) -> T {
+func car<T>(_ innerCons: (ConsPosition) -> T) -> T {
     return innerCons(.Left);
 }
 
-func cdr<T>(innerCons: ConsPosition -> T) -> T {
+func cdr<T>(_ innerCons: (ConsPosition) -> T) -> T {
     return innerCons(.Right);
 }
 
@@ -69,35 +69,35 @@ car(cdr(z))
 // Representing rational numbers
 // Pairs offer a natural way to complete the rational-number system. Simply represent a rational number as a pair of two integers: a numerator and a denominator. Then makeRat, numer and denom are readily implemented as follows
 
-typealias Rational = (ConsPosition -> Int)
+typealias Rational = ((ConsPosition) -> Int)
 
-func makeRat1(n: Int, _ d:Int) -> Rational {
+func makeRat1(_ n: Int, _ d:Int) -> Rational {
     return cons(n,d)
 }
-func numer(x: Rational) -> Int {
+func numer(_ x: Rational) -> Int {
     return car(x)
 }
-func denom(x: Rational) -> Int {
+func denom(_ x: Rational) -> Int {
     return cdr(x)
 }
 
-func printRat(x: Rational) {
+func printRat(_ x: Rational) {
     print("\(numer(x))/\(denom(x))")
 }
 
-func addRat1(x: Rational, _ y: Rational) -> Rational {
+func addRat1(_ x: Rational, _ y: Rational) -> Rational {
     return makeRat1((numer(x) * denom(y)) + (numer(y) * denom(x)), denom(x) * denom(y))
 }
-func subRat1(x: Rational, _ y: Rational) -> Rational {
+func subRat1(_ x: Rational, _ y: Rational) -> Rational {
     return makeRat1((numer(x) * denom(y)) - (numer(y) * denom(x)), denom(x) * denom(y))
 }
-func mulRat1(x: Rational, _ y: Rational) -> Rational {
+func mulRat1(_ x: Rational, _ y: Rational) -> Rational {
     return makeRat1(numer(x) * numer(y), denom(x) * denom(y))
 }
-func divRat1(x: Rational, _ y: Rational) -> Rational {
+func divRat1(_ x: Rational, _ y: Rational) -> Rational {
     return makeRat1(numer(x) * denom(y), denom(x) * numer(y))
 }
-func isEqualRat(x: Rational, _ y: Rational) -> Bool {
+func isEqualRat(_ x: Rational, _ y: Rational) -> Bool {
     return (numer(x) * denom(y)) == (numer(y) * denom(x))
 }
 
@@ -110,7 +110,7 @@ printRat(addRat1(oneThird, oneThird))
 
 // The final example shows that our rational-number implementation does not reduce numbers to lowest terms. We can remedy this by changing makeRat. 
 
-func gcd(a: Int, _ b: Int) -> Int {
+func gcd(_ a: Int, _ b: Int) -> Int {
     if b == 0 {
         return abs(a)
     } else {
@@ -118,12 +118,12 @@ func gcd(a: Int, _ b: Int) -> Int {
     }
 }
 
-func makeRat2(n: Int, _ d:Int) -> Rational {
+func makeRat2(_ n: Int, _ d:Int) -> Rational {
     let g = gcd(n, d)
     return cons(n/g, d/g)
 }
 
-func addRat2(x: Rational, _ y: Rational) -> Rational {
+func addRat2(_ x: Rational, _ y: Rational) -> Rational {
     return makeRat2((numer(x) * denom(y)) + (numer(y) * denom(x)), denom(x) * denom(y))
 }
 
@@ -139,14 +139,14 @@ printRat(addRat2(oneThird, oneThird))
 
 // For example an alternative way to address the problem of reducing rational numbers to lowest terms  is to perform the reduction whenever we access the parts of a rational number, rather than when we construct it. This leads to different constructor and selector procedures:
 
-func makeRat(n: Int, d: Int) -> Rational {
+func makeRat(_ n: Int, d: Int) -> Rational {
     return cons(n, d)
 }
-func numer2(x: Rational) -> Int {
+func numer2(_ x: Rational) -> Int {
     let g = gcd(car(x), cdr(x))
     return car(x) / g
 }
-func denom2(x: Rational) -> Int {
+func denom2(_ x: Rational) -> Int {
     let g = gcd(car(x), cdr(x))
     return cdr(x) / g
 }
@@ -225,14 +225,14 @@ struct Interval {
 let a = Interval(6.7, 6.9)
 let b = Interval(2.1, 2.3)
 
-func +(lhs: Interval, rhs: Interval) -> Interval {
+func + (lhs: Interval, rhs: Interval) -> Interval {
     return Interval(lhs.lower + rhs.lower, lhs.upper + rhs.upper)
 }
 let c = a + b
 
 // Alyssa also works out the product of two intervals by finding the minimum and the maximum of the products of the bounds using them as the bounds o fthe resulting interval.
 
-func *(lhs: Interval, rhs: Interval) -> Interval {
+func * (lhs: Interval, rhs: Interval) -> Interval {
     let p1 = lhs.lower * rhs.lower
     let p2 = lhs.lower * rhs.upper
     let p3 = lhs.upper * rhs.lower
@@ -243,7 +243,7 @@ let d = a * b
 
 // To divide two intervals, Alyssa multiplies the first by the reciprocal of the second. Note that the bounds of the reciprocal interval are the reciprocal of the upper bound and the reciprocal of the lower bound, in that order.
 
-func /(lhs: Interval, rhs: Interval) -> Interval {
+func / (lhs: Interval, rhs: Interval) -> Interval {
     return lhs * Interval(1 / rhs.upper, 1 / rhs.lower)
 }
 let e = d / b
@@ -294,11 +294,11 @@ extension Interval {
 
 // He has written the following two programs, each of which computes the parallel-resistors formula differently
 
-func parOne(a: Interval, _ b: Interval) -> Interval {
+func parOne(_ a: Interval, _ b: Interval) -> Interval {
     return (a * b) / (a + b)
 }
 
-func parTwo(a: Interval, _ b: Interval) -> Interval {
+func parTwo(_ a: Interval, _ b: Interval) -> Interval {
     let one = Interval(1, 1)
     return one / ((one / a) + (one / b))
 }
