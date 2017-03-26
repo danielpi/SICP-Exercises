@@ -12,11 +12,11 @@ import Cocoa
 
 
 
-func wave2(frame: Frame) {
+func wave2(_ frame: Frame) {
     beside(wave, flipVert(wave))(frame)
 }
-func wave4(frame: Frame) {
-    below(top: wave2, wave2)(frame)
+func wave4(_ frame: Frame) {
+    below(wave2, wave2)(frame)
 }
 
 
@@ -27,61 +27,61 @@ draw(wave4)
 // In building up a complex image in this manner we are exploiting the fact that painters are closed under the language's means of combination. The beside and below of two painters is itself a painter; therefore, we can use it as an element in making more complex painters. As with building up list strucutre using cons, the closure of our data under the means of combination is crucial to the ability to create complex structures while using only a few operations.
 // Once we can combine painters, we would like to be able to abstract typical patterns of combining painters. We will implement the painter operations as Scheme procedures. This means that we don't need a special abstraction mechanism in the picture language: Since the means of combination are ordinary Scheme procedures, we automatically have the capability to do anything with painter operations that we can do with procedures. For example, we can abstract the pattern in wave4 as
 
-func flippedPairs(painter: Painter) -> Painter {
+func flippedPairs(_ painter: @escaping Painter) -> Painter {
     let painter2 = beside(painter, flipVert(painter))
-    return below(top: painter2, painter2)
+    return below(painter2, painter2)
 }
 draw(flippedPairs(wave))
 
-func wave4b(frame: Frame) {
+func wave4b(_ frame: Frame) {
     flippedPairs(wave)(frame)
 }
 draw(wave4b)
 
 // We can also define recursive operations. Here's one that makes painters split and branch towards the right as shown in Figure 2.13 and Figure 2.14
 
-func rightSplit(painter: Painter, n: Int) -> Painter {
+func rightSplit(_ painter: @escaping Painter, n: Int) -> Painter {
     if n == 0 {
         return painter
     } else {
         let smaller = rightSplit(painter, n: n - 1)
-        return beside(painter, below(top: smaller, smaller))
+        return beside(painter, below(smaller, smaller))
     }
 }
 draw(rightSplit(wave, n: 2))
 
-func upSplit(painter: Painter, n: Int) -> Painter {
+func upSplit(_ painter: @escaping Painter, n: Int) -> Painter {
     if n == 0 {
         return painter
     } else {
         let smaller = upSplit(painter, n: n - 1)
-        return below(top: beside(smaller, smaller), painter)
+        return below(beside(smaller, smaller), painter)
     }
 }
 
 // We can produce balanced patterns by branching upwards as well as towards the right.
 
-func cornerSplit(painter: Painter, n: Int) -> Painter {
+func cornerSplit(_ painter: @escaping Painter, n: Int) -> Painter {
     if n == 0 {
         return painter
     } else {
         let up = upSplit(painter, n: n - 1)
         let right = rightSplit(painter, n: n - 1)
         let topLeft = beside(up, up)
-        let bottomRight = below(top: right, right)
+        let bottomRight = below(right, right)
         let corner = cornerSplit(painter, n: n - 1)
         
-        return beside(below(top: topLeft, painter), below(top: corner, bottomRight))
+        return beside(below(topLeft, painter), below(corner, bottomRight))
     }
 }
 draw(cornerSplit(wave, n: 5))
 
 // By placing four copies of a cornerSplit appropriately, we obtain a pattern called square-Limit, whose application to wave and rogers is shown in Figure 2.9.
 
-func squareLimit(painter: Painter, n: Int) -> Painter {
+func squareLimit(_ painter: @escaping Painter, n: Int) -> Painter {
     let quarter = cornerSplit(painter, n: n)
     let half = beside(flipHoriz(quarter), quarter)
-    return below(top: half, flipVert(half))
+    return below(half, flipVert(half))
 }
 draw(squareLimit(wave, n: 4))
 
@@ -90,21 +90,21 @@ draw(squareLimit(wave, n: 4))
 // In addition to abstracting patterns of combining painters, we can work at a higher level, abstracting patterns of combining painter operations. That is, we can view the painter operations as elements to manipulate and can write means of combination for these elements - procedures that take painter operations as arguments and create new painter operations.
 // For example, flippedPairs and squareLimit each arrange four copies of a painter's image in a square pattern; they differ only in how they orient the copies. One way to abstract this pattern of painter combination is with the following procedure, which takes four one-argument painter operations and produces a painter operation that transforms a given painter with those four operations and arranges the results in a square. tl, tr, bl, and br are the transformations to aply to the top left copy, the top right copy, the bottem left copy and the bottom right copy, respectively.
 
-func squareOfFour(tl tl: Transformer, tr: Transformer, bl: Transformer, br: Transformer) -> Transformer {
+func squareOfFour(tl: @escaping Transformer, tr: @escaping Transformer, bl: @escaping Transformer, br: @escaping Transformer) -> Transformer {
     return { painter in
         let top = beside(tl(painter), tr(painter))
         let bottom = beside(bl(painter), br(painter))
-        return below(top: bottom, top)
+        return below(bottom, top)
     }
 }
 
-func identity(painter: Painter) -> Painter {
+func identity(_ painter: @escaping Painter) -> Painter {
     return painter
 }
 
 // Then flippedPairs can be defined in terms of squareOfFour as follows:
 
-func flippedPairs2(painter: Painter) -> Painter {
+func flippedPairs2(_ painter: @escaping Painter) -> Painter {
     let combine4 = squareOfFour(tl: identity, tr: flipVert, bl: identity, br: flipVert)
     return combine4(painter)
 }
@@ -112,11 +112,11 @@ draw(flippedPairs2(wave))
 
 // and squareLimit can be expressed as
 
-func rotate180(painter: Painter) -> Painter {
-    return transformPainter(painter, origin: Point(x: 1, y: 1), corner1: Point(x: 0, y: 1), corner2: Point(x: 1, y: 0))
+func rotate180(_ painter: @escaping Painter) -> Painter {
+    return transform(painter: painter, origin: Point(x: 1, y: 1), corner1: Point(x: 0, y: 1), corner2: Point(x: 1, y: 0))
 }
 
-func squareLimit2(painter: Painter, n: Int) -> Painter {
+func squareLimit2(_ painter: @escaping Painter, n: Int) -> Painter {
     let combine4 = squareOfFour(tl:rotate180, tr:flipVert, bl:flipHoriz, br:identity)
     return combine4(cornerSplit(painter, n: n))
 }
@@ -133,7 +133,7 @@ draw(squareLimit2(wave, n: 4))
 // For example, (0, 0) is mapped to the origin of the frame, (1,1) to the vertex diagonally opposite the origin, and (0.5, 0.5) to the center of the frame. We can create a frame's coordinate map with the following procedure:
 
 
-func frameCoordMap2(frame: Frame) -> (Vector) -> Vector {
+func frameCoordMap2(_ frame: Frame) -> (Vector) -> Vector {
     return { vector in
         return frame.origin + ((vector.x * frame.edge1) + (vector.y * frame.edge2))
     }
@@ -158,11 +158,11 @@ frameCoordMap2(aFrame)(Vector(x: 0.5, y: 0.5))
 // A painter is represented as a procedure that, given a frame as argument, draws a particular image shifted and scaled to fit the frame. That is to say if p is a painter and f is a frame, then we produces p's image in f by calling p with f as argument.
 // The details of how primitive painters are implemented depend on the particular characteristics of the graphics system and the type of image to be drawn. For instance, suppose we have a procedure draw-line that draws a line on the screen between two specified points. Then we can create painters for line drawings, such as the wave painter in Figure 2.10, from lists of line segments as follows:
 
-func drawLine(start: Point, _ end: Point) {
+func drawLine(_ start: Point, _ end: Point) {
     print("Draw Line from \(start.x),\(start.y) to \(end.x),\(end.y)")
 }
 
-func segmentsToPainter2(segments: [Segment]) -> Painter {
+func segmentsToPainter2(_ segments: [Segment]) -> Painter {
     return { frame in
         for segment in segments {
             let start = frameCoordMap2(frame)(segment.startPoint)
@@ -194,22 +194,22 @@ public func transformPainter(painter: Painter, origin: Point, corner1: Point, co
 
 // Here's how to flip painter images vertically:
 
-func flipVert2(painter: Painter) -> Painter {
-    return transformPainter(painter, origin: Point(x: 0, y: 1), corner1: Point(x: 1, y: 1), corner2: Point(x: 0, y: 0))
+func flipVert2(_ painter: @escaping Painter) -> Painter {
+    return transform(painter: painter, origin: Point(x: 0, y: 1), corner1: Point(x: 1, y: 1), corner2: Point(x: 0, y: 0))
 }
 draw(flipVert2(wave))
 
 // Other transformations rotate images counterclockwise by 90 degrees
 
-func rotate90(painter: Painter) -> Painter {
-    return transformPainter(painter, origin: Point(x: 1, y: 0), corner1: Point(x: 1, y: 1), corner2: Point(x: 0, y: 0))
+func rotate90(_ painter: @escaping Painter) -> Painter {
+    return transform(painter: painter, origin: Point(x: 1, y: 0), corner1: Point(x: 1, y: 1), corner2: Point(x: 0, y: 0))
 }
 draw(rotate90(wave))
 
 // or squash images towards the center of the frame:
 
-func squashInwards(painter: Painter) -> Painter {
-    return transformPainter(painter, origin: Point(x: 0.35, y: 0.35), corner1: Point(x: 0.65, y: 0.35), corner2: Point(x: 0.35, y: 0.65))
+func squashInwards(_ painter: @escaping Painter) -> Painter {
+    return transform(painter: painter, origin: Point(x: 0.35, y: 0.35), corner1: Point(x: 0.65, y: 0.35), corner2: Point(x: 0.35, y: 0.65))
 }
 draw(squashInwards(wave))
 
@@ -227,7 +227,7 @@ func beside2(painter1: Painter, painter2: Painter) -> Painter {
 }
 */
 
-func besidePainter(frame: Frame) {
+func besidePainter(_ frame: Frame) {
     beside(wave, wave)(frame)
 }
 draw(besidePainter)
