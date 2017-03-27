@@ -16,7 +16,7 @@ extension Array {
 
 let unorderedSet1 = [10,3,6,1]
 
-func isElementOfSet1<T: Equatable>(x: T, _ set: [T]) -> Bool {
+func isElementOfSet1<T: Equatable>(_ x: T, _ set: [T]) -> Bool {
     if let (head, tail) = set.match {
         if head == x {
             return true
@@ -32,7 +32,7 @@ isElementOfSet1(7, unorderedSet1)
 
 //: Using this we can write adjoinSet. If the object to be adjoined is already in the set, we just return the set. Otherwise, we use + (cons) to add the object to the list that represents the set:
 
-func adjoinSet1<T: Equatable>(x: T, _ set: [T]) -> [T] {
+func adjoinSet1<T: Equatable>(_ x: T, _ set: [T]) -> [T] {
     if isElementOfSet1(x, set) {
         return set
     } else {
@@ -43,7 +43,7 @@ let unorderedSet2 = adjoinSet1(8, unorderedSet1)
 
 //: For intersectionSet we can use a recursive strategy. If we know how to form the intersection of set2 and the tail of set1, we only need to decide whether to include the head of set1 in this. But this depends on whether the head of set1 is also in set2. Here is the resulting procedure:
 
-func intersectionSet1<T: Equatable>(set1: [T], _ set2: [T]) -> [T] {
+func intersectionSet1<T: Equatable>(_ set1: [T], _ set2: [T]) -> [T] {
     if let (head, tail) = set1.match {
         if isElementOfSet1(head, set2) {
             return [head] + intersectionSet1(tail, set2)
@@ -63,7 +63,7 @@ intersectionSet1(unorderedSet1, unorderedSet2)
 //:
 //: One advantage of ordering shows up in isElementOfSet: In checking for the presence of an item, we no longer have to scan the entire set. If we reach a set element that is larger than the item we are looking for, then we know that the item is not in the set:
 
-func isElementOfSet2<T: Comparable>(x: T, _ set: [T]) -> Bool {
+func isElementOfSet2<T: Comparable>(_ x: T, _ set: [T]) -> Bool {
     if let (head, tail) = set.match {
         switch head {
         case x:
@@ -85,9 +85,9 @@ isElementOfSet2(3, orderedSet1)
 //:
 //: We obtain a more impressive speedup with intersectionSet. In the unordered representation this operation required O(n^2) steps, because we performed a complete scan of set2 for each element of set1. But with the ordered representation, we can use a more clever method. Begin by comparing the initial elements, x1 and x2, of the two sets. If x1 equals x2, then that gives an element of the intersection, and the rest of the intersection is the intersection of the tails of the two sets. Suppose, however, that x1 is less than x2. Since x2 is the smallest element in set2, we can immedietely conclude that x1 cannot appear anywhere in set2 and hence is not in the intersection. Hence, the intersection is equal to the intersection of set2 with the tail of set1. Similarly, if x2 is less than x1, then the intersection is given by the intersection of set1 with the tail of set2. Here is the procedure:
 
-func intersectionSet2<T: Comparable>(set1: [T], _ set2: [T]) -> [T] {
+func intersectionSet2<T: Comparable>(_ set1: [T], _ set2: [T]) -> [T] {
     if let (x1, tail1) = set1.match,
-        (x2, tail2) = set2.match {
+       let (x2, tail2) = set2.match {
             switch true {
             case x1 == x2:
                 return [x1] + intersectionSet2(tail1, tail2)
@@ -121,56 +121,49 @@ let figure216 = NSImage(named: "figure2-16.png")
 //:
 //: For Swift I'm not even going to attempt the approach listed in the book (of using a list as the data structure). Instead I'll use enums with associated types.
 
-class Box<T> {
-    let unbox: T
-    init(_ value: T) {
-        self.unbox = value
-    }
-}
-
-enum TreeSet<T>: CustomStringConvertible {
+indirect enum TreeSet<T>: CustomStringConvertible {
     case Empty
-    case Tree(entry:Box<T>, left:Box<TreeSet<T>>, right: Box<TreeSet<T>>)
+    case Tree(entry:T, left:TreeSet<T>, right: TreeSet<T>)
     
     var description : String {
         switch self {
         case .Empty:
             return "()"
         case let .Tree(entry, left, right):
-            return "(\(entry.unbox) \(left.unbox) \(right.unbox))"
+            return "(\(entry) \(left) \(right))"
         }
     }
 }
 
-func entry<T>(tree: TreeSet<T>) -> T {
+func entry<T>(_ tree: TreeSet<T>) -> T {
     switch tree {
-    case let .Tree(entry, _, right):
-        return entry.unbox
+    case let .Tree(entry, _, _):
+        return entry
     default:
         fatalError("Tried to read an entry from an empty tree")
     }
 }
 
-func leftBranch<T>(tree: TreeSet<T>) -> TreeSet<T> {
+func leftBranch<T>(_ tree: TreeSet<T>) -> TreeSet<T> {
     switch tree {
     case let .Tree(_, left, _):
-        return left.unbox
+        return left
     default:
         fatalError("Tried to read the left branch from an empty tree")
     }
 }
 
-func rightBranch<T>(tree: TreeSet<T>) -> TreeSet<T> {
+func rightBranch<T>(_ tree: TreeSet<T>) -> TreeSet<T> {
     switch tree {
     case let .Tree(_, _, right):
-        return right.unbox
+        return right
     default:
         fatalError("Tried to read the right branch from an empty tree")
     }
 }
 
-func makeTree<T>(entry: T, _ left:TreeSet<T>, _ right:TreeSet<T>) -> TreeSet<T> {
-    return TreeSet.Tree(entry: Box(entry), left: Box(left), right: Box(right))
+func makeTree<T>(_ entry: T, _ left:TreeSet<T>, _ right:TreeSet<T>) -> TreeSet<T> {
+    return TreeSet.Tree(entry: entry, left: left, right: right)
 }
 
 let a = makeTree(5, .Empty, .Empty)
@@ -181,16 +174,16 @@ print(rightBranch(a))
 
 //: Now we can write the isElementOfSet procedure using the strategy described above:
 
-func isElementOfSet3<T: Comparable>(x: T, _ set: TreeSet<T>) -> Bool {
+func isElementOfSet3<T: Comparable>(_ x: T, _ set: TreeSet<T>) -> Bool {
     switch set {
     case .Empty:
         return false
-    case let .Tree(entry, _, _) where entry.unbox == x:
+    case let .Tree(entry, _, _) where entry == x:
         return true
-    case let .Tree(entry, left, _) where entry.unbox < x:
-        return isElementOfSet3(x, left.unbox)
-    case let .Tree(entry, _, right) where entry.unbox > x:
-        return isElementOfSet3(x, right.unbox)
+    case let .Tree(entry, left, _) where entry < x:
+        return isElementOfSet3(x, left)
+    case let .Tree(entry, _, right) where entry > x:
+        return isElementOfSet3(x, right)
     default:
         fatalError("isElementOfSet3 has an unhandled case when x:\(x) and set:\(set)")
     }
@@ -200,16 +193,16 @@ isElementOfSet3(6, a)
 
 //: Adjoining an item to a set is implemented similarly and also requires O(log n) steps. To adjoin an item x, we compare x with the node entry to determine whether x should be added to the right or to the left branch, and having adjoined x to the appropriate branch we piece this newly constructed branch together with the original entry and the other branch. If x is equal to the entry, we just return the node. If we are asked to adjoin x to an empty tree, we generate a tree that has x as the entry and empty right and left branches. Here is the procedure:
 
-func adjoinSet3<T: Comparable>(x: T, _ set: TreeSet<T>) -> TreeSet<T> {
+func adjoinSet3<T: Comparable>(_ x: T, _ set: TreeSet<T>) -> TreeSet<T> {
     switch set {
     case .Empty:
         return makeTree(x, .Empty, .Empty)
-    case let .Tree(entry, _, _) where entry.unbox == x:
+    case let .Tree(entry, _, _) where entry == x:
         return set
-    case let .Tree(entry, left, right) where entry.unbox > x:
-        return makeTree(entry.unbox, adjoinSet3(x, left.unbox), right.unbox)
-    case let .Tree(entry, left, right) where entry.unbox < x:
-        return makeTree(entry.unbox, left.unbox, adjoinSet3(x, right.unbox))
+    case let .Tree(entry, left, right) where entry > x:
+        return makeTree(entry, adjoinSet3(x, left), right)
+    case let .Tree(entry, left, right) where entry < x:
+        return makeTree(entry, left, adjoinSet3(x, right))
     default:
         fatalError("adjoinSet3 didn't handle all cases when x:\(x) set:\(set)")
     }
@@ -248,7 +241,7 @@ struct Record {
     }
 }
 
-func lookup(key: Int, _ records: [Record]) -> Record? {
+func lookup(_ key: Int, _ records: [Record]) -> Record? {
     if let (head, tail) = records.match {
         if key == head.key {
             return head
