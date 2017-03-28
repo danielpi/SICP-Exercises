@@ -69,7 +69,7 @@ struct Rational  {
         }
     }
     
-    static func gcd(a: Int, _ b: Int) -> Int {
+    static func gcd(_ a: Int, _ b: Int) -> Int {
         if b == 0 {
             return abs(a)
         } else {
@@ -131,7 +131,7 @@ struct Complex {
         self.imag = m * sin(A)
     }
     
-    static func square(x: Double) -> Double { return x * x }
+    static func square(_ x: Double) -> Double { return x * x }
 }
 extension Complex: CustomStringConvertible {
     var description: String {
