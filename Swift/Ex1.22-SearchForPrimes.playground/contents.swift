@@ -1,18 +1,18 @@
 import Cocoa
 
 // Exercise 1.22
-func isEven(n: Int) -> Bool {
+func isEven(_ n: Int) -> Bool {
     return (n % 2) == 0
 }
-func square(x: Int) -> Int {
+func square(_ x: Int) -> Int {
     return x * x
 }
-func dividesWithNoRemainder(a: Int, _ b: Int) -> Bool {
+func dividesWithNoRemainder(_ a: Int, _ b: Int) -> Bool {
     return  a % b == 0
 }
 // dividesWithNoRemainder(10, 2)
 
-func findDivisor(n: Int, _ testDivisor: Int) -> Int {
+func findDivisor(_ n: Int, _ testDivisor: Int) -> Int {
     switch true {
     case square(testDivisor) > n:
         return n
@@ -23,23 +23,23 @@ func findDivisor(n: Int, _ testDivisor: Int) -> Int {
     }
 }
 
-func smallestDivisor(n: Int) -> Int {
+func smallestDivisor(_ n: Int) -> Int {
     return findDivisor(n, 2)
 }
 
-func isPrime(n:Int) -> Bool {
+func isPrime(_ n:Int) -> Bool {
     return n == smallestDivisor(n)
 }
 
-func timedPrimeTest(n: Int) {
+func timedPrimeTest(_ n: Int) {
     startPrimeTest(n, NSDate())
 }
-func startPrimeTest(n: Int, _ startTime: NSDate) {
+func startPrimeTest(_ n: Int, _ startTime: NSDate) {
     if isPrime(n) {
         reportPrime(n, -1 * startTime.timeIntervalSinceNow)
     }
 }
-func reportPrime(n: Int, _ elapsedTime: Double) {
+func reportPrime(_ n: Int, _ elapsedTime: Double) {
     print("\n")
     print("\(n)")
     print(" *** ")
@@ -49,7 +49,7 @@ func reportPrime(n: Int, _ elapsedTime: Double) {
 
 // Using this procedure write a searchForPrimes that checks the primality of consecutive odd integers in a specified range. Use your procedure to find the three smallest primes larger than 1000, larger than 10000, larger than 100000, larger than 1000000.
 
-func searchForPrimes(a: Int, _ b: Int) {
+func searchForPrimes(_ a: Int, _ b: Int) {
     switch true {
     case a > b:
         print("Complete")
@@ -68,32 +68,32 @@ func searchForPrimes(a: Int, _ b: Int) {
 // - 1000000
 
 searchForPrimes(1000, 1030)
-// 1009 *** 0.23639303445816
-// 1013 *** 0.227622985839844
-// 1019 *** 0.216214001178741
-(0.23639303445816 + 0.227622985839844 + 0.216214001178741) / 3
-// Average time 0.00398
+// 1009 *** 0.00457704067230225
+// 1013 *** 0.00441199541091919
+// 1019 *** 0.00452703237533569
+(0.00457704067230225 + 0.00441199541091919 + 0.00452703237533569) / 3
+// Average time 0.004505356152852377
 
 searchForPrimes(10000, 10050)
-// 10007 *** 0.727922022342682
-// 10009 *** 0.748418986797333
-// 10037 *** 0.735283017158508
-(0.727922022342682 + 0.748418986797333 + 0.735283017158508) / 3
-// Average time 0.012369
+// 10007 *** 0.0136359930038452
+// 10009 *** 0.0135749578475952
+// 10037 *** 0.0148789882659912
+(0.0136359930038452 + 0.0135749578475952 + 0.0148789882659912) / 3
+// Average time 0.01402997970581053
 
 searchForPrimes(100000, 100050)
-// 100003 *** 2.24567699432373
-// 100019 *** 2.0843819975853
-// 100043 *** 2.03399205207825
-(2.24567699432373 + 2.0843819975853 + 2.03399205207825) / 3
-// Average time 0.03857
+// 100003 *** 0.0468270182609558
+// 100019 *** 0.0487009882926941
+// 100043 *** 0.0503749847412109
+(0.0468270182609558 + 0.0487009882926941 + 0.0503749847412109) / 3
+// Average time 0.04863433043162027
 
 searchForPrimes(1000000, 1000050)
-// 1000003 *** 6.36476397514343
-// 1000033 *** 6.54135400056839
-// 1000037 *** 6.34981900453568
-(6.36476397514343 + 6.54135400056839 + 6.34981900453568) / 3
-// Average time 0.109049
+// 1000003 *** 0.157728970050812
+// 1000033 *** 0.194114983081818
+// 1000037 *** 0.196036040782928
+(0.157728970050812 + 0.194114983081818 + 0.196036040782928) / 3
+// Average time 0.1826266646385193
 
 // Note the time needed to test each prime. Since the testing algorithm has an order of growth of O(n^0.5) you should expect primes around 10,000 to take about 10^0.5 times as long to test for as for primes around 1000.
 
@@ -107,10 +107,10 @@ Times in DrRacket
 
 Times in Swift
 ;         | Actual Times |    1000 |   10000 |  100000 | 1000000 |
-;    1000 |    0.22674   | 0.22674 | 0.23312 | 0.21213 | 0.20297 |
-;   10000 |    0.73720   | 0.71702 | 0.73720 | 0.67082 | 0.64186 |
-;  100000 |    2.12135   | 2.26743 | 2.33125 | 2.12135 | 2.02975 |
-; 1000000 |    6.41864   | 7.17025 | 7.37208 | 6.70829 | 6.41864 |
+;    1000 |    0.00450   | 0.00450 | 0.01423 | 0.04500 | 0.14230 |
+;   10000 |    0.01402   | 0.00443 | 0.01402 | 0.04433 | 0.1402  |
+;  100000 |    0.04863   | 0.00486 | 0.01537 | 0.04863 | 0.15378 |
+; 1000000 |    0.18262   | 0.00577 | 0.01826 | 0.05774 | 0.18262 |
 */
 
 // Do your timing data bear this out?
