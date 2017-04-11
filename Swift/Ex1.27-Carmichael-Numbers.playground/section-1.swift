@@ -4,17 +4,17 @@ import Darwin
 // Demonstrate that Carmichael numbers really do fool the Fermat test. Write a procedure that takes an integer n and tests whether a^n is congruent to a modulo n for every a < n.
 
 
-func isEven(n: Int) -> Bool {
+func isEven(_ n: Int) -> Bool {
     return (n % 2) == 0
 }
-func square(x: Int) -> Int {
+func square(_ x: Int) -> Int {
     return x * x
 }
-func dividesWithNoRemainder(a: Int, _ b: Int) -> Bool {
+func dividesWithNoRemainder(_ a: Int, _ b: Int) -> Bool {
     return  a % b == 0
 }
 
-func next(n: Int) -> Int {
+func next(_ n: Int) -> Int {
     if n == 2 {
         return 3
     } else {
@@ -22,7 +22,7 @@ func next(n: Int) -> Int {
     }
 }
 
-func findDivisor(n: Int, _ testDivisor: Int) -> Int {
+func findDivisor(_ n: Int, _ testDivisor: Int) -> Int {
     switch true {
     case square(testDivisor) > n:
         return n
@@ -33,16 +33,16 @@ func findDivisor(n: Int, _ testDivisor: Int) -> Int {
     }
 }
 
-func smallestDivisor(n: Int) -> Int {
+func smallestDivisor(_ n: Int) -> Int {
     return findDivisor(n, 2)
 }
 
-func isPrime(n:Int) -> Bool {
+func isPrime(_ n:Int) -> Bool {
     return n == smallestDivisor(n)
 }
 
 
-func expMod(base: Int, _ exp: Int, _ m: Int) -> Int {
+func expMod(_ base: Int, _ exp: Int, _ m: Int) -> Int {
     switch true {
     case exp == 0:
         return 1
@@ -53,7 +53,7 @@ func expMod(base: Int, _ exp: Int, _ m: Int) -> Int {
     }
 }
 
-func carmichaelTestIter(n: Int, _ a: Int) -> Bool {
+func carmichaelTestIter(_ n: Int, _ a: Int) -> Bool {
     switch true {
     case a == 0:
         return true
@@ -64,7 +64,7 @@ func carmichaelTestIter(n: Int, _ a: Int) -> Bool {
     }
 }
 
-func isCarmichaelNumber(n: Int) -> Bool {
+func isCarmichaelNumber(_ n: Int) -> Bool {
     if isPrime(n) {
         return false
     } else {

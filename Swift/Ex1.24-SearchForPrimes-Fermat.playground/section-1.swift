@@ -3,17 +3,17 @@ import Cocoa
 // Exercise 1.24
 
 
-func isEven(n: Int) -> Bool {
+func isEven(_ n: Int) -> Bool {
     return (n % 2) == 0
 }
-func square(x: Int) -> Int {
+func square(_ x: Int) -> Int {
     return x * x
 }
-func dividesWithNoRemainder(a: Int, b: Int) -> Bool {
+func dividesWithNoRemainder(_ a: Int, _ b: Int) -> Bool {
     return  a % b == 0
 }
 
-func expMod(base: Int, _ exp: Int, _ m: Int) -> Int {
+func expMod(_ base: Int, _ exp: Int, _ m: Int) -> Int {
     switch true {
     case exp == 0:
         return 1
@@ -23,8 +23,8 @@ func expMod(base: Int, _ exp: Int, _ m: Int) -> Int {
         return (base * expMod(base, exp - 1, m)) % m
     }
 }
-func fermatTest(n: Int) -> Bool {
-    func tryIt(a: Int) -> Bool {
+func fermatTest(_ n: Int) -> Bool {
+    func tryIt(_ a: Int) -> Bool {
         return expMod(a, n, n) == a
     }
     let randomA:Int = Int(arc4random_uniform(UInt32(n - 1)) + 1)
@@ -32,7 +32,7 @@ func fermatTest(n: Int) -> Bool {
 }
 fermatTest(8)
 
-func isPrimeFast(n: Int, _ times: Int) -> Bool {
+func isPrimeFast(_ n: Int, _ times: Int) -> Bool {
     switch true {
     case times == 0:
         return true
@@ -43,24 +43,21 @@ func isPrimeFast(n: Int, _ times: Int) -> Bool {
     }
 }
 
-func timedPrimeTest(n: Int) {
+func timedPrimeTest(_ n: Int) {
     startPrimeTest(n, NSDate())
 }
-func startPrimeTest(n: Int, _ startTime: NSDate) {
+func startPrimeTest(_ n: Int, _ startTime: NSDate) {
     if isPrimeFast(n, 10) {
         reportPrime(n, -1 * startTime.timeIntervalSinceNow)
     }
 }
-func reportPrime(n: Int, _ elapsedTime: Double) {
-    print("\n")
-    print("\(n)")
-    print(" *** ")
-    print("\(elapsedTime)")
+func reportPrime(_ n: Int, _ elapsedTime: Double) {
+    print("\(n) *** \(elapsedTime)")
 }
 
 // Using this procedure write a searchForPrimes that checks the primality of consecutive odd integers in a specified range. Use your procedure to find the three smallest primes larger than 1000, larger than 10000, larger than 100000, larger than 1000000.
 
-func searchForPrimes(a: Int, _ b: Int) {
+func searchForPrimes(_ a: Int, _ b: Int) {
     switch true {
     case a > b:
         print("Complete")

@@ -26,7 +26,7 @@ enum TreeSet<T>: CustomStringConvertible {
     }
 }
 
-func entry<T>(tree: TreeSet<T>) -> T {
+func entry<T>(_ tree: TreeSet<T>) -> T {
     switch tree {
     case let .Tree(entry, _, _):
         return entry.unbox
@@ -35,7 +35,7 @@ func entry<T>(tree: TreeSet<T>) -> T {
     }
 }
 
-func leftBranch<T>(tree: TreeSet<T>) -> TreeSet<T> {
+func leftBranch<T>(_ tree: TreeSet<T>) -> TreeSet<T> {
     switch tree {
     case let .Tree(_, left, _):
         return left.unbox
@@ -44,7 +44,7 @@ func leftBranch<T>(tree: TreeSet<T>) -> TreeSet<T> {
     }
 }
 
-func rightBranch<T>(tree: TreeSet<T>) -> TreeSet<T> {
+func rightBranch<T>(_ tree: TreeSet<T>) -> TreeSet<T> {
     switch tree {
     case let .Tree(_, _, right):
         return right.unbox
@@ -53,12 +53,12 @@ func rightBranch<T>(tree: TreeSet<T>) -> TreeSet<T> {
     }
 }
 
-func makeTree<T>(entry: T, _ left:TreeSet<T>, _ right:TreeSet<T>) -> TreeSet<T> {
+func makeTree<T>(_ entry: T, _ left:TreeSet<T>, _ right:TreeSet<T>) -> TreeSet<T> {
     return TreeSet.Tree(entry: Box(entry), left: Box(left), right: Box(right))
 }
 
 
-func isElementOfSet<T: Comparable>(x: T, _ set: TreeSet<T>) -> Bool {
+func isElementOfSet<T: Comparable>(_ x: T, _ set: TreeSet<T>) -> Bool {
     switch set {
     case .Empty:
         return false
@@ -73,7 +73,7 @@ func isElementOfSet<T: Comparable>(x: T, _ set: TreeSet<T>) -> Bool {
     }
 }
 
-func adjoinSet<T: Comparable>(x: T, _ set: TreeSet<T>) -> TreeSet<T> {
+func adjoinSet<T: Comparable>(_ x: T, _ set: TreeSet<T>) -> TreeSet<T> {
     switch set {
     case .Empty:
         return makeTree(x, .Empty, .Empty)
@@ -88,7 +88,7 @@ func adjoinSet<T: Comparable>(x: T, _ set: TreeSet<T>) -> TreeSet<T> {
     }
 }
 
-func treeToList<T>(tree: TreeSet<T>) -> [T] {
+func treeToList<T>(_ tree: TreeSet<T>) -> [T] {
     switch tree {
     case .Empty:
         return []
@@ -97,11 +97,11 @@ func treeToList<T>(tree: TreeSet<T>) -> [T] {
     }
 }
 
-func adjoinRandom(set: TreeSet<Int>) -> TreeSet<Int> {
+func adjoinRandom(_ set: TreeSet<Int>) -> TreeSet<Int> {
     return adjoinSet(Int(arc4random_uniform(100)), set)
 }
 
-func adjoinRandomValues(n: Int, _ set: TreeSet<Int>) -> TreeSet<Int> {
+func adjoinRandomValues(_ n: Int, _ set: TreeSet<Int>) -> TreeSet<Int> {
     if n < 1 {
         return set
     } else {
@@ -109,7 +109,7 @@ func adjoinRandomValues(n: Int, _ set: TreeSet<Int>) -> TreeSet<Int> {
     }
 }
 
-func partialTree(elts: [Int], _ n: Int) -> TreeSetList {
+func partialTree(_ elts: [Int], _ n: Int) -> TreeSetList {
     if n == 0 {
         return (.Empty, elts)
     } else {
@@ -123,7 +123,7 @@ func partialTree(elts: [Int], _ n: Int) -> TreeSetList {
     }
 }
 
-func listToTree(elements: [Int]) -> TreeSet<Int> {
+func listToTree(_ elements: [Int]) -> TreeSet<Int> {
     let (tree, _) = partialTree(elements, elements.count)
     return tree
 }
@@ -134,15 +134,15 @@ extension Array {
     }
 }
 
-func unionOrderedList<T: Comparable>(set1: [T], _ set2: [T]) -> [T] {
+func unionOrderedList<T: Comparable>(_ set1: [T], _ set2: [T]) -> [T] {
     switch (set1.match, set2.match) {
-    case (.None, .None):
+    case (.none, .none):
         return []
-    case (.None, _):
+    case (.none, _):
         return set2
-    case (_, .None):
+    case (_, .none):
         return set1
-    case (.Some(let head1, let tail1), .Some(let head2, let tail2)):
+    case (.some(let head1, let tail1), .some(let head2, let tail2)):
         switch true {
         case head1 == head2:
             return [head1] + unionOrderedList(tail1, tail2)
@@ -158,7 +158,7 @@ func unionOrderedList<T: Comparable>(set1: [T], _ set2: [T]) -> [T] {
     }
 }
 
-func unionSet(set1: TreeSet<Int>, _ set2: TreeSet<Int>) -> TreeSet<Int> {
+func unionSet(_ set1: TreeSet<Int>, _ set2: TreeSet<Int>) -> TreeSet<Int> {
     return listToTree(unionOrderedList(treeToList(set1), treeToList(set2)))
 }
 
@@ -177,9 +177,9 @@ print(treeToList(union))
 
 
 
-func intersectionOrderedList<T: Comparable>(set1: [T], _ set2: [T]) -> [T] {
+func intersectionOrderedList<T: Comparable>(_ set1: [T], _ set2: [T]) -> [T] {
     if let (x1, tail1) = set1.match,
-        (x2, tail2) = set2.match {
+        let (x2, tail2) = set2.match {
             switch true {
             case x1 == x2:
                 return [x1] + intersectionOrderedList(tail1, tail2)
@@ -196,7 +196,7 @@ func intersectionOrderedList<T: Comparable>(set1: [T], _ set2: [T]) -> [T] {
 }
 
 
-func intersectionSet(set1: TreeSet<Int>, _ set2: TreeSet<Int>) -> TreeSet<Int> {
+func intersectionSet(_ set1: TreeSet<Int>, _ set2: TreeSet<Int>) -> TreeSet<Int> {
     return listToTree(intersectionOrderedList(treeToList(set1), treeToList(set2)))
 }
 
