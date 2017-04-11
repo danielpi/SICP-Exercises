@@ -7,14 +7,14 @@ import Cocoa
 
 
 protocol MultipliableType {
-    func *(lhs: Self, rhs: Self) -> Self
+    static func * (lhs: Self, rhs: Self) -> Self
 }
 extension Double : MultipliableType {}
 extension Float  : MultipliableType {}
 extension Int    : MultipliableType {}
 
-protocol AddableType: IntegerLiteralConvertible {
-    func +(lhs: Self, rhs: Self) -> Self
+protocol AddableType: ExpressibleByIntegerLiteral {
+    static func +(lhs: Self, rhs: Self) -> Self
 }
 extension Double : AddableType {}
 extension Float  : AddableType {}
@@ -22,21 +22,21 @@ extension Int    : AddableType {}
 
 
 
-func cube<T:MultipliableType>(x: T) -> T {
+func cube<T:MultipliableType>(_ x: T) -> T {
     return x * x * x
 }
-func identity<T>(x: T) -> T {
+func identity<T>(_ x: T) -> T {
     return x
 }
-func inc(n: Int) -> Int {
+func inc(_ n: Int) -> Int {
     return n + 1
 }
-func isEven(n: Int) -> Bool {
+func isEven(_ n: Int) -> Bool {
     return (n % 2) == 0
 }
 
 
-func sum<T:Comparable,U:AddableType>(term:(T) -> U, _ a:T, _ next:(T) -> T, _ b:T) -> U {
+func sum<T:Comparable,U:AddableType>(_ term:(T) -> U, _ a:T, _ next:(T) -> T, _ b:T) -> U {
     if a > b {
         return 0
     } else {
@@ -45,15 +45,15 @@ func sum<T:Comparable,U:AddableType>(term:(T) -> U, _ a:T, _ next:(T) -> T, _ b:
 }
 
 
-func integral(f f:(Double) -> Double, a:Double, b:Double, n:Int) -> Double {
-    func h(a: Double, _ b: Double, _ n: Int) -> Double {
+func integral(f:@escaping (Double) -> Double, a:Double, b:Double, n:Int) -> Double {
+    func h(_ a: Double, _ b: Double, _ n: Int) -> Double {
         return (b - a) / Double(n)
     }
-    func yk(f:(Double) -> Double, _ a: Double, _ b: Double, _ n:Int, _ k:Int) -> Double {
-        let x = a + (Double(k) * h(a,b,n))
+    func yk(_ f:(Double) -> Double, _ a: Double, _ b: Double, _ n:Int, _ k:Int) -> Double {
+        let x = a + (Double(k) * h(a, b, n))
         return f(x)
     }
-    func simpsonsTerm(k:Int) -> Double {
+    func simpsonsTerm(_ k: Int) -> Double {
         switch true {
         case k == 0 || k == n:
             return yk(f, a, b, n, k)

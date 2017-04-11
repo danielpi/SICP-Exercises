@@ -5,15 +5,15 @@ import Cocoa
 // Exercise 1.31
 // a) The sum procedure is only the simplest of a vast number of similar abstractions that can be captured as higher-order procedures. Write an analogous procedure called product that returns the product of the values of a function at points over a given range. 
 
-protocol MultipliableType: IntegerLiteralConvertible {
-    func *(lhs: Self, rhs: Self) -> Self
+protocol MultipliableType: ExpressibleByIntegerLiteral {
+    static func * (lhs: Self, rhs: Self) -> Self
 }
 extension Double : MultipliableType {}
 extension Float  : MultipliableType {}
 extension Int    : MultipliableType {}
 
-protocol AddableType: IntegerLiteralConvertible {
-    func +(lhs: Self, rhs: Self) -> Self
+protocol AddableType: ExpressibleByIntegerLiteral {
+    static func + (lhs: Self, rhs: Self) -> Self
 }
 extension Double : AddableType {}
 extension Float  : AddableType {}
@@ -21,21 +21,21 @@ extension Int    : AddableType {}
 
 
 
-func cube<T:MultipliableType>(x: T) -> T {
+func cube<T:MultipliableType>(_ x: T) -> T {
     return x * x * x
 }
-func identity<T>(x: T) -> T {
+func identity<T>(_ x: T) -> T {
     return x
 }
-func inc(n: Int) -> Int {
+func inc(_ n: Int) -> Int {
     return n + 1
 }
-func isEven(n: Int) -> Bool {
+func isEven(_ n: Int) -> Bool {
     return (n % 2) == 0
 }
 
 
-func product<T:Comparable,U:MultipliableType>(term:(T) -> U, _ a:T, _ next:(T) -> T, _ b:T) -> U {
+func product<T:Comparable,U:MultipliableType>(_ term:(T) -> U, _ a:T, _ next:(T) -> T, _ b:T) -> U {
     if a > b {
         return 1
     } else {
@@ -45,7 +45,7 @@ func product<T:Comparable,U:MultipliableType>(term:(T) -> U, _ a:T, _ next:(T) -
 
 // Show how to define factorial in terms of product.
 
-func factorial(n: Int) -> Int {
+func factorial(_ n: Int) -> Int {
     return product(identity, 1, inc, n)
 }
 factorial(5)
@@ -59,8 +59,8 @@ pi   2 * 4 * 4 * 6 * 6 * 8 ...
 
 */
 
-func DRPpi(steps: Int) -> Double {
-    func term(k: Int) -> Double {
+func DRPpi(_ steps: Int) -> Double {
+    func term(_ k: Int) -> Double {
         if isEven(k) {
             return (Double(k) + 2) / (Double(k) + 1)
         } else {
@@ -70,7 +70,7 @@ func DRPpi(steps: Int) -> Double {
     return 4 * product(term, 1, inc, steps)
 }
 
-DRPpi(100)
+DRPpi(1000)
 
 
 

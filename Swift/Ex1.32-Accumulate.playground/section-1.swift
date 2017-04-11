@@ -6,7 +6,7 @@ import Cocoa
 // func accumulate(combiner:,nullValue:, term: ,a:, next: , b:) ->
 
 // Write accumulate and show how sum and product can both be defined as simple calls to accumulate
-func accumulateDouble(combiner: (Double, Double) -> Double,
+func accumulateDouble(_ combiner: (Double, Double) -> Double,
                    _ nullValue: Double,
                         _ term: (Int) -> Double,
                            _ a: Int,
@@ -20,27 +20,27 @@ func accumulateDouble(combiner: (Double, Double) -> Double,
 }
 
 // Implementing sum
-func sumDouble(term:(Int) -> Double, _ a: Int, _ next: (Int) -> Int, _ b: Int) -> Double {
+func sumDouble(_ term:(Int) -> Double, _ a: Int, _ next: (Int) -> Int, _ b: Int) -> Double {
     return accumulateDouble(+, 0.0, term, a, next, b)
 }
 
 
-func inc(n: Int) -> Int {
+func inc(_ n: Int) -> Int {
     return n + 1
 }
-func isEven(n: Int) -> Bool {
+func isEven(_ n: Int) -> Bool {
     return (n % 2) == 0
 }
 
-func integral(f:(Double) -> Double, a:Double, b:Double, n:Int) -> Double {
-    func h(a: Double, _ b: Double, _ n: Int) -> Double {
+func integral(_ f:@escaping (Double) -> Double, a:Double, b:Double, n:Int) -> Double {
+    func h(_ a: Double, _ b: Double, _ n: Int) -> Double {
         return (b - a) / Double(n)
     }
-    func yk(f:(Double) -> Double, _ a: Double, _ b: Double, _ n:Int, _ k:Int) -> Double {
+    func yk(_ f:(Double) -> Double, _ a: Double, _ b: Double, _ n:Int, _ k:Int) -> Double {
         let x = a + (Double(k) * h(a,b,n))
         return f(x)
     }
-    func simpsonsTerm(k:Int) -> Double {
+    func simpsonsTerm(_ k:Int) -> Double {
         switch true {
         case k == 0 || k == n:
             return yk(f, a, b, n, k)
@@ -53,7 +53,7 @@ func integral(f:(Double) -> Double, a:Double, b:Double, n:Int) -> Double {
     return (h(a,b,n) / 3.0) * sumDouble(simpsonsTerm, 0, inc, n)
 }
 
-func cube(x: Double) -> Double {
+func cube(_ x: Double) -> Double {
     return x * x * x
 }
 func identity<T>(x: T) -> T {
@@ -64,12 +64,12 @@ integral(identity, a:0, b:1, n:100)
 
 
 // Implementing Product
-func productDouble(term:(Int) -> Double, _ a: Int, _ next: (Int) -> Int, _ b: Int) -> Double {
+func productDouble(_ term:(Int) -> Double, _ a: Int, _ next: (Int) -> Int, _ b: Int) -> Double {
     return accumulateDouble(*, 1.0, term, a, next, b)
 }
 
 
-func DRPpi(steps: Int) -> Double {
+func DRPpi(_ steps: Int) -> Double {
     func term(k: Int) -> Double {
         if isEven(k) {
             return (Double(k) + 2) / (Double(k) + 1)
@@ -85,7 +85,7 @@ DRPpi(100)
 
 
 // b) Write accumulate again as an iterative process
-func accumulateIter(combiner: (Double, Double) -> Double, _ term: (Int) -> Double, _ a: Int, _ next: (Int) -> Int, _ b: Int, _ result: Double) -> Double {
+func accumulateIter(_ combiner: (Double, Double) -> Double, _ term: (Int) -> Double, _ a: Int, _ next: (Int) -> Int, _ b: Int, _ result: Double) -> Double {
     if (a > b) {
         return result
     } else {
@@ -93,7 +93,7 @@ func accumulateIter(combiner: (Double, Double) -> Double, _ term: (Int) -> Doubl
     }
 }
 
-func accumulate2(combiner: (Double, Double) -> Double, _ nullValue: Double, _ term: (Int) -> Double, _ a: Int, _ next: (Int) -> Int, _ b: Int) -> Double {
+func accumulate2(_ combiner: (Double, Double) -> Double, _ nullValue: Double, _ term: (Int) -> Double, _ a: Int, _ next: (Int) -> Int, _ b: Int) -> Double {
     
     return accumulateIter(combiner, term, a, next, b, nullValue)
 }
@@ -101,20 +101,20 @@ func accumulate2(combiner: (Double, Double) -> Double, _ nullValue: Double, _ te
 
 
 // Implementing sum
-func sum(term:(Int) -> Double, _ a: Int, _ next: (Int) -> Int, _ b: Int) -> Double {
+func sum(_ term:(Int) -> Double, _ a: Int, _ next: (Int) -> Int, _ b: Int) -> Double {
     return accumulate2(+, 0.0, term, a, next, b)
 }
 
 
-func integral2(f:(Double) -> Double, a:Double, b:Double, n:Int) -> Double {
-    func h(a: Double, _ b: Double, _ n: Int) -> Double {
+func integral2(_ f:@escaping (Double) -> Double, a:Double, b:Double, n:Int) -> Double {
+    func h(_ a: Double, _ b: Double, _ n: Int) -> Double {
         return (b - a) / Double(n)
     }
-    func yk(f:(Double) -> Double, _ a: Double, _ b: Double, _ n:Int, _ k:Int) -> Double {
+    func yk(_ f:(Double) -> Double, _ a: Double, _ b: Double, _ n:Int, _ k:Int) -> Double {
         let x = a + (Double(k) * h(a,b,n))
         return f(x)
     }
-    func simpsonsTerm(k:Int) -> Double {
+    func simpsonsTerm(_ k: Int) -> Double {
         switch true {
         case k == 0 || k == n:
             return yk(f, a, b, n, k)
@@ -132,12 +132,12 @@ integral2(identity, a: 0,b: 1, n:100)
 
 
 // Implementing Product
-func product(term:(Int) -> Double, _ a: Int, _ next: (Int) -> Int, _ b: Int) -> Double {
+func product(_ term:(Int) -> Double, _ a: Int, _ next: (Int) -> Int, _ b: Int) -> Double {
     return accumulate2(*, 1.0, term, a, next, b)
 }
 
 
-func DRPpi2(steps: Int) -> Double {
+func DRPpi2(_ steps: Int) -> Double {
     func term(k: Int) -> Double {
         if isEven(k) {
             return (Double(k) + 2) / (Double(k) + 1)
