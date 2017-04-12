@@ -5,9 +5,8 @@ import Cocoa
 
 // Write a procedure iterativeImprovement that takes two procedures as arguments: a method for telling whether a guess is good enough and a method for improving a guess. IterativeImprovement should return as its value a procedure that takes a guess as argument and keeps improving the guess until it is good enough. 
 
-func iterativeImprovement(isGoodEnough: (Double) -> Bool, _ improve: (Double) -> Double) -> (Double) -> Double {
-    var iter: (Double) -> Double = { _ in return 0.0 }
-    iter = { (guess: Double) -> Double in
+func iterativeImprovement(_ isGoodEnough:@escaping (Double) -> Bool, _ improve:@escaping (Double) -> Double) -> (Double) -> Double {
+    func iter(_ guess: Double) -> Double {
         if isGoodEnough(guess) {
             return guess
         } else {
@@ -19,15 +18,15 @@ func iterativeImprovement(isGoodEnough: (Double) -> Bool, _ improve: (Double) ->
 
 // Rewrite the sqrt procedure from section 1.1.7 
 
-func sqrt(x: Double) -> Double {
-    func average(x: Double, _ y: Double) -> Double {
+func sqrt(_ x: Double) -> Double {
+    func average(_ x: Double, _ y: Double) -> Double {
         return (x + y) / 2.0
     }
-    func isGoodEnough(guess: Double) -> Bool {
+    func isGoodEnough(_ guess: Double) -> Bool {
         return abs(pow(guess, 2) - x) < 0.00001
     }
     
-    func improve(guess: Double) -> Double {
+    func improve(_ guess: Double) -> Double {
         return average(guess, (x / guess))
     }
     let solver = iterativeImprovement(isGoodEnough, improve)
@@ -39,11 +38,11 @@ sqrt(64.0)
 
 // Rewrite the fixedPoint procedure of section 1.3.3 in terms of iterativeImprovement.
 
-func fixedPoint(f: (Double) -> Double, _ guess: Double) -> Double {
-    func isGoodEnough(guess: Double) -> Bool {
+func fixedPoint(_ f:@escaping (Double) -> Double, _ guess: Double) -> Double {
+    func isGoodEnough(_ guess: Double) -> Bool {
         return abs(guess - f(guess)) < 0.00001
     }
-    func improve(guess: Double) -> Double {
+    func improve(_ guess: Double) -> Double {
         return f(guess)
     }
     let solver = iterativeImprovement(isGoodEnough, improve)

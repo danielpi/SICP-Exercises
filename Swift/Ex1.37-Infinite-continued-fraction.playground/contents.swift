@@ -25,9 +25,8 @@ import Cocoa
 //
 // Suppose that n and d are procedures of one argument (the term i) that return the Ni and Di of the terms of the continued fraction. Define a procedure cont-frac such that evaluating (cont-frac n d k) computes the value of the k-term finite continued fraction. Check your procedure by approximating 1 / Golden ratio
 
-func kFiniteContFrac(N:(Int)->Double, _ D:(Int)->Double, _ k:Int) -> Double {
-    var contFrac: (i:Int) -> Double = { _ in return 0.0 }
-    contFrac = { i in
+func kFiniteContFrac(_ N:@escaping (Int)->Double, _ D:@escaping (Int)->Double, _ k:Int) -> Double {
+    func contFrac(i: Int) -> Double {
         if i > k {
             return 0.0
         } else {
@@ -38,14 +37,14 @@ func kFiniteContFrac(N:(Int)->Double, _ D:(Int)->Double, _ k:Int) -> Double {
 }
 
 func goldenRation() -> Double {
-    func N(i:Int) -> Double {
+    func N(_ i:Int) -> Double {
         return 1.0
     }
-    func D(i:Int) -> Double {
+    func D(_ i:Int) -> Double {
         return 1.0
     }
     
-    return 1 / kFiniteContFrac( N, D, 100)
+    return 1 / kFiniteContFrac(N, D, 100)
 }
 goldenRation()
 
@@ -54,9 +53,8 @@ goldenRation()
 
 
 // b) Write an iterative version of cont-frac
-func kFiniteContFracIter(N:(Int)->Double, _ D:(Int)->Double, _ k:Int) -> Double {
-    var contFrac: (i: Int, output:Double) -> Double = { _ in return 0.0 }
-    contFrac = { i, output in
+func kFiniteContFracIter(_ N:@escaping (Int)->Double, _ D:@escaping (Int)->Double, _ k:Int) -> Double {
+    func contFrac(i: Int, output:Double) -> Double {
         if i == 0 {
             return output
         } else {
@@ -67,10 +65,10 @@ func kFiniteContFracIter(N:(Int)->Double, _ D:(Int)->Double, _ k:Int) -> Double 
 }
 
 func goldenRationIter() -> Double {
-    func N(i:Int) -> Double {
+    func N(_ i:Int) -> Double {
         return 1.0
     }
-    func D(i:Int) -> Double {
+    func D(_ i:Int) -> Double {
         return 1.0
     }
     

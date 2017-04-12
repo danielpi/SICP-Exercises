@@ -4,9 +4,8 @@ import Cocoa
 // Leonhard Euler published a continued fraction expansion for e - 2. In this fraction Ni are all 1 and Di are successively 1, 2, 1, 1, 4, 1, 1, 6, 1, 1, 8 ... Write a program that uses cont-frac to approximate e.
 
 
-func kFiniteContFrac(N:(Int)->Double, _ D:(Int)->Double, _ k:Int) -> Double {
-    var contFrac: (i:Int) -> Double = { _ in return 0.0 }
-    contFrac = { i in
+func kFiniteContFrac(_ N:@escaping (Int)->Double, _ D:@escaping (Int)->Double, _ k:Int) -> Double {
+    func contFrac(i:Int) -> Double {
         if i > k {
             return 0.0
         } else {
@@ -32,7 +31,7 @@ func eulerE() -> Double {
 eulerE()
 
 // Used the code below to debug the D() function
-func D(i:Int) -> Double {
+func D(_ i:Int) -> Double {
     if ((i + 1) % 3) == 0 {
         return 2 * (Double(i + 1) / 3)
     } else {

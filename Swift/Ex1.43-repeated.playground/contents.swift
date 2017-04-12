@@ -13,14 +13,14 @@ import Cocoa
 // and returns the procedure that computes the nth repeated application of f. Your procedure should be able to be used as follows: repeated(square, 2)(5) = 625. You may find it convenient to use compose from exercise 1.42.
 
 
-func inc(x: Double) -> Double { return x + 1 }
-func square(x: Double) -> Double { return x * x }
+func inc(_ x: Double) -> Double { return x + 1 }
+func square(_ x: Double) -> Double { return x * x }
 
-func compose<T>(f: (T) -> T, _ g: (T) -> T) -> (T) -> T {
+func compose<T>(_ f:@escaping (T) -> T, _ g:@escaping (T) -> T) -> (T) -> T {
     return { (x: T) -> T in return f(g(x)) }
 }
 
-func repeatIter<T>(f: (T) -> T, _ g: (T) -> T, _ step: Int) -> (T) -> T {
+func repeatIter<T>(_ f:@escaping (T) -> T, _ g:@escaping (T) -> T, _ step: Int) -> (T) -> T {
     if (step == 1) {
         return g
     } else {
@@ -28,7 +28,7 @@ func repeatIter<T>(f: (T) -> T, _ g: (T) -> T, _ step: Int) -> (T) -> T {
     }
 }
 
-func repeated<T>(f: (T) -> T , _ n: Int) -> (T) -> T {
+func repeated<T>(_ f:@escaping (T) -> T , _ n: Int) -> (T) -> T {
     return repeatIter(f, f, n)
 }
 repeated(square, 2)(5)
