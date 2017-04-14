@@ -12,8 +12,8 @@ enum ConsPosition {
     case Left, Right
 }
 
-func cons<T>(a: T, _ b: T) -> (ConsPosition -> T) {
-    func innerCons(i: ConsPosition) -> T {
+func cons<T>(_ a: T, _ b: T) -> ((ConsPosition) -> T) {
+    func innerCons(_ i: ConsPosition) -> T {
         if i == .Left {
             return a;
         } else {
@@ -24,50 +24,50 @@ func cons<T>(a: T, _ b: T) -> (ConsPosition -> T) {
     return innerCons;
 }
 
-func car<T>(innerCons: ConsPosition -> T) -> T {
+func car<T>(_ innerCons: (ConsPosition) -> T) -> T {
     return innerCons(.Left);
 }
 
-func cdr<T>(innerCons: ConsPosition -> T) -> T {
+func cdr<T>(_ innerCons: (ConsPosition) -> T) -> T {
     return innerCons(.Right);
 }
 
 
 
 
-typealias Point = (ConsPosition -> Double)
+typealias Point = ((ConsPosition) -> Double)
 
-func makePoint(x: Double, _ y: Double) -> Point {
+func makePoint(_ x: Double, _ y: Double) -> Point {
     return cons(x, y)
 }
-func xPoint(x: Point) -> Double {
+func xPoint(_ x: Point) -> Double {
     return car(x)
 }
-func yPoint(x: Point) -> Double {
+func yPoint(_ x: Point) -> Double {
     return cdr(x)
 }
-func printPoint(x: Point) {
+func printPoint(_ x: Point) {
     print("(\(xPoint(x)),\(yPoint(x)))")
 }
 
 
 
-typealias Segment = (ConsPosition -> Point)
+typealias Segment = ((ConsPosition) -> Point)
 
-func makeSegment(start: Point, _ end: Point) -> Segment {
+func makeSegment(_ start:@escaping Point, _ end:@escaping Point) -> Segment {
     return cons(start, end)
 }
-func startSegment(x: Segment) -> Point {
+func startSegment(_ x: Segment) -> Point {
     return car(x)
 }
-func endSegment(x: Segment) -> Point {
+func endSegment(_ x: Segment) -> Point {
     return cdr(x)
 }
-func midpointSegment(x: Segment) -> Point {
+func midpointSegment(_ x: Segment) -> Point {
     func average(a: Double, _ b: Double) -> Double {
         return (a + b) / 2
     }
-    return makePoint(average(xPoint(startSegment(x)), xPoint(endSegment(x))), average(yPoint(startSegment(x)), yPoint(endSegment(x))))
+    return makePoint(average(a: xPoint(startSegment(x)), xPoint(endSegment(x))), average(a: yPoint(startSegment(x)), yPoint(endSegment(x))))
 }
 
 
