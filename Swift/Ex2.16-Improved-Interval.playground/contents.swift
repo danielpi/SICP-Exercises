@@ -44,11 +44,11 @@ func /(lhs: EngineeringTolerance, rhs: EngineeringTolerance) -> EngineeringToler
     return EngineeringTolerance(lhs.value / rhs.value, lhs.tolerance - rhs.tolerance)
 }
 
-func parOne(a: EngineeringTolerance, _ b: EngineeringTolerance) -> EngineeringTolerance {
+func parOne(_ a: EngineeringTolerance, _ b: EngineeringTolerance) -> EngineeringTolerance {
     return (a * b) / (a + b)
 }
 
-func parTwo(a: EngineeringTolerance, _ b: EngineeringTolerance) -> EngineeringTolerance {
+func parTwo(_ a: EngineeringTolerance, _ b: EngineeringTolerance) -> EngineeringTolerance {
     let one = EngineeringTolerance(1, 0)
     return one / ((one / a) + (one / b))
 }
@@ -60,7 +60,7 @@ let a = parOne(r1, r2)
 let b = parTwo(r1, r2)
 // 0.02652330018327665
 
-func series(r1: EngineeringTolerance, _ r2: EngineeringTolerance) -> EngineeringTolerance {
+func series(_ r1: EngineeringTolerance, _ r2: EngineeringTolerance) -> EngineeringTolerance {
     return r1 + r2
 }
 

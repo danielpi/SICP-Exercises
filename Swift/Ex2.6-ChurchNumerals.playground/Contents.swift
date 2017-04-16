@@ -6,14 +6,14 @@ import Cocoa
 
 // I took the following from https://gist.github.com/CodaFi/b9ca5bcee6d7ea9ff158
 
-func zero<A, B>(a: A) -> B -> B {
+func zero<A, B>(_ a: A) -> (B) -> B {
     return { (b: B) -> B in
         return b
     }
 }
 
-func addOne<A, B, C>(n: ((A -> B) -> C -> A)) -> (A -> B) -> C -> B {
-    return { (f: (A -> B)) -> C -> B in
+func addOne<A, B, C>(_ n: @escaping (((A) -> B) -> (C) -> A)) -> ((A) -> B) -> (C) -> B {
+    return { (f: @escaping ((A) -> B)) -> (C) -> B in
         return { (x: C) -> B in
             return f(n(f)(x))
         }
@@ -21,11 +21,11 @@ func addOne<A, B, C>(n: ((A -> B) -> C -> A)) -> (A -> B) -> C -> B {
 }
 
 /// Returns the church encoding of any integer.
-func church<A>(x : Int) -> (A -> A) -> A -> A {
+func church<A>(_ x: Int) -> ((A) -> A) -> (A) -> A {
     if x == 0 {
         return zero
     }
-    return { (f : (A -> A)) -> A -> A in
+    return { (f:@escaping ((A) -> A)) -> (A) -> A in
         return { (a : A) -> A in
             return f(church(x - 1)(f)(a))
         }
@@ -36,7 +36,7 @@ func church<A>(x : Int) -> (A -> A) -> A -> A {
 ///
 /// This function is not tail recursive and has a tendency to smash the
 /// stack with incredibly large values of church-encoded n's.
-func unchurch<A>(f: ((Int -> Int) -> Int -> A)) -> A {
+func unchurch<A>(_ f: (((Int) -> Int) -> (Int) -> A)) -> A {
     return f({ (i: Int) -> Int in
         return i + 1
     })(0)
@@ -74,7 +74,7 @@ return f( return { (b : B) -> B in return b }(f)(x))
 
 */
 
-func one<A>(f : (A -> A)) -> (A) -> A {
+func one<A>(f:@escaping ((A) -> A)) -> (A) -> A {
     return { (x : A) -> A in
         return f(x)
     }

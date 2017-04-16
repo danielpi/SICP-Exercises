@@ -36,10 +36,10 @@ func *(lhs: Interval, rhs: Interval) -> Interval {
     return Interval(min(p1, p2, p3, p4), max(p1, p2, p3, p4))
 }
 
-func isPositive(x: Double) -> Bool {
+func isPositive(_ x: Double) -> Bool {
     return x > 0
 }
-func isNegative(x: Double) -> Bool {
+func isNegative(_ x: Double) -> Bool {
     return x < 0
 }
 

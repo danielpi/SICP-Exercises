@@ -3,13 +3,6 @@ import Cocoa
 // Exercise 2.29
 // A binary mobile consists of two branches, a left branch and a right branch. Each branch is a rod of a certain length from which hands either a weight or another binary mobile. We can represent a binary mobile using combound data by constructing it from two branches
 
-class Box<T>{
-    let unbox: T
-    init(_ value: T) {
-        self.unbox = value
-    }
-}
-
 struct Mobile {
     let left: Branch
     let right: Branch
@@ -41,7 +34,7 @@ struct Branch {
         case let Structure.Weight(weight):
             return weight
         case let Structure.Structure(mobile):
-            return mobile.unbox.weight
+            return mobile.weight
         }
     }
     
@@ -50,27 +43,26 @@ struct Branch {
     }
 }
 
-enum Structure {
+indirect enum Structure {
     case Weight(Int)
-    case Structure(Box<Mobile>)
+    case Structure(Mobile)
     
     var isBalanced: Bool {
         switch self {
         case .Weight(_):
             return true
-        case .Structure(let boxedMobile):
-            let mobile = boxedMobile.unbox
+        case .Structure(let mobile):
             return mobile.isBalanced
         }
     }
 }
 
 let aMobile = Mobile(left: Branch(length: 3, structure: .Weight(2)),
-                    right: Branch(length: 3, structure: .Structure(Box(Mobile(left: Branch(length: 2, structure: .Weight(1)), right: Branch(length: 2, structure: .Weight(1)))))))
+                    right: Branch(length: 3, structure: .Structure(Mobile(left: Branch(length: 2, structure: .Weight(1)), right: Branch(length: 2, structure: .Weight(1))))))
 
 let bMobile = Mobile(left: Branch(3, .Weight(2)),
-                    right: Branch(3, .Structure(Box(Mobile(left: Branch(2, .Weight(1)),
-                                                          right: Branch(2, .Weight(1)))))))
+                    right: Branch(3, .Structure(Mobile(left: Branch(2, .Weight(1)),
+                                                       right: Branch(2, .Weight(1))))))
 // a. Write the corresponding selectors left-branch and right -branch, which return the branches of a mobile, and branch-length and branch-structure, which return components of a branch
 
 let aBranch = aMobile.left

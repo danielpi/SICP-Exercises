@@ -35,10 +35,10 @@ func *(lhs: Interval, rhs: Interval) -> Interval {
     return Interval(min(p1, p2, p3, p4), max(p1, p2, p3, p4))
 }
 
-func isPositive(x: Double) -> Bool {
+func isPositive(_ x: Double) -> Bool {
     return x > 0
 }
-func isNegative(x: Double) -> Bool {
+func isNegative(_ x: Double) -> Bool {
     return x < 0
 }
 
@@ -49,17 +49,17 @@ func /(lhs: Interval, rhs: Interval) -> Interval {
     return lhs * Interval(1 / rhs.upper, 1 / rhs.lower)
 }
 
-func isPositive(x: Interval) -> Bool {
+func isPositive(_ x: Interval) -> Bool {
     return isPositive(x.lower) && isPositive(x.upper)
 }
-func spansZero(x: Interval) -> Bool {
+func spansZero(_ x: Interval) -> Bool {
     return isNegative(x.lower) && isPositive(x.upper)
 }
-func isNegative(x: Interval) -> Bool {
+func isNegative(_ x: Interval) -> Bool {
     return isNegative(x.lower) && isNegative(x.upper)
 }
 
-func mulInterval(lhs: Interval, _ rhs: Interval) -> Interval {
+func mulInterval(_ lhs: Interval, _ rhs: Interval) -> Interval {
     switch true {
     case isPositive(lhs) && isPositive(rhs):
         return Interval(lhs.lower * rhs.lower, lhs.upper * rhs.upper)

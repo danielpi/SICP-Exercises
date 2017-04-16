@@ -56,11 +56,11 @@ func /(lhs: Interval, rhs: Interval) -> Interval {
 }
 
 
-func parOne(a: Interval, _ b: Interval) -> Interval {
+func parOne(_ a: Interval, _ b: Interval) -> Interval {
     return (a * b) / (a + b)
 }
 
-func parTwo(a: Interval, _ b: Interval) -> Interval {
+func parTwo(_ a: Interval, _ b: Interval) -> Interval {
     let one = Interval(1, 1)
     return one / ((one / a) + (one / b))
 }
@@ -77,7 +77,7 @@ pTwo.percent
 
 // These intervls are representing a spread of probabilities regarding the possible results of sticking two actual resistors in parallel. Lets reduce this down to a small number of calculations to see what the spread should include
 
-func par(r1: Double, _ r2: Double) -> Double {
+func par(_ r1: Double, _ r2: Double) -> Double {
     return (r1 * r2) / (r1 + r2)
 }
 

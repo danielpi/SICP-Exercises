@@ -56,11 +56,11 @@ func /(lhs: Interval, rhs: Interval) -> Interval {
 }
 
 
-func parOne(a: Interval, _ b: Interval) -> Interval {
+func parOne(_ a: Interval, _ b: Interval) -> Interval {
     return (a * b) / (a + b)
 }
 
-func parTwo(a: Interval, _ b: Interval) -> Interval {
+func parTwo(_ a: Interval, _ b: Interval) -> Interval {
     let one = Interval(1, 1)
     return one / ((one / a) + (one / b))
 }
@@ -97,7 +97,7 @@ e.percent
 
 
 var A = Interval(center: 1.0, percent: 0.01)
-func mulDivide(a: Interval) -> Interval {
+func mulDivide(_ a: Interval) -> Interval {
     return a * a / a
 }
 A = mulDivide(A)
