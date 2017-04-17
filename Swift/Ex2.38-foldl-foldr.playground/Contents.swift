@@ -3,23 +3,21 @@ import Cocoa
 // Exercise 2.38
 // The accumulate procedure is also known as fold-right, because it combines the first element of the sequence with the result of combining all the elements to the right. There is also a fold-left, which is similar to fold-right, except that it combines elements working in the opposite direction:
 
-func cons<A>(value: A, _ list: [A]) -> [A] {
+func cons<A>(_ value: A, _ list: [A]) -> [A] {
     var newList = list
-    newList.insert(value, atIndex: 0)
+    newList.insert(value, at: 0)
     return newList
 }
-func car<A>(list:[A]) -> A {
+func car<A>(_ list:[A]) -> A {
     return list[0]
 }
-func cdr<A>(list:[A]) -> [A] {
+func cdr<A>(_ list:[A]) -> [A] {
     return Array(list[1..<list.count])
 }
 
 
-func foldl<A,B>(op: (B, A) -> B, initial: B, seq sequence:[A]) -> B {
-    var iter: (B, [A]) -> B = { (a,_) in return a }
-    
-    iter = { (result, rest) in
+func foldl<A,B>(_ op:@escaping (B, A) -> B, initial: B, seq sequence:[A]) -> B {
+    func iter(_ result: B, _ rest: [A]) -> B {
         if rest.isEmpty {
             return result
         } else {
@@ -29,7 +27,7 @@ func foldl<A,B>(op: (B, A) -> B, initial: B, seq sequence:[A]) -> B {
     return iter(initial, sequence)
 }
 
-func foldr<A,B>(op: (A, B) -> B, initial: B, seq sequence: [A]) -> B {
+func foldr<A,B>(_ op: (A, B) -> B, initial: B, seq sequence: [A]) -> B {
     if sequence.isEmpty {
         return initial
     } else {
@@ -42,45 +40,35 @@ foldr(/, initial:64.0, seq:[2,2,2])
 foldl(/, initial:1.0, seq:[1,2,3])
 
 
-class Box<T>{
-    let unbox: T
-    init(_ value: T) {
-        self.unbox = value
-    }
-}
-
 enum Tree<T> {
-    case Leaf(Box<T>)
-    case Node([Box<Tree<T>>])
+    case Leaf(T)
+    case Node([Tree<T>])
     
     var stringRepresentation: String {
         switch self {
         case let .Leaf(value):
-            return " \(value.unbox)"
+            return " \(value)"
         case let .Node(values):
-            let strings = values.map { $0.unbox.stringRepresentation }
+            let strings = values.map { $0.stringRepresentation }
             return "\(strings)"
         }
     }
     
-    static func leaf(value: T) -> Tree<T> {
-        return Tree.Leaf(Box(value))
+    static func leaf(_ value: T) -> Tree<T> {
+        return Tree.Leaf(value)
     }
-    static func node(leaves: Tree<T>...) -> Tree<T> {
-        let boxed = leaves.map { Box($0) }
-        return Tree.Node(boxed)
+    static func node(_ leaves: Tree<T>...) -> Tree<T> {
+        return Tree.Node(leaves)
     }
-    static func list(values: T...) -> Tree<T> {
-        let boxedValues = values.map { Box($0) }
-        let leaves = boxedValues.map { Tree.Leaf($0) }
-        let boxed = leaves.map { Box($0) }
-        return Tree.Node(boxed)
+    static func list(_ values: T...) -> Tree<T> {
+        let leaves = values.map { Tree.Leaf($0) }
+        return Tree.Node(leaves)
     }
-    static func cons(left: T, _ right: Tree<T>) -> Tree<T> {
+    static func cons(_ left: T, _ right: Tree<T>) -> Tree<T> {
         let l = Tree.leaf(left)
         return Tree.node(l, right)
     }
-    static func cons(left: Tree<T>, _ right: T) -> Tree<T> {
+    static func cons(_ left: Tree<T>, _ right: T) -> Tree<T> {
         let r = Tree.leaf(right)
         return Tree.node(left, r)
     }

@@ -17,7 +17,7 @@ public struct QueenF: CustomStringConvertible {
 public typealias SolutionF = [QueenF]
 public typealias SolutionsF = [SolutionF]
 
-public func isSafeF(a: QueenF, _ b: QueenF) -> Bool {
+public func isSafeF(_ a: QueenF, _ b: QueenF) -> Bool {
     return (a.row != b.row) &&
         (a.col != b.col) &&
         (abs(a.row - b.row) != abs(a.col - b.col))
@@ -29,11 +29,11 @@ public func isSafeForF(queen: QueenF) -> (QueenF) -> Bool {
 }
 
 public func isSafeF(queen: QueenF, _ solution: SolutionF) -> Bool {
-    return solution.map(isSafeForF(queen)).reduce(true) { $0 && $1 }
+    return solution.map(isSafeForF(queen: queen)).reduce(true) { $0 && $1 }
 }
 //isSafe(Queen(2, 1), [Queen(3, 2), Queen(4, 6)])
 
-public func addColOfQueensF(board: SolutionsF, col: Int) -> SolutionsF {
+public func addColOfQueensF(to board: SolutionsF, col: Int) -> SolutionsF {
     let possibleQueens = Array(1...8).map() { row in return QueenF(row, col) }
     
     if board.isEmpty {

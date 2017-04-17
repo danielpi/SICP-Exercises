@@ -3,9 +3,7 @@ import Cocoa
 // Exercise 2.40
 // Define a procedure uniquePairs that, given an integer n, generates the sequence of pairs (i, j) with 1 <= j <= i <= n. Use uniquePairs to simplify the definition of primeSumPairs
 
-
-
-func uniquePairs(n: Int) -> [(Int,Int)] {
+func uniquePairs(_ n: Int) -> [(Int,Int)] {
     return Array(1...n).flatMap() { i in
         Array(1..<i).map() { j in
             (i,j)
@@ -16,15 +14,15 @@ func uniquePairs(n: Int) -> [(Int,Int)] {
 let a = uniquePairs(6)
 print("\(a)")
 
-func square(x: Int) -> Int {
+func square(_ x: Int) -> Int {
     return x * x
 }
 
-func dividesWithNoRemainder(a: Int, _ b: Int) -> Bool {
+func dividesWithNoRemainder(_ a: Int, _ b: Int) -> Bool {
     return a % b == 0
 }
 
-func findDivisor(n: Int, _ testDivisor: Int) -> Int {
+func findDivisor(_ n: Int, _ testDivisor: Int) -> Int {
     switch true {
     case square(testDivisor) > n:
         return n
@@ -35,26 +33,26 @@ func findDivisor(n: Int, _ testDivisor: Int) -> Int {
     }
 }
 
-func smallestDivisor(n: Int) -> Int {
+func smallestDivisor(_ n: Int) -> Int {
     return findDivisor(n, 2)
 }
 
-func isPrime(n: Int) -> Bool {
+func isPrime(_ n: Int) -> Bool {
     return n == smallestDivisor(n)
 }
 
 typealias Pair = (Int,Int)
 typealias Triple = (Int,Int,Int)
 
-func isPrimeSum(pair: Pair) -> Bool {
+func isPrimeSum(_ pair: Pair) -> Bool {
     return isPrime(pair.0 + pair.1)
 }
 
-func pairToTriple(pair: Pair) -> Triple {
+func pairToTriple(_ pair: Pair) -> Triple {
     return (pair.0, pair.1, pair.0 + pair.1)
 }
 
-func primeSumPairs(n: Int) -> [Triple] {
+func primeSumPairs(_ n: Int) -> [Triple] {
     return uniquePairs(n).filter(isPrimeSum).map(pairToTriple)
 }
 

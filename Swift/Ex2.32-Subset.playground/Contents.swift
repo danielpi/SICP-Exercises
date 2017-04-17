@@ -13,25 +13,25 @@ import Cocoa
 */
 
 
-func cons<A>(value: A, _ list: [A]) -> [A] {
+func cons<A>(_ value: A, _ list: [A]) -> [A] {
     var newList = list
-    newList.insert(value, atIndex: 0)
+    newList.insert(value, at: 0)
     return newList
 }
-func car<A>(list:[A]) -> A {
+func car<A>(_ list:[A]) -> A {
     return list[0]
 }
-func cdr<A>(list:[A]) -> [A] {
+func cdr<A>(_ list:[A]) -> [A] {
     return Array(list[1..<list.count])
 }
 
 
-func subsets(s: [Int]) -> [[Int]] {
+func subsets(_ s: [Int]) -> [[Int]] {
     if s.isEmpty {
         return [[]]
     } else {
         let rest = subsets(cdr(s))
-        return rest + map(rest) { cons(car(s), $0) }
+        return rest + rest.map{ cons(car(s), $0) }
     }
 }
 

@@ -13,18 +13,18 @@ import Cocoa
 
 // Fill in the following template to produce a procedure that evaluates a polynomial using Horner's rule. Assume that the coefficients of the polynomial are arranged in a sequence, from a0 through an
 
-func cons<A>(value: A, _ list: [A]) -> [A] {
+func cons<A>(_ value: A, _ list: [A]) -> [A] {
     var newList = list
-    newList.insert(value, atIndex: 0)
+    newList.insert(value, at: 0)
     return newList
 }
-func car<A>(list:[A]) -> A {
+func car<A>(_ list:[A]) -> A {
     return list[0]
 }
-func cdr<A>(list:[A]) -> [A] {
+func cdr<A>(_ list:[A]) -> [A] {
     return Array(list[1..<list.count])
 }
-func accumulate(op: (Double, Double) -> Double, initial: Double, seq sequence: [Double]) -> Double {
+func accumulate(_ op: (Double, Double) -> Double, initial: Double, seq sequence: [Double]) -> Double {
     if sequence.isEmpty {
         return initial
     } else {
@@ -32,7 +32,7 @@ func accumulate(op: (Double, Double) -> Double, initial: Double, seq sequence: [
     }
 }
 
-func hornerEval(x: Double, seq coefficientSequence: [Double]) -> Double {
+func hornerEval(_ x: Double, seq coefficientSequence: [Double]) -> Double {
     return accumulate({ (thisCoeff, higherTerms) in return (higherTerms * x) + thisCoeff }, initial:0.0, seq:coefficientSequence)
 }
 
@@ -40,7 +40,7 @@ func hornerEval(x: Double, seq coefficientSequence: [Double]) -> Double {
 
 hornerEval(2, seq: [1,3,0,5,0,1])
 
-func hornerEval2(x: Double, seq coefficientSequence: [Double]) -> Double {
+func hornerEval2(_ x: Double, seq coefficientSequence: [Double]) -> Double {
     return coefficientSequence.reduce(0.0) { ($0 * x) + $1 }
 }
 hornerEval2(2, seq:[1,0,5,0,3,1])

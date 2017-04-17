@@ -7,58 +7,46 @@ import Cocoa
 //      return treeMap(tree, square)
 // }
 
-
-
-class Box<T>{
-    let unbox: T
-    init(_ value: T) {
-        self.unbox = value
-    }
-}
-
-enum Tree<T> {
-    case Leaf(Box<T>)
-    case Node([Box<Tree<T>>])
+indirect enum Tree<T> {
+    case Leaf(T)
+    case Node([Tree<T>])
     
     var stringRepresentation: String {
         switch self {
         case let .Leaf(value):
-            return " \(value.unbox)"
+            return " \(value)"
         case let .Node(values):
-            let strings = values.map{ $0.unbox.stringRepresentation }
+            let strings = values.map{ $0.stringRepresentation }
             return "\(strings)"
         }
     }
     
-    static func leaf(value: T) -> Tree<T> {
-        return Tree.Leaf(Box(value))
+    static func leaf(_ value: T) -> Tree<T> {
+        return Tree.Leaf(value)
     }
-    static func node(leaves: Tree<T>...) -> Tree<T> {
-        let boxed = leaves.map{ Box($0) }
-        return Tree.Node(boxed)
+    static func node(_ leaves: Tree<T>...) -> Tree<T> {
+        return Tree.Node(leaves)
     }
-    static func list(values: T...) -> Tree<T> {
-        let boxedValues = values.map{ Box($0) }
-        let leaves = boxedValues.map{ Tree.Leaf($0) }
-        let boxed = leaves.map{ Box($0) }
-        return Tree.Node(boxed)
+    static func list(_ values: T...) -> Tree<T> {
+        let leaves = values.map{ Tree.Leaf($0) }
+        return Tree.Node(leaves)
     }
 }
 
-func square(x: Int) -> Int {
+func square(_ x: Int) -> Int {
     return x * x
 }
 
-func treeMap(tree: Tree<Int>, _ f: (Int) -> Int) -> Tree<Int> {
+func treeMap(_ tree: Tree<Int>, _ f:@escaping (Int) -> Int) -> Tree<Int> {
     switch tree {
     case .Leaf(let value):
-        return Tree.leaf(f(value.unbox))
+        return Tree.leaf(f(value))
     case .Node(let values):
-        return Tree.Node(values.map{ Box(treeMap($0.unbox, f)) })
+        return Tree.Node(values.map{ treeMap($0, f) })
     }
 }
 
-func squareTree(tree: Tree<Int>) -> Tree<Int> {
+func squareTree(_ tree: Tree<Int>) -> Tree<Int> {
     return treeMap(tree, square)
 }
 

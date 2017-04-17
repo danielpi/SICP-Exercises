@@ -10,14 +10,14 @@ import Cocoa
 
 // is represented as the sequence ((1 2 3 4) (4 5 6 6) (6 7 8 9)). With this representation, we can use sequence operations to concisely express the basic matrix and vector operations. These operations (which are described in any book on matrix algebra) are the following:
 
-func dotProduct(v: [Int], _ w: [Int]) -> Int {
-    return zip(v,w).map(*).reduce(0, combine: +)
+func dotProduct(_ v: [Int], _ w: [Int]) -> Int {
+    return zip(v,w).map(*).reduce(0, +)
 }
 let a = [1,2,3]
 let b = [5,6,7]
 dotProduct(a, b)
 
-func matrixXVector(m: [[Int]], _ v: [Int]) -> [Int] {
+func matrixXVector(_ m: [[Int]], _ v: [Int]) -> [Int] {
     return m.map { dotProduct($0, v) }
 }
 
@@ -25,15 +25,15 @@ let c = [[1,0,0],[0,1,0],[0,0,1]]
 matrixXVector(c, a)
 
 
-func cons<A>(value: A, _ list: [A]) -> [A] {
+func cons<A>(_ value: A, _ list: [A]) -> [A] {
     var newList = list
-    newList.insert(value, atIndex: 0)
+    newList.insert(value, at: 0)
     return newList
 }
-func car<A>(list:[A]) -> A {
+func car<A>(_ list:[A]) -> A {
     return list[0]
 }
-func cdr<A>(list:[A]) -> [A] {
+func cdr<A>(_ list:[A]) -> [A] {
     return Array(list[1..<list.count])
 }
 
@@ -41,7 +41,7 @@ cons(4, a)
 cons(a, c)
 
 
-func accumulate<A>(op: (A, [A]) -> [A], initial: [A], seq sequence: [A]) -> [A] {
+func accumulate<A>(_ op: (A, [A]) -> [A], initial: [A], seq sequence: [A]) -> [A] {
     if sequence.isEmpty {
         return initial
     } else {
