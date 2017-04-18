@@ -57,22 +57,22 @@ public struct Frame {
 // Painter Generators
 public typealias Painter = (Frame) -> Void
 
-func frameCoordMap(frame: Frame) -> (Vector) -> Vector {
+func frameCoordMap(_ frame: Frame) -> (Vector) -> Vector {
     return { vector in
         return frame.origin + ((vector.x * frame.edge1) + (vector.y * frame.edge2))
     }
 }
 
-func segmentsToPainter(segments:[Segment]) -> Painter {
+func segmentsToPainter(_ segments:[Segment]) -> Painter {
     return { frame in
         frame.dc.lockFocus()
         let lineColor = NSColor(calibratedHue: 0.0, saturation: 0.0, brightness: 0.0, alpha: 0.8)
         lineColor.setStroke()
         
         let xform = NSAffineTransform()
-        xform.scaleBy(frame.dc.size.height / 1)
-        xform.rotateByDegrees(-90)
-        xform.translateXBy(-1, yBy: 0.0)
+        xform.scale(by: frame.dc.size.height / 1)
+        xform.rotate(byDegrees: -90)
+        xform.translateX(by: -1, yBy: 0.0)
         xform.concat()
         
         let line = NSBezierPath()
@@ -81,8 +81,8 @@ func segmentsToPainter(segments:[Segment]) -> Painter {
         for segment in segments {
             let start = frameCoordMap(frame)(segment.startPoint)
             let end = frameCoordMap(frame)(segment.endPoint)
-            line.moveToPoint(NSPoint(x: start.x, y: start.y))
-            line.lineToPoint(NSPoint(x: end.x, y: end.y))
+            line.move(to: NSPoint(x: start.x, y: start.y))
+            line.line(to: NSPoint(x: end.x, y: end.y))
             line.stroke()
         }
         frame.dc.unlockFocus()
@@ -90,7 +90,7 @@ func segmentsToPainter(segments:[Segment]) -> Painter {
 }
 
 // Painters
-public func wave(frame: Frame) {
+public func wave(_ frame: Frame) {
     segmentsToPainter([Segment(startPoint: Point(x: 0.165, y: 0.945), endPoint: Point(x: 0.465, y: 0.665)),
         Segment(startPoint: Point(x: 0.465, y: 0.665), endPoint: Point(x: 0.465, y: 0.285)),
         Segment(startPoint: Point(x: 0.465, y: 0.455), endPoint: Point(x: 0.745, y: 0.585)),
@@ -103,7 +103,7 @@ public func wave(frame: Frame) {
 }
 
 // Transformer Generator
-func transformPainter(painter: Painter, origin: Point, corner1: Point, corner2: Point) -> Painter {
+func transform(painter:@escaping Painter, origin: Point, corner1: Point, corner2: Point) -> Painter {
     return { frame in
         let m = frameCoordMap(frame)
         let newOrigin = m(origin)
@@ -113,20 +113,20 @@ func transformPainter(painter: Painter, origin: Point, corner1: Point, corner2: 
 
 
 // Transformers
-public func beside(left: Painter, _ right: Painter) -> Painter {
+public func beside(_ left:@escaping Painter, _ right:@escaping Painter) -> Painter {
     let splitPoint = Point(x: 0.5, y: 0)
-    let paintLeft = transformPainter(left, origin: Point(x: 0, y: 0), corner1: splitPoint, corner2: Point(x: 0, y: 1))
-    let paintRight = transformPainter(right, origin: splitPoint, corner1: Point(x: 1, y: 0), corner2: Point(x: 0.5, y: 1))
+    let paintLeft = transform(painter: left, origin: Point(x: 0, y: 0), corner1: splitPoint, corner2: Point(x: 0, y: 1))
+    let paintRight = transform(painter: right, origin: splitPoint, corner1: Point(x: 1, y: 0), corner2: Point(x: 0.5, y: 1))
     return { frame in
         paintLeft(frame)
         paintRight(frame)
     }
 }
 
-public func below(top: Painter, bottom: Painter) -> Painter {
+public func below(_ top:@escaping Painter, bottom:@escaping Painter) -> Painter {
     let splitPoint = Point(x: 0.0, y: 0.5)
-    let paintTop = transformPainter(top, origin: Point(x:0, y:0), corner1: Point(x: 1, y: 0), corner2: splitPoint)
-    let paintBot = transformPainter(bottom, origin:splitPoint, corner1:Point(x: 1, y: 0.5), corner2:Point(x: 0, y: 1))
+    let paintTop = transform(painter: top, origin: Point(x:0, y:0), corner1: Point(x: 1, y: 0), corner2: splitPoint)
+    let paintBot = transform(painter: bottom, origin:splitPoint, corner1:Point(x: 1, y: 0.5), corner2:Point(x: 0, y: 1))
     return { frame in
         paintTop(frame)
         paintBot(frame)
@@ -134,7 +134,7 @@ public func below(top: Painter, bottom: Painter) -> Painter {
 }
 
 
-public func draw(painter: Painter) -> NSImage {
+public func draw(_ painter: Painter) -> NSImage {
     let squareSize: CGFloat = 500
     let imgSize = NSMakeSize(squareSize, squareSize)
     let img = NSImage(size: imgSize)
@@ -145,12 +145,12 @@ public func draw(painter: Painter) -> NSImage {
 
 
 
-func upSplit(painter: Painter, n: Int) -> Painter {
+func upSplit(painter:@escaping Painter, n: Int) -> Painter {
     if n == 0 {
         return painter
     } else {
-        let smaller = upSplit(painter, n:n - 1)
+        let smaller = upSplit(painter: painter, n:n - 1)
         return below(beside(smaller, smaller), bottom:painter)
     }
 }
-draw(upSplit(wave, n:3))
+draw(upSplit(painter: wave, n:3))

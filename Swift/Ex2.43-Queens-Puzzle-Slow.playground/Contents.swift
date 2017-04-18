@@ -3,7 +3,7 @@ import Cocoa
 // Exercise 2.43
 // Louis Reasoner is having a terrible time doing Exercise 2.42. His queens procedure seems to work but it runs extremely slowly. (Louis never does manage to wait long enough for it to solve even the 6x6 case.) When Louis asks Eva Lu Ator for help, she points out that he has interchanged the order of the nested mappings in the flatmap, writing it as
 
-public func queens42(boardSize: Int) -> [[Queen]] {
+public func queens42(_ boardSize: Int) -> [[Queen]] {
     var queenCols: (Int) -> [[Queen]] = { _ in [[Queen]]() }
     queenCols = { k in
         if k == 0 {
@@ -29,7 +29,7 @@ solutions42.count
 let a = pow(5.0, 8.0)
 a
 
-public func queens43(boardSize: Int) -> [[Queen]] {
+public func queens43(_ boardSize: Int) -> [[Queen]] {
     var queenCols: (Int) -> [[Queen]] = { _ in [[Queen]]() }
     queenCols = { k in
         if k == 0 {

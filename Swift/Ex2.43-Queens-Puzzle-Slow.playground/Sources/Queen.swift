@@ -10,25 +10,25 @@ public struct Pair<A,B> {
     }
 }
 
-public func cons<A,B>(left: A, _ right: B) -> Pair<A,B> {
+public func cons<A,B>(_ left: A, _ right: B) -> Pair<A,B> {
     return Pair(left: left, right: right)
 }
-public func car<A,B>(pair: Pair<A,B>) -> A {
+public func car<A,B>(_ pair: Pair<A,B>) -> A {
     return pair.left
 }
-public func cdr<A,B>(pair: Pair<A,B>) -> B {
+public func cdr<A,B>(_ pair: Pair<A,B>) -> B {
     return pair.right
 }
 
-public func cons<A>(value: A, _ list: [A]) -> [A] {
+public func cons<A>(_ value: A, _ list: [A]) -> [A] {
     var newList = list
-    newList.insert(value, atIndex: 0)
+    newList.insert(value, at: 0)
     return newList
 }
-public func car<A>(list:[A]) -> A {
+public func car<A>(_ list:[A]) -> A {
     return list[0]
 }
-public func cdr<A>(list:[A]) -> [A] {
+public func cdr<A>(_ list:[A]) -> [A] {
     return Array(list[1..<list.count])
 }
 
@@ -36,28 +36,28 @@ public func cdr<A>(list:[A]) -> [A] {
 public typealias Queen = Pair<Int,Int>
 
 
-public func enumerateInterval(low: Int, _ high: Int) -> [Int] {
+public func enumerateInterval(_ low: Int, _ high: Int) -> [Int] {
     return Array(low...high)
 }
 
 
 public let emptyBoard: [Queen] = []
 
-func placeQueen(rank: Int, _ file: Int) -> Queen {
+func placeQueen(_ rank: Int, _ file: Int) -> Queen {
     return cons(rank, file)
 }
-func queenRank(queen: Queen) -> Int {
+func queenRank(_ queen: Queen) -> Int {
     return car(queen)
 }
-func queenFile(queen: Queen) -> Int {
+func queenFile(_ queen: Queen) -> Int {
     return cdr(queen)
 }
 
-public func adjoinPosition(rank: Int, _ file: Int, _ board: [Queen]) -> [Queen] {
+public func adjoinPosition(_ rank: Int, _ file: Int, _ board: [Queen]) -> [Queen] {
     return cons(placeQueen(rank, file), board)
 }
 
-func findFirst(pred: (Queen) -> Bool, _ items: [Queen]) -> Queen {
+func findFirst(_ pred: (Queen) -> Bool, _ items: [Queen]) -> Queen {
     switch true {
     case items.isEmpty:
         return Queen(left: 0, right: 0)
@@ -68,8 +68,8 @@ func findFirst(pred: (Queen) -> Bool, _ items: [Queen]) -> Queen {
     }
 }
 
-public func isSafe(file: Int, _ board: [Queen]) -> Bool {
-    func getQueenByFile(file: Int, _ board: [Queen]) -> Queen {
+public func isSafe(_ file: Int, _ board: [Queen]) -> Bool {
+    func getQueenByFile(_ file: Int, _ board: [Queen]) -> Queen {
         return findFirst({ queen in
             queenFile(queen) == file
             }, board)
@@ -88,7 +88,7 @@ public func isSafe(file: Int, _ board: [Queen]) -> Bool {
 }
 
 
-public func queensF(boardSize: Int) -> [[Queen]] {
+public func queensF(_ boardSize: Int) -> [[Queen]] {
     var queenCols: (Int) -> [[Queen]] = { _ in [[Queen]]() }
     queenCols = { k in
         if k == 0 {
