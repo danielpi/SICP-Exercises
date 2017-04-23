@@ -49,5 +49,7 @@ func frame2Edge2(frame: Frame2) -> Vector {
     return frame.edge2
 }
 
+print("done")
+
 
 

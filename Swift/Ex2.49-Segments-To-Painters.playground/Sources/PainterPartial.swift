@@ -54,13 +54,13 @@ public struct Frame {
 // Painter Generators
 public typealias Painter = (Frame) -> Void
 
-public func frameCoordMap(frame: Frame) -> (Vector) -> Vector {
+public func frameCoordMap(_ frame: Frame) -> (Vector) -> Vector {
     return { vector in
         return frame.origin + ((vector.x * frame.edge1) + (vector.y * frame.edge2))
     }
 }
 
-public func draw(painter: Painter) -> NSImage {
+public func draw(_ painter: Painter) -> NSImage {
     let squareSize: CGFloat = 500
     let imgSize = NSMakeSize(squareSize, squareSize)
     let img = NSImage(size: imgSize)

@@ -10,16 +10,16 @@ import Cocoa
 
 
 
-func segmentsToPainter(segments:[Segment]) -> Painter {
+func segmentsToPainter(_ segments:[Segment]) -> Painter {
     return { frame in
         frame.dc.lockFocus()
         let lineColor = NSColor(calibratedHue: 0.0, saturation: 0.0, brightness: 0.0, alpha: 0.8)
         lineColor.setStroke()
         
         let xform = NSAffineTransform()
-        xform.scaleBy(frame.dc.size.height / 1)
-        xform.rotateByDegrees(-90)
-        xform.translateXBy(-1, yBy: 0.0)
+        xform.scale(by: frame.dc.size.height / 1)
+        xform.rotate(byDegrees: -90)
+        xform.translateX(by: -1, yBy: 0.0)
         xform.concat()
         
         let line = NSBezierPath()
@@ -28,8 +28,8 @@ func segmentsToPainter(segments:[Segment]) -> Painter {
         for segment in segments {
             let start = frameCoordMap(frame)(segment.startPoint)
             let end = frameCoordMap(frame)(segment.endPoint)
-            line.moveToPoint(NSPoint(x: start.x, y: start.y))
-            line.lineToPoint(NSPoint(x: end.x, y: end.y))
+            line.move(to: NSPoint(x: start.x, y: start.y))
+            line.line(to: NSPoint(x: end.x, y: end.y))
             line.stroke()
         }
         frame.dc.unlockFocus()
@@ -39,7 +39,7 @@ func segmentsToPainter(segments:[Segment]) -> Painter {
 
 // Painters
 
-func frameOutline(frame: Frame) {
+func frameOutline(_ frame: Frame) {
     segmentsToPainter([Segment(startPoint: Point(x: 0, y: 0), endPoint: Point(x: 1, y: 0)),
         Segment(startPoint: Point(x: 1, y: 0), endPoint: Point(x: 1, y: 1)),
         Segment(startPoint: Point(x: 1, y: 1), endPoint: Point(x: 0, y: 1)),
@@ -48,14 +48,14 @@ func frameOutline(frame: Frame) {
 draw(frameOutline)
 
 
-func frameCross(frame: Frame) {
+func frameCross(_ frame: Frame) {
     segmentsToPainter([Segment(startPoint: Point(x: 0, y: 0), endPoint: Point(x: 1, y: 1)),
                        Segment(startPoint: Point(x: 1, y: 0), endPoint: Point(x: 0, y: 1))])(frame)
 }
 draw(frameCross)
 
 
-func frameDiamond(frame: Frame) {
+func frameDiamond(_ frame: Frame) {
     segmentsToPainter([Segment(startPoint: Point(x: 0.5, y: 0), endPoint: Point(x: 1, y: 0.5)),
         Segment(startPoint: Point(x: 1, y: 0.5), endPoint: Point(x: 0.5, y: 1)),
         Segment(startPoint: Point(x: 0.5, y: 1), endPoint: Point(x: 0, y: 0.5)),
@@ -64,7 +64,7 @@ func frameDiamond(frame: Frame) {
 draw(frameDiamond)
 
 
-public func wave(frame: Frame) {
+public func wave(_ frame: Frame) {
     segmentsToPainter([Segment(startPoint: Point(x: 0.165, y: 0.945), endPoint: Point(x: 0.465, y: 0.665)),
         Segment(startPoint: Point(x: 0.465, y: 0.665), endPoint: Point(x: 0.465, y: 0.285)),
         Segment(startPoint: Point(x: 0.465, y: 0.455), endPoint: Point(x: 0.745, y: 0.585)),
