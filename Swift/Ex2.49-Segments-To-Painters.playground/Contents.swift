@@ -77,3 +77,5 @@ public func wave(_ frame: Frame) {
 }
 draw(wave)
 
+print("Is this working?")
+

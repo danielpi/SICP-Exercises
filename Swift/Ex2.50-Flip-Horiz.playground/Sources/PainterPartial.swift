@@ -67,19 +67,19 @@ func segmentsToPainter(segments:[Segment]) -> Painter {
         lineColor.setStroke()
         
         let xform = NSAffineTransform()
-        xform.scaleBy(frame.dc.size.height / 1)
-        xform.rotateByDegrees(-90)
-        xform.translateXBy(-1, yBy: 0.0)
+        xform.scale(by: frame.dc.size.height / 1)
+        xform.rotate(byDegrees: -90)
+        xform.translateX(by: -1, yBy: 0.0)
         xform.concat()
         
         let line = NSBezierPath()
         line.lineWidth = 1 / frame.dc.size.height
         
         for segment in segments {
-            let start = frameCoordMap(frame)(segment.startPoint)
-            let end = frameCoordMap(frame)(segment.endPoint)
-            line.moveToPoint(NSPoint(x: start.x, y: start.y))
-            line.lineToPoint(NSPoint(x: end.x, y: end.y))
+            let start = frameCoordMap(frame: frame)(segment.startPoint)
+            let end = frameCoordMap(frame: frame)(segment.endPoint)
+            line.move(to: NSPoint(x: start.x, y: start.y))
+            line.line(to: NSPoint(x: end.x, y: end.y))
             line.stroke()
         }
         frame.dc.unlockFocus()
@@ -89,8 +89,8 @@ func segmentsToPainter(segments:[Segment]) -> Painter {
 func segmentsToText(segments: [Segment]) -> Painter {
     return { frame in
         for segment in segments {
-            let start = frameCoordMap(frame)(segment.startPoint)
-            let end = frameCoordMap(frame)(segment.endPoint)
+            let start = frameCoordMap(frame: frame)(segment.startPoint)
+            let end = frameCoordMap(frame: frame)(segment.endPoint)
             print("Draw Line from \(start.x),\(start.y) to \(end.x),\(end.y)")
         }
     }
@@ -98,7 +98,7 @@ func segmentsToText(segments: [Segment]) -> Painter {
 
 // Painters
 public func wave(frame: Frame) {
-    segmentsToPainter([Segment(startPoint: Point(x: 0.165, y: 0.945), endPoint: Point(x: 0.465, y: 0.665)),
+    segmentsToPainter(segments: [Segment(startPoint: Point(x: 0.165, y: 0.945), endPoint: Point(x: 0.465, y: 0.665)),
         Segment(startPoint: Point(x: 0.465, y: 0.665), endPoint: Point(x: 0.465, y: 0.285)),
         Segment(startPoint: Point(x: 0.465, y: 0.455), endPoint: Point(x: 0.745, y: 0.585)),
         Segment(startPoint: Point(x: 0.465, y: 0.665), endPoint: Point(x: 0.755, y: 0.925)),
@@ -110,20 +110,20 @@ public func wave(frame: Frame) {
 }
 
 public func frameOutline(frame: Frame) {
-    segmentsToPainter([Segment(startPoint: Point(x: 0, y: 0), endPoint: Point(x: 1, y: 0)),
+    segmentsToPainter(segments: [Segment(startPoint: Point(x: 0, y: 0), endPoint: Point(x: 1, y: 0)),
         Segment(startPoint: Point(x: 1, y: 0), endPoint: Point(x: 1, y: 1)),
         Segment(startPoint: Point(x: 1, y: 1), endPoint: Point(x: 0, y: 1)),
         Segment(startPoint: Point(x: 0, y: 1), endPoint: Point(x: 0, y: 0))])(frame)
 }
 
 public func frameCross(frame: Frame) {
-    segmentsToPainter([Segment(startPoint: Point(x: 0, y: 0), endPoint: Point(x: 1, y: 1)),
+    segmentsToPainter(segments: [Segment(startPoint: Point(x: 0, y: 0), endPoint: Point(x: 1, y: 1)),
         Segment(startPoint: Point(x: 1, y: 0), endPoint: Point(x: 0, y: 1))])(frame)
 }
 
 
 public func frameDiamond(frame: Frame) {
-    segmentsToPainter([Segment(startPoint: Point(x: 0.5, y: 0), endPoint: Point(x: 1, y: 0.5)),
+    segmentsToPainter(segments: [Segment(startPoint: Point(x: 0.5, y: 0), endPoint: Point(x: 1, y: 0.5)),
         Segment(startPoint: Point(x: 1, y: 0.5), endPoint: Point(x: 0.5, y: 1)),
         Segment(startPoint: Point(x: 0.5, y: 1), endPoint: Point(x: 0, y: 0.5)),
         Segment(startPoint: Point(x: 0, y: 0.5), endPoint: Point(x: 0.5, y: 0))])(frame)
@@ -131,9 +131,9 @@ public func frameDiamond(frame: Frame) {
 
 
 // Transformer Generator
-public func transformPainter(painter: Painter, origin: Point, corner1: Point, corner2: Point) -> Painter {
+public func transformPainter(painter: @escaping Painter, origin: Point, corner1: Point, corner2: Point) -> Painter {
     return { frame in
-        let m = frameCoordMap(frame)
+        let m = frameCoordMap(frame: frame)
         let newOrigin = m(origin)
         painter(Frame(origin: newOrigin, edge1: m(corner1) - newOrigin, edge2: m(corner2) - newOrigin, dc: frame.dc))
     }
@@ -143,28 +143,28 @@ public func transformPainter(painter: Painter, origin: Point, corner1: Point, co
 // Transformers
 public typealias Transformer = (Painter) -> Painter
 
-public func beside(left: Painter, right: Painter) -> Painter {
+public func beside(left: @escaping Painter, right: @escaping Painter) -> Painter {
     let splitPoint = Point(x: 0.5, y: 0)
-    let paintLeft = transformPainter(left, origin:Point(x: 0, y: 0), corner1:splitPoint, corner2:Point(x: 0, y: 1))
-    let paintRight = transformPainter(right, origin:splitPoint, corner1:Point(x: 1, y: 0), corner2:Point(x: 0.5, y: 1))
+    let paintLeft = transformPainter(painter: left, origin:Point(x: 0, y: 0), corner1:splitPoint, corner2:Point(x: 0, y: 1))
+    let paintRight = transformPainter(painter: right, origin:splitPoint, corner1:Point(x: 1, y: 0), corner2:Point(x: 0.5, y: 1))
     return { frame in
         paintLeft(frame)
         paintRight(frame)
     }
 }
 
-public func below(top: Painter, bottom: Painter) -> Painter {
+public func below(top: @escaping Painter, bottom: @escaping Painter) -> Painter {
     let splitPoint = Point(x: 0.0, y: 0.5)
-    let paintTop = transformPainter(top, origin:Point(x:0, y:0), corner1:Point(x: 1, y: 0), corner2:splitPoint)
-    let paintBot = transformPainter(bottom, origin:splitPoint, corner1:Point(x: 1, y: 0.5), corner2:Point(x: 0, y: 1))
+    let paintTop = transformPainter(painter: top, origin:Point(x:0, y:0), corner1:Point(x: 1, y: 0), corner2:splitPoint)
+    let paintBot = transformPainter(painter: bottom, origin:splitPoint, corner1:Point(x: 1, y: 0.5), corner2:Point(x: 0, y: 1))
     return { frame in
         paintTop(frame)
         paintBot(frame)
     }
 }
 
-public func flipVert(painter: Painter) -> Painter {
-    let flipped = transformPainter(painter, origin: Point(x: 0, y: 1), corner1:Point(x: 1, y: 1), corner2:Point(x: 0, y: 0))
+public func flipVert(painter: @escaping Painter) -> Painter {
+    let flipped = transformPainter(painter: painter, origin: Point(x: 0, y: 1), corner1:Point(x: 1, y: 1), corner2:Point(x: 0, y: 0))
     return { frame in
         flipped(frame)
     }

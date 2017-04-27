@@ -5,19 +5,19 @@ import Cocoa
 
 // First
 
-func below(top: Painter, bottom: Painter) -> Painter {
+func below(top: @escaping Painter, bottom: @escaping Painter) -> Painter {
     let splitPoint = Point(x: 0.0, y: 0.5)
-    let paintTop = transformPainter(top, origin:Point(x:0, y:0), corner1:Point(x: 1, y: 0), corner2:splitPoint)
-    let paintBot = transformPainter(bottom, origin:splitPoint, corner1:Point(x: 1, y: 0.5), corner2:Point(x: 0, y: 1))
+    let paintTop = transformPainter(painter: top, origin:Point(x:0, y:0), corner1:Point(x: 1, y: 0), corner2:splitPoint)
+    let paintBot = transformPainter(painter: bottom, origin:splitPoint, corner1:Point(x: 1, y: 0.5), corner2:Point(x: 0, y: 1))
     return { frame in
         paintTop(frame)
         paintBot(frame)
     }
 }
-draw(below(wave, bottom:wave))
+draw(painter: below(top: wave, bottom:wave))
 
 // Second
-func below2(top: Painter, bottom: Painter) -> Painter {
-    return rotate270(beside(rotate90(top), rotate90(top)))
+func below2(top: @escaping Painter, @escaping bottom: Painter) -> Painter {
+    return rotate270(painter: beside(left: rotate90(painter: top), rotate90(painter: top)))
 }
-draw(below2(wave, bottom:wave))
+draw(painter: below2(top: wave, bottom:wave))
