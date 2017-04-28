@@ -23,17 +23,18 @@ draw(wave)
 
 // b. Change the pattern constructed by cornerSplit (for example, by using only one copy of the upSplit and rightSplit images instead of two).
 
-func cornerSplit(painter: Painter, n: Int) -> Painter {
+func cornerSplit(_ painter: @escaping Painter, n: Int) -> Painter {
     if n == 0 {
         return painter
     } else {
         let up = upSplit(painter, n:n - 1)
         let right = rightSplit(painter, n:n - 1)
-        let topLeft = beside(up, wave)
-        let bottomRight = below(right, bottom:wave)
+        let topLeft = beside(left: up, right: wave)
+        let bottomRight = below(top: right, bottom:wave)
         let corner = cornerSplit(painter, n:n - 1)
         
-        return beside(below(topLeft, bottom:painter), below(corner, bottom:bottomRight))
+        return beside(left: below(top: topLeft, bottom: painter),
+                      right: below(top: corner, bottom: bottomRight))
     }
 }
 draw(cornerSplit(wave, n:3))
@@ -41,15 +42,18 @@ draw(cornerSplit(wave, n:3))
 // c. Modify the version of squareLimit that uses squareOfFour so as to assemble the corners in a different pattern. (For example you might make the big Mr. Rogers look outward from each corner of the square.)
 
 
-func squareOfFour(tl: Transformer, _ tr: Transformer, bl: Transformer, br: Transformer) -> Transformer {
+func squareOfFour(_ tl: @escaping Transformer,
+                  _ tr: @escaping Transformer,
+                  bl: @escaping Transformer,
+                  br: @escaping Transformer) -> Transformer {
     return { painter in
-        let top = beside(tl(painter), tr(painter))
-        let bottom = beside(bl(painter), br(painter))
-        return below(bottom, bottom:top)
+        let top = beside(left: tl(painter), right: tr(painter))
+        let bottom = beside(left: bl(painter), right: br(painter))
+        return below(top: bottom, bottom: top)
     }
 }
 
-func squareLimit(painter: Painter, n: Int) -> Painter {
+func squareLimit(_ painter: @escaping Painter, n: Int) -> Painter {
     let combine4 = squareOfFour(rotate180, flipVert, bl:flipHoriz, br:flipHoriz)
     return combine4(cornerSplit(painter, n:n))
 }

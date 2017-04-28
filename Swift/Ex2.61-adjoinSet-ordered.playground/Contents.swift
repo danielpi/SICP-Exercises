@@ -12,7 +12,7 @@ extension Array {
 let orderedSet = [1,3,5,7,9]
 orderedSet.match
 
-func adjoinSet<T: Comparable>(x: T, _ set: [T]) -> [T] {
+func adjoin<T: Comparable>(_ x: T, _ set: [T]) -> [T] {
     if let (head, tail) = set.match {
         switch true {
         case x == head:
@@ -20,14 +20,14 @@ func adjoinSet<T: Comparable>(x: T, _ set: [T]) -> [T] {
         case x < head:
             return [x] + set
         default:
-            return [head] + adjoinSet(x, tail)
+            return [head] + adjoin(x, tail)
         }
     } else {
         return [x]
     }
 }
 
-adjoinSet(4, [])
-adjoinSet(4, orderedSet)
-adjoinSet(5, orderedSet)
+adjoin(4, [])
+adjoin(4, orderedSet)
+adjoin(5, orderedSet)
 

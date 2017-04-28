@@ -54,22 +54,22 @@ public struct Frame {
 // Painter Generators
 public typealias Painter = (Frame) -> Void
 
-public func frameCoordMap(frame: Frame) -> (Vector) -> Vector {
+public func frameCoordMap(_ frame: Frame) -> (Vector) -> Vector {
     return { vector in
         return frame.origin + ((vector.x * frame.edge1) + (vector.y * frame.edge2))
     }
 }
 
-public func segmentsToPainter(segments:[Segment]) -> Painter {
+public func segmentsToPainter(_ segments:[Segment]) -> Painter {
     return { frame in
         frame.dc.lockFocus()
         let lineColor = NSColor(calibratedHue: 0.0, saturation: 0.0, brightness: 0.0, alpha: 0.8)
         lineColor.setStroke()
         
         let xform = NSAffineTransform()
-        xform.scaleBy(frame.dc.size.height / 1)
-        xform.rotateByDegrees(-90)
-        xform.translateXBy(-1, yBy: 0.0)
+        xform.scale(by: frame.dc.size.height / 1)
+        xform.rotate(byDegrees: -90)
+        xform.translateX(by: -1, yBy: 0.0)
         xform.concat()
         
         let line = NSBezierPath()
@@ -78,15 +78,15 @@ public func segmentsToPainter(segments:[Segment]) -> Painter {
         for segment in segments {
             let start = frameCoordMap(frame)(segment.startPoint)
             let end = frameCoordMap(frame)(segment.endPoint)
-            line.moveToPoint(NSPoint(x: start.x, y: start.y))
-            line.lineToPoint(NSPoint(x: end.x, y: end.y))
+            line.move(to: NSPoint(x: start.x, y: start.y))
+            line.line(to: NSPoint(x: end.x, y: end.y))
             line.stroke()
         }
         frame.dc.unlockFocus()
     }
 }
 
-func segmentsToText(segments: [Segment]) -> Painter {
+func segmentsToText(_ segments: [Segment]) -> Painter {
     return { frame in
         for segment in segments {
             let start = frameCoordMap(frame)(segment.startPoint)
@@ -98,20 +98,20 @@ func segmentsToText(segments: [Segment]) -> Painter {
 
 // Painters
 
-public func frameOutline(frame: Frame) {
+public func frameOutline(_ frame: Frame) {
     segmentsToPainter([Segment(startPoint: Point(x: 0, y: 0), endPoint: Point(x: 1, y: 0)),
         Segment(startPoint: Point(x: 1, y: 0), endPoint: Point(x: 1, y: 1)),
         Segment(startPoint: Point(x: 1, y: 1), endPoint: Point(x: 0, y: 1)),
         Segment(startPoint: Point(x: 0, y: 1), endPoint: Point(x: 0, y: 0))])(frame)
 }
 
-public func frameCross(frame: Frame) {
+public func frameCross(_ frame: Frame) {
     segmentsToPainter([Segment(startPoint: Point(x: 0, y: 0), endPoint: Point(x: 1, y: 1)),
         Segment(startPoint: Point(x: 1, y: 0), endPoint: Point(x: 0, y: 1))])(frame)
 }
 
 
-public func frameDiamond(frame: Frame) {
+public func frameDiamond(_ frame: Frame) {
     segmentsToPainter([Segment(startPoint: Point(x: 0.5, y: 0), endPoint: Point(x: 1, y: 0.5)),
         Segment(startPoint: Point(x: 1, y: 0.5), endPoint: Point(x: 0.5, y: 1)),
         Segment(startPoint: Point(x: 0.5, y: 1), endPoint: Point(x: 0, y: 0.5)),
@@ -120,7 +120,7 @@ public func frameDiamond(frame: Frame) {
 
 
 // Transformer Generator
-public func transformPainter(painter: Painter, origin: Point, corner1: Point, corner2: Point) -> Painter {
+public func transform(painter: @escaping Painter, origin: Point, corner1: Point, corner2: Point) -> Painter {
     return { frame in
         let m = frameCoordMap(frame)
         let newOrigin = m(origin)
@@ -130,79 +130,79 @@ public func transformPainter(painter: Painter, origin: Point, corner1: Point, co
 
 
 // Transformers
-public typealias Transformer = (Painter) -> Painter
+public typealias Transformer = (@escaping Painter) -> Painter
 
-public func beside(left: Painter, _ right: Painter) -> Painter {
+public func beside(left: @escaping Painter, right: @escaping Painter) -> Painter {
     let splitPoint = Point(x: 0.5, y: 0)
-    let paintLeft = transformPainter(left, origin:Point(x: 0, y: 0), corner1:splitPoint, corner2:Point(x: 0, y: 1))
-    let paintRight = transformPainter(right, origin:splitPoint, corner1:Point(x: 1, y: 0), corner2:Point(x: 0.5, y: 1))
+    let paintLeft = transform(painter: left, origin:Point(x: 0, y: 0), corner1:splitPoint, corner2:Point(x: 0, y: 1))
+    let paintRight = transform(painter: right, origin:splitPoint, corner1:Point(x: 1, y: 0), corner2:Point(x: 0.5, y: 1))
     return { frame in
         paintLeft(frame)
         paintRight(frame)
     }
 }
 
-public func below(top: Painter, bottom: Painter) -> Painter {
+public func below(top: @escaping Painter, bottom: @escaping Painter) -> Painter {
     let splitPoint = Point(x: 0.0, y: 0.5)
-    let paintTop = transformPainter(top, origin:Point(x:0, y:0), corner1:Point(x: 1, y: 0), corner2:splitPoint)
-    let paintBot = transformPainter(bottom, origin:splitPoint, corner1:Point(x: 1, y: 0.5), corner2:Point(x: 0, y: 1))
+    let paintTop = transform(painter: top, origin:Point(x:0, y:0), corner1:Point(x: 1, y: 0), corner2:splitPoint)
+    let paintBot = transform(painter: bottom, origin:splitPoint, corner1:Point(x: 1, y: 0.5), corner2:Point(x: 0, y: 1))
     return { frame in
         paintTop(frame)
         paintBot(frame)
     }
 }
 
-public func flipVert(painter: Painter) -> Painter {
-    let flipped = transformPainter(painter, origin:Point(x: 0, y: 1), corner1:Point(x: 1, y: 1), corner2:Point(x: 0, y: 0))
+public func flipVert(_ painter: @escaping Painter) -> Painter {
+    let flipped = transform(painter: painter, origin:Point(x: 0, y: 1), corner1:Point(x: 1, y: 1), corner2:Point(x: 0, y: 0))
     return { frame in
         flipped(frame)
     }
 }
 
-public func flipHoriz(painter: Painter) -> Painter {
-    let flipped = transformPainter(painter, origin:Point(x: 1, y: 0), corner1:Point(x: 0, y: 0), corner2:Point(x: 1, y: 1))
+public func flipHoriz(_ painter: @escaping Painter) -> Painter {
+    let flipped = transform(painter: painter, origin:Point(x: 1, y: 0), corner1:Point(x: 0, y: 0), corner2:Point(x: 1, y: 1))
     return { frame in
         flipped(frame)
     }
 }
 
-public func rotate90(painter: Painter) -> Painter {
-    return transformPainter(painter, origin:Point(x: 1, y: 0), corner1:Point(x: 1, y: 1), corner2:Point(x: 0, y: 0))
+public func rotate90(_ painter: @escaping Painter) -> Painter {
+    return transform(painter: painter, origin:Point(x: 1, y: 0), corner1:Point(x: 1, y: 1), corner2:Point(x: 0, y: 0))
 }
 
-public func rotate180(painter: Painter) -> Painter {
-    return transformPainter(painter, origin:Point(x: 1, y: 1), corner1:Point(x: 0, y: 1), corner2:Point(x: 1, y: 0))
+public func rotate180(_ painter: @escaping Painter) -> Painter {
+    return transform(painter: painter, origin:Point(x: 1, y: 1), corner1:Point(x: 0, y: 1), corner2:Point(x: 1, y: 0))
 }
 
-public func rotate270(painter: Painter) -> Painter {
-    return transformPainter(painter, origin:Point(x: 0, y: 1), corner1:Point(x: 0, y: 0), corner2:Point(x: 1, y: 1))
+public func rotate270(_ painter: @escaping Painter) -> Painter {
+    return transform(painter: painter, origin:Point(x: 0, y: 1), corner1:Point(x: 0, y: 0), corner2:Point(x: 1, y: 1))
 }
 
-public func rightSplit(painter: Painter, n: Int) -> Painter {
+public func rightSplit(_ painter: @escaping Painter, n: Int) -> Painter {
     if n == 0 {
         return painter
     } else {
         let smaller = rightSplit(painter, n:n - 1)
-        return beside(painter, below(smaller, bottom:smaller))
+        return beside(left: painter, right: below(top: smaller, bottom: smaller))
     }
 }
 
 
-public func upSplit(painter: Painter, n: Int) -> Painter {
+public func upSplit(_ painter: @escaping Painter, n: Int) -> Painter {
     if n == 0 {
         return painter
     } else {
         let smaller = upSplit(painter, n:n - 1)
-        return below(beside(smaller, smaller), bottom:painter)
+        return below(top: beside(left: smaller, right: smaller), bottom: painter)
     }
 }
 
-public func identity(painter: Painter) -> Painter {
+public func identity(_ painter: @escaping Painter) -> Painter {
     return painter
 }
 
 // Visualisation
-public func draw(painter: Painter) -> NSImage {
+public func draw(_ painter: Painter) -> NSImage {
     let squareSize: CGFloat = 500
     let imgSize = NSMakeSize(squareSize, squareSize)
     let img = NSImage(size: imgSize)

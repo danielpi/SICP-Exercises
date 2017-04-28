@@ -6,56 +6,49 @@ import Cocoa
 //: 2. Do the two procedures have the same order of growth in the number of steps required to convert a balanced tree with n elements to a list? If not, which one grows more slowly?
 
 
-class Box<T> {
-    let unbox: T
-    init(_ value: T) {
-        self.unbox = value
-    }
-}
-
-enum TreeSet<T>: CustomStringConvertible {
+indirect enum TreeSet<T>: CustomStringConvertible {
     case Empty
-    case Tree(entry:Box<T>, left:Box<TreeSet<T>>, right: Box<TreeSet<T>>)
+    case Tree(entry:T, left:TreeSet<T>, right: TreeSet<T>)
     
-    var description : String {
+    var description: String {
         switch self {
         case .Empty:
             return "()"
         case let .Tree(entry, left, right):
-            return "(\(entry.unbox) \(left.unbox) \(right.unbox))"
+            return "(\(entry) \(left) \(right))"
         }
     }
 }
 
-func entry<T>(tree: TreeSet<T>) -> T {
+func entry<T>(_ tree: TreeSet<T>) -> T {
     switch tree {
     case let .Tree(entry, _, _):
-        return entry.unbox
+        return entry
     default:
         fatalError("Tried to read an entry from an empty tree")
     }
 }
 
-func leftBranch<T>(tree: TreeSet<T>) -> TreeSet<T> {
+func leftBranch<T>(_ tree: TreeSet<T>) -> TreeSet<T> {
     switch tree {
     case let .Tree(_, left, _):
-        return left.unbox
+        return left
     default:
         fatalError("Tried to read the left branch from an empty tree")
     }
 }
 
-func rightBranch<T>(tree: TreeSet<T>) -> TreeSet<T> {
+func rightBranch<T>(_ tree: TreeSet<T>) -> TreeSet<T> {
     switch tree {
     case let .Tree(_, _, right):
-        return right.unbox
+        return right
     default:
         fatalError("Tried to read the right branch from an empty tree")
     }
 }
 
-func makeTree<T>(entry: T, _ left:TreeSet<T>, _ right:TreeSet<T>) -> TreeSet<T> {
-    return TreeSet.Tree(entry: Box(entry), left: Box(left), right: Box(right))
+func makeTree<T>(_ entry: T, _ left:TreeSet<T>, _ right:TreeSet<T>) -> TreeSet<T> {
+    return TreeSet.Tree(entry: entry, left: left, right: right)
 }
 
 let a = makeTree(5, .Empty, .Empty)
@@ -65,31 +58,31 @@ print(leftBranch(a))
 print(rightBranch(a))
 
 
-func isElementOfSet3<T: Comparable>(x: T, _ set: TreeSet<T>) -> Bool {
+func isElementOfSet3<T: Comparable>(_ x: T, _ set: TreeSet<T>) -> Bool {
     switch set {
     case .Empty:
         return false
-    case let .Tree(entry, _, _) where entry.unbox == x:
+    case let .Tree(entry, _, _) where entry == x:
         return true
-    case let .Tree(entry, left, _) where entry.unbox < x:
-        return isElementOfSet3(x, left.unbox)
-    case let .Tree(entry, _, right) where entry.unbox > x:
-        return isElementOfSet3(x, right.unbox)
+    case let .Tree(entry, left, _) where entry < x:
+        return isElementOfSet3(x, left)
+    case let .Tree(entry, _, right) where entry > x:
+        return isElementOfSet3(x, right)
     default:
         fatalError("isElementOfSet3 has an unhandled case when x:\(x) and set:\(set)")
     }
 }
 
-func adjoinSet<T: Comparable>(x: T, _ set: TreeSet<T>) -> TreeSet<T> {
+func adjoinSet<T: Comparable>(_ x: T, _ set: TreeSet<T>) -> TreeSet<T> {
     switch set {
     case .Empty:
         return makeTree(x, .Empty, .Empty)
-    case let .Tree(entry, _, _) where entry.unbox == x:
+    case let .Tree(entry, _, _) where entry == x:
         return set
-    case let .Tree(entry, left, right) where entry.unbox > x:
-        return makeTree(entry.unbox, adjoinSet(x, left.unbox), right.unbox)
-    case let .Tree(entry, left, right) where entry.unbox < x:
-        return makeTree(entry.unbox, left.unbox, adjoinSet(x, right.unbox))
+    case let .Tree(entry, left, right) where entry > x:
+        return makeTree(entry, adjoinSet(x, left), right)
+    case let .Tree(entry, left, right) where entry < x:
+        return makeTree(entry, left, adjoinSet(x, right))
     default:
         fatalError("adjoinSet3 didn't handle all cases when x:\(x) set:\(set)")
     }
@@ -98,25 +91,27 @@ func adjoinSet<T: Comparable>(x: T, _ set: TreeSet<T>) -> TreeSet<T> {
 
 // a
 
-func treeToList1<T>(tree: TreeSet<T>) -> [T] {
+func treeToList1<T>(_ tree: TreeSet<T>) -> [T] {
     switch tree {
     case .Empty:
         return []
     case let .Tree(entry, left, right):
-        return treeToList1(left.unbox) + [entry.unbox] + treeToList1(right.unbox)
+        let leftList = treeToList1(left)
+        let rightList = treeToList1(right)
+        return leftList + [entry] + rightList
     }
 }
 
 let f = adjoinSet(7, adjoinSet(6, adjoinSet(5, adjoinSet(4, adjoinSet(4, adjoinSet(2, adjoinSet(1, .Empty)))))))
 
-func treeToList2<T>(tree: TreeSet<T>) -> [T] {
+func treeToList2<T>(_ tree: TreeSet<T>) -> [T] {
     var copyToList: (TreeSet<T>, [T]) -> [T] = { _, _ in return [] }
     copyToList =  { (tree, resultList) in
         switch tree {
         case .Empty:
             return resultList
         case let .Tree(entry, left, right):
-            return copyToList(left.unbox, [entry.unbox] + copyToList(right.unbox, resultList))
+            return copyToList(left, [entry] + copyToList(right, resultList))
         }
     }
     return copyToList(tree, [])
@@ -138,18 +133,18 @@ print("t->l2 c:\(treeToList2(fig216c))")
 
 // To look at the complexity I wanted to be able to use larger sets. So I wrote a couple of functions that allow me to make larger random sets easily.
 
-func adjoinRandom(set: TreeSet<Int>) -> TreeSet<Int> {
+func adjoinRandom(_ set: TreeSet<Int>) -> TreeSet<Int> {
     return adjoinSet(Int(arc4random_uniform(100)), set)
 }
 
-func adjoinRandomValues(n: Int, _ set: TreeSet<Int>) -> TreeSet<Int> {
+func adjoinRandomValues(_ n: Int, _ set: TreeSet<Int>) -> TreeSet<Int> {
     if n < 1 {
         return set
     } else {
         return adjoinRandomValues(n - 1, adjoinRandom(set))
     }
 }
-let g = adjoinRandomValues(100,f)
+let g = adjoinRandomValues(20,f)
 print(g)
 
 print(treeToList1(g))

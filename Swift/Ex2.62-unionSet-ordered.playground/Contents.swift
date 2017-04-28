@@ -9,22 +9,22 @@ extension Array {
     }
 }
 
-func unionSet<T: Comparable>(set1: [T], _ set2: [T]) -> [T] {
+func union<T: Comparable>(_ set1: [T], _ set2: [T]) -> [T] {
     switch (set1.match, set2.match) {
-    case (.None, .None):
+    case (.none, .none):
         return []
-    case (.None, _):
+    case (.none, _):
         return set2
-    case (_, .None):
+    case (_, .none):
         return set1
-    case (.Some(let head1, let tail1), .Some(let head2, let tail2)):
+    case (.some(let head1, let tail1), .some(let head2, let tail2)):
         switch true {
         case head1 == head2:
-            return [head1] + unionSet(tail1, tail2)
+            return [head1] + union(tail1, tail2)
         case head1 > head2:
-            return [head2] + unionSet(set1, tail2)
+            return [head2] + union(set1, tail2)
         case head1 < head2:
-            return [head1] + unionSet(tail1, set2)
+            return [head1] + union(tail1, set2)
         default:
             fatalError("unionSet failed evaluating head1:\(head1) head2:\(head2)")
         }
@@ -35,8 +35,8 @@ func unionSet<T: Comparable>(set1: [T], _ set2: [T]) -> [T] {
 
 let orderedSet1 = [1,3,5,7,9]
 let orderedSet2 = [2,4,6,8,10]
-unionSet([Int](), [Int]())
-unionSet([], orderedSet2)
-unionSet(orderedSet1, [])
-unionSet(orderedSet1, orderedSet2)
-unionSet(orderedSet1, [1,2,3,4,5,6,7,8,9,10])
+union([Int](), [Int]())
+union([], orderedSet2)
+union(orderedSet1, [])
+union(orderedSet1, orderedSet2)
+union(orderedSet1, [1,2,3,4,5,6,7,8,9,10])

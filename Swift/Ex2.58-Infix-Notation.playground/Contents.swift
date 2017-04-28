@@ -8,28 +8,21 @@ import Cocoa
 // deriv([* "x" "y" [+ "x" 3]], "x")
 // deriv("x" * "y" * ("x" + 3), "x")
 
-class Box<T>{
-    let unbox: T
-    init(_ value: T) {
-        self.unbox = value
-    }
-}
-
-enum Expr {
-    case Sum(Box<Expr>, Box<Expr>)
-    case Product(Box<Expr>, Box<Expr>)
-    case Exponential(Box<Expr>, Box<Expr>)
+indirect enum Expr {
+    case Sum(Expr, Expr)
+    case Product(Expr, Expr)
+    case Exponential(Expr, Expr)
     case Constant(Int)
     case Variable(String)
 }
 
-extension Expr: IntegerLiteralConvertible {
+extension Expr: ExpressibleByIntegerLiteral {
     init(integerLiteral value: IntegerLiteralType) {
         self = .Constant(value)
     }
 }
 
-extension Expr: StringLiteralConvertible {
+extension Expr: ExpressibleByStringLiteral {
     init(stringLiteral value: String) {
         self = .Variable(value)
     }
@@ -47,11 +40,11 @@ extension Expr: CustomStringConvertible {
     var description: String {
         switch self {
         case .Sum(let a1, let a2):
-            return "(" + a1.unbox.description + " + " + a2.unbox.description + ")"
+            return "(" + a1.description + " + " + a2.description + ")"
         case .Product(let m1, let m2):
-            return "(" + m1.unbox.description + " * " + m2.unbox.description + ")"
+            return "(" + m1.description + " * " + m2.description + ")"
         case .Exponential(let e1, let e2):
-            return "(" + e1.unbox.description + " ** " + e2.unbox.description + ")"
+            return "(" + e1.description + " ** " + e2.description + ")"
         case .Constant(let value):
             return String(value)
         case .Variable(let label):
@@ -68,13 +61,19 @@ func * (lhs: Expr, rhs: Expr) -> Expr {
     return makeProduct(lhs, rhs)
 }
 
-infix operator ** { associativity left precedence 160 }
+precedencegroup ExponentPrecedence {
+    higherThan: MultiplicationPrecedence
+    associativity: left
+}
+
+// infix operator ** { associativity left precedence 160 }
+infix operator **: ExponentPrecedence
 func ** (lhs: Expr, rhs: Expr) -> Expr {
-    return makeExponentiation(lhs, rhs)
+    return makeExponentiation(base: lhs, exponent: rhs)
 }
 
 
-func isVariable(exp: Expr) -> Bool {
+func isVariable(_ exp: Expr) -> Bool {
     switch exp {
     case .Variable(_):
         return true
@@ -83,7 +82,7 @@ func isVariable(exp: Expr) -> Bool {
     }
 }
 
-func isSameVariable(v1: Expr, _ v2: Expr) -> Bool {
+func isSameVariable(_ v1: Expr, _ v2: Expr) -> Bool {
     switch (v1, v2) {
     case (.Variable(let val1), .Variable(let val2)):
         return val1 == val2
@@ -92,7 +91,7 @@ func isSameVariable(v1: Expr, _ v2: Expr) -> Bool {
     }
 }
 
-func makeSum(a1: Expr, _ a2: Expr) -> Expr {
+func makeSum(_ a1: Expr, _ a2: Expr) -> Expr {
     switch (a1, a2) {
     case (.Constant(0), _):
         return a2
@@ -101,11 +100,11 @@ func makeSum(a1: Expr, _ a2: Expr) -> Expr {
     case (.Constant(let a), .Constant(let b)):
         return .Constant(a + b)
     default:
-        return Expr.Sum(Box(a1), Box(a2))
+        return Expr.Sum(a1, a2)
     }
 }
 
-func isSum(exp: Expr) -> Bool {
+func isSum(_ exp: Expr) -> Bool {
     switch exp {
     case .Sum(_, _):
         return true
@@ -114,25 +113,25 @@ func isSum(exp: Expr) -> Bool {
     }
 }
 
-func addend(s: Expr) -> Expr {
+func addend(_ s: Expr) -> Expr {
     switch s {
     case .Sum(let a1, _):
-        return a1.unbox
+        return a1
     default:
         fatalError("Tried to get the addend from an expression that was not a sum")
     }
 }
 
-func augend(s: Expr) -> Expr {
+func augend(_ s: Expr) -> Expr {
     switch s {
     case .Sum(_, let a2):
-        return a2.unbox
+        return a2
     default:
         fatalError("Tried to get the augend from an expression that was not a sum")
     }
 }
 
-func makeProduct(m1: Expr, _ m2: Expr) -> Expr {
+func makeProduct(_ m1: Expr, _ m2: Expr) -> Expr {
     switch (m1, m2) {
     case (.Constant(0), _):
         return .Constant(0)
@@ -145,11 +144,11 @@ func makeProduct(m1: Expr, _ m2: Expr) -> Expr {
     case (.Constant(let a), .Constant(let b)):
         return .Constant(a * b)
     default:
-        return Expr.Product(Box(m1), Box(m2))
+        return Expr.Product(m1, m2)
     }
 }
 
-func isProduct(x: Expr) -> Bool {
+func isProduct(_ x: Expr) -> Bool {
     switch x {
     case .Product(_, _):
         return true
@@ -158,25 +157,25 @@ func isProduct(x: Expr) -> Bool {
     }
 }
 
-func multiplier(p: Expr) -> Expr {
+func multiplier(_ p: Expr) -> Expr {
     switch p {
     case .Product(let m1, _):
-        return m1.unbox
+        return m1
     default:
         fatalError("Tried to get the multiplier from an expression that was not a product")
     }
 }
 
-func multiplicand(p: Expr) -> Expr {
+func multiplicand(_ p: Expr) -> Expr {
     switch p {
     case .Product(_, let m2):
-        return m2.unbox
+        return m2
     default:
         fatalError("Tried to get the multiplicand from an expression that was not a product")
     }
 }
 
-func makeExponentiation(base: Expr, _ exponent:Expr) -> Expr {
+func makeExponentiation(base: Expr, exponent:Expr) -> Expr {
     switch (base, exponent) {
     case (_, .Constant(0)):
         return .Constant(1)
@@ -185,11 +184,11 @@ func makeExponentiation(base: Expr, _ exponent:Expr) -> Expr {
     case (.Constant(let b), .Constant(let e)):
         return Expr.Constant(Int(pow(Double(b),Double(e))))
     default:
-        return Expr.Exponential(Box(base), Box(exponent))
+        return Expr.Exponential(base, exponent)
     }
 }
 
-func isExponentiation(exp: Expr) -> Bool {
+func isExponentiation(_ exp: Expr) -> Bool {
     switch exp {
     case .Exponential(_, _):
         return true
@@ -198,49 +197,47 @@ func isExponentiation(exp: Expr) -> Bool {
     }
 }
 
-func base(exp: Expr) -> Expr {
+func base(_ exp: Expr) -> Expr {
     switch exp {
     case .Exponential(let b, _):
-        return b.unbox
+        return b
     default:
         fatalError("Tried to get the base from an expression that was not an Exponential")
     }
 }
 
-func exponent(exp: Expr) -> Expr {
+func exponent(_ exp: Expr) -> Expr {
     switch exp {
     case .Exponential(_, let e):
-        return e.unbox
+        return e
     default:
         fatalError("Tried to get the exponent from an expression that was not an Exponential")
     }
 }
 
 
-func deriv(exp: Expr, _ variable: Expr) -> Expr {
+func deriv(_ exp: Expr, variable: Expr) -> Expr {
     switch exp {
     case .Constant(_):
         return .Constant(0)
     case .Variable(_):
         return isSameVariable(exp, variable) ? .Constant(1) : .Constant(0)
     case .Sum(_, _):
-        return makeSum(deriv(addend(exp), variable), deriv(augend(exp), variable))
+        return makeSum(deriv(addend(exp), variable:variable), deriv(augend(exp), variable:variable))
     case .Product(_, _):
-        return makeSum(makeProduct(multiplier(exp), deriv(multiplicand(exp), variable)), makeProduct(deriv(multiplier(exp), variable), multiplicand(exp)))
-    case .Exponential(let b, let e):
-        let base = b.unbox
-        let exponent = e.unbox
-        
+        return makeSum(makeProduct(multiplier(exp), deriv(multiplicand(exp), variable:variable)), makeProduct(deriv(multiplier(exp), variable:variable), multiplicand(exp)))
+    case .Exponential(let base, let exponent):
         return makeProduct(makeProduct(exponent,
-            makeExponentiation(base,
-                makeSum(exponent, Expr.Constant(-1)))), deriv(base, variable))
+                                       makeExponentiation(base: base,
+                                                          exponent: makeSum(exponent, Expr.Constant(-1)))), deriv(base, variable:variable))
     }
 }
 
-print(deriv("x" + 3, "x")) // 1
-print(deriv("x" * "y", "x")) // y
-print(deriv(("x" * "y") * ("x" + 3), "x")) //
-print(deriv(2 * ("x" ** 4) + (6 * "y" ** 2), "y"))
-print(deriv("x" + (3 * ("x" + ("y" + 2))), "x"))
-print(deriv("x" + 3 * ("x" + "y" + 2), "x"))
+
+print(deriv("x" + 3, variable:"x")) // 1
+print(deriv("x" * "y", variable:"x")) // y
+print(deriv(("x" * "y") * ("x" + 3), variable:"x")) //
+print(deriv(2 * ("x" ** 4) + (6 * "y" ** 2), variable:"y"))
+print(deriv("x" + (3 * ("x" + ("y" + 2))), variable:"x"))
+print(deriv("x" + 3 * ("x" + "y" + 2), variable:"x"))
 
