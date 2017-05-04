@@ -3,62 +3,55 @@ import Cocoa
 //: ## Exercise 2.66
 //: Implement the lookup procedure for the case where the set of records is structured as a binary tree, ordered by the numerical values of the keys.
 
-class Box<T> {
-    let unbox: T
-    init(_ value: T) {
-        self.unbox = value
-    }
-}
-
 extension Array {
     var match: (head: Element, tail: [Element])? {
         return (count > 0) ? (self[0], Array(self[1..<count])) : nil
     }
 }
 
-enum TreeSet<T>: CustomStringConvertible {
+indirect enum TreeSet<T>: CustomStringConvertible {
     case Empty
-    case Tree(entry:Box<T>, left:Box<TreeSet<T>>, right: Box<TreeSet<T>>)
+    case Tree(entry:T, left:TreeSet<T>, right: TreeSet<T>)
     
     var description : String {
         switch self {
         case .Empty:
             return "()"
         case let .Tree(entry, left, right):
-            return "(\(entry.unbox) \(left.unbox) \(right.unbox))"
+            return "(\(entry) \(left) \(right))"
         }
     }
 }
 
-func entry<T>(tree: TreeSet<T>) -> T {
+func entry<T>(_ tree: TreeSet<T>) -> T {
     switch tree {
     case let .Tree(entry, _, _):
-        return entry.unbox
+        return entry
     default:
         fatalError("Tried to read an entry from an empty tree")
     }
 }
 
-func leftBranch<T>(tree: TreeSet<T>) -> TreeSet<T> {
+func leftBranch<T>(_ tree: TreeSet<T>) -> TreeSet<T> {
     switch tree {
     case let .Tree(_, left, _):
-        return left.unbox
+        return left
     default:
         fatalError("Tried to read the left branch from an empty tree")
     }
 }
 
-func rightBranch<T>(tree: TreeSet<T>) -> TreeSet<T> {
+func rightBranch<T>(_ tree: TreeSet<T>) -> TreeSet<T> {
     switch tree {
     case let .Tree(_, _, right):
-        return right.unbox
+        return right
     default:
         fatalError("Tried to read the right branch from an empty tree")
     }
 }
 
-func makeTree<T>(entry: T, _ left:TreeSet<T>, _ right:TreeSet<T>) -> TreeSet<T> {
-    return TreeSet.Tree(entry: Box(entry), left: Box(left), right: Box(right))
+func makeTree<T>(_ entry: T, _ left:TreeSet<T>, _ right:TreeSet<T>) -> TreeSet<T> {
+    return TreeSet.Tree(entry: entry, left: left, right: right)
 }
 
 struct Record: CustomStringConvertible {
@@ -70,38 +63,38 @@ struct Record: CustomStringConvertible {
         self.value = value
     }
     
-    var description : String {
+    var description: String {
         return "\(key):\(value)"
     }
 }
 
 typealias Records = TreeSet<Record>
 
-func lookup(key: Int, _ records: Records) -> Record? {
+func lookup(_ key: Int, _ records: Records) -> Record? {
     switch records {
     case .Empty:
         return nil
-    case let .Tree(entry, _, _) where entry.unbox.key == key:
-        return entry.unbox
-    case let .Tree(entry, left, _) where entry.unbox.key > key:
-        return lookup(key, left.unbox)
-    case let .Tree(entry, _, right) where entry.unbox.key < key:
-        return lookup(key, right.unbox)
+    case let .Tree(entry, _, _) where entry.key == key:
+        return entry
+    case let .Tree(entry, left, _) where entry.key > key:
+        return lookup(key, left)
+    case let .Tree(entry, _, right) where entry.key < key:
+        return lookup(key, right)
     default:
         fatalError("lookup failed to handle \(records) properly")
     }
 }
 
-func insert(record: Record, _ records: Records) -> Records {
+func insert(_ record: Record, _ records: Records) -> Records {
     switch records {
     case .Empty:
         return makeTree(record, .Empty, .Empty)
-    case let .Tree(entry, _, _) where entry.unbox.key == record.key:
+    case let .Tree(entry, _, _) where entry.key == record.key:
         return records
-    case let .Tree(entry, left, right) where entry.unbox.key > record.key:
-        return makeTree(entry.unbox, insert(record, left.unbox), right.unbox)
-    case let .Tree(entry, left, right) where entry.unbox.key < record.key:
-        return makeTree(entry.unbox, left.unbox, insert(record, right.unbox))
+    case let .Tree(entry, left, right) where entry.key > record.key:
+        return makeTree(entry, insert(record, left), right)
+    case let .Tree(entry, left, right) where entry.key < record.key:
+        return makeTree(entry, left, insert(record, right))
     default:
         fatalError("insert failed")
     }
