@@ -12,4 +12,68 @@
 ; state of an account by an account by a current balance rather than by remembering
 ; the entire history of account transactions.
 
-; 
+; In a system composed of many objects, the objects are rarely completely independent.
+; Each may influencethe states of others through interactions, which serve to couple
+; the state variables of one object to those of other objects. Indeed, the view that a
+; system is composed of separate objects is most useful when the state variables of the
+; system can be grouped into closely coupled subsystems that are only loosely coupled
+; to other subsystems.
+
+; This view of a system can be a powerful framework for organising computational models
+; of the system. For such a model to be modular, it should be decomposed into computational
+; objects that model the actual objects in the system. Each computational object must have
+; its own local state variables describing the actual object's state. Since the states of
+; objects in the system being modeled change over time, the state variables of the
+; corresponding computaional objects must also change. If we choose to model the flow of
+; time in the system by the elapsed time in the computer, then we must have a way to
+; construct computational objects whose behaviors change as our programs run. In particular,
+; if we wish to model state variables by ordinary symbolic names in the programming
+; language, then the language must provide an assignment operator to enable us to change
+; the value associated with a name.
+
+; 3.1.1 Local State Variables
+; To illustrate what we mean by having a computational object with time varying state,
+; let us model the situation of withdrawing money from a bank account. We will do this
+; using a procedure withdraw, which takes as argument an amount to be withdrawn. If there
+; is enough money in the account to accomodate the withdrawal, then withdraw should
+; return the balance remaining after the withdrawal. Otherwise, withdraw should return the
+; message Insufficient funds. For example, if we begin with $100 in the account, we should
+; obtain the following sequence of responses using withdraw:
+
+; (withdraw 25)
+; 75
+; (withdraw 25)
+; 50
+; (withdraw 60)
+; "Insufficient funds"
+; (withdraw 15)
+; 35
+
+; Observe that the expression (withdraw 25), evaluated twice, yeilds different values.
+; This is a new kind of behavior for a procedure. Until now, all out procedures could
+; be viewed as specifications for computing mathematical functions. A call to a procedure
+; computed the value of the function applied to the given arguments, and two calls to the
+; same procedure with the same arguments always produced the same result.
+
+; To implement withdraw, we can use a variable balance to indicate the balance of money in
+; the account and define withdraw as a procedure that accesses balance. The withdraw
+; procedure checks to see if balance is at least as large as the requested amount. If so,
+; withdraw decrements balance by amount and returns the new value of balance. Otherwise,
+; withdraw returns the Insufficient funds message. Here are the difinitions of balance
+; and withdraw:
+
+(define balance 100)
+(define (withdraw amount)
+  (if (>= balance amount)
+      (begin (set! balance (- balance amount))
+             balance)
+      "Insufficient funds"))
+
+; Decrementing balance is accomplished by the expression
+; (set! balance (- balance amount))
+
+
+; This uses the set! special form, whose syntax is
+; (set! <name> <new-value.)
+
+
