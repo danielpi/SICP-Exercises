@@ -74,6 +74,40 @@
 
 
 ; This uses the set! special form, whose syntax is
-; (set! <name> <new-value.)
+; (set! <name> <new-value>)
+
+; Here <name> is a symbol and <new-value. is any expression. set! changes <name> so that
+; its value is the result obtained by evaluating <new-value>. In the case at hand, we are
+; changing balance so that its new value will be the result of subtracting amount from the
+; previous value of balance.
+
+; withdraw also uses the begin special form to cause two expressions to be evaluated in the
+; case where the if test is true: first decrementing balance and then returning the value
+; of balance. In general, evaluating the expression
+
+; (begin <exp1> <exp2> ... <expk>)
+
+; cause the expressions <exp1> through <expk> to be evaluated in sequence and the value of
+; the final expression <expk> to be returned as the value of the entire begin form.
+
+; Although withdraw works as desired, the variable balance presents a problem. As specified
+; above, balance is a name defined in the global environment and is freely accessible to be
+; examined or modified by any procedure. It would be much better if we could somehow make
+; balance internal to withdraw, so that withdraw would be the only procedure that could
+; access balance directly and any other procedure could access balance only indirectly
+; (through calls to withdraw). This would more accurately model the notion that balance is a
+; local state variable used by withdraw to keep track of the state of the account.
+
+; We can make balance internal to withdraw by reqriting the definition as follows:
+
+(define new-withdraw
+  (let ((balance 100))
+    (lambda (amount)
+      (if (>= balance amount)
+          (begin (set! balance (- balance amount))
+                 balance)
+          "Insufficient funts"))))
+
+
 
 
