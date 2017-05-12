@@ -106,7 +106,57 @@
       (if (>= balance amount)
           (begin (set! balance (- balance amount))
                  balance)
-          "Insufficient funts"))))
+          "Insufficient funds"))))
+
+; What we have done here is use let to establish an environment with a local variable balance,
+; bound to the initial value 100. Within this local environment, we use lambda to create a
+; procedure that takes amount as an argument and behaves like our previous withdraw procedure.
+; This procedure-returned as the result of evaluating the let expression-is new-withdraw, which
+; behaves in precisely the same way as withdraw but whose variable balance is not accessible
+; by any other procedure.
+
+; Combinint set! with local variables is the general programming technique we will use for
+; constructing computational objects with local state. Unfortunately, using this technique
+; raises a serious problem: When we first introduced procedures, we also introduced the
+; substitution model of evaluation (Section 1.1.5) to provide an interpretation of what
+; procedure application means. We said that applying a procedure should be interpreted as
+; evaluating the body of the procedure with the formal parameters replaced by their values.
+; The trouble is that, as soon as we introduce assignment into our language, substitution
+; is no longer an adequate model of procedure application. (We will see why this is so in
+; Section 3.1.3.) As a consequence, we technically have at this point no way to understand
+; why the new-withdraw procedure behaves as clained above. In order to really understand
+; a procedure such as new-withdraw, we will need to develop a new model of procedure
+; application. In Section 3.2 we will introduce such a model, together with an explanation
+; of set! and local variables. First, however, we examine some variations on the theme
+; established by new-withdraw.
+
+; The following procedure, make-withdraw, creates "withdrawal processor." The formal
+; parameter balance in make-withdraw specifies the initial amount of money in the account.
+
+(define (make-withdraw balance)
+  (lambda (amount)
+    (if (>= balance amount)
+        (begin (set! balance (- balance amount))
+               balance)
+        "Insufficient funds")))
+
+; make-withdraw can be used as follows to create two objects W1 and W2:
+
+(define W1 (make-withdraw 100))
+(define W2 (make-withdraw 100))
+
+(W1 50) ; 50
+(W2 70) ; 30
+(W2 40) ; "Insufficient funds"
+(W1 40) ; 10
+
+; Observe that W1 and W2 are completely independent objects, each with its own local state
+; variable balance. Withdrawals from one do not affect the other.
+
+
+
+
+
 
 
 
