@@ -1,22 +1,15 @@
 import Foundation
 
-public class Box<T> {
-    let unbox: T
-    init(_ value: T) {
-        self.unbox = value
-    }
-}
-
-public enum Tree {
+public indirect enum Tree {
     case Leaf(symbol: String, weight: Int)
-    case Branch(left: Box<Tree>, right: Box<Tree>, symbols: [String], weight: Int)
+    case Branch(left: Tree, right: Tree, symbols: [String], weight: Int)
 }
 
-public func makeLeaf(symbol: String, _ weight: Int) -> Tree {
+public func makeLeaf(_ symbol: String, _ weight: Int) -> Tree {
     return Tree.Leaf(symbol: symbol, weight: weight)
 }
 
-func isLeaf(object: Tree) -> Bool {
+func isLeaf(_ object: Tree) -> Bool {
     switch object {
     case .Leaf(symbol: _, weight: _):
         return true
@@ -25,7 +18,7 @@ func isLeaf(object: Tree) -> Bool {
     }
 }
 
-func symbol(x: Tree) -> String {
+func symbol(_ x: Tree) -> String {
     switch x {
     case let .Leaf(symbol: s, weight: _):
         return s
@@ -34,39 +27,39 @@ func symbol(x: Tree) -> String {
     }
 }
 
-public func makeCodeTree(left: Tree, _ right: Tree) -> Tree {
+public func makeCodeTree(_ left: Tree, _ right: Tree) -> Tree {
     switch (left, right) {
     case let (.Leaf(symbol:s1, weight:w1), .Leaf(symbol:s2, weight:w2)):
-        return Tree.Branch(left: Box(left), right: Box(right), symbols: [s1] + [s2], weight: w1 + w2)
+        return Tree.Branch(left: left, right: right, symbols: [s1] + [s2], weight: w1 + w2)
     case let (.Leaf(symbol:s1, weight:w1), .Branch(left: _, right: _, symbols:s2, weight:w2)):
-        return Tree.Branch(left: Box(left), right: Box(right), symbols: [s1] + s2, weight: w1 + w2)
+        return Tree.Branch(left: left, right: right, symbols: [s1] + s2, weight: w1 + w2)
     case let (.Branch(left: _, right: _, symbols:s1, weight:w1), .Leaf(symbol:s2, weight:w2)):
-        return Tree.Branch(left: Box(left), right: Box(right), symbols: s1 + [s2], weight: w1 + w2)
+        return Tree.Branch(left: left, right: right, symbols: s1 + [s2], weight: w1 + w2)
     case let (.Branch(left: _, right: _, symbols:s1, weight:w1), .Branch(left: _, right: _, symbols:s2, weight:w2)):
-        return Tree.Branch(left: Box(left), right: Box(right), symbols: s1 + s2, weight: w1 + w2)
+        return Tree.Branch(left: left, right: right, symbols: s1 + s2, weight: w1 + w2)
         
     }
 }
 
-public func leftBranch(tree: Tree) -> Tree {
+public func leftBranch(_ tree: Tree) -> Tree {
     switch tree {
     case let .Branch(left: left, right: _, symbols: _, weight: _):
-        return left.unbox
+        return left
     default:
         fatalError("leftBranch failed \(tree)")
     }
 }
 
-public func rightBranch(tree: Tree) -> Tree {
+public func rightBranch(_ tree: Tree) -> Tree {
     switch tree {
     case let .Branch(left: _, right: right, symbols: _, weight: _):
-        return right.unbox
+        return right
     default:
         fatalError("rightBranch failed \(tree)")
     }
 }
 
-func symbols(tree: Tree) -> [String] {
+func symbols(_ tree: Tree) -> [String] {
     switch tree {
     case let .Leaf(symbol: symbol, weight: _):
         return [symbol]
@@ -75,7 +68,7 @@ func symbols(tree: Tree) -> [String] {
     }
 }
 
-func weight(tree: Tree) -> Int {
+func weight(_ tree: Tree) -> Int {
     switch tree {
     case let .Leaf(symbol: _, weight: w1):
         return w1

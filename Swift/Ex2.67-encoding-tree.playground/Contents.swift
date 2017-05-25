@@ -8,7 +8,7 @@ let sampleMessage = [0,1,1,0,0,1,0,1,0,1,1,1,0]
 
 //: Use the decode procedure to decode the message, and give the result
 
-func chooseBranch(bit: Int, _ branch: Tree) -> Tree {
+func chooseBranch(_ bit: Int, _ branch: Tree) -> Tree {
     switch bit {
     case 0:
         return leftBranch(branch)
@@ -25,7 +25,7 @@ extension Array {
     }
 }
 
-func decode(bits: [Int], _ tree: Tree) -> [String] {
+func decode(_ bits: [Int], _ tree: Tree) -> [String] {
     var decode1: ([Int], Tree) -> [String] = { _, _ in return [] }
     decode1 = { bits1, currentBranch in
         if let (_, tail) = bits1.match {
