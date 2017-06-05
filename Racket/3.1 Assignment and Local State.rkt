@@ -153,7 +153,27 @@
 ; Observe that W1 and W2 are completely independent objects, each with its own local state
 ; variable balance. Withdrawals from one do not affect the other.
 
+; We can also create objects that handle deposits as well withdrawals, and thus we can
+; represent simple bank accounts. Here is a procedure that returns a "bank-account object"
+; with a specified initial balance:
 
+(define (make-account balance)
+  (define (withdraw amount)
+    (if (>= balance amount)
+        (begin (set! balance (- balance amount))
+               balance)
+        "Insufficent funds"))
+  (define (deposit amount)
+    (set! balance (+ balance amount))
+    balance)
+  (define (dispatch m)
+    (cond ((eq? m 'withdraw) withdraw)
+          ((eq? m 'deposit) deposit)
+          (else (error "Unkown request: MAKE-ACCOUNT"
+                       m))))
+  dispatch)
+
+; Each call to make-account sets up an environment
 
 
 

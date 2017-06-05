@@ -13,16 +13,16 @@ extension Array {
 
 
 
-func encodeSymbol(symbol: String, _ tree: Tree) -> [Int] {
+func encodeSymbol(_ symbol: String, _ tree: Tree) -> [Int] {
     switch tree {
     case .Leaf(symbol: _, weight: _):
         return []
     case let .Branch(left: left, right: right, symbols: syms, weight: _):
         if syms.contains(symbol) {
-            if symbols(left.unbox).contains(symbol) {
-                return [0] + encodeSymbol(symbol, left.unbox)
+            if symbols(left).contains(symbol) {
+                return [0] + encodeSymbol(symbol, left)
             } else {
-                return [1] + encodeSymbol(symbol, right.unbox)
+                return [1] + encodeSymbol(symbol, right)
             }
         } else {
             fatalError("The symbol:(\(symbol)) is not contained in the tree:(\(tree))")
@@ -30,7 +30,7 @@ func encodeSymbol(symbol: String, _ tree: Tree) -> [Int] {
     }
 }
 
-func encode(message:[String], _ tree:Tree) -> [Int] {
+func encode(_ message:[String], _ tree:Tree) -> [Int] {
     if let (head, tail) = message.match {
         return encodeSymbol(head, tree) + encode(tail, tree)
     } else {
