@@ -1,31 +1,15 @@
 import Foundation
 
-public class Box<T> {
-    public let unbox: T
-    init(_ value: T) {
-        self.unbox = value
-    }
-}
-
-public enum Tree: CustomStringConvertible {
+public indirect enum Tree {
     case Leaf(symbol: String, weight: Int)
-    case Branch(left: Box<Tree>, right: Box<Tree>, symbols: [String], weight: Int)
-    
-    public var description: String {
-        switch self {
-        case let .Leaf(symbol: sym, weight: wei):
-            return "(\(sym),\(wei))"
-        case let .Branch(left: l, right: r, symbols: sym, weight: wei):
-            return "[(\(sym),\(wei)),\(l.unbox),\(r.unbox)]"
-        }
-    }
+    case Branch(left: Tree, right: Tree, symbols: [String], weight: Int)
 }
 
-public func makeLeaf(symbol: String, _ weight: Int) -> Tree {
+public func makeLeaf(_ symbol: String, _ weight: Int) -> Tree {
     return Tree.Leaf(symbol: symbol, weight: weight)
 }
 
-func isLeaf(object: Tree) -> Bool {
+func isLeaf(_ object: Tree) -> Bool {
     switch object {
     case .Leaf(symbol: _, weight: _):
         return true
@@ -34,7 +18,7 @@ func isLeaf(object: Tree) -> Bool {
     }
 }
 
-func symbol(x: Tree) -> String {
+func symbol(_ x: Tree) -> String {
     switch x {
     case let .Leaf(symbol: s, weight: _):
         return s
@@ -43,39 +27,39 @@ func symbol(x: Tree) -> String {
     }
 }
 
-public func makeCodeTree(left: Tree, _ right: Tree) -> Tree {
+public func makeCodeTree(_ left: Tree, _ right: Tree) -> Tree {
     switch (left, right) {
     case let (.Leaf(symbol:s1, weight:w1), .Leaf(symbol:s2, weight:w2)):
-        return Tree.Branch(left: Box(left), right: Box(right), symbols: [s1] + [s2], weight: w1 + w2)
+        return Tree.Branch(left: left, right: right, symbols: [s1] + [s2], weight: w1 + w2)
     case let (.Leaf(symbol:s1, weight:w1), .Branch(left: _, right: _, symbols:s2, weight:w2)):
-        return Tree.Branch(left: Box(left), right: Box(right), symbols: [s1] + s2, weight: w1 + w2)
+        return Tree.Branch(left: left, right: right, symbols: [s1] + s2, weight: w1 + w2)
     case let (.Branch(left: _, right: _, symbols:s1, weight:w1), .Leaf(symbol:s2, weight:w2)):
-        return Tree.Branch(left: Box(left), right: Box(right), symbols: s1 + [s2], weight: w1 + w2)
+        return Tree.Branch(left: left, right: right, symbols: s1 + [s2], weight: w1 + w2)
     case let (.Branch(left: _, right: _, symbols:s1, weight:w1), .Branch(left: _, right: _, symbols:s2, weight:w2)):
-        return Tree.Branch(left: Box(left), right: Box(right), symbols: s1 + s2, weight: w1 + w2)
+        return Tree.Branch(left: left, right: right, symbols: s1 + s2, weight: w1 + w2)
         
     }
 }
 
-public func leftBranch(tree: Tree) -> Tree {
+public func leftBranch(_ tree: Tree) -> Tree {
     switch tree {
     case let .Branch(left: left, right: _, symbols: _, weight: _):
-        return left.unbox
+        return left
     default:
         fatalError("leftBranch failed \(tree)")
     }
 }
 
-public func rightBranch(tree: Tree) -> Tree {
+public func rightBranch(_ tree: Tree) -> Tree {
     switch tree {
     case let .Branch(left: _, right: right, symbols: _, weight: _):
-        return right.unbox
+        return right
     default:
         fatalError("rightBranch failed \(tree)")
     }
 }
 
-public func symbols(tree: Tree) -> [String] {
+public func symbols(_ tree: Tree) -> [String] {
     switch tree {
     case let .Leaf(symbol: symbol, weight: _):
         return [symbol]
@@ -84,7 +68,7 @@ public func symbols(tree: Tree) -> [String] {
     }
 }
 
-func weight(tree: Tree) -> Int {
+func weight(_ tree: Tree) -> Int {
     switch tree {
     case let .Leaf(symbol: _, weight: w1):
         return w1
@@ -93,7 +77,7 @@ func weight(tree: Tree) -> Int {
     }
 }
 
-func chooseBranch(bit: Int, _ branch: Tree) -> Tree {
+func chooseBranch(_ bit: Int, _ branch: Tree) -> Tree {
     switch bit {
     case 0:
         return leftBranch(branch)
@@ -110,9 +94,8 @@ extension Array {
     }
 }
 
-public func decode(bits: [Int], _ tree: Tree) -> [String] {
-    var decode1: ([Int], Tree) -> [String] = { _, _ in return [] }
-    decode1 = { bits1, currentBranch in
+public func decode(_ bits: [Int], _ tree: Tree) -> [String] {
+    func decode1(_ bits1: [Int], _ currentBranch: Tree) -> [String] {
         if let (_, tail) = bits1.match {
             let nextBranch = chooseBranch(bits1[0], currentBranch)
             switch nextBranch {
@@ -128,7 +111,8 @@ public func decode(bits: [Int], _ tree: Tree) -> [String] {
     return decode1(bits, tree)
 }
 
-public func adjoinSet(x: Tree, _ set: [Tree]) -> [Tree] {
+
+public func adjoinSet(_ x: Tree, _ set: [Tree]) -> [Tree] {
     if let (head, tail) = set.match {
         if weight(x) < weight(head) {
             return [x] + set

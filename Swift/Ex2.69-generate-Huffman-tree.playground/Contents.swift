@@ -13,7 +13,7 @@ extension Array {
 
 typealias SymFreqPair = (String, Int)
 
-func makeLeafSet(pairs: [SymFreqPair]) -> [Tree] {
+func makeLeafSet(_ pairs: [SymFreqPair]) -> [Tree] {
     var result: [Tree] = []
     for pair in pairs {
         result = adjoinSet(makeLeaf(pair.0, pair.1), result)
@@ -21,7 +21,7 @@ func makeLeafSet(pairs: [SymFreqPair]) -> [Tree] {
     return result
 }
 
-func successiveMerge(leafSet: [Tree]) -> [Tree] {
+func successiveMerge(_ leafSet: [Tree]) -> [Tree] {
     if leafSet.count <= 1 {
         return leafSet
     } else {
@@ -29,7 +29,7 @@ func successiveMerge(leafSet: [Tree]) -> [Tree] {
     }
 }
 
-func generateHuffmanTree(pairs: [SymFreqPair]) -> Tree {
+func generateHuffmanTree(_ pairs: [SymFreqPair]) -> Tree {
     return successiveMerge(makeLeafSet(pairs))[0]
 }
 
