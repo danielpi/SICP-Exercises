@@ -17,13 +17,13 @@ enum Expr {
     case Variable(String)
 }
 
-extension Expr: IntegerLiteralConvertible {
+extension Expr: ExpressibleByIntegerLiteral {
     init(integerLiteral value: IntegerLiteralType) {
         self = .Constant(value)
     }
 }
 
-extension Expr: StringLiteralConvertible {
+extension Expr: ExpressibleByStringLiteral {
     init(stringLiteral value: String) {
         self = .Variable(value)
     }
@@ -97,7 +97,7 @@ func * (lhs: Expr, rhs: Expr) -> Expr {
     return makeProduct(lhs, rhs)
 }
 
-func isVariable(exp: Expr) -> Bool {
+func isVariable(_ exp: Expr) -> Bool {
     switch exp {
     case .Variable(_):
         return true
@@ -106,7 +106,7 @@ func isVariable(exp: Expr) -> Bool {
     }
 }
 
-func isSameVariable(v1: Expr, _ v2: Expr) -> Bool {
+func isSameVariable(_ v1: Expr, _ v2: Expr) -> Bool {
     switch (v1, v2) {
     case (.Variable(let val1), .Variable(let val2)):
         return val1 == val2
@@ -115,14 +115,14 @@ func isSameVariable(v1: Expr, _ v2: Expr) -> Bool {
     }
 }
 
-func makeSum1(a1:Expr, _ a2: Expr) -> Expr {
+func makeSum1(_ a1:Expr, _ a2: Expr) -> Expr {
     return Expr.Sum(Box(a1), Box(a2))
 }
-func makeProduct1(m1: Expr, _ m2: Expr) -> Expr {
+func makeProduct1(_ m1: Expr, _ m2: Expr) -> Expr {
     return Expr.Product(Box(m1), Box(m2))
 }
 
-func isSum(exp: Expr) -> Bool {
+func isSum(_ exp: Expr) -> Bool {
     switch exp {
     case .Sum(_, _):
         return true
@@ -131,7 +131,7 @@ func isSum(exp: Expr) -> Bool {
     }
 }
 
-func addend(s: Expr) -> Expr {
+func addend(_ s: Expr) -> Expr {
     switch s {
     case .Sum(let a1, _):
         return a1.unbox
@@ -140,7 +140,7 @@ func addend(s: Expr) -> Expr {
     }
 }
 
-func augend(s: Expr) -> Expr {
+func augend(_ s: Expr) -> Expr {
     switch s {
     case .Sum(_, let a2):
         return a2.unbox
@@ -149,7 +149,7 @@ func augend(s: Expr) -> Expr {
     }
 }
 
-func isProduct(x: Expr) -> Bool {
+func isProduct(_ x: Expr) -> Bool {
     switch x {
     case .Product(_, _):
         return true
@@ -157,7 +157,7 @@ func isProduct(x: Expr) -> Bool {
         return false
     }
 }
-func multiplier(p: Expr) -> Expr {
+func multiplier(_ p: Expr) -> Expr {
     switch p {
     case .Product(let m1, _):
         return m1.unbox
@@ -165,7 +165,7 @@ func multiplier(p: Expr) -> Expr {
         fatalError("Tried to get the multiplier from an expression that was not a product")
     }
 }
-func multiplicand(p: Expr) -> Expr {
+func multiplicand(_ p: Expr) -> Expr {
     switch p {
     case .Product(_, let m2):
         return m2.unbox
@@ -173,7 +173,7 @@ func multiplicand(p: Expr) -> Expr {
         fatalError("Tried to get the multiplicand from an expression that was not a product")
     }
 }
-func makeSum(a1: Expr, _ a2: Expr) -> Expr {
+func makeSum(_ a1: Expr, _ a2: Expr) -> Expr {
     switch (a1, a2) {
     case (.Constant(0), _):
         return a2
@@ -185,7 +185,7 @@ func makeSum(a1: Expr, _ a2: Expr) -> Expr {
         return Expr.Sum(Box(a1), Box(a2))
     }
 }
-func makeProduct(m1: Expr, _ m2: Expr) -> Expr {
+func makeProduct(_ m1: Expr, _ m2: Expr) -> Expr {
     switch (m1, m2) {
     case (.Constant(0), _):
         return .Constant(0)
@@ -202,7 +202,7 @@ func makeProduct(m1: Expr, _ m2: Expr) -> Expr {
     }
 }
 
-func deriv(exp: Expr, _ variable: Expr) -> Expr {
+func deriv(_ exp: Expr, _ variable: Expr) -> Expr {
     switch exp {
     case .Constant(_):
         return .Constant(0)
@@ -225,11 +225,11 @@ print(deriv(("x" * "y") * ("x" + 3), "x"))    // ((x * y) + (y * (x + 3)))
 //: We can regard this program as performing a dispatch on the type of the expression to be differentiated. In this situation the "type tag" of the datum is the algebraic operator symbol (such as +) and the operation being performed is deriv. We can transform this program into data-directed style by rewriting the basic derivative procedure as
 
 
-typealias DerivativeFunction = (exp: Expr, variable: Expr) -> Expr
+typealias DerivativeFunction = (_ exp: Expr, _ variable: Expr) -> Expr
 
 var globalSelectorTable = [String: [String: DerivativeFunction]]()
 
-func put(op: String, _ type: String, _ item: DerivativeFunction) {
+func put(_ op: String, _ type: String, _ item: @escaping DerivativeFunction) {
     if let _ = globalSelectorTable[type] {
         globalSelectorTable[type]![op] = item
     } else {
@@ -238,12 +238,12 @@ func put(op: String, _ type: String, _ item: DerivativeFunction) {
 }
 
 
-func get(op: String, _ type: String) -> DerivativeFunction? {
+func get(_ op: String, _ type: String) -> DerivativeFunction? {
     return globalSelectorTable[type]?[op]
 }
 
 
-func operatorAsString(exp: Expr) -> String {
+func operatorAsString(_ exp: Expr) -> String {
     switch exp {
     case .Sum(_, _):
         return "+"
@@ -256,7 +256,7 @@ func operatorAsString(exp: Expr) -> String {
     }
 }
 
-func deriv2(exp: Expr, _ variable: Expr) -> Expr {
+func deriv2(_ exp: Expr, _ variable: Expr) -> Expr {
     switch exp {
     case .Constant(_):
         return .Constant(0)
@@ -264,7 +264,7 @@ func deriv2(exp: Expr, _ variable: Expr) -> Expr {
         return isSameVariable(exp, variable) ? .Constant(1) : .Constant(0)
     default:
         let function = get("deriv", operatorAsString(exp))!
-        return function(exp: exp, variable: variable)
+        return function(exp, variable)
     }
 }
 
@@ -277,7 +277,7 @@ func deriv2(exp: Expr, _ variable: Expr) -> Expr {
 
 func installDerivativeSumPackage() {
     // Internal Procedures
-    func makeSum(a1: Expr, _ a2: Expr) -> Expr {
+    func makeSum(_ a1: Expr, _ a2: Expr) -> Expr {
         switch (a1, a2) {
         case (.Constant(0), _):
             return a2
@@ -290,7 +290,7 @@ func installDerivativeSumPackage() {
         }
     }
     
-    func derivSum(exp: Expr, variable: Expr) -> Expr {
+    func derivSum(_ exp: Expr, variable: Expr) -> Expr {
         return makeSum(deriv2(addend(exp), variable), deriv2(augend(exp), variable))
     }
     
@@ -302,7 +302,7 @@ installDerivativeSumPackage()
 globalSelectorTable
 
 func installDerivativeProductPackage() {
-    func makeProduct(m1: Expr, _ m2: Expr) -> Expr {
+    func makeProduct(_ m1: Expr, _ m2: Expr) -> Expr {
         switch (m1, m2) {
         case (.Constant(0), _):
             return .Constant(0)
@@ -319,7 +319,7 @@ func installDerivativeProductPackage() {
         }
     }
     
-    func derivProduct(exp: Expr, _ variable: Expr) -> Expr {
+    func derivProduct(_ exp: Expr, _ variable: Expr) -> Expr {
         return makeSum(makeProduct(multiplier(exp), deriv2(multiplicand(exp), variable)), makeProduct(deriv2(multiplier(exp), variable), multiplicand(exp)))
     }
     
@@ -339,7 +339,7 @@ print(deriv2(("x" * "y") * ("x" + 3), "x"))   // ((x * y) + (y * (x + 3)))
 //: - Choose any additional differentiation rule that you like, such as the one for exponents (Exercise 2.56), and install it in this data-directed system.
 
 func installDerivativeExponentPackage() {
-    func base(exp: Expr) -> Expr {
+    func base(_ exp: Expr) -> Expr {
         switch exp {
         case .Exponential(let b, _):
             return b.unbox
@@ -348,7 +348,7 @@ func installDerivativeExponentPackage() {
         }
     }
     
-    func exponent(exp: Expr) -> Expr {
+    func exponent(_ exp: Expr) -> Expr {
         switch exp {
         case .Exponential(_, let e):
             return e.unbox
@@ -357,7 +357,7 @@ func installDerivativeExponentPackage() {
         }
     }
     
-    func makeSum(a1: Expr, _ a2: Expr) -> Expr {
+    func makeSum(_ a1: Expr, _ a2: Expr) -> Expr {
         switch (a1, a2) {
         case (.Constant(0), _):
             return a2
@@ -370,7 +370,7 @@ func installDerivativeExponentPackage() {
         }
     }
     
-    func makeProduct(m1: Expr, _ m2: Expr) -> Expr {
+    func makeProduct(_ m1: Expr, _ m2: Expr) -> Expr {
         switch (m1, m2) {
         case (.Constant(0), _):
             return .Constant(0)
@@ -387,7 +387,7 @@ func installDerivativeExponentPackage() {
         }
     }
     
-    func makeExponentiation(base: Expr, _ exponent:Expr) -> Expr {
+    func makeExponentiation(_ base: Expr, _ exponent:Expr) -> Expr {
         switch (base, exponent) {
         case (_, .Constant(0)):
             return .Constant(1)
@@ -400,13 +400,13 @@ func installDerivativeExponentPackage() {
         }
     }
     
-    func derivExponentiation(exp: Expr, variable: Expr) -> Expr{
-        let base = base(exp)
-        let exponent = exponent(exp)
+    func derivExponentiation(_ exp: Expr, variable: Expr) -> Expr{
+        let baseVar = base(exp)
+        let exponentVar = exponent(exp)
         
-        return makeProduct(makeProduct(exponent,
-                makeExponentiation(base,
-                 makeSum(exponent, Expr.Constant(-1)))), deriv2(base, variable))
+        return makeProduct(makeProduct(exponentVar,
+                makeExponentiation(baseVar,
+                 makeSum(exponentVar, Expr.Constant(-1)))), deriv2(baseVar, variable))
     }
     
     put("make", "**", makeExponentiation)
@@ -415,10 +415,16 @@ func installDerivativeExponentPackage() {
 
 installDerivativeExponentPackage()
 
-infix operator ** { associativity left precedence 160 }
+precedencegroup ExponentPrecedence {
+    associativity: right
+    //assignment: true
+    higherThan: MultiplicationPrecedence
+}
+
+infix operator **: ExponentPrecedence
 func ** (lhs: Expr, rhs: Expr) -> Expr {
     let makeExponentiation = get("make", "**")
-    return makeExponentiation!(exp: lhs, variable: rhs)
+    return makeExponentiation!(lhs, rhs)
 }
 
 print(globalSelectorTable)
