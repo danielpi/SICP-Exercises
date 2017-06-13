@@ -21,7 +21,7 @@ typealias TaggedRecord = (String, EmployeeRecord)
 class DivisionFile {
     var contents = [String: EmployeeRecord]()
     
-    func addEmployee(record: EmployeeRecord) {
+    func addEmployee(_ record: EmployeeRecord) {
         contents[record.name] = record
     }
 }
@@ -40,11 +40,11 @@ productionFile.addEmployee(EmployeeRecord(name: "Simon", address: "Melbourne", s
 productionFile.addEmployee(EmployeeRecord(name: "Jamie", address: "Ballarat", salary: "12"))
 
 
-typealias Function = (name: String) -> String
+typealias Function = (_ name: String) -> String
 
 var globalSelectorTable = [String: [String: Function]]()
 
-func put(op: String, type: String, item: Function) {
+func put(_ op: String, type: String, item: @escaping Function) {
     if let _ = globalSelectorTable[type] {
         globalSelectorTable[type]![op] = item
     } else {
@@ -52,18 +52,18 @@ func put(op: String, type: String, item: Function) {
     }
 }
 
-func get(op: String, type: String) -> Function? {
+func get(_ op: String, type: String) -> Function? {
     return globalSelectorTable[type]?[op]
 }
 
 // Each division needs to write a package to install their access routines
 
 func installEngineeringPackage() {
-    func tag(x: EmployeeRecord) -> TaggedRecord {
+    func tag(_ x: EmployeeRecord) -> TaggedRecord {
         return ("engineering", x)
     }
     
-    func getRecord(name: String, file: DivisionFile) -> TaggedRecord? {
+    func getRecord(_ name: String, file: DivisionFile) -> TaggedRecord? {
         if file.contents[name] == nil {
             return nil
         } else {

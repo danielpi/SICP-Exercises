@@ -7,12 +7,12 @@ import Darwin
 
 typealias ComplexNumberDataObject = (String) -> Double
 
-func square(x: Double) -> Double {
+func square(_ x: Double) -> Double {
     return x * x
 }
 
-func makeFromRealImag(x: Double, _ y: Double) -> ComplexNumberDataObject {
-    func dispatch(op: String) -> Double {
+func makeFromRealImag(_ x: Double, _ y: Double) -> ComplexNumberDataObject {
+    func dispatch(_ op: String) -> Double {
         switch op {
         case "real-part":
             return x
@@ -29,7 +29,7 @@ func makeFromRealImag(x: Double, _ y: Double) -> ComplexNumberDataObject {
     return dispatch
 }
 
-func applyGeneric(op: String, _ arg: ComplexNumberDataObject) -> Double {
+func applyGeneric(_ op: String, _ arg: ComplexNumberDataObject) -> Double {
     return arg(op)
 }
 
@@ -38,7 +38,7 @@ applyGeneric("magnitude", a)
 applyGeneric("angle", a)
 
 
-func makeFromMagAng(r: Double, _ A: Double) -> ComplexNumberDataObject {
+func makeFromMagAng(_ r: Double, _ A: Double) -> ComplexNumberDataObject {
     func dispatch(op: String) -> Double {
         switch op {
         case "real-part":

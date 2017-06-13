@@ -17,7 +17,7 @@ struct Tagged<V>: CustomStringConvertible {
     }
 }
 
-func attachTag<V>(tag: NumberType, value: V) -> Tagged<V> {
+func attachTag<V>(_ tag: NumberType, value: V) -> Tagged<V> {
     return Tagged(type: tag, value: value)
 }
 
@@ -46,7 +46,7 @@ func == (lhs: TypeKey, rhs: TypeKey) -> Bool {
 
 var globalSelectorTable = [TypeKey: [String: Any]]()
 
-func put(op: String, _ type: TypeKey, _ item: Any) {
+func put(_ op: String, _ type: TypeKey, _ item: Any) {
     if let _ = globalSelectorTable[type] {
         globalSelectorTable[type]![op] = item
     } else {
@@ -54,11 +54,11 @@ func put(op: String, _ type: TypeKey, _ item: Any) {
     }
 }
 
-func get(op: String, _ type: TypeKey) -> Any? {
+func get(_ op: String, _ type: TypeKey) -> Any? {
     return globalSelectorTable[type]?[op]
 }
 
-func applyGeneric(op: String, _ args: Tagged<Pair> ...) -> Tagged<Pair> {
+func applyGeneric(_ op: String, _ args: Tagged<Pair> ...) -> Tagged<Pair> {
     let typeTags = TypeKey(types: args.map { $0.type })
     switch typeTags.types.count {
     case 1:
@@ -72,23 +72,23 @@ func applyGeneric(op: String, _ args: Tagged<Pair> ...) -> Tagged<Pair> {
     }
 }
 
-func add(x: Tagged<Pair>, y: Tagged<Pair>) -> Tagged<Pair> {
+func add(_ x: Tagged<Pair>, y: Tagged<Pair>) -> Tagged<Pair> {
     return applyGeneric("add", x, y)
 }
-func sub(x: Tagged<Pair>, y: Tagged<Pair>) -> Tagged<Pair> {
+func sub(_ x: Tagged<Pair>, y: Tagged<Pair>) -> Tagged<Pair> {
     return applyGeneric("sub", x, y)
 }
-func mul(x: Tagged<Pair>, y: Tagged<Pair>) -> Tagged<Pair> {
+func mul(_ x: Tagged<Pair>, y: Tagged<Pair>) -> Tagged<Pair> {
     return applyGeneric("mul", x, y)
 }
-func div(x: Tagged<Pair>, y: Tagged<Pair>) -> Tagged<Pair> {
+func div(_ x: Tagged<Pair>, y: Tagged<Pair>) -> Tagged<Pair> {
     return applyGeneric("div", x, y)
 }
-func equ(x: Tagged<Pair>, y: Tagged<Pair>) -> Tagged<Pair> {
+func equ(_ x: Tagged<Pair>, y: Tagged<Pair>) -> Tagged<Pair> {
     return applyGeneric("equ", x, y)
 }
 
-func realPart(z: Tagged<Pair>) -> Double {
+func realPart(_ z: Tagged<Pair>) -> Double {
     // return applyGeneric("realPart", z) // Can't use applyGeneric beacuse these functions should return proper Swift types.
     if let proc = get("realPart", TypeKey(types: [z.type])) as? (Pair) -> Double {
         return proc(z.value)
@@ -96,21 +96,21 @@ func realPart(z: Tagged<Pair>) -> Double {
         fatalError("realPart Failed")
     }
 }
-func imagPart(z: Tagged<Pair>) -> Double {
+func imagPart(_ z: Tagged<Pair>) -> Double {
     if let proc = get("imagPart", TypeKey(types: [z.type])) as? (Pair) -> Double {
         return proc(z.value)
     } else {
         fatalError("imagPart Failed")
     }
 }
-func magnitude(z: Tagged<Pair>) -> Double {
+func magnitude(_ z: Tagged<Pair>) -> Double {
     if let proc = get("magnitude", TypeKey(types: [z.type])) as? (Pair) -> Double {
         return proc(z.value)
     } else {
         fatalError("magnitude Failed")
     }
 }
-func angle(z: Tagged<Pair>) -> Double {
+func angle(_ z: Tagged<Pair>) -> Double {
     if let proc = get("angle", TypeKey(types: [z.type])) as? (Pair) -> Double {
         return proc(z.value)
     } else {
@@ -119,7 +119,7 @@ func angle(z: Tagged<Pair>) -> Double {
 }
 
 func installSwiftNumberPackage() {
-    func tag(x: Double) -> Tagged<Double> { return attachTag(.number, value: x) }
+    func tag(_ x: Double) -> Tagged<Double> { return attachTag(.number, value: x) }
     put("add", TypeKey(types: [.number, .number]), { x, y in tag(x + y) })
     put("sub", TypeKey(types: [.number, .number]), { x, y in tag(x - y) })
     put("mul", TypeKey(types: [.number, .number]), { x, y in tag(x * y) })
@@ -128,10 +128,10 @@ func installSwiftNumberPackage() {
     put("equ", TypeKey(types: [.number, .number]), { x, y in
         let a:Any = (x == y)
         return a
-    })
+    } as Any)
 }
 
-func makeSchemeNumber(n: Double) -> Tagged<Double> {
+func makeSchemeNumber(_ n: Double) -> Tagged<Double> {
     if let make = get("make", TypeKey(types: [.number, .number])) as? (Double) -> Tagged<Double> {
         return make(n)
     } else {
@@ -150,7 +150,7 @@ struct Pair: CustomStringConvertible {
 
 func installRationalPackage() {
     // Internal Procedures from Ex 2.1.1
-    func gcd(a: Int, _ b: Int) -> Int {
+    func gcd(_ a: Int, _ b: Int) -> Int {
         if b == 0 {
             return abs(a)
         } else {
@@ -158,7 +158,7 @@ func installRationalPackage() {
         }
     }
     
-    func makeRat(n: Int, _ d:Int) -> Pair {
+    func makeRat(_ n: Int, _ d:Int) -> Pair {
         let g = gcd(n, d)
         if d < 0 {
             return Pair(car: n/g, cdr: -d/g)
@@ -167,35 +167,35 @@ func installRationalPackage() {
         }
     }
     
-    func numer(x: Pair) -> Int {
+    func numer(_ x: Pair) -> Int {
         return x.car as! Int
     }
-    func denom(x: Pair) -> Int {
+    func denom(_ x: Pair) -> Int {
         return x.cdr as! Int
     }
     
-    func printRat(x: Pair) {
+    func printRat(_ x: Pair) {
         print("\(numer(x))/\(denom(x))")
     }
     
-    func addRat(x: Pair, _ y: Pair) -> Pair {
+    func addRat(_ x: Pair, _ y: Pair) -> Pair {
         return makeRat((numer(x) * denom(y)) + (numer(y) * denom(x)), denom(x) * denom(y))
     }
-    func subRat(x: Pair, _ y: Pair) -> Pair {
+    func subRat(_ x: Pair, _ y: Pair) -> Pair {
         return makeRat((numer(x) * denom(y)) - (numer(y) * denom(x)), denom(x) * denom(y))
     }
-    func mulRat(x: Pair, _ y: Pair) -> Pair {
+    func mulRat(_ x: Pair, _ y: Pair) -> Pair {
         return makeRat(numer(x) * numer(y), denom(x) * denom(y))
     }
-    func divRat(x: Pair, _ y: Pair) -> Pair {
+    func divRat(_ x: Pair, _ y: Pair) -> Pair {
         return makeRat(numer(x) * denom(y), denom(x) * numer(y))
     }
-    func isEqualRat(x: Pair, _ y: Pair) -> Bool {
+    func isEqualRat(_ x: Pair, _ y: Pair) -> Bool {
         return (numer(x) * denom(y)) == (numer(y) * denom(x))
     }
     
     // Interface to rest of the system
-    func tag(x: Pair) -> Tagged<Pair> { return attachTag(.rational, value: x) }
+    func tag(_ x: Pair) -> Tagged<Pair> { return attachTag(.rational, value: x) }
     
     put("add", TypeKey(types: [.rational, .rational]), { x, y in return tag(addRat(x,y)) } )
     put("sub", TypeKey(types: [.rational, .rational]), { x, y in return tag(subRat(x,y)) } )
@@ -205,7 +205,7 @@ func installRationalPackage() {
 }
 
 
-func makeRationalNumber(n: Int, d: Int) -> Tagged<Pair> {
+func makeRationalNumber(_ n: Int, d: Int) -> Tagged<Pair> {
     if let make = get("make", TypeKey(types: [.rational, .rational])) as? (Int, Int) -> Tagged<Pair> {
         return make(n, d)
     } else {
@@ -213,26 +213,26 @@ func makeRationalNumber(n: Int, d: Int) -> Tagged<Pair> {
     }
 }
 
-func square(x:Double) -> Double { return x * x }
+func square(_ x:Double) -> Double { return x * x }
 
 func installRectangularPackage() {
     // Internal Procedures
-    func realPart(z: Pair) -> Double { return z.car as! Double }
-    func imagPart(z: Pair) -> Double { return z.cdr as! Double }
-    func magnitude(z: Pair) -> Double {
+    func realPart(_ z: Pair) -> Double { return z.car as! Double }
+    func imagPart(_ z: Pair) -> Double { return z.cdr as! Double }
+    func magnitude(_ z: Pair) -> Double {
         return pow(square(realPart(z)) + square(imagPart(z)), 0.5)
     }
-    func angle(z: Pair) -> Double {
+    func angle(_ z: Pair) -> Double {
         return atan2(imagPart(z), realPart(z))
     }
     
-    func tag(x: Pair) -> Tagged<Pair> {
+    func tag(_ x: Pair) -> Tagged<Pair> {
         return attachTag(.rectangular, value: x)
     }
-    func makeFromRealImag(x: Double, y: Double) -> Tagged<Pair> {
+    func makeFromRealImag(_ x: Double, y: Double) -> Tagged<Pair> {
         return tag(Pair(car: x, cdr: y))
     }
-    func makeFromMagAng(r: Double, A: Double) -> Tagged<Pair> {
+    func makeFromMagAng(_ r: Double, A: Double) -> Tagged<Pair> {
         return tag(Pair(car:r * cos(A), cdr:r * sin(A)))
     }
     
@@ -249,22 +249,22 @@ installRectangularPackage()
 
 func installPolarPackage() {
     // Internal Procedures
-    func magnitude(z: Pair) -> Double { return z.car as! Double }
-    func angle(z: Pair) -> Double { return z.cdr as! Double }
-    func realPart(z: Pair) -> Double {
+    func magnitude(_ z: Pair) -> Double { return z.car as! Double }
+    func angle(_ z: Pair) -> Double { return z.cdr as! Double }
+    func realPart(_ z: Pair) -> Double {
         return magnitude(z) * cos(angle(z))
     }
-    func imagPart(z: Pair) -> Double {
+    func imagPart(_ z: Pair) -> Double {
         return magnitude(z) * sin(angle(z))
     }
     
-    func tag(x: Pair) -> Tagged<Pair> {
+    func tag(_ x: Pair) -> Tagged<Pair> {
         return attachTag(.polar, value: x)
     }
-    func makeFromMagAng(r: Double, A: Double) -> Tagged<Pair> {
+    func makeFromMagAng(_ r: Double, A: Double) -> Tagged<Pair> {
         return tag(Pair(car: r, cdr: A))
     }
-    func makeFromRealImag(x: Double, y: Double) -> Tagged<Pair> {
+    func makeFromRealImag(_ x: Double, y: Double) -> Tagged<Pair> {
         return tag(Pair(car: pow(square(x) + square(y), 0.5), cdr:atan2(y, x)))
     }
     
@@ -280,7 +280,7 @@ installPolarPackage()
 
 func installComplexPackage() {
     // Imported procedures from rectangular and polar packages
-    func makeFromRealImag(x: Double, y: Double) -> Tagged<Pair> {
+    func makeFromRealImag(_ x: Double, y: Double) -> Tagged<Pair> {
         if let make = get("makeFromRealImag", TypeKey(types: [.rectangular])) as? (Double, Double) -> Tagged<Pair> {
             return make(x, y)
         } else {
@@ -288,41 +288,41 @@ func installComplexPackage() {
         }
     }
     
-    func makeFromMagAng(r: Double, A: Double) -> Tagged<Pair> {
+    func makeFromMagAng(_ r: Double, A: Double) -> Tagged<Pair> {
         if let make = get("makeFromMagAng", TypeKey(types: [.polar])) as? (Double, Double) -> Tagged<Pair> {
             return make(r, A)
         } else {
             fatalError("Failed to make from Mag Ang")
         }
     }
-    func magnitude(z: Pair) -> Double { return z.car as! Double }
-    func angle(z: Pair) -> Double { return z.cdr as! Double }
-    func realPart(z: Pair) -> Double {
+    func magnitude(_ z: Pair) -> Double { return z.car as! Double }
+    func angle(_ z: Pair) -> Double { return z.cdr as! Double }
+    func realPart(_ z: Pair) -> Double {
         return magnitude(z) * cos(angle(z))
     }
-    func imagPart(z: Pair) -> Double {
+    func imagPart(_ z: Pair) -> Double {
         return magnitude(z) * sin(angle(z))
     }
     
     // Internal Procedures
-    func addComplex(z1: Pair, z2: Pair) -> Tagged<Pair> {
+    func addComplex(_ z1: Pair, z2: Pair) -> Tagged<Pair> {
         return makeFromRealImag(realPart(z1) + realPart(z2), y: imagPart(z1) + imagPart(z2))
     }
     
-    func subComplex(z1: Pair, z2: Pair) -> Tagged<Pair> {
+    func subComplex(_ z1: Pair, z2: Pair) -> Tagged<Pair> {
         return makeFromRealImag(realPart(z1) - realPart(z2), y: imagPart(z1) - imagPart(z2))
     }
     
-    func mulComplex(z1: Pair, z2:Pair) -> Tagged<Pair> {
+    func mulComplex(_ z1: Pair, z2:Pair) -> Tagged<Pair> {
         return makeFromMagAng(magnitude(z1) * magnitude(z2), A: angle(z1) + angle(z2))
     }
     
-    func divComplex(z1: Pair, z2: Pair) -> Tagged<Pair> {
+    func divComplex(_ z1: Pair, z2: Pair) -> Tagged<Pair> {
         return makeFromMagAng(magnitude(z1) / magnitude(z2), A: angle(z1) - angle(z2))
     }
     
     // Interface to rest of the system
-    func tag(z: Pair) -> Tagged<Pair> {
+    func tag(_ z: Pair) -> Tagged<Pair> {
         return attachTag(.complex, value: z)
     }
     
@@ -341,7 +341,7 @@ func installComplexPackage() {
 }
 installComplexPackage()
 
-func makeComplexFromRealImag(x: Double, y: Double) -> Tagged<Pair> {
+func makeComplexFromRealImag(_ x: Double, y: Double) -> Tagged<Pair> {
     if let make = get("makeFromRealImag", TypeKey(types: [.complex])) as? (Double, Double) -> Tagged<Pair> {
         return make(x, y)
     } else {
@@ -349,7 +349,7 @@ func makeComplexFromRealImag(x: Double, y: Double) -> Tagged<Pair> {
     }
 }
 
-func makeComplexFromMagAng(r: Double, A: Double) -> Tagged<Pair> {
+func makeComplexFromMagAng(_ r: Double, A: Double) -> Tagged<Pair> {
     if let make = get("makeFromMagAng", TypeKey(types: [.complex])) as? (Double, Double) -> Tagged<Pair> {
         return make(r, A)
     } else {
